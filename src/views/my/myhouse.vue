@@ -24,7 +24,9 @@
 
 <script>
 	export default {
+	  
 	  methods:{
+	  	
 	  	addHouse(){
 		  	this.$router.push("/addHouse")
 

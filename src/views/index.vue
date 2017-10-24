@@ -43,7 +43,26 @@
 </template>
 
 <script>
+  import cookie from 'js-cookie'
 	export default{
+    mounted(){
+        let url = '/initSession4Test/47'
+        this.axios.get(
+            url, 
+            {
+              params: {},
+            },
+        ).then(
+            
+            function(res) {
 
+                //console.log(res)
+            }
+        ).catch(
+            function(err) {
+                console.log(err)
+            }
+        );
+    }
 	}
 </script>

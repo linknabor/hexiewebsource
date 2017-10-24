@@ -48,24 +48,25 @@
 </template>
 
 <script>
+	let vm;
 	export default {
+		created(){
+			vm = this;
+		},
 	  data(){
-			return {
-				number:11234
-			}
-	  },
+		  return {
+				number:''
+		  }
+	  },	
 	  methods:{
-	  	test(){
-	  		alert(1)
-	  	},
 	  	 show(){
 	  	 	alert("调js-sdk")
 	  	 },
 	  	 submit(){//判断是否为纯数字
 	  	 	var reg = /^\d+$/;
-	  	 	//var re = new RegExp(reg);
-	  	 	if(reg.test(this.number)){//默认通过
-	  	 		this.$router.push("/bindHouse")
+	  	 	if(reg.test(this.number)){//为数字即通过
+	  	 		
+	  	 		this.$router.push('/bindHouse/' + this.number);
 	  	 	}else{
 	  	 		alert("不通过，请输入数字")
 	  	 	}

@@ -10,27 +10,62 @@ import 'mint-ui/lib/style.css'
 
 import Qs from 'qs';
 import axios from 'axios';
+//axios.defaults.withCredentials=true; //存储cookie？
 import VueAxios from 'vue-axios';
 
 import css from '../static/normalize.css'
 
+import cookie from 'js-cookie'
+
+import receiveData from './receiveData.js'
+
+Vue.prototype.receiveData = receiveData;
 
 
 Vue.use(MintUI)
-//axios对象配置和申明
+//创建axios 实例
+
 var axiosInstance = axios.create({
     transformRequest: [function (data) {
         data = Qs.stringify(data);
+        console.log(data)
         return data;
     }],
     headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
         'Accept': '*/*',
     },
-    baseURL: 'http://api.hzbuvi.com/paas',
-    //baseURL: 'http://api.yesmywine.com/paas',
-    responseType: 'json'
+    baseURL: 'https://test.e-shequ.com/wechat/hexie/wechat',
+    withCredentials:true,
+    //responseType: 'json' // "text/xml"
+    //responseType:'text',
+    responseType:'text/xml',
+
+    transformResponse: [function (data) {//数据转换
+      //console.log(data.getElementsByTagName('*'))
+      return data;
+    }],
 });
+//创建axios拦截器 给请求头加cookie
+
+axiosInstance.interceptors.request.use(
+    config => {
+        if( !cookie.get('session')){//没有seesion 判断  暂时跳过直接在首页就存seesion
+          
+        }else{//在请求头加 session
+          config.headers.Cookie =`${ cookie.get('Cookie') }`
+        }
+
+        // config.headers.Authorization = // token
+        //     `${ Cookies.get('yesmywine_mall$token_type') } ${ Cookies.get('yesmywine_mall$token') }`
+         // 不添加 return config 不会执行http请求
+         return config
+    },
+    err => {
+        return Promise.reject(err)
+    }
+)
+
 Vue.use(VueAxios, axiosInstance);
 
 

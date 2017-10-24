@@ -44,7 +44,7 @@ export default new Router({
       component:AddHouse
     },
     {
-      path:'/bindHouse',
+      path:'/bindHouse/:number',
       name:'BindHouse',
       component:BindHouse
     }
