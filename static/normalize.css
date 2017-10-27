@@ -1,3 +1,11 @@
+/* my self */
+
+.fl{float: left;}
+.fr{float: right;}
+.ov{overflow: hidden;}
+
+
+
 /*! normalize.css v7.0.0 | MIT License | github.com/necolas/normalize.css */
 
 /* Document
@@ -9,7 +17,7 @@
  *    IE on Windows Phone and in iOS.
  */
 
-html {
+ html {
   line-height: 1.15; /* 1 */
   -ms-text-size-adjust: 100%; /* 2 */
   -webkit-text-size-adjust: 100%; /* 2 */

@@ -48,10 +48,34 @@
 </template>
 
 <script>
+	import wx from 'weixin-js-sdk';
 	let vm;
+	import { MessageBox } from 'mint-ui';
 	export default {
 		created(){
 			vm = this;
+			// 请求接口获取 后台返回的 微信配置项
+			let url = '/getUrlJsSign';
+			// vm, url, params 
+
+			vm.receiveData.postData(vm,url,{url:'https://test.e-shequ.com/weixin/wuye/myhouse.html'} )
+			// let obj ={"url" : "https://test.e-shequ.com/weixin/wuye/myhouse.html"}
+			// this.axios({
+			//   method: 'post',
+			//   url: 'https://test.e-shequ.com/wechat/hexie/wechat/getUrlJsSign',
+			//   //data:{"url" : "https://test.e-shequ.com/weixin/wuye/myhouse.html"}
+			//   data: JSON.stringify({"url" : "https://test.e-shequ.com/weixin/wuye/myhouse.html"})
+			// }).then(function(res){
+			// 	console.log(res)
+			// });
+			// wx.config({
+			//     debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+			//     appId: '', // 必填，公众号的唯一标识
+			//     timestamp: , // 必填，生成签名的时间戳
+			//     nonceStr: '', // 必填，生成签名的随机串
+			//     signature: '',// 必填，签名，见附录1
+			//     jsApiList: ['scanQRCode'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+			// });
 		},
 	  data(){
 		  return {
@@ -62,13 +86,16 @@
 	  	 show(){
 	  	 	alert("调js-sdk")
 	  	 },
-	  	 submit(){//判断是否为纯数字
-	  	 	var reg = /^\d+$/;
+	  	 submit(){//判断是否为正确账单号
+	  	 	//  let url = '/hexiehouse/'+ this.number;
+	  		// this.receiveData.getOriginData(vm,url,'data',function(){
+	  		// 	console.log(this.data)
+	  		// })
+	  	 	var reg = /^\d{18}$/
 	  	 	if(reg.test(this.number)){//为数字即通过
-	  	 		
 	  	 		this.$router.push('/bindHouse/' + this.number);
 	  	 	}else{
-	  	 		alert("不通过，请输入数字")
+	  	 		MessageBox.alert('请输入正确账单号', 'www.e-shequ.com');
 	  	 	}
 	  	 }
 	  }

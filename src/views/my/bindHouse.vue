@@ -11,10 +11,10 @@
 		padding: 0;
 	}
 	ul li{
-		font-size: '微软雅黑';
 		color: #000;
 		padding: 10px 15px ;
 		list-style: none;
+		overflow: hidden;
 	}
 	.fr{
 		float: right;
@@ -25,13 +25,13 @@
 <template>
 	<div class="bindhouse">
 		<ul>
-			<li>{{name}}&nbsp;{{result.city_name}}</li>
+			<li>{{data.sect_name}}&nbsp;{{data.city_name}}</li>
 			<li>
-				<span class="fl">{{result.cell_addr}}</span>
-				<span class="fr">{{result.cnst_area}}平米</span>
+				<span class="fl">{{data.cell_addr}}</span>
+				<span class="fr">{{data.cnst_area}}平米</span>
 			</li>
 			<li>
-				{{result.mng_cell_id}}(户号)
+				{{data.mng_cell_id}}(户号)
 			</li>
 		</ul>
 		<mt-button  size="large" class="bottomBtn" @click.native="addHouse" >添加房子</mt-button>
@@ -48,52 +48,51 @@
 	  },
 	  data(){
 	  	return{
-	  		result:{},
+	  		data:{
+	  			name:'',
+	  		},
 	  		axiosParams:{
         		number: this.$route.params.number
-        	},
-	  		name:'华川家园',
-	  		city:'上海市',
-	  		address : '浦东新区秒传路1弄1号1室',
-	  		size:'10.0',
-	  		number:13456567 //户号
+        	}
 
 	  	}
 	  },
 	  mounted(){
 	  	//查询number下的房屋
 	  	 let url = '/hexiehouse/'+ this.axiosParams.number
-	  	//getData: function (vm, url, params, backdataname) {
-	  		this.receiveData.getData(vm,url,{},'result')
+	  	//getData: function (vm, url,backdataname) {
+	  		this.receiveData.getData(vm,url,'response',function(){
+	  			vm.data = vm.response.result
+	  		})
 	  },
 	  methods:{
-	  	addHouse(){//添加房子
-	  		
-	  		console.log(this.result)
+	  	addHouse(){//添加房子 get 提交两个参数 
+	  		//console.log(this.data)
+	  		let url = '/addhexiehouse/'+this.axiosParams.number+'/'+this.data.mng_cell_id
+	  		//let url = '/hexiehouse/addhexiehouse/'+this.data.mng_cell_id+'/'+this.axiosParams.number
+	  		//console.log(this.axiosParams.number) //输入的账单号
+	  		//console.log(this.data.mng_cell_id) //房屋编号
+	  		vm.receiveData.getData(vm,url,'res',function(){
+	  			//返回值的message的为空 而且
+	  			if(vm.res.errorCode == 0){
+	  				if(vm.res.message){
+	  					MessageBox.alert(`${vm.res.message}`,'www.e-she.com').then( action =>{
+	  			 			vm.$router.push("/myhouse")	
+	  			 		})	
+	  				}else{
+	  					MessageBox.alert('添加房屋成功','www.e-she.com').then( action =>{
+	  			 			vm.$router.push("/myhouse")	
+	  			 		})
+	  				}
+	  				
+	  			}else{
+	  				MessageBox.alert(`${vm.res.message}`,'www.e-she.com').then( action =>{
+	  			 		vm.$router.push("/addHouse")	
+	  			 	})
+	  			}
 
-	  		//MessageBox.alert('添加房屋成功','www.e-she.com');
-	  	},
-
-	  	//字符串转为对象
-	  	loadxml: function(xmlStr){
-        	
-        	var root = document.createElement('XMLROOT');
-        	root.innerHTML = xmlStr;
-        	return vm.parse(root)
-    	},
-    	
-    	//递归解析 将xml 对象转为 json
-    	parse: function(node){
-	        var result = {};
-	        for(var i = 0 ; i < node.childNodes.length ; ++i){
-	            if(node.childNodes[i].nodeType == 1){//元素节点 继续递归解析
-	                result[node.childNodes[i].nodeName.toLowerCase()] = this.parse(node.childNodes[i]);
-	            }else if(node.childNodes[i].nodeType==3){//文本节点 返回
-	                return node.childNodes[i].nodeValue;
-	            }
-	        }
-	        return result;
-    	} ,
+	  		})
+	  	}
 	
 
 

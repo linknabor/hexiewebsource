@@ -15,9 +15,13 @@ import VueAxios from 'vue-axios';
 
 import css from '../static/normalize.css'
 
+
+
 import cookie from 'js-cookie'
 
 import receiveData from './receiveData.js'
+
+
 
 Vue.prototype.receiveData = receiveData;
 
@@ -28,21 +32,18 @@ Vue.use(MintUI)
 var axiosInstance = axios.create({
     transformRequest: [function (data) {
         data = Qs.stringify(data);
-        console.log(data)
         return data;
     }],
     headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
+        //'Content-Type': 'application/x-www-form-urlencoded',
+        //'Content-Type':'application/json;charset=utf-8',
+        'Content-Type':"application/json",
+
         'Accept': '*/*',
     },
     baseURL: 'https://test.e-shequ.com/wechat/hexie/wechat',
     withCredentials:true,
-    //responseType: 'json' // "text/xml"
-    //responseType:'text',
-    responseType:'text/xml',
-
     transformResponse: [function (data) {//数据转换
-      //console.log(data.getElementsByTagName('*'))
       return data;
     }],
 });
