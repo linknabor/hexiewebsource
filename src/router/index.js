@@ -6,11 +6,13 @@ import My from '@/components/my' //我的
 import Service from '@/components/service' //服务
 import Market from '@/components/market' //集市
 import Community from '@/components/community' //社区
-
+//绑定房子
 import Myhouse from '@/views/my/myhouse'
 import AddHouse from '@/views/my/addHouse'
 import BindHouse from '@/views/my/bindHouse'
 
+//支付
+import Pay from '@/views/pay/pay'
 Vue.use(Router)
 
 export default new Router({
@@ -21,7 +23,7 @@ export default new Router({
     //   component: Index,
   	 //  children:[
     //   	//{path:'', component: Service },
-    //     {path:'', component: Myhouse },//默认暂时设为 我的房子
+    //     {path:'', component: My },//默认暂时设为 我的房子
     //   	{path:'service',component: Service},
     //   	{path:'market',component:Market},
     //   	{path:'community',component:Community},
@@ -52,6 +54,11 @@ export default new Router({
       path:'/bindHouse/:number',
       name:'BindHouse',
       component:BindHouse
+    },
+    {
+      path:'/pay',
+      name:'Pay',
+      component:Pay
     }
   ]
 })
