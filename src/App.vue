@@ -11,5 +11,7 @@ export default {
 </script>
 
 <style>
-
+	#app{
+		font-size: 0.26rem;
+	}
 </style>

@@ -1,42 +1,52 @@
-<style scoped>
-	.bottomBtn{
-		position: fixed;
-		bottom: 0;
-		height: 44px;
-		background-color:#ff8a00;
-		 color:white;
+<style scoped>     
+	.myhouse{         
+		font-size: 0.24rem; 
 	}
-	.nohouse{
-		height:500px;
-		background: url('../../../static/image/bg_nohouse.jpg') no-repeat center center;
-		background-size: cover;
-		-moz-background-size:100% 100%;
+
+	.bottomBtn{
+		font-size: 0.3rem;         
+		position: fixed;         
+		bottom: 0.02rem;
+		height: 0.98rem;         
+		background-color:#ff8a00;         
+		color:white;     
+	}
+
+	.nohouse{         
+		height:5rem;         
+		background:
+		url('../../../static/image/bg_nohouse.jpg') no-repeat center center;
+		background-size: cover;         
+		-moz-background-size:100% 100%;     
 	}
 
 	.house-list{
 		list-style: none;
 		padding: 0;
-		margin-top: 10px;
+		margin-top: 0.1rem;
 	}
 	.house-list li{
-		padding:0 16px 20px;
+		padding:0 0.16rem 0.2rem;
 		overflow: hidden;
+		border-bottom: 0.2rem solid #f6f7f2;
 	}
+
 	.house-list li p{
-		height: 36px;
-		line-height: 36px;
+		height: 0.7rem;
+		line-height: 0.7rem;
 		margin:0;
 		overflow: hidden;
 	}
 
 	.del-icon{
-		background-image: url('../../../static/image/icon_del.png');
+		background: url('../../../static/image/icon_del.png') no-repeat center;
 		display: block;
 		width: 40px;
 		height: 40px;
+		-width: 0.8rem;
+		-height: 0.8rem;
 		transform:scale(0.5);
 	}
-
 </style>
 
 <template>
@@ -64,7 +74,6 @@
 		<mt-button  size="large" class="bottomBtn" @click.native="addHouse" >添加房子</mt-button>
 	</div>
 </template>
-
 <script>
 	let vm;
 	import { MessageBox, Toast } from 'mint-ui';

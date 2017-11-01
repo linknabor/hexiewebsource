@@ -14,6 +14,7 @@ import axios from 'axios';
 import VueAxios from 'vue-axios';
 
 import css from '../static/normalize.css'
+import rem from '../static/rem.js'
 
 
 

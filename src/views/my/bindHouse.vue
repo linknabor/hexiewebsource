@@ -1,18 +1,21 @@
 <style scoped>
 	.bottomBtn{
+		font-size: 0.3rem;
 		position: fixed;
 		bottom: 0;
-		height: 44px;
+		height: 0.9rem;
+		line-height: 0.9rem;
 		background-color:#ff8a00;
 		color:white;
 	}
 	ul{
-		margin: 10px 0 0;
+		margin: 0.1rem 0 0;
 		padding: 0;
 	}
 	ul li{
+		line-height: 0.7rem;
 		color: #000;
-		padding: 10px 15px ;
+		padding: 0.1rem 0.15rem;
 		list-style: none;
 		overflow: hidden;
 	}
@@ -34,7 +37,7 @@
 				{{data.mng_cell_id}}(户号)
 			</li>
 		</ul>
-		<mt-button  size="large" class="bottomBtn" @click.native="addHouse" >添加房子</mt-button>
+		<mt-button  size="large" class="bottomBtn" @click.native="addHouse" >绑定房子</mt-button>
 	</div>
 </template>
 

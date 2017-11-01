@@ -12,6 +12,7 @@
     display: block;
      width: 25%;
      float: left;
+     font-size: 0.4rem;
    }
    .foot-item:link,.foot-item:visited{
      background-color: white;

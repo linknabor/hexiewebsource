@@ -1,38 +1,39 @@
 <style scoped>
 	.lite-divider{
 		border-bottom: 1px solid #d4cfc8;
-		padding-left: 15px;
+		padding-left: 0.15rem;
 		overflow: hidden;
 		padding: 1px;
 	}
 	.hidden-input{
-		height: 20px;
-		margin-top: 20px;
+		height: 0.4rem;
+		margin-top: 0.4rem;
+		width: 4rem;
+		-background: black;
 		border: none;
 		outline: none;
 		background-color: transparent;
-		font-size: 15px;
-		padding: 0 15px 15px;
+		font-size: 0.28rem;
+		padding: 0 0.15rem 0.15rem;
 	}
 
 	.scan-icon{
 		float: right;
 		display: inline-block;
-		height: 40px;
-		width: 40px;
-		background-size: 20px;
+		height: 0.8rem;
+		width: 0.8rem;
 		background: url('../../../static/image/icon_scan.png') ;
 		transform:scale(0.5);
 		margin: 10px;
 	}
 	.subBtn{
-		height: 44px;
-		line-height: 44px;
+		height: 0.88rem;
+		line-height: 0.88rem;
 		background-color: #ff8a00;
+		font-size: 0.3rem;
 		color: white;
-		width: 90%;
-		margin: 0 auto;
-		margin-top: 60px;
+		width: 6.9rem;
+		margin: 0.6rem auto 0;
 	}
 
 </style>
@@ -57,7 +58,7 @@
 			// 请求接口获取 后台返回的 微信配置项
 			let url = '/getUrlJsSign';
 			// vm, url, params 
-
+			//new URL
 			vm.receiveData.postData(vm,url,{url:'https://test.e-shequ.com/weixin/wuye/myhouse.html'} )
 			// let obj ={"url" : "https://test.e-shequ.com/weixin/wuye/myhouse.html"}
 			// this.axios({
