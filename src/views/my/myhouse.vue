@@ -93,11 +93,15 @@
 	  	showList(){
 	  		let url = '/hexiehouses';
 		  	vm.receiveData.getData(vm,url,'data',function(){
+		  		console.log(vm.data.result)
 		  		//赋值 单个时解析的不为数组 所以判断
 		  		if(vm.data.result instanceof Array){
 		  			vm.dataArr = vm.data.result	
-		  		}else{
+
+		  		}else if(vm.data.result){
 		  			vm.dataArr.push(vm.data.result)
+		  		}else{
+		  			vm.dataArr = [];
 		  		}
 		  		
 		  	})
