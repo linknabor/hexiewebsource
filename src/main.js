@@ -13,8 +13,8 @@ import axios from 'axios';
 //axios.defaults.withCredentials=true; //存储cookie？
 import VueAxios from 'vue-axios';
 
-import css from '../static/normalize.css'
-import rem from '../static/rem.js'
+import '../static/css/normalize.css'
+import '../static/js/rem.js'
 
 
 
