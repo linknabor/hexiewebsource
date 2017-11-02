@@ -93,20 +93,12 @@
 	  		let url = '/hexiehouses';
 		  	vm.receiveData.getData(vm,url,'data',function(){
 		  		console.log(vm.data.result)
-		  		//赋值 单个时解析的不为数组 所以判断
-		  		if(vm.data.result instanceof Array){
-		  			vm.dataArr = vm.data.result	
-
-		  		}else if(vm.data.result){
-		  			vm.dataArr.push(vm.data.result)
-		  		}else{
-		  			vm.dataArr = [];
-		  		}
-		  		
+		  		//console.log(vm.data.result)
+		  		//vm.$set(vm.dataArr,)
+		  		vm.dataArr = vm.data.result
 		  	})
 	  	},
 	  	addHouse(){
-
 		  	this.$router.push("/addHouse")
 	  	},
 	  	del(value,index){
@@ -123,7 +115,7 @@
 					  duration: 1000
 					});
 		  		})
-			}).catch(reject =>{
+			}).catch(reject =>{//点击了取消
 				//console.log(reject)
 				return
 			})

@@ -72,9 +72,6 @@
 	  	addHouse(){//添加房子 get 提交两个参数 
 	  		//console.log(this.data)
 	  		let url = '/addhexiehouse/'+this.axiosParams.number+'/'+this.data.mng_cell_id
-	  		//let url = '/hexiehouse/addhexiehouse/'+this.data.mng_cell_id+'/'+this.axiosParams.number
-	  		//console.log(this.axiosParams.number) //输入的账单号
-	  		//console.log(this.data.mng_cell_id) //房屋编号
 	  		vm.receiveData.getData(vm,url,'res',function(){
 	  			//返回值的message的为空 而且
 	  			if(vm.res.errorCode == 0){
@@ -87,7 +84,6 @@
 	  			 			vm.$router.push("/myhouse")	
 	  			 		})
 	  				}
-	  				
 	  			}else{
 	  				MessageBox.alert(`${vm.res.message}`,'www.e-she.com').then( action =>{
 	  			 		vm.$router.push("/addHouse")	

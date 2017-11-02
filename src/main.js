@@ -32,7 +32,8 @@ Vue.use(MintUI)
 
 var axiosInstance = axios.create({
     transformRequest: [function (data) {
-        data = Qs.stringify(data);
+        //data = Qs.stringify(data);
+        data = JSON.stringify(data);
         return data;
     }],
     headers: {
@@ -40,7 +41,9 @@ var axiosInstance = axios.create({
         //'Content-Type':'application/json;charset=utf-8',
         'Content-Type':"application/json",
 
-        'Accept': '*/*',
+        //'Accept': '*/*',
+        'Accept': 'application/json',
+
     },
     baseURL: 'https://test.e-shequ.com/wechat/hexie/wechat',
     withCredentials:true,

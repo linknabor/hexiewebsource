@@ -17,24 +17,24 @@ Vue.use(Router)
 
 export default new Router({
   routes: [
-    // {
-    //   path: '/',
-    //   name: 'Index',
-    //   component: Index,
-  	 //  children:[
-    //   	//{path:'', component: Service },
-    //     {path:'', component: My },//默认暂时设为 我的房子
-    //   	{path:'service',component: Service},
-    //   	{path:'market',component:Market},
-    //   	{path:'community',component:Community},
-    //   	{path:'my',component:My}
-   	//   ]
-    // },
     {
-      path:'/',
-      name:'Myhouse',
-      component:Myhouse
+      path: '/',
+      name: 'Index',
+      component: Index,
+  	  children:[
+      	//{path:'', component: Service },
+        {path:'', component: My },//默认暂时设为 我的房子
+      	{path:'service',component: Service},
+      	{path:'market',component:Market},
+      	{path:'community',component:Community},
+      	{path:'my',component:My}
+   	  ]
     },
+    // {
+    //   path:'/',
+    //   name:'Myhouse',
+    //   component:Myhouse
+    // },
     {
     	path :'/my',
     	name : 'My',
