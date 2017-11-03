@@ -1,9 +1,9 @@
 <template>
 	<div class="main">
 		<mt-navbar  v-model="selected">
-	    	<mt-tab-item id="1">选项一</mt-tab-item>
-	    	<mt-tab-item id="2">选项二</mt-tab-item>
-	    	<mt-tab-item id="3">选项三</mt-tab-item>
+	    	<mt-tab-item id="1">账单缴费</mt-tab-item>
+	    	<mt-tab-item id="2">物业缴费</mt-tab-item>
+	    	<mt-tab-item id="3">停车缴费</mt-tab-item>
     	</mt-navbar>
 		<!-- tab-container -->
 		<mt-tab-container v-model="selected">
@@ -30,7 +30,10 @@
 	  }
 	}
 </script>
-<style scoped>
+<style scoped> 
+	.test{
+		border-bottom: 2px solid #000;
+	}
 	.main{
 		margin: 0 0.3rem;
 		background-color:#000;

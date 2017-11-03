@@ -92,9 +92,7 @@
 	  	showList(){
 	  		let url = '/hexiehouses';
 		  	vm.receiveData.getData(vm,url,'data',function(){
-		  		console.log(vm.data.result)
 		  		//console.log(vm.data.result)
-		  		//vm.$set(vm.dataArr,)
 		  		vm.dataArr = vm.data.result
 		  	})
 	  	},
