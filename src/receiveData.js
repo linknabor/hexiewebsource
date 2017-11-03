@@ -58,14 +58,19 @@ let receiveData = {
      * @param  {objec} vm     [Vue实例]
      * @param  {string} url    [ajax地址]
      * @param  {string} backdataname [存储ajax返回数据的vm节点的key]
+     * @params {object} callback  [回调函数]
+     * @param  {object} params       [请求参数]
      */
         //请求数据统一的方法
-    getData: function (vm, url, backdataname,callback) {
+    getData: function (vm, url, backdataname,callback,params) {
+        if (typeof (params) == 'undefined' || typeof (params) != 'object') {
+            params = {}
+        };
         if (backdataname == '' || typeof (backdataname) != 'string') {
             backdataname = 'data';
         };
         vm.axios.get(url, {
-                params: {}
+                params: params
             })
             .then(function (res){
                 let a = JSON.parse(res.data)
@@ -75,6 +80,7 @@ let receiveData = {
                 }
             })
             .catch(function (err) {
+                alert('qdfdsfd')
                 console.log(err);
             })
     },

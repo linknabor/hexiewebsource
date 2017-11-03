@@ -47,7 +47,7 @@
   import cookie from 'js-cookie'
 	export default{
     mounted(){
-        let url = '/initSession4Test/47'
+        let url = '/initSession4Test/14995'
         this.axios.get(
             url, 
             {

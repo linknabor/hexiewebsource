@@ -41,7 +41,7 @@
 <template>
 	<div>
         <div class="lite-divider" style="margin-top:35px;margin-left:15px;margin-right:15px;">
-            <input placeholder="输入账单编号快速缴费" class="hidden-input" style="text-align:left;" v-model="number">
+            <input placeholder="请输入账单号" class="hidden-input" style="text-align:left;" v-model="number">
             <div class="scan-icon" @click="show"></div>
         </div>
 		<mt-button class="subBtn" size="large" @click.native="submit" >提交</mt-button>
@@ -58,7 +58,7 @@
 			vm = this; 
 			// 请求接口获取 后台返回的 微信配置项
 			let url = '/getUrlJsSign';
-			console.log(vm.$route)
+			//console.log(vm.$route)
     		vm.receiveData.wxconfig(vm,wx,'https://test.e-shequ.com/weixin/wuye/myhouse.html',['scanQRCode'])
 		},
 	  data(){
