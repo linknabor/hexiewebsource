@@ -20,8 +20,8 @@
 	.scan-icon{
 		float: right;
 		display: inline-block;
-		height: 20px;
-		width: 20px;
+		height: 0.4rem;
+		width: 0.4rem;
 		background: url('../../../static/image/icon_scan.png') no-repeat center ;
 		background-size: cover;
 		margin-top: 10px;

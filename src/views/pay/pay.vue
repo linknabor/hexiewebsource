@@ -17,18 +17,9 @@
 		  </mt-tab-container-item>
 		  <mt-tab-container-item id="b">
 			<!-- 物业缴费开始 -->
-		    	<div  class="bill-item ov" v-for="(item,index) in billInfo" @click="select(index)">
-		    		<div class="select-item fl" :class="{selected:item.isSelected }" >
-		    		</div>
-		    		<div class="fr info">
-		    			<p>服务名:{{item.service_fee_name}}</p>
-			    		<p>价格:{{item.fee_price}}</p>
-			    		<p>地址：{{item.pay_cell_addr}}</p>
-			    		<p>账期：{{item.service_fee_cycle}}</p>	
-		    		</div>	
-		    	</div>
+		    	<Bill :bill-info="billInfo" @select="itemClick"></Bill>	
 		    	<div class="blank" ></div>
-
+				
 		    	<div class="btn-fixed">
 		    		button
 		            <!-- <div class="select-btn fl fs14 plr15">全选</div>
@@ -49,20 +40,16 @@
 <script>
 	let vm;
 	import wx from 'weixin-js-sdk';
+	import Bill from '../../components/bill.vue';
 	export default {
+	  components:{Bill},
+	  created(){
+	  },
 	  data(){
+
 	  	return {
 	  		//-isSelected: false,//是否选中 切换样式和加减总价钱
-	  		billInfo:[
-	  			{
-	  				service_fee_name : '物业费',
-	  				fee_price:'22.20',
-	  				pay_cell_addr:'上海市长宁区天山西路306',
-	  				service_fee_cycle:'2016年5月'
-
-
-	  			}
-	  		],//物业缴费数据
+	  		billInfo:[],//物业缴费数据
 	  		carBillInfo:[],//停车缴费数据
 	  		selected:'a', //选项卡 默认选中
 	  		number:'', //账单缴费 账单号
@@ -93,7 +80,10 @@
 	  		//调用微信扫一扫 成功数据返回到number
 	  	 	vm.receiveData.scan(vm,wx,'number')
 	  	},
-	  	select(index){
+	  	test(info){
+	  		alert(123)
+	  	},
+	  	itemClick:function(){
 	  		//vm.billList[index].isSelected = true;
 	  		if(vm.billInfo[index].isSelected){
 	  			vm.$set(vm.billInfo[index],'isSelected',false)
@@ -108,30 +98,6 @@
 	}
 </script>
 <style scoped> 
- 	/*item start*/
-	.bill-item{
-		margin-top: 0.3rem;
-		overflow: hidden;
-		color: #666;
-		border-radius: 3px;
-		border:1px solid #cdcdcb;
-	}
- 	.select-item {
-            background: url('../../../static/image/icon_unselect.png') no-repeat ;
-            background-size: 16px;
-            background-position:10px center;
-            width:0.7rem;
-            height: 2.44rem;
-            border-right: 1px solid #cdcdcb;
-    }
-    .selected {
-    	background: url('../../../static/image/icon_selected.png') no-repeat ;
-    	background-size: 16px;
-        background-position:10px center;
-    }
-
-	/*item end*/
-
 	/*footbtn start*/
 	.blank{
 		width:100%;
@@ -190,11 +156,11 @@
 	.scan-icon{
 		float: right;
 		display: inline-block;
-		height: 0.8rem;
-		width: 0.8rem;
+		height: 0.4rem;
+		width: 0.4rem;
 		background: url('../../../static/image/icon_scan.png') ;
-		transform:scale(0.5);
-		margin: 10px;
+		background-size: cover;
+		margin-top: 10px;
 	}
 	.subBtn{
 		height: 0.88rem;
