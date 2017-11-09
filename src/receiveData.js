@@ -11,13 +11,13 @@ let receiveData = {
      * @param  {string} url     [url地址]
      * @param  {array} apilist    [要调用的微信接口]
      */
-    wxconfig(vm,wx,url,apilist){
-        vm.axios.post('/getUrlJsSign', {url : url })
+    wxconfig(vm,wx,apilist){
+        vm.axios.post('/getUrlJsSign', {url : 'https://test.e-shequ.com/weixin/wuye/myhouse.html' })
             .then(function (res) {
                 let a = JSON.parse(res.data)
                 let wd = a.result  //接口返回的嵌入数据
                 wx.config({
-                    debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+                    debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
                     appId: wd.appId, // 必填，公众号的唯一标识
                     timestamp: wd.timestamp, // 必填，生成签名的时间戳
                     nonceStr: wd.nonceStr, // 必填，生成签名的随机串
@@ -26,6 +26,7 @@ let receiveData = {
                 });
             })
             .catch(function (err) {
+                alert('暂放-微信config失败')
                 console.log('fail', err);
         });
     },
@@ -48,6 +49,7 @@ let receiveData = {
                         vm[backdataname] = rs; // 当needResult 为 1 时，扫码返回的结果
                 },
             fail: function (res) {
+                    alert('暂放-配置微信扫一扫失败')
                     alert("网络不稳定 ，请刷新重试！");
                 }
         });
@@ -80,7 +82,7 @@ let receiveData = {
                 }
             })
             .catch(function (err) {
-                alert('qdfdsfd')
+                alert('暂放-接口调用失败')
                 console.log(err);
             })
     },

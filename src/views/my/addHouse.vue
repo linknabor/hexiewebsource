@@ -59,7 +59,7 @@
 			// 请求接口获取 后台返回的 微信配置项
 			let url = '/getUrlJsSign';
 			//console.log(vm.$route)
-    		vm.receiveData.wxconfig(vm,wx,'https://test.e-shequ.com/weixin/wuye/myhouse.html',['scanQRCode'])
+    		vm.receiveData.wxconfig(vm,wx,['scanQRCode'])
 		},
 	  data(){
 		  return {

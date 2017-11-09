@@ -93,7 +93,11 @@
 	  		let url = '/hexiehouses';
 		  	vm.receiveData.getData(vm,url,'data',function(){
 		  		//console.log(vm.data.result)
-		  		vm.dataArr = vm.data.result
+		  		if(vm.data.result != null){
+			  		vm.dataArr = vm.data.result		  			
+		  		}else{
+		  			vm.dataArr = []
+		  		}
 		  	})
 	  	},
 	  	addHouse(){

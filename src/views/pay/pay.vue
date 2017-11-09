@@ -17,8 +17,8 @@
 		  </mt-tab-container-item>
 		  <mt-tab-container-item id="b">
 			<!-- 物业缴费开始 -->
-		    	<div  class="bill-item ov" v-for="(item,index) in billInfo">
-		    		<div class="select-item fl" :class="{selected:item.isSelected }" @click="select(index)">
+		    	<div  class="bill-item ov" v-for="(item,index) in billInfo" @click="select(index)">
+		    		<div class="select-item fl" :class="{selected:item.isSelected }" >
 		    		</div>
 		    		<div class="fr info">
 		    			<p>服务名:{{item.service_fee_name}}</p>
@@ -30,10 +30,11 @@
 		    	<div class="blank" ></div>
 
 		    	<div class="btn-fixed">
-		            <div class="select-btn fl fs14 plr15">全选</div>
+		    		button
+		            <!-- <div class="select-btn fl fs14 plr15">全选</div>
 		            <div class="submit-btn ov fs16" >我要缴费
 		                <span style="margin-left:10px">¥全部金额</span>
-		            </div>
+		            </div> -->
         		</div>
 		    <!-- 物业缴费结束 -->
 
@@ -47,11 +48,21 @@
 </template>
 <script>
 	let vm;
+	import wx from 'weixin-js-sdk';
 	export default {
 	  data(){
 	  	return {
 	  		//-isSelected: false,//是否选中 切换样式和加减总价钱
-	  		billInfo:[],//物业缴费数据
+	  		billInfo:[
+	  			{
+	  				service_fee_name : '物业费',
+	  				fee_price:'22.20',
+	  				pay_cell_addr:'上海市长宁区天山西路306',
+	  				service_fee_cycle:'2016年5月'
+
+
+	  			}
+	  		],//物业缴费数据
 	  		carBillInfo:[],//停车缴费数据
 	  		selected:'a', //选项卡 默认选中
 	  		number:'', //账单缴费 账单号
@@ -61,6 +72,7 @@
 	  },
 	  created(){
 	  	vm = this;
+	  	 vm.receiveData.wxconfig(vm,wx,['scanQRCode'])
 	  	let url = '/billList'/*+'payStatus=02'*/
 	  	let params = {
 	  		startDate:'',
@@ -69,18 +81,17 @@
 	  		currentPage : vm.billPage, //页码
 	  		totalCount : 0, //第几条开始
 	  	};
-	  	alert('321');
 	  	vm.receiveData.getData(vm, url, 'data',function(){
 	  		//alert(1)
 	  		vm.billInfo = vm.data.result.bill_info;//物业缴费
 	  		vm.carBillInfo = vm.data.result.car_bill_info;//停车缴费
-	  		alert(vm.billInfo)
 	  	},params) 
 	  	/* a = "billList?"payStatus=02&currentPage="+normalPage+"&totalCount="+o.totalCountNormal,*/
 	  },
 	  methods:{
 	  	show(){
-	  		alert(1)
+	  		//调用微信扫一扫 成功数据返回到number
+	  	 	vm.receiveData.scan(vm,wx,'number')
 	  	},
 	  	select(index){
 	  		//vm.billList[index].isSelected = true;
@@ -136,6 +147,7 @@
         background: #000;
         height: 0.92rem;
         line-height: 0.92rem;
+        text-align: center;
 	}
 	/*footbtn end*/
 
