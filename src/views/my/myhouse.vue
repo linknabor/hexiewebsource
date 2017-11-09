@@ -13,7 +13,7 @@
 	}
 
 	.nohouse{         
-		height:5rem;         
+		height:10rem;         
 		background: url('../../assets/bg_nohouse.jpg') no-repeat center center;
 		background-size: cover;         
 		-moz-background-size:100% 100%;     

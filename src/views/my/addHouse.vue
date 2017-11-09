@@ -20,11 +20,11 @@
 	.scan-icon{
 		float: right;
 		display: inline-block;
-		height: 0.8rem;
-		width: 0.8rem;
+		height: 20px;
+		width: 20px;
 		background: url('../../../static/image/icon_scan.png') ;
-		transform:scale(0.5);
-		margin: 10px;
+		background-size: cover;
+		margin-top: 10px;
 	}
 	.subBtn{
 		height: 0.88rem;

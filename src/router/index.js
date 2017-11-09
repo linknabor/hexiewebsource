@@ -15,7 +15,7 @@ import BindHouse from '@/views/my/bindHouse'
 import Pay from '@/views/pay/pay'
 Vue.use(Router)
 
-export default new Router({
+const router= new Router({
   routes: [
     {
       path: '/',
@@ -38,27 +38,56 @@ export default new Router({
     {
     	path :'/my',
     	name : 'My',
-    	component :My
+    	component :My,
+      meta:{
+        title:'我的房子'
+      }
     },
     {
       path:'/myhouse',
       name:'Myhouse',
-      component: Myhouse
+      component: Myhouse,
+      meta:{
+        title:'我的房子'
+      }
     },
     {
       path:'/addHouse',
       name:'AddHouse',
-      component:AddHouse
+      component:AddHouse,
+      meta:{
+        title:'添加房子'
+      }
     },
     {
       path:'/bindHouse/:number',
       name:'BindHouse',
-      component:BindHouse
+      component:BindHouse,
+      meta:{
+        title:'绑定房子'
+      }
     },
     {
       path:'/pay',
       name:'Pay',
-      component:Pay
+      component:Pay,
+      meta:{
+        title:'缴费页面'
+      }
     }
   ]
-})
+});
+//路由的钩子函数，
+//在每一次路由跳转之前会进入这个方法 to：到哪去  from：从哪来 next() 调用这个方法来完成这个钩子函数
+router.beforeEach((to, from, next) => {
+    //动态改变title
+    changeTitle(to.meta.title)
+    next();
+});
+//动态改变title
+function changeTitle(title) {
+    title = title ? title : '和协社区';
+    window.document.title = title;
+};
+
+export default router
