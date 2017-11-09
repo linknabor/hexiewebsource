@@ -22,7 +22,7 @@
 		display: inline-block;
 		height: 20px;
 		width: 20px;
-		background: url('../../../static/image/icon_scan.png') ;
+		background: url('../../../static/image/icon_scan.png') no-repeat center ;
 		background-size: cover;
 		margin-top: 10px;
 	}

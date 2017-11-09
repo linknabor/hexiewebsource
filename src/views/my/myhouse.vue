@@ -38,13 +38,11 @@
 	}
 
 	.del-icon{
-		background: url('../../../static/image/icon_del.png') no-repeat center;
-		display: block;
-		width: 40px;
-		height: 40px;
-		-width: 0.8rem;
-		-height: 0.8rem;
-		transform:scale(0.5);
+		background: url('../../../static/image/icon_cancel.png') no-repeat center;
+		background-size: cover;
+		width: 20px;
+		height: 20px;
+		margin-top: 5px;
 	}
 </style>
 
