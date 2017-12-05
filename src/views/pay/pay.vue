@@ -4,7 +4,7 @@
 	    	<mt-tab-item id="a">账单缴费</mt-tab-item>
 	    	<mt-tab-item id="b">物业缴费</mt-tab-item>
 	    	<mt-tab-item id="c">停车缴费</mt-tab-item>
-	    	</mt-navbar>
+	    </mt-navbar>
 		<mt-tab-container v-model="selected">
 		  <mt-tab-container-item id="a">
 		  	<!-- 账单缴费开始-->
@@ -17,11 +17,22 @@
 		  </mt-tab-container-item>
 		  <mt-tab-container-item id="b">
 			<!-- 物业缴费开始 -->
-		    	<Bill :bill-info="billInfo" @select="itemClick"></Bill>	
-		    	<div class="blank" ></div>
-				
+		    	<div class="blank"
+					v-infinite-scroll="bLoadMore"
+  					infinite-scroll-disabled="bisLastPage"
+  					infinite-scroll-distance="0"
+
+		    	>
+		    		<Bill :bill-info="billInfo" @itemClick="itemClick"></Bill>
+		    	</div>
 		    	<div class="btn-fixed">
-		    		button
+		    		<div class="fl select-btn" :class="{allSelected:bAllSelect }" @click="allSelect(billInfo)">全选&nbsp;</div>
+		    		<div class="pay" @click="pay">
+		    			我要缴费
+		    			<span>
+		    				￥{{allPrice}}
+		    			</span>
+		    		</div>
 		            <!-- <div class="select-btn fl fs14 plr15">全选</div>
 		            <div class="submit-btn ov fs16" >我要缴费
 		                <span style="margin-left:10px">¥全部金额</span>
@@ -43,98 +54,183 @@
 	import Bill from '../../components/bill.vue';
 	export default {
 	  components:{Bill},
-	  created(){
+	  computed:{
+	  	allPrice : function(){
+	  		let ap = 0;
+	  		for(let i in this.billInfo){
+	  			if(this.billInfo[i].selected == true){
+	  				ap+=Number(this.billInfo[i].fee_price)
+	  			}
+	  		}
+	  		return ap
+	  	}
 	  },
 	  data(){
-
 	  	return {
+	  		index :0,
+	  		url : '/billList',
+	  		params : {
+	  			startDate:'',
+	  			endDate:'',
+	  			payStatus: '02', //写死
+	  			currentPage : 1, //页码
+	  			totalCount : 0, //第几条开始
+	  		},
+	  		bisLastPage:false,//物业缴费是否为最后一页
+	  		carisLastPage:false,//停车缴费是否最后一页
+	  		bAllSelect:false,//物业缴费全选
 	  		//-isSelected: false,//是否选中 切换样式和加减总价钱
 	  		billInfo:[],//物业缴费数据
 	  		carBillInfo:[],//停车缴费数据
 	  		selected:'a', //选项卡 默认选中
 	  		number:'', //账单缴费 账单号
 	  		billPage :1, // 物业缴费页码
-	  		carBillPage :1 //停车缴费页码
+	  		carBillPage :1, //停车缴费页码
 	  	}
 	  },
 	  created(){
 	  	vm = this;
-	  	 vm.receiveData.wxconfig(vm,wx,['scanQRCode'])
-	  	let url = '/billList'/*+'payStatus=02'*/
-	  	let params = {
-	  		startDate:'',
-	  		endDate:'',
-	  		payStatus: '02', //写死
-	  		currentPage : vm.billPage, //页码
-	  		totalCount : 0, //第几条开始
-	  	};
-	  	vm.receiveData.getData(vm, url, 'data',function(){
-	  		//alert(1)
+
+	  },
+	  mounted(){//creaetd 改为mounted
+
+	  	//微信配置
+	  	 vm.receiveData.wxconfig(vm,wx,['scanQRCode']);
+	  	
+	  	//请求首屏数据
+	  /*	vm.receiveData.getData(vm, vm.url, 'data',function(){
 	  		vm.billInfo = vm.data.result.bill_info;//物业缴费
+	  		alert(1)
+	  		//console.log(vm.billInfo)
 	  		vm.carBillInfo = vm.data.result.car_bill_info;//停车缴费
-	  	},params) 
-	  	/* a = "billList?"payStatus=02&currentPage="+normalPage+"&totalCount="+o.totalCountNormal,*/
+	  	},vm.params) */
 	  },
 	  methods:{
+	  	//物业账单 - 上拉加载更多
+	  	bLoadMore(){
+	  		//临时接收的数组
+	  		let tempArr = null;
+			//页码自增 从2开始
+			vm.params.currentPage = vm.billPage++;
+			//请求接口数据
+			vm.receiveData.getData(
+				vm,
+				vm.url,
+				'data',
+				function(){
+	  				tempArr = vm.data.result.bill_info;//物业缴费
+	  				if(tempArr.length>0){
+	  					vm.billInfo =vm.billInfo.concat(tempArr) //物业缴费
+	  					vm.bAllSelect = false;
+	  				}else{
+	  					vm.bisLastPage = true;
+	  				}
+	  			},
+	  			vm.params
+	  		) 
+
+	  	},
+	  	//点击缴费按钮
+	  	pay(){
+	  		let selectedArr = [];
+	  		if(allSelected == true){
+	  			//全部选中
+	  			selectedArr = vm.billInfo;
+	  		}else{
+	  			//只选中一部分
+	  			for(i in this.billInfo)
+	  		}
+	  		vm.$router.push({path:'/payDetail',query:{bills:}});
+	  	},
+
+	  	//调用微信扫一扫接口, 成功 数据返回到number,显示在input上
 	  	show(){
-	  		//调用微信扫一扫 成功数据返回到number
 	  	 	vm.receiveData.scan(vm,wx,'number')
 	  	},
-	  	test(info){
-	  		alert(123)
-	  	},
-	  	itemClick:function(){
-	  		//vm.billList[index].isSelected = true;
-	  		if(vm.billInfo[index].isSelected){
-	  			vm.$set(vm.billInfo[index],'isSelected',false)
+	  	//点击某个选中按钮 params1:被点击按钮的下标 params2:被点击按钮所属的数组
+	  	itemClick:function(index,b){//3个页面对应不同的三个数组 
+	  		if(b[index].selected){
+	  			vm.$set(b[index],'selected',false)
 	  		}else{
-	  			vm.$set(vm.billInfo[index],'isSelected',true)
+	  			vm.$set(b[index],'selected',true)
 	  		}
-	  		
-	  		//console.log(vm.billInfo[index].isSelected)
-	  		//alert(index)
+	  	},
+	  	//点击全选按钮 params:需要被全部选中的数组
+	  	allSelect:function(arr){
+	  		if(this.bAllSelect){//取消全选
+	  			for(let i in arr){
+	  				vm.$set(arr[i],'selected',false);
+	  			}
+	  		}else{//全部选中
+	  			for(let i in arr){
+	  				vm.$set(arr[i],'selected',true);
+	  			}
+	  		}
+	  		//取反
+	  		this.bAllSelect = !this.bAllSelect;
 	  	}
-	  }
 	}
+}
 </script>
 <style scoped> 
 	/*footbtn start*/
 	.blank{
-		width:100%;
-		clear:both;
-		height:1rem;
+		padding-bottom: 1rem;
 	}
+
 	.btn-fixed{
 		position: fixed;
 		color: #fff;
         left: 0;
         right: 0;
         bottom: 0;
-        background: #000;
         height: 0.92rem;
         line-height: 0.92rem;
         text-align: center;
 	}
+	
+	.select-btn{
+		padding-left: 36px;
+        background: url('../../../static/image/icon_unselect_white.png') no-repeat;
+        background-color: rgba(0,0,0,0.6);
+        background-size: 16px;
+        background-position: 15px center;
+        height: 0.92rem;
+        line-height: 0.92rem;
+	}
+
+	.allSelected{
+		background: url('../../../static/image/icon_selected_white.png') no-repeat;
+		 background-color: rgba(0,0,0,0.6);
+        background-size: 16px;
+        background-position: 15px center;
+
+	}
+
+	.pay{
+		overflow: hidden;
+		background: #ff8a00;
+		text-align: center;	
+	}
+
+	 
 	/*footbtn end*/
 
-
-
 	.main{
- 	margin:0 0.3rem;
- }
+ 		margin:0 0.3rem;
+ 	}
 
- 
- .mint-navbar .mint-tab-item{
- 	border-bottom: 1px solid #cdcdcb;
- }
+	 .mint-navbar .mint-tab-item{
+	 	border-bottom: 1px solid #cdcdcb;
+	 }
 
- .mint-navbar .mint-tab-item.is-selected{
- 	border-bottom: 1px solid #ff8a00;
- 	margin-bottom: 0;
- 	color:#ff8a00;
- }
+	 .mint-navbar .mint-tab-item.is-selected{
+	 	border-bottom: 1px solid #ff8a00;
+	 	margin-bottom: 0;
+	 	color:#ff8a00;
+	 }
 
- .lite-divider{
+	 .lite-divider{
 		border-bottom: 1px solid #d4cfc8;
 		-padding-left: 0.15rem;
 		overflow: hidden;

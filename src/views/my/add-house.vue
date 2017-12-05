@@ -58,7 +58,6 @@
 			vm = this; 
 			// 请求接口获取 后台返回的 微信配置项
 			let url = '/getUrlJsSign';
-			//console.log(vm.$route)
     		vm.receiveData.wxconfig(vm,wx,['scanQRCode'])
 		},
 	  data(){

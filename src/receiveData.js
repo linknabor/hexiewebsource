@@ -26,7 +26,7 @@ let receiveData = {
                 });
             })
             .catch(function (err) {
-                alert('暂放-微信config失败')
+                //alert('暂放-微信config失败')
                 console.log('fail', err);
         });
     },
@@ -49,8 +49,9 @@ let receiveData = {
                         vm[backdataname] = rs; // 当needResult 为 1 时，扫码返回的结果
                 },
             fail: function (res) {
-                    alert('暂放-配置微信扫一扫失败')
-                    alert("网络不稳定 ，请刷新重试！");
+                    //alert('暂放-配置微信扫一扫失败')
+                    console.log("网络不稳定 ，请刷新重试！")
+                    //alert("网络不稳定 ，请刷新重试！");
                 }
         });
     },
@@ -82,7 +83,7 @@ let receiveData = {
                 }
             })
             .catch(function (err) {
-                alert('暂放-接口调用失败')
+                //alert('暂放-接口调用失败')
                 console.log(err);
             })
     },

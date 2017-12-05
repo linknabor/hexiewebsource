@@ -56,11 +56,14 @@
         ).then(
             
             function(res) {
-
-                //console.log(res)
+                //alert('cg')
+                //alert(res)
+                console.log(res)
             }
         ).catch(
             function(err) {
+                //alert('sb')
+                //alert(err)
                 console.log(err)
             }
         );

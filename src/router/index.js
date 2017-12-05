@@ -8,11 +8,12 @@ import Market from '@/components/market' //集市
 import Community from '@/components/community' //社区
 //绑定房子
 import Myhouse from '@/views/my/myhouse'
-import AddHouse from '@/views/my/addHouse'
-import BindHouse from '@/views/my/bindHouse'
+import AddHouse from '@/views/my/add-house'
+import BindHouse from '@/views/my/bind-house'
 
 //支付
 import Pay from '@/views/pay/pay'
+import PayDetail from '@/views/pay/pay-detail'
 Vue.use(Router)
 
 const router= new Router({
@@ -74,7 +75,15 @@ const router= new Router({
       meta:{
         title:'缴费页面'
       }
-    }
+    },
+    {
+      path:'/payDetail/:',
+      name:'PayDetail',
+      component:PayDetail,
+      meta:{
+        title:'缴费详情'
+      }
+    },
   ]
 });
 //路由的钩子函数，

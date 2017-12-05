@@ -2,7 +2,7 @@
 	<!-- 确定选中的状态   点击radio改变状态,emmit一个事件 -->
 <div>
 	<div  class="bill-item ov" v-for="(item,index) in billInfo" @click="select(index)">
-		<div class="select-item fl" :class="{selected:item.isSelected }" ></div>
+		<div class="select-item fl" :class="{selected:item.selected }" ></div>
 		<div class="fl info">
 			<p class="top ov">
 				<span class="title fl">{{item.service_fee_name}}</span>
@@ -25,9 +25,8 @@
 			},
 		},
 		methods:{
-			select(index){
-				console.log(132)
-				this.$emit('test',index)
+			select(index){ 
+				this.$emit('itemClick',index,this.billInfo)
 			}
 		}
 

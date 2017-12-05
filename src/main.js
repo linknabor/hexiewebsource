@@ -46,6 +46,7 @@ var axiosInstance = axios.create({
 
     },
     baseURL: 'https://test.e-shequ.com/wechat/hexie/wechat',
+    //baseURL:'http://10.0.8.20/',
     withCredentials:true,
     transformResponse: [function (data) {//数据转换
       return data;
