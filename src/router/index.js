@@ -14,6 +14,7 @@ import BindHouse from '@/views/my/bind-house'
 //支付
 import Pay from '@/views/pay/pay'
 import PayDetail from '@/views/pay/pay-detail'
+import UptonList from '@/views/pay/upton-list'
 Vue.use(Router)
 
 const router= new Router({
@@ -28,7 +29,6 @@ const router= new Router({
       	{path:'service',component: Service},
       	{path:'market',component:Market},
       	{path:'community',component:Community},
-      	{path:'my',component:My}
    	  ]
     },
     // {
@@ -77,13 +77,21 @@ const router= new Router({
       }
     },
     {
-      path:'/payDetail/:',
-      name:'PayDetail',
+      path:'/payDetail',
+      name:'payDetail',
       component:PayDetail,
       meta:{
         title:'缴费详情'
       }
     },
+    {
+      path:'/uptonList',
+      name:'uptonList',
+      component: UptonList,
+      meta:{
+        title :'优惠券'
+      }
+    }
   ]
 });
 //路由的钩子函数，

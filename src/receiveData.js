@@ -100,11 +100,14 @@ let receiveData = {
         };
         vm.axios.post(url, params)
             .then(function (res) {
-                let a = res.data
-                xmlParser.parseString(a, function (err, result) {
-                //将返回的结果赋值
-                 vm[backdataname] = result.BaseResult
-                });
+                alert(234)
+                //let a = res.data
+                // xmlParser.parseString(a, function (err, result) {
+                // //将返回的结果赋值
+                //  vm[backdataname] = result.BaseResult
+                // });
+                console.log(res)
+                //vm[backdataname] = result.BaseResult
                 if (typeof (callback) == 'function') {//回调
                         callback()
                 }

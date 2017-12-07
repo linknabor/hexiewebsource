@@ -3,6 +3,9 @@
 .fl{float: left;}
 .fr{float: right;}
 .ov{overflow: hidden;}
+p{
+  margin:0;
+}
 
 
 

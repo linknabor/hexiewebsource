@@ -62,7 +62,7 @@
 	  				ap+=Number(this.billInfo[i].fee_price)
 	  			}
 	  		}
-	  		return ap
+	  		return parseFloat(ap).toFixed(2)
 	  	}
 	  },
 	  data(){
@@ -86,6 +86,7 @@
 	  		number:'', //账单缴费 账单号
 	  		billPage :1, // 物业缴费页码
 	  		carBillPage :1, //停车缴费页码
+	  		reduceMode :'',//减免金额的方式
 	  	}
 	  },
 	  created(){
@@ -118,9 +119,11 @@
 				vm.url,
 				'data',
 				function(){
+	  				vm.reduceMode = vm.data.result.reduce_mode;//减免方式
 	  				tempArr = vm.data.result.bill_info;//物业缴费
 	  				if(tempArr.length>0){
 	  					vm.billInfo =vm.billInfo.concat(tempArr) //物业缴费
+
 	  					vm.bAllSelect = false;
 	  				}else{
 	  					vm.bisLastPage = true;
@@ -130,17 +133,29 @@
 	  		) 
 
 	  	},
-	  	//点击缴费按钮
+	  	//点击物业缴费按钮
 	  	pay(){
 	  		let selectedArr = [];
-	  		if(allSelected == true){
+	  		if(vm.allSelected == true){
 	  			//全部选中
 	  			selectedArr = vm.billInfo;
 	  		}else{
 	  			//只选中一部分
-	  			for(i in this.billInfo)
+	  			for( let i in vm.billInfo){
+	  				if(vm.billInfo[i].selected){
+	  					selectedArr.push(vm.billInfo[i])
+	  				}
+	  			}
 	  		}
-	  		vm.$router.push({path:'/payDetail',query:{bills:}});
+	  		let bills="";
+	  		let stmtId ="";
+	  		let payAddres=selectedArr[0].pay_cell_addr;
+	  		for(let i in selectedArr){
+	  			bills+=selectedArr[i].bill_id+',';
+
+	  		}
+	  		//vm.$router.push('/payDetail/'+ '123459' +'/'+'65431');
+	  		vm.$router.push({ name:'payDetail', params: { bills,stmtId,payAddres,totalPrice : vm.allPrice,reduceMode : vm.reduceMode }})
 	  	},
 
 	  	//调用微信扫一扫接口, 成功 数据返回到number,显示在input上
@@ -150,9 +165,12 @@
 	  	//点击某个选中按钮 params1:被点击按钮的下标 params2:被点击按钮所属的数组
 	  	itemClick:function(index,b){//3个页面对应不同的三个数组 
 	  		if(b[index].selected){
-	  			vm.$set(b[index],'selected',false)
+	  			vm.$set(b[index],'selected',false);
+	  			//某一个点击了取消后全选消失
+ 	  			vm.bAllSelect = false;
 	  		}else{
-	  			vm.$set(b[index],'selected',true)
+	  			vm.$set(b[index],'selected',true);
+
 	  		}
 	  	},
 	  	//点击全选按钮 params:需要被全部选中的数组
