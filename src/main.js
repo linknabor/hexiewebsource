@@ -22,6 +22,10 @@ import cookie from 'js-cookie'
 
 import receiveData from './receiveData.js'
 
+let str = 'https://test.e-shequ.com/weixin/';
+
+Vue.prototype.str = str;
+
 
 
 Vue.prototype.receiveData = receiveData;

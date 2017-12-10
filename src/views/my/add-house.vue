@@ -44,21 +44,21 @@
             <input placeholder="请输入账单号" class="hidden-input" style="text-align:left;" v-model="number">
             <div class="scan-icon" @click="show"></div>
         </div>
-		<mt-button class="subBtn" size="large" @click.native="submit" >提交</mt-button>
+		<mt-button class="subBtn" size="large" @click.native="submit">提交</mt-button>
 	</div>
 </template>
 
 <script>
 	import wx from 'weixin-js-sdk';
-	import qs from 'qs';
 	let vm;
 	import { MessageBox } from 'mint-ui';
 	export default {
 		created(){
 			vm = this; 
 			// 请求接口获取 后台返回的 微信配置项
-			let url = '/getUrlJsSign';
-    		vm.receiveData.wxconfig(vm,wx,['scanQRCode'])
+			location.href.reload();
+			let url = location.href.split('#')[0];
+    		vm.receiveData.wxconfig(vm,wx,['scanQRCode'],url);
 		},
 	  data(){
 		  return {

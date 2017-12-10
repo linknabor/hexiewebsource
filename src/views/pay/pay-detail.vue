@@ -169,7 +169,21 @@
 		line-height: 0.9rem;
 	}
 
-
+/*发票*/
+.invoice{
+	border:1px solid #cecdc9;
+	padding-top: 0.5rem;
+	margin-top: 0.6rem;
+}
+.invoice label{
+	padding: 0 0.2rem;
+}
+.form-row{
+	padding-bottom: 0.4rem;
+}
+.mint-cell-wrapper{
+	border:none;
+}
 
 
 </style>
@@ -214,11 +228,34 @@
 				<p class="fr bigfont">￥ {{count}}</p>
 			</div>
 			<!-- 发票 -->
-
+			<form class="invoice">
+				<div class="form-row">
+					是否需要发票:&nbsp;&nbsp;
+					 <input  type="radio" id="yes" value="yes" v-model="needInvoice">
+  					 <label for="yes">是</label>
+					 <input type="radio" id="no" value="no" v-model="needInvoice">
+  					 <label for="no">否</label>
+				</div>
+				<div v-if="needInvoice == 'yes'" class="form-row">
+					申请发票类型:&nbsp;&nbsp;
+					 <input  type="radio" id="person" value="person" v-model="invoiceType">
+  					 <label for="person">个人</label>
+					 <input type="radio" id="company" value="company" v-model="invoiceType">
+  					 <label for="company">公司</label>
+				</div>
+				<div class="form-row" v-if="invoiceType == 'company'">
+					<mt-field label="发票抬头" placeholder="请输入..." v-model="invoiceTitle"></mt-field>
+				</div>
+				<div class="form-row" v-if="invoiceType == 'company'">
+					<mt-field label="公司税号" placeholder="请输入..." v-model="creditCode"></mt-field>
+				</div>
+			</form>
 			<!-- 支付按钮 -->
 			<div style="height:1rem;"></div>
 			<div class="pay-btn" @click="wechatPay">立即微信支付</div>
 		</div>
+
+
 		<!-- 优惠券列表 -->
 		<div class="upton-list" v-else>
 			<!-- 可用券的数量 -->
@@ -251,6 +288,10 @@
 	export default {
 		data(){
 			return {
+				invoiceTitle:'',//发票抬头
+				creditCode:'',//公司税号
+				invoiceType:'person',//公司或个人
+				needInvoice:'no',//是否需要发票
 				uptonAmount:'未使用',
 				upronAmountNumber:0,////优惠券金额 数量
 				uptonData:[],
@@ -258,7 +299,6 @@
 				routeParams:{
 					bills : this.$route.params.bills,//id 集合
 					stmtId:this.$route.params.stmtId,//扫码数据
-					payAddres:this.$route.params.payAddres,//支付地址
 					totalPrice:this.$route.params.totalPrice,//合计金额
 					reduceMode:this.$route.params.reduceMode,//减免方式
 				},
@@ -276,11 +316,29 @@
 
 			}
 		},
+		beforeCreate(){//刷新页面
+			
+			//alert(1)
+		},
 		created(){
 			vm = this;
+			location.href.reload();
+			this.directRightUrl();
+			if(vm.routeParams.stmtId == " "){
+				vm.routeParams.stmtId = ""
+			}
 			vm.receiveData.wxconfig(vm,wx,['chooseWXPay']);
 			//得到实际支付金额 和是否减免 和减免了多少钱
 			vm.calcReduceAmt()
+		},
+		watch:{
+			needInvoice:function(){
+				if(this.needInvoice == 'yes'){
+					console.log('yes')
+				}else{
+					console.log('no')
+				}
+			}
 		},
 		mounted(){
 			//请求费用数据
@@ -300,16 +358,18 @@
 						vm.mianAmt = vm.data.result.mianAmt;
 					}
 
+
+
 	  				//户号
 	  				vm.verNumber = useDate.ver_no;
 	  				//地址
-	  				vm.addr = useDate.cell_addr
+	  				vm.addr = useDate.cell_addr;
 	  				//面积
-	  				vm.area = useDate.cnst_area
+	  				vm.area = useDate.cnst_area;
 	  				//费用列表
-	  				vm.feeList = useDate.fee_name
-	  				//console.log(vm.feeList)
+	  				vm.feeList = useDate.fee_name;
 	  			},
+
 	  			{
 	  				billId :vm.routeParams.bills,
 	  				stmtId :vm.routeParams.stmtId
@@ -330,6 +390,23 @@
 		},
 		
 		methods:{
+			// 重定向到正确的url
+			directRightUrl () {
+			  let paths = window.location.href.split('#')
+			  paths[1] = paths[1] || '/'
+			  // 老式的#!分隔跳转
+			  if (paths[0].charAt(paths[0].length - 1) !== '?') {
+			    paths[0] = `${paths[0]}?`
+			  }
+			  if (paths[1].charAt(0) === '!') {
+			     paths[1] = paths[1].substr(1)
+			  }
+			  let url = `${paths[0]}#${paths[1]}`
+			  if (window.location.href !== url) {
+			    window.location.href = url
+			  }
+			},
+
 			//切换优惠券选中状态
 			showIcon(index){
 				if(vm.uptonData[index].selected){
@@ -348,7 +425,7 @@
 			calcReduceAmt(){
 				//实际支付的钱
 				vm.count = vm.routeParams.totalPrice;
-				console.log(vm.count)
+
 				let reduced_amt = 0;//减少的钱
 				let reduce_rate = 0;//减少到角还是分
 				if ("0" == vm.routeParams.reduceMode) {	//不减免 
@@ -425,7 +502,45 @@
 					// },
 					'postResultData',
 					function(){
-						console.log(vm.postResultData)
+						let wd = vm.postResultData//微信配置数据
+						console.log(wd)
+						//微信配置
+						wx.config({
+		                    debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+		                    appId: wd.appid, // 必填，公众号的唯一标识
+		                    timestamp: wd.timestamp, // 必填，生成签名的时间戳
+		                    nonceStr: wd.nonceStr, // 必填，生成签名的随机串
+		                    signature: wd.signature,// 必填，签名，见附录1
+		                    jsApiList: ['chooseWXPay'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+		                });
+		                //调用微信支付
+						 wx.chooseWXPay({
+			                "timestamp":wd.timestamp,
+			                "nonceStr":wd.noncestr,
+			                "package":wd.packageValue,
+			                "signType":wd.signtype,
+			                "paySign":wd.paysign,
+							"appId":wd.appid,
+			          	    success: function (res) {
+			                	alert('成功')
+			                	//notifyPaySuccess();
+			          	    },
+			          	    fail:function(res) {
+			          	    	alert('失败')
+			          	 //    	alert(JSON.stringify(res));
+						        	// o.isPaying = false;
+						        	// commonui.hideAjaxLoading();
+						        	// $("#zzmb").hide();
+			          	    },
+			          	    cancel:function(res){
+			          	    	alert('取消')
+								// console.log(JSON.stringify(n));
+								// o.isPaying = false;
+						  //       commonui.hideAjaxLoading();
+						  //       $("#zzmb").hide();
+							}
+			          	    
+			          	});
 					}
 				)
 			}

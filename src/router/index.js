@@ -19,23 +19,30 @@ Vue.use(Router)
 
 const router= new Router({
   routes: [
-    {
-      path: '/',
-      name: 'Index',
-      component: Index,
-  	  children:[
-      	//{path:'', component: Service },
-        {path:'', component: My },//默认暂时设为 我的房子
-      	{path:'service',component: Service},
-      	{path:'market',component:Market},
-      	{path:'community',component:Community},
-   	  ]
-    },
+    // {
+    //   path: '/',
+    //   name: 'Index',
+    //   component: Index,
+  	 //  children:[
+    //   	//{path:'', component: Service },
+    //     {path:'', component: My },//默认暂时设为 我的房子
+    //   	{path:'service',component: Service},
+    //   	{path:'market',component:Market},
+    //   	{path:'community',component:Community},
+   	//   ]
+    // },
+
     // {
     //   path:'/',
     //   name:'Myhouse',
     //   component:Myhouse
     // },
+
+    {
+      path:'',
+      name:'Pay',
+      component:Pay
+    },
     {
     	path :'/my',
     	name : 'My',
@@ -77,12 +84,13 @@ const router= new Router({
       }
     },
     {
-      path:'/payDetail',
+      path:'/payDetail/:bills/:stmtId/:totalPrice/:reduceMode',
       name:'payDetail',
       component:PayDetail,
       meta:{
         title:'缴费详情'
-      }
+      },
+
     },
     {
       path:'/uptonList',

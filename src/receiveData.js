@@ -1,5 +1,5 @@
-//import xml2js from'xml2js' 
-//var xmlParser = new xml2js.Parser({explicitArray : false, ignoreAttrs : true})
+import xml2js from'xml2js' 
+var xmlParser = new xml2js.Parser({explicitArray : false, ignoreAttrs : true})
     //xml转json
 
 let receiveData = {
@@ -11,8 +11,8 @@ let receiveData = {
      * @param  {string} url     [url地址]
      * @param  {array} apilist    [要调用的微信接口]
      */
-    wxconfig(vm,wx,apilist){
-        vm.axios.post('/getUrlJsSign', {url : 'https://test.e-shequ.com/weixin/wuye/myhouse.html' })
+    wxconfig(vm,wx,apilist,url){
+        vm.axios.post('/getUrlJsSign', {url : url })
             .then(function (res) {
                 let a = JSON.parse(res.data)
                 let wd = a.result  //接口返回的嵌入数据
@@ -100,14 +100,13 @@ let receiveData = {
         };
         vm.axios.post(url, params)
             .then(function (res) {
-                alert(234)
-                //let a = res.data
+
+                let a = res.data;
+                 vm[backdataname] = JSON.parse(a).result
                 // xmlParser.parseString(a, function (err, result) {
                 // //将返回的结果赋值
                 //  vm[backdataname] = result.BaseResult
                 // });
-                console.log(res)
-                //vm[backdataname] = result.BaseResult
                 if (typeof (callback) == 'function') {//回调
                         callback()
                 }
