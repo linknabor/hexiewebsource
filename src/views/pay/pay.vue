@@ -306,11 +306,10 @@
 		//请求查询缴费 账单列表
 		queryBillList(){
 			let url = 'billList';
-			vm.params.house_id = vm.house;
+			vm.params.house_id = vm.query.house;
 			vm.params.currentPage = 1;
 			vm.receiveData.getData(vm,url,'queryBillInfo',function(){
 				vm.queryBillInfo = vm.queryBillInfo.result.bill_info;
-				console.log(vm.queryBillInfo)
 			},vm.params)
 		},
 
@@ -345,7 +344,7 @@
 	  		vm.receiveData.getData(vm,url,'pageData4',function(){
 	  			tempArr = vm.pageData4.result.bill_info;
 	  			if( tempArr && tempArr.length > 0){
-  					vm.queryBillInfo =vm.billInfo.concat(tempArr) //快捷缴费
+  					vm.queryBillInfo =vm.queryBillInfo.concat(tempArr) //快捷缴费
   					vm.queryAllselect = false;
 	  			}else{
   					vm.queryisLastPage = true;
