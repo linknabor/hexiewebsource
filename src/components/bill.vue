@@ -1,8 +1,9 @@
 <template>
 	<!-- 确定选中的状态   点击radio改变状态,emmit一个事件 -->
 <div>
+	
 	<div  class="bill-item ov" v-for="(item,index) in billInfo" @click="select(index)">
-		<div class="select-item fl" :class="{selected:item.selected }" ></div>
+		<div class="select-item fl"  :class="{selected:item.selected,'payed':item.pay_status!='02'}" ></div>
 		<div class="fl info">
 			<p class="top ov">
 				<span class="title fl">{{item.service_fee_name}}</span>
@@ -10,7 +11,7 @@
 			</p>
 			<p class="bottom ov">
 				<span class="addr fl">{{item.pay_cell_addr}}</span>
-				<span class="date fr">{{item.service_fee_cycle}}</span>
+				<span class="date fr data-height">{{item.service_fee_cycle}}</span>
 			</p>
 		</div>	
 	</div>
@@ -41,21 +42,27 @@
 	border:1px solid #cdcdcb;
 }
 .select-item {
-    background: url('../../static/image/icon_unselect.png') no-repeat ;
+    background: url('../assets/images/common/icon_unselect.png') no-repeat ;
     background-size: 0.32rem;
     background-position: center;
     width:0.7rem;
-    height: 2.44rem;
+    height: 2.6rem;
     border-right: 1px solid #cdcdcb;
 }
 .selected {
-	background: url('../../static/image/icon_selected.png') no-repeat ;
+	background: url('../assets/images/common/icon_selected.png') no-repeat ;
 	background-size: 0.32rem;
    background-position: center;
 }
-
+.payed{
+	background: url('../assets/images/common/icon_cancel.png') no-repeat ;
+	background-size: 0.32rem;
+   background-position: center;
+}
 .info{
-	padding: 0.3rem;
+	padding: 0.2rem 0.3rem 0.1rem 0.3rem;
+	width: calc(100% - 1.4rem);
+	/*padding: 0.3rem 0.1rem;*/
 }
 
 .top{
@@ -89,8 +96,8 @@
 
 .bottom .date{
 	padding-left: 0.35rem;
-	background: url('../../static/image/icon_time_gray.png') no-repeat left center;
+	background: url('../assets/images/common/icon_time_gray.png') no-repeat left center;
 	background-size: 0.3rem;
 }
-
+.data-height{}
 </style>
