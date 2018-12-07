@@ -4,21 +4,32 @@
 	}
 	.huzhu{font-size: 0.34rem;font-weight: bold;}
 	.bottomBtn{
-		font-size: 0.3rem;         
+		font-size: 0.35rem;         
 		position: fixed;         
-		bottom: 0.02rem;
-		height: 0.98rem;         
+		bottom: 0;
+		height: 49px;         
 		background-color:#ff8a00;         
-		color:white;     
+		color:white;letter-spacing: 2px;
+		width: 100%;line-height: 49px;text-align: center;
+		overflow: hidden;     
 	}
 
-	.nohouse{         
-		height:10rem;         
+	.nohouse{
+		position: fixed;
+		left: 0;
+		top: 0;
+		height:100%;
+		width: 100%;
+		/*background: #ff8a00;         */
+		/* height:10rem;         
 		background: url('../../assets/images/house/bg_nohouse.jpg') no-repeat center center;
 		background-size: cover;         
-		-moz-background-size:100% 100%;     
+		-moz-background-size:100% 100%;      */
 	}
-
+	.nohouse img{
+		height: 100%;
+		width: 100%;
+	}
 	.house-list{
 		list-style: none;
 		padding: 0;
@@ -48,9 +59,11 @@
 
 <template>
 	<div class="myhouse">
-		<div class="nohouse" v-if="dataArr.length == 0"></div>
-		<ul class="house-list" v-else="dataArr.length == 0">
-			<li v-for="(i,index) in dataArr">
+		<div class="nohouse" v-if="dataArr.length == 0">
+			<img src="../../assets/images/house/bg_nohouse.jpg" alt="">
+		</div>
+		<ul class="house-list" v-else>
+			<li v-for="(i,index) in dataArr" :key="index">
 				<p>
 					<span class="fl huzhu">{{i.sect_name}} {{i.city_name}}</span>
 					<i  @click="del(i,index)"class="fr del-icon" ></i>
@@ -68,7 +81,8 @@
 				号码2 ：{{i.ver_no}} -->
 			</li>
 		</ul>
-		<mt-button  size="large" class="bottomBtn" @click.native="addHouse" >添加房子</mt-button>
+		<div class="bottomBtn" @click="addHouse">添加房子</div>
+		<!-- <mt-button  size="large" class="bottomBtn" @click.native="addHouse" ></mt-button> -->
 	</div>
 </template>
 <script>
@@ -101,7 +115,8 @@
 	  	},
 	  	addHouse(){
 	  		this.common.checkRegisterStatus();
-		  	this.$router.push("/addHouse")
+			//   this.$router.push("/addHouse")
+			  this.$router.push('/identHouse');
 	  	},
 	  	del(value,index){
 	  		MessageBox.confirm('确定要删除吗?').then(action => {
@@ -112,9 +127,10 @@
 		  			//回调函数 判断删除成功与否 暂放
 		  			//console.log(vm.delData)
 		  			Toast({
-					  message: '删除成功',
-					  position: 'top',
-					  duration: 1000
+					    message: '删除房子成功',
+						iconClass: 'icon icon-success',
+					    duration: 1000,
+					    position: 'middle'
 					});
 		  		})
 			}).catch(reject =>{//点击了取消

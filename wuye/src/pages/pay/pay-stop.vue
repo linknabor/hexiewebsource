@@ -67,7 +67,7 @@
 				carBillPage :1, //停车缴费页码
 				reduceMode:1,
 				quan:false,
-				baseUrl:'https://test.e-shequ.com/weixin/',
+				baseUrl:'https://www.e-shequ.com/weixin/',
 				permit_skip_pay:'1'
 			}
 		},
@@ -169,19 +169,10 @@
 					}
 				}
 		  		//------过佳家
-		  		vm.str = 'https://test.e-shequ.com/weixin/';
+		  		vm.str = 'https://www.e-shequ.com/weixin/';
 		  		let url = vm.str + "paymentdetail.html?#/?billIds="+bills+"&stmtId="+vm.stmtId+"&payAddr="+escape(pay_addr)+"&totalPrice="+vm[allPrice]+"&reduceMode="+vm.reduceMode;
 	            window.location.href = url;
 
-
-	     		//-------合协
-	     //        vm.str = 'https://www.e-shequ.com/pay/';
-		  		// vm.baseUrl='https://www.e-shequ.com/weixin/';
-		  		// var url = vm.str+"hx";
-	     //        url += "paymentdetail.html?#/?billIds="+bills+"&stmtId="+vm.stmtId+"&payAddr="+escape(pay_addr)+"&totalPrice="+vm[allPrice]+"&reduceMode="+vm.reduceMode;
-	     //        url += "&basePageUrl="+vm.baseUrl;
-	     //        window.location.href = url;
-	        
 		  	},
 		  	//点击某个选中按钮 params1:被点击按钮的下标 params2:被点击按钮所属的数组
 		  	itemClick:function(index,b){//3个页面对应不同的三个数组 

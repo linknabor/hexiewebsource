@@ -1,12 +1,12 @@
 <style scoped>
 	.bottomBtn{
-		font-size: 0.3rem;
-		position: fixed;
+		font-size: 0.35rem;         
+		position: fixed;         
 		bottom: 0;
-		height: 0.9rem;
-		line-height: 0.9rem;
-		background-color:#ff8a00;
-		color:white;
+		height: 49px; overflow: hidden;        
+		background-color:#ff8a00;         
+		color:white;letter-spacing: 2px;
+		width: 100%;line-height:49px;text-align: center;     
 	}
 	ul{
 		margin: 0.1rem 0 0;
@@ -38,7 +38,8 @@
 			</li>
 		</ul>
 		<!-- <loading v-show="loadingShow"></loading> -->
-		<mt-button  size="large" class="bottomBtn" @click.native="addHouse" >绑定房子</mt-button>
+		<div class="bottomBtn"  @click="addHouse">绑定房子</div>
+		<!-- <mt-button  size="large" class="bottomBtn" @click.native="addHouse" >绑定房子</mt-button> -->
 	</div>
 </template>
 

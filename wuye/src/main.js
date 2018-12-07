@@ -27,9 +27,14 @@ Vue.prototype.common = common;
 
 import receiveData from './receiveData.js'
 Vue.prototype.receiveData = receiveData;
+Vue.prototype.$axios = axios;
 
-let str = 'https://test.e-shequ.com/weixin/';
+let str = 'https://www.e-shequ.com/weixin/';
 Vue.prototype.str = str;
+
+// 首页新闻
+let news = 'https://www.e-shequ.com/weixin/wuye/message.html?messageId=';
+Vue.prototype.news = news;
 
 
 Vue.use(MintUI)
@@ -50,7 +55,7 @@ var axiosInstance = axios.create({
         'Accept': 'application/json',
 
     },
-    baseURL: 'https://test.e-shequ.com/wechat/hexie/wechat',
+    baseURL: 'https://www.e-shequ.com/wechat/hexie/wechat',
    
     withCredentials:true,
     transformResponse: [function (data) {//数据转换
@@ -64,13 +69,13 @@ axiosInstance.interceptors.request.use(
         if( !cookie.get('session')){//没有seesion 判断  暂时跳过直接在首页就存seesion
           
         }else{//在请求头加 session
-          config.headers.Cookie =`${ cookie.get('Cookie') }`
+            config.headers.Cookie =`${ cookie.get('Cookie') }`
         }
 
         // config.headers.Authorization = // token
         //     `${ Cookies.get('yesmywine_mall$token_type') } ${ Cookies.get('yesmywine_mall$token') }`
-         // 不添加 return config 不会执行http请求
-         return config
+        // 不添加 return config 不会执行http请求
+        return config
     },
     err => {
         return Promise.reject(err)

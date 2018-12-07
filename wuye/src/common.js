@@ -3,24 +3,25 @@ import wx from 'weixin-js-sdk';
 var MasterConfig = function() {
     
     var t = {
-        baseUrl: "https://test.e-shequ.com/wechat/hexie/wechat/",
-        basePageUrl:"https://test.e-shequ.com/weixin/",
-        payPageFolder:"https://test.e-shequ.com/pay/",
+        baseUrl: "https://www.e-shequ.com/wechat/hexie/wechat/",
+        basePageUrl:"https://www.e-shequ.com/weixin/",
+        payPageFolder:"https://www.e-shequ.com/pay/",
         payPageSuffix:"hx",
       
         
         //生产
-        // appId: "wxbd214f5765f346c1",
-        // bindAppId: "wxa48ca61b68163483",
+        appId: "wxbd214f5765f346c1",
+        bindAppId: "wxa48ca61b68163483",
         oauthUrl: "http://open.weixin.qq.com/connect/oauth2/authorize?",
         oauthUrlPostFix:"&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect",
        
-        
+        //uat
+        // appId: "wx9ffe0a2b5a64a285",
+        // bindAppId: "wx9ffe0a2b5a64a285",
+
         //测试
-        appId: "wx95f46f41ca5e570e",
-        bindAppId: "wx95f46f41ca5e570e",
-        // oauthUrl: "http://open.weixin.qq.com/connect/oauth2/authorize?",
-        // oauthUrlPostFix:"&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect",
+        // appId: "wx95f46f41ca5e570e",
+        // bindAppId: "wx95f46f41ca5e570e",
         
         shop_name: "合协",
 
@@ -47,7 +48,7 @@ var Config = function() {
             no_goods: "更多新品正在陆续推出..."
         },
         user_info: {
-            avatar: "https://test.e-shequ.com/weixin/static/images/logo.jpg",
+            avatar: "https://www.e-shequ.com/weixin/static/images/logo.jpg",
             nickname: "游客",
             levelname: "普通会员"
         },
@@ -57,7 +58,7 @@ var Config = function() {
             2 : "大楼VIP"
         },
         coupon:{
-            seedImg:"https://test.e-shequ.com/weixin/static/img/banner/banner_market_shuiguo.jpg"
+            seedImg:"https://www.e-shequ.com/weixin/static/img/banner/banner_market_shuiguo.jpg"
         }
     },
     e = {};
@@ -380,16 +381,12 @@ let common = {
         o
     },
     log: function() {
-        for (var e = arguments.length,
-        o = 0; e > o; o++) 
-        console.log(arguments[o])
+        // for (var e = arguments.length,
+        // o = 0; e > o; o++) 
+        // console.log(arguments[o])
     },
-    // log: function() {
-    //     for (var e = arguments.length,
-    //     o = 0; e > o; o++) {}
-    // },
     alert: function(e) {
-        "" === getCookie("DevDebug") ? console.log(e) : alert(e)
+        // "" === getCookie("DevDebug") ? console.log(e) : alert(e)
     },
     errorTip: function() {
         var e = '<div class="wrapper"></div><div class="box"><p>请重新刷新</p></div>';

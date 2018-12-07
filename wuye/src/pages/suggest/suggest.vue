@@ -69,7 +69,7 @@ export default {
     data () { 
         return {
             //----------合协社区
-            fabu:"https://test.e-shequ.com/weixin/",
+            fabu:"https://www.e-shequ.com/weixin/",
 
             ok:false,
             routeParams:{
