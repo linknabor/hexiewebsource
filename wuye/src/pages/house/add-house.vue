@@ -78,7 +78,7 @@
 	  	 	if(reg.test(this.number)){//为数字即通过
 	  	 		this.$router.push('/bindHouse/' + this.number);
 	  	 	}else{
-	  	 		MessageBox.alert('请输入正确账单号', 'www.e-shequ.com');
+	  	 		MessageBox.alert('请输入正确账单号', 'test.e-shequ.com');
 			   }
 		
 	  	 }

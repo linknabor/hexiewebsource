@@ -28,7 +28,7 @@
             </a>
           </li>
           <li>
-            <a href="https://www.e-shequ.com/weixin/person/index.html" class="nav-controller">
+            <a href="https://uat.e-shequ.com/weixin/person/index.html" class="nav-controller">
               <i class="footer_logo footer_person"></i>我的
             </a>
           </li>

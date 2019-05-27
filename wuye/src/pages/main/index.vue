@@ -81,7 +81,7 @@ h6{text-align: right; padding: 0 15px;font-size: 11px;color:rgba(0,0,0,0.63);let
                     </router-link>
                 </li>
                 <li class="jgg_li" >
-                    <a href="#" class="link" @click="alert()">
+                    <a href="https://w.url.cn/s/AtroAQY" class="link">
                         <div class="jgg_img">
                             <img src="../../assets/images/index/bmwx1.png" alt="tt">
                         </div>
@@ -159,9 +159,9 @@ export default {
     computed: {},
 
     mounted(){
-        // this.initSession4Test();
-        this.initUserInfo();
-        // this.common.initWechat(['onMenuShareTimeline','onMenuShareAppMessage']);
+        this.initSession4Test();
+        // this.initUserInfo();
+        this.common.initWechat(['onMenuShareTimeline','onMenuShareAppMessage']);
     },
 
     methods: {

@@ -131,7 +131,7 @@
 		
 			sousuo(name){
 				this.$axios({
-	             	url:'https://www.e-shequ.com/wechat/hexie/wechat/getVagueSectByName?sect_name='+name,
+	             	url:'https://test.e-shequ.com/wechat/hexie/wechat/getVagueSectByName?sect_name='+name,
 	             	method:'get'
 	            }).then((res) =>{
 	             	let data=res.data.result;
@@ -176,7 +176,7 @@
            			$('.pay').addClass('disabled');
 					$('.pay').text('正在处理...')
            			this.$axios({
-           				url:'https://www.e-shequ.com/wechat/hexie/wechat/addhexiehouse2?area='+vm.query.area+'&houseId='+vm.choosehouse,
+           				url:'https://test.e-shequ.com/wechat/hexie/wechat/addhexiehouse2?area='+vm.query.area+'&houseId='+vm.choosehouse,
            				method:'post'
            			}).then((res) =>{
                        if(res.data.result!=null){

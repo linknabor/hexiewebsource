@@ -29,11 +29,9 @@ import receiveData from './receiveData.js'
 Vue.prototype.receiveData = receiveData;
 Vue.prototype.$axios = axios;
 
-let str = 'https://www.e-shequ.com/weixin/';
-Vue.prototype.str = str;
 
 // 首页新闻
-let news = 'https://www.e-shequ.com/weixin/wuye/message.html?messageId=';
+let news = 'https://test.e-shequ.com/weixin/wuye/message.html?messageId=';
 Vue.prototype.news = news;
 
 
@@ -55,7 +53,7 @@ var axiosInstance = axios.create({
         'Accept': 'application/json',
 
     },
-    baseURL: 'https://www.e-shequ.com/wechat/hexie/wechat',
+    baseURL: 'https://test.e-shequ.com/wechat/hexie/wechat',
    
     withCredentials:true,
     transformResponse: [function (data) {//数据转换
