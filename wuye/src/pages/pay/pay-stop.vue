@@ -67,7 +67,7 @@
 				carBillPage :1, //停车缴费页码
 				reduceMode:1,
 				quan:false,
-				baseUrl:'https://www.e-shequ.com/weixin/',
+				baseUrl:'https://test.e-shequ.com/weixin/',
 				permit_skip_pay:'1'
 			}
 		},
@@ -169,7 +169,7 @@
 					}
 				}
 		  		//------过佳家
-		  		vm.str = 'https://www.e-shequ.com/weixin/';
+		  		vm.str = 'https://test.e-shequ.com/weixin/';
 		  		let url = vm.str + "paymentdetail.html?#/?billIds="+bills+"&stmtId="+vm.stmtId+"&payAddr="+escape(pay_addr)+"&totalPrice="+vm[allPrice]+"&reduceMode="+vm.reduceMode;
 	            window.location.href = url;
 

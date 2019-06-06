@@ -90,12 +90,12 @@
 	  		vm.receiveData.postData(vm,url2,{},'res',function(){
 	  			vm.loadingShow = false;
 				if(vm.res.result !== null) {
-                    MessageBox.alert('添加房子成功','www.e-shequ.com').then( action =>{
+                    MessageBox.alert('添加房子成功','test.e-shequ.com').then( action =>{
 	  						vm.$router.push("/myhouse")
 	  					})
 				}
 				if(vm.res.result == null) {
-					 MessageBox.alert('添加房子成功','www.e-shequ.com').then( action =>{
+					 MessageBox.alert('添加房子成功','test.e-shequ.com').then( action =>{
 	  						vm.$router.push("/myhouse")
 	  					})
 				}

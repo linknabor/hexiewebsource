@@ -81,7 +81,7 @@ h6{text-align: right; padding: 0 15px;font-size: 11px;color:rgba(0,0,0,0.63);let
                     </router-link>
                 </li>
                 <li class="jgg_li" >
-                    <a href="#" class="link" @click="alert()">
+                    <a href="javascript:void(0);" class="link" @click="alerts()">
                         <div class="jgg_img">
                             <img src="../../assets/images/index/bmwx1.png" alt="tt">
                         </div>
@@ -161,7 +161,7 @@ export default {
     mounted(){
         // this.initSession4Test();
         this.initUserInfo();
-        // this.common.initWechat(['onMenuShareTimeline','onMenuShareAppMessage']);
+        this.common.initWechat(['onMenuShareTimeline','onMenuShareAppMessage']);
     },
 
     methods: {
@@ -193,8 +193,11 @@ export default {
                 i = null,
                 e = function(n){
                     // console.log(JSON.stringify(n));
-                    vm.dataArr = n.result;
-                    page++;
+                    if(n.result) {
+                        vm.dataArr = n.result;
+                        page++;
+                    }
+                    
                 },
                 r = function(){
                     
@@ -212,7 +215,7 @@ export default {
                 window.location.href = vm.news+mid;
             }
         },
-        alert(){
+        alerts(){
             MessageBox('该功能暂未开放','尽请期待!');
         }
 

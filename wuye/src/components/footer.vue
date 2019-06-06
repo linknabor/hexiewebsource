@@ -23,12 +23,12 @@
       <nav>
         <ul>
           <li>
-            <a href="javascript:void(0);" class="nav-controller active">
+            <a href="https://test.e-shequ.com/weixin/wuye/index.html" class="nav-controller active">
               <i class="footer_logo footer_wuye_selected"></i>社区
             </a>
           </li>
           <li>
-            <a href="https://www.e-shequ.com/weixin/person/index.html" class="nav-controller">
+            <a href="https://test.e-shequ.com/weixin/person/index.html" class="nav-controller">
               <i class="footer_logo footer_person"></i>我的
             </a>
           </li>

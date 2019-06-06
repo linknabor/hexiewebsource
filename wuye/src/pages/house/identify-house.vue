@@ -77,7 +77,7 @@
 	import '../../assets/iconfont/iconfont.css'
 	export default{
 		data(){
-			return{
+			return {
 				// params:{
 				// 	user_id:this.$route.query.user_id
 				// }

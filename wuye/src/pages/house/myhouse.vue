@@ -66,7 +66,7 @@
 			<li v-for="(i,index) in dataArr" :key="index">
 				<p>
 					<span class="fl huzhu">{{i.sect_name}} {{i.city_name}}</span>
-					<i  @click="del(i,index)"class="fr del-icon" ></i>
+					<i  @click="del(i,index)" class="fr del-icon" ></i>
 				</p>
 				<p>
 					<span class="fl">{{i.cell_addr}}</span> 

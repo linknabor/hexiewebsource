@@ -3,15 +3,15 @@ import wx from 'weixin-js-sdk';
 var MasterConfig = function() {
     
     var t = {
-        baseUrl: "https://www.e-shequ.com/wechat/hexie/wechat/",
-        basePageUrl:"https://www.e-shequ.com/weixin/",
-        payPageFolder:"https://www.e-shequ.com/pay/",
+        baseUrl: "https://test.e-shequ.com/wechat/hexie/wechat/",
+        basePageUrl:"https://test.e-shequ.com/weixin/",
+        payPageFolder:"https://test.e-shequ.com/pay/",
         payPageSuffix:"hx",
       
         
         //生产
-        appId: "wxbd214f5765f346c1",
-        bindAppId: "wxa48ca61b68163483",
+        // appId: "wxbd214f5765f346c1",
+        // bindAppId: "wxa48ca61b68163483",
         oauthUrl: "http://open.weixin.qq.com/connect/oauth2/authorize?",
         oauthUrlPostFix:"&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect",
        
@@ -20,8 +20,8 @@ var MasterConfig = function() {
         // bindAppId: "wx9ffe0a2b5a64a285",
 
         //测试
-        // appId: "wx95f46f41ca5e570e",
-        // bindAppId: "wx95f46f41ca5e570e",
+        appId: "wx95f46f41ca5e570e",
+        bindAppId: "wx95f46f41ca5e570e",
         
         shop_name: "合协",
 
@@ -48,7 +48,7 @@ var Config = function() {
             no_goods: "更多新品正在陆续推出..."
         },
         user_info: {
-            avatar: "https://www.e-shequ.com/weixin/static/images/logo.jpg",
+            avatar: "https://test.e-shequ.com/weixin/static/images/logo.jpg",
             nickname: "游客",
             levelname: "普通会员"
         },
@@ -58,7 +58,7 @@ var Config = function() {
             2 : "大楼VIP"
         },
         coupon:{
-            seedImg:"https://www.e-shequ.com/weixin/static/img/banner/banner_market_shuiguo.jpg"
+            seedImg:"https://test.e-shequ.com/weixin/static/img/banner/banner_market_shuiguo.jpg"
         }
     },
     e = {};
