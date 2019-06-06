@@ -8,9 +8,9 @@ const path = require('path')
 module.exports = {
   build: {
     env: require('./prod.env'),
-    index: path.resolve(__dirname, '../dist/index.html'),
+    index: path.resolve(__dirname, '../dist/index1.html'),
     assetsRoot: path.resolve(__dirname, '../dist'),
-    assetsSubDirectory: 'static', //放置静态文件的目录
+    assetsSubDirectory: 'static1', //放置静态文件的目录
     assetsPublicPath: './', //放置静态文件的路径
     productionSourceMap: true,
     // Gzip off by default as many popular static hosts such as

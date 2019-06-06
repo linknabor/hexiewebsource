@@ -115,8 +115,8 @@
 	  	},
 	  	addHouse(){
 	  		this.common.checkRegisterStatus();
-			//   this.$router.push("/addHouse")
-			  this.$router.push('/identHouse');
+			  this.$router.push("/addHouse")
+			  // this.$router.push('/identHouse');
 	  	},
 	  	del(value,index){
 	  		MessageBox.confirm('确定要删除吗?').then(action => {

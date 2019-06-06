@@ -25,7 +25,7 @@ Vue.prototype.receiveData = receiveData;
 
 
 
-let str = 'https://uat.e-shequ.com/weixin/';
+let str = 'https://test.e-shequ.com/weixin/';
 Vue.prototype.str = str;
 
 Vue.use(MintUI)
@@ -40,7 +40,7 @@ var axiosInstance = axios.create({
         'Content-Type':"application/json",
         'Accept': 'application/json',
     },
-    baseURL: 'https://uat.e-shequ.com/wechat/hexie/wechat',
+    baseURL: 'https://test.e-shequ.com/wechat/hexie/wechat',
     withCredentials:true,
     transformResponse: [function (data) {//数据转换
       return data;

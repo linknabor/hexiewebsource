@@ -725,7 +725,7 @@
 								vm.receiveData.postData(vm,reqUrl,{},'reqUrlData',function(){
 									vm.payInfo = vm.reqUrlData.result;
 									// vm.payInfofee_data = vm.reqUrlData.result.fee_data;	  		
-					  				var forwardUrl = "https://uat.e-shequ.com/weixin/";
+					  				var forwardUrl = "https://test.e-shequ.com/weixin/";
 					  				// alert("支付成功");
 					  				forwardUrl += "wuye/index.html?state=123#/paymentquery";
 					  				window.location.href = forwardUrl;
