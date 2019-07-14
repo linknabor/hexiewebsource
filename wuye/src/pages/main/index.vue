@@ -160,13 +160,9 @@ export default {
     computed: {},
 
     mounted(){
-<<<<<<< HEAD
+
         // this.initSession4Test();
         this.initUserInfo();
-=======
-        this.initSession4Test();
-        // this.initUserInfo();
->>>>>>> 7d6922947466c46ab4920682ddbfa69a3a80d097
         this.common.initWechat(['onMenuShareTimeline','onMenuShareAppMessage']);
     },
 
