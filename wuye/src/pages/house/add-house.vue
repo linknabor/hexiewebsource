@@ -65,20 +65,25 @@
 		  }
 	  },
 	  mounted(){
-	  	this.common.checkRegisterStatus();
+		
+	  	// this.common.checkRegisterStatus();
 	  },
 	  methods:{
 	  	 show(){
 	  	 	//调用微信扫一扫 成功数据返回到number
 	  	 	vm.receiveData.scan(vm,wx,'number')
 	  	 },
-	  	 submit(){//判断是否为正确账单号
-
+		   submit(){//判断是否为正确账单号
+		   let  wuye_myhouse={
+				url: /127|test/.test(location.origin)?'test.e-shequ.com':
+						/uat/.test(location.origin)?'uat.e-shequ.com':
+						'www.e-shequ.com'       //提示框网址
+				}
 	  	 	var reg = /^\d{18}$/
 	  	 	if(reg.test(this.number)){//为数字即通过
 	  	 		this.$router.push('/bindHouse/' + this.number);
 	  	 	}else{
-	  	 		MessageBox.alert('请输入正确账单号', 'test.e-shequ.com');
+	  	 		MessageBox.alert('请输入正确账单号',wuye_myhouse.url);
 			   }
 		
 	  	 }

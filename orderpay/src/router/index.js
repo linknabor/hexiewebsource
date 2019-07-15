@@ -1,0 +1,115 @@
+import Vue from 'vue'
+import Router from 'vue-router'
+import Orders from '@/pages/orders'
+import Orderdetail from '@/pages/orderdetail'
+import Onsaleorders from '@/pages/onsaleorders'
+import Logistice from '@/pages/logistice'
+import Comment from '@/pages/comment'
+import Grouporders from '@/pages/grouporders'
+import RepairPay from '@/pages/repairPay'
+import Commentxiu from '@/pages/commentxiu'
+import Homeorders from '@/pages/homeorders'
+import Homeorderdetail from '@/pages/homeorderdetail'
+
+Vue.use(Router)
+
+let router= new Router({
+  // mode:'history',
+  routes: [
+    {
+      path: '/orders',
+      name: 'orders',
+      component: resolve=>require(['@/pages/orders'],resolve),
+      meta: {
+        title:'商品订单'
+      }
+    },
+    {
+      path: '/orderdetail',
+      name: 'orderdetail',
+      component: resolve=>require(['@/pages/orderdetail'],resolve),
+      meta: {
+        title:'订单详情'
+      }
+    },
+    {
+      path: '/logistice',
+      name: 'logistice',
+      component: resolve=>require(['@/pages/logistice'],resolve),
+      meta: {
+        title:'物流信息'
+      }
+    },
+    {
+      path: '/onsaleorders',
+      name: 'onsaleorders',
+      component: resolve=>require(['@/pages/onsaleorders'],resolve),
+      meta: {
+        title:'商品订单'
+      }
+    },
+    {
+      path: '/comment',
+      name: 'comment',
+      component: resolve=>require(['@/pages/comment'],resolve),
+      meta: {
+        title:'评论'
+      }
+    },
+    {
+      path: '/grouporders',
+      name: 'grouporders',
+      component: resolve=>require(['@/pages/grouporders'],resolve),
+      meta: {
+        title:'团购订单'
+      }
+    },
+    {
+      path: '/repairPay',
+      name: 'repairPay',
+      component: resolve=>require(['@/pages/repairPay'],resolve),
+    },
+    {
+      path: '/commentxiu',
+      name: 'commentxiu',
+      component:resolve=>require(['@/pages/commentxiu'],resolve),
+    },
+    {
+      path: '/homeorders',
+      name: 'homeorders',
+      component:resolve=>require(['@/pages/homeorders'],resolve),
+      meta: {
+        title:'服务订单'
+      }
+    },
+    {
+      path: '/homeorderdetail',
+      name: 'homeorderdetail',
+      component:resolve=>require(['@/pages/homeorderdetail'],resolve),
+      meta: {
+        title:'预约成功'
+      }
+    },
+  ]
+})
+
+////路由的钩子函数，
+//在每一次路由跳转之前会进入这个方法 to：到哪去  from：从哪来 next() 调用这个方法来完成这个钩子函数
+router.beforeEach((to,from, next) => {
+  if(to.matched[0].name !== "index") {
+    common.checkRegisterStatus()
+  }
+  //动态改变title
+  changeTitle(to.meta.title);
+  next();
+});
+
+//动态改变title
+function changeTitle(title) {
+  console.log(title)
+  title = title ? title : '合协社区';
+  window.document.title = title;
+};
+
+
+export default router

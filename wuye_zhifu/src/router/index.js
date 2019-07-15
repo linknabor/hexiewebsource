@@ -1,11 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import bill from '@/components/bill'
-
-
 //支付
-import PayDetail from '@/views/pay/pay-detail'
+// import PayDetail from '@/views/pay/pay-detail'
+// import { resolve } from 'path';
 Vue.use(Router)
 
 const router= new Router({
@@ -13,7 +11,7 @@ const router= new Router({
     {
       path:'/',
       name:'payDetail',
-      component:PayDetail,
+      component:resolve=> require(['@/views/pay/pay-detail'],resolve),
       meta:{
         title:'缴费详情'
       },

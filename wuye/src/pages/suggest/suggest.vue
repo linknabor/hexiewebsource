@@ -68,9 +68,6 @@ export default {
     },  
     data () { 
         return {
-            //----------合协社区
-            fabu:"https://test.e-shequ.com/weixin/",
-
             ok:false,
             routeParams:{
                 category : this.$route.query.category,
@@ -88,10 +85,9 @@ export default {
     computed: {},
 
     mounted(){
-        // console.log(vm.routeParams.category);
-        // console.log(this.$route.query.category);
-        this.common.checkRegisterStatus();
-        // let url1 = "getUrlJsSign";
+        
+        // this.common.checkRegisterStatus();
+        
         let url1 = "getUrlJsSign";
         vm.receiveData.postData(
             vm,
@@ -200,7 +196,6 @@ export default {
         },
         
         saveThread:function(){
-            // this.common.checkRegisterStatus();
             let url2 = "thread/addThread";
             vm.receiveData.postData(
                 vm,
@@ -215,10 +210,7 @@ export default {
                 function(res){
                     console.log("success:"+JSON.stringify(res));
                     alert("发布成功");
-                    console.log(vm.fabu);
-                    var forwardUrl = vm.fabu;
-                    forwardUrl += "wuye/index.html";
-                    window.location.href = forwardUrl;
+                    window.location.href = vm.basePageUrl+"wuye/index.html?v=20162299";
                 }
             )
         }

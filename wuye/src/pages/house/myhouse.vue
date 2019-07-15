@@ -93,7 +93,7 @@
 	  	vm = this;
 	  },
 	  mounted(){//查看房子列表
-	  	this.common.checkRegisterStatus();
+	  	// this.common.checkRegisterStatus();
 	  	vm.showList();
 	  },
 	  data(){
@@ -114,9 +114,7 @@
 		  	})
 	  	},
 	  	addHouse(){
-	  		this.common.checkRegisterStatus();
-			  this.$router.push("/addHouse")
-			  // this.$router.push('/identHouse');
+			  this.$router.push('/identHouse');
 	  	},
 	  	del(value,index){
 	  		MessageBox.confirm('确定要删除吗?').then(action => {

@@ -131,7 +131,7 @@ export default {
        vm=this;
    },
    mounted() {
-       	this.common.checkRegisterStatus();
+       	// this.common.checkRegisterStatus();
        this.query();//获取账单
    },
 

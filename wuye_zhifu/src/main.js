@@ -3,6 +3,7 @@ import App from './App'
 import router from './router'
 
 /*自己添加的开始  引入mint-ui 和 axios*/
+
 import MintUI from 'mint-ui'
 import 'mint-ui/lib/style.css'
 import $ from 'jquery'
@@ -11,22 +12,25 @@ import Qs from 'qs';
 import axios from 'axios';
 //axios.defaults.withCredentials=true; //存储cookie？
 import VueAxios from 'vue-axios';
-import '../static/css/base.css'
 
-// import '../static/css/normalize.css'
-import '../static/js/rem.js'
+import './assets/css/normalize.css'
+import './assets/css/base.css'
+import './assets/js/rem.js'
 
 import cookie from 'js-cookie'
-import common from './common.js'
-Vue.prototype.common = common;
 
-import receiveData from './receiveData.js'
+//本地用
+// import {common,MasterConfig} from './assets/js/common';
+Vue.prototype.common = common;
+Vue.prototype.baseUrl = MasterConfig.C('baseUrl');
+Vue.prototype.basePageUrl = MasterConfig.C('basePageUrl');
+
+
+
+import receiveData from './assets/js/receiveData'
 Vue.prototype.receiveData = receiveData;
 
 
-
-let str = 'https://test.e-shequ.com/weixin/';
-Vue.prototype.str = str;
 
 Vue.use(MintUI)
 //创建axios 实例
@@ -40,7 +44,8 @@ var axiosInstance = axios.create({
         'Content-Type':"application/json",
         'Accept': 'application/json',
     },
-    baseURL: 'https://test.e-shequ.com/wechat/hexie/wechat',
+    baseURL:Vue.prototype.baseUrl,
+    // baseURL: 'https://test.e-shequ.com/wechat/hexie/wechat',
     withCredentials:true,
     transformResponse: [function (data) {//数据转换
       return data;

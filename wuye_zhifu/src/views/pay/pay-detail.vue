@@ -1,10 +1,4 @@
 <style scoped>
-	/* input:-webkit-input-placeholder {
-      
-         font-size: 12px;
-		 font-weight: 300;
-		 letter-spacing: 1px;
-    } */
 	.pay-detail{
 		padding:0.3rem;
 	}
@@ -94,22 +88,22 @@
 		padding: 0.3rem 0.3rem;
 	}
 	.upton-list .can-use{
-		font:0.26rem/1rem "";
+		/* font:0.26rem/1rem ""; */
 		font-size: 0.3rem;
 		height: 0.6rem;
 		border-bottom: 1px solid #878787;
-		/*padding: 10px 10px;*/
+		padding: 10px 10px;
 	}
 	.uptonDetail{
 		position: relative;
-		background:url("../../../static/image/bg_courtesy_card.png") no-repeat;
+		background:url("../../assets/image/bg_courtesy_card.png") no-repeat;
 		background-size: 100% 2.15rem;
 		margin:0.3rem 0;
 		height: 2.15rem;
 		padding:0 0.3rem 0 0.4rem;
 	}
 	.icon{
-		background:url('../../../static/image/icon_select.png');
+		background:url('../../assets/image/icon_select.png');
 		background-size: cover;
 		position:absolute;
 		width: 0.4rem;
@@ -119,7 +113,7 @@
 		margin-left: -0.6rem;
 	}
 	.iconShow{
-		background:url('../../../static/image/icon_selectted.png');
+		background:url('../../assets/image/icon_selectted.png');
 		background-size: cover;
 		z-index: 5;
 	}
@@ -300,7 +294,7 @@
 				<p class="fr">共{{uptonNumber}}个</p>
 			</div>
 			<!-- 详情 -->
-			<div class="uptonDetail" v-for=" (item,index) in uptonData" @click="showIcon(index)">
+			<div class="uptonDetail" v-for="(item,index) in uptonData" @click="showIcon(index)">
 				<i class="icon" :class="{iconShow:item.selected}" ></i>
 				<div class="detail-left fl">
 					<div class="upton-name">{{item.title}}</div>
@@ -332,26 +326,24 @@
 				needInvoice:'yes',//是否需要发票
 				uptonAmount:'未使用',
 				upronAmountNumber:0,////优惠券金额 数量
-				uptonData:[],
+				uptonData:[
+					// {
+					// 	id:1,
+					// 	selected:false,
+					// 	title:'滴滴滴',
+					// 	leftDayDes:'11',
+					// 	useStartDateStr:'22',
+					// 	useEndDateStr:'33',
+					// 	amount:100,
+					// },
+				],
 				selectUpton:true,//显示的是缴费详情页面还是选择优惠劵页面
-				// routeParams:{
-				// 	bills : this.$route.params.bills,//id 集合
-				// 	stmtId:this.$route.params.stmtId,//扫码数据
-				// 	totalPrice:this.$route.params.totalPrice,//合计金额
-				// 	reduceMode:this.$route.params.reduceMode,//减免方式
-				// },
 				routeParams:{
 					billIds : this.$route.query.billIds,//id 集合
 					stmtId:this.$route.query.stmtId,//扫码数据
 					totalPrice:this.$route.query.totalPrice,//合计金额
 					reduceMode:this.$route.query.reduceMode,//减免方式
 				},
-				// routeParams:{
-				// 	billIds : this.getUrlParams('billIds'),//id 集合
-				// 	stmtId:this.getUrlParams('stmtId'),//扫码数据
-				// 	totalPrice:this.getUrlParams('totalPrice'),//合计金额
-				// 	reduceMode:this.getUrlParams('reduceMode'),//减免方式
-				// },
 				count:0,//实际支付金额
 				hasReduce:'0',//是否有减免
 				reduceAmt:'0',//减免合计
@@ -378,10 +370,6 @@
 			if(vm.routeParams.stmtId == " "){
 				vm.routeParams.stmtId = ""
 			}
-			// console.log('----------')
-			// console.log(this.getUrlParams('billIds'))
-			// let urlIndex = location.href.split('#')[0];
-			// vm.receiveData.wxconfig(vm,wx,['chooseWXPay']);
 			//得到实际支付金额 和是否减免 和减免了多少钱
 			vm.calcReduceAmt()
 		},
@@ -397,13 +385,11 @@
 			}
 		},
 		mounted(){
+			vm.common.checkRegisterStatus();
+
 			// this.initSession4Test()
 
 			//请求费用数据
-	
-	  		// console.log(this.$route.query)
-	  		// console.log(this.$route.query.billIds);
-	  		// console.log(this.routeParams)
 			let url = "getBillDetail";
 			vm.receiveData.getData(
 				vm,
@@ -448,9 +434,9 @@
 	  		vm.receiveData.getData(vm,url2,'temp',function(){	  			
 	  		    //更新后 获取优惠劵
 	  			let url3 = 'getCouponsPayWuYe';
-	  			vm.receiveData.getData(vm,url3,'uptonData',function(){
-	  				vm.uptonData = vm.uptonData.result;
-	  				vm.uptonNumber = vm.uptonData.length;
+	  			vm.receiveData.getData(vm,url3,'uptonDatas',function(){
+	  				// vm.uptonData = vm.uptonDatas.result;
+	  				// vm.uptonNumber = vm.uptonDatas.length;
 	  			})
 	  		});
 	  		// this.common.initWechat(['onMenuShareTimeline','onMenuShareAppMessage']);
@@ -458,11 +444,12 @@
 		},
 		
 		methods:{
-					 initSession4Test(){
-							let url = '/initSession4Test/105';
-								vm.receiveData.getData(vm,url,'Data',function(){
-							});
-          		  },
+			//创造用户
+			initSession4Test(){
+				let url = '/initSession4Test/105';
+					vm.receiveData.getData(vm,url,'Data',function(){
+				});
+			},
 
 			// 重定向到正确的url
 			directRightUrl () {
@@ -496,45 +483,6 @@
 					}
 				}
 			},
-			//测试
-						// 	add() {
-						// 		vm.routeParams.reduceMode=2;	
-						// 		//实际支付的钱
-						// 		//  vm.routeParams.totalPrice
-						// 		vm.count =20.56;//传过来的合计金额
-
-						// 		let reduced_amt = 0;//减少的钱
-						// 		let reduce_rate = 0;//减少到角还是分减少到角还是分
-						// 		if ("0" == vm.routeParams.reduceMode) {	//不减免 
-						// 			return;
-						// 		}else if ("1" == vm.routeParams.reduceMode) {	//四舍五入至元
-						// 			reduce_rate = "1";
-						// 			reduced_amt=Math.round(vm.count*reduce_rate)/reduce_rate;
-						// 			vm.hasReduce = "1";
-						// 			//console.log(reduced_amt)//20--20  //20.45-- 20    //20.56--21 
-						// 	//console.log(vm.count*reduce_rate)//20--20 // 20.45--20.45 // 20.56--20.56
-						// 		}else if ("2" == vm.routeParams.reduceMode) {	//表示四舍五入至角
-						// 			reduce_rate = "10";
-						// 			reduced_amt=Math.round(vm.count*reduce_rate)/reduce_rate;
-						// 			vm.hasReduce = "1";
-						// 		//	console.log(reduced_amt) //20--20    //20.45--20.5   //20.56--20.6
-						// //	console.log(vm.count*reduce_rate)//20--200   //20.45--204.5	 //20.56--205.6 
-						// 		}else {
-						// 			return;
-						// 		}
-						// 		vm.count = reduced_amt.toFixed(2);//合计
-						// 		// console.log(vm.count)
-						// 		//1  20--20.00  // 20.45--20.00  // 20.56-- 21.00
-						// 		//2  20--20.00  // 20.45--20.50  //20.56--20.60
-						// 		vm.reduceAmt = parseFloat(20.56) - parseFloat(vm.count);
-						// 		//console.log(vm.reduceAmt)
-						// 		//1 20--0  20.45 --   0.4499999999999993     20.56 --   -0.4400000000000013
-						// 		//2 20--0  20.45 --  -0.05000000000000071    20.56 --   -0.0400000000000027  
-						// 		vm.reduceAmt = vm.reduceAmt.toFixed(2);//减少的钱
-						// 		//console.log(vm.reduceAmt)
-						// 		//1 20 -- 0.00   20.45 --   0.45    20.56 --   -0.44
-						// 		//2 20 -- 0.00   20.45 --  -0.05    20.56 --   -0.04
-			// 	},
 
 			//根据合计金额和减免方式得到实际支付金额
 			calcReduceAmt(){
@@ -612,75 +560,6 @@
 				};
 				$('.box-bg').css("display",'block');
 				let url = "getPrePayInfo?billId="+vm.routeParams.billIds+"&stmtId="+vm.routeParams.stmtId+"&couponUnit="+vm.upronAmountNumber+"&couponNum=1&couponId="+vm.couponId+"&mianBill="+vm.mianBill+"&mianAmt="+vm.mianAmt+"&reduceAmt="+vm.reduceAmt+"&invoice_title_type="+this.invoice_title_type+"&credit_code="+this.credit_code+"&invoice_title="+this.invoice_title;
-				// vm.receiveData.postData(
-							// 	vm,
-							// 	url,
-							// 	{},
-							// 	'postResultData',
-							// 	function(){
-							// 		let wd = vm.postResultData//微信配置数据
-							// 		// alert(112233)						
-							// 		//微信配置
-							// 		wx.config({
-							//                   debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
-							//                   appId: wd.appid, // 必填，公众号的唯一标识
-							//                   timestamp: wd.timestamp, // 必填，生成签名的时间戳
-							//                   nonceStr: wd.noncestr, // 必填，生成签名的随机串
-							//                   signature: wd.paysign,// 必填，签名，见附录1
-							//                   jsApiList: ['chooseWXPay'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
-							//               });
-											
-									// 		wx.chooseWXPay({
-									// 		 	"appId":wd.appid,
-								//                "timestamp":wd.timestamp,
-								//                "nonceStr":wd.noncestr,
-								//                "package":wd.packageValue,
-								//                "signType":wd.signtype,
-								//                "paySign":wd.paysign,
-												
-								//          	    success: function (res) {
-								//          	    	// alert("起步走起");
-								//          	    	// window.location.href = "https://www.baidu.com";
-									// 				let reqUrl = "noticePayed?billId="+vm.routeParams.billIds+"&stmtId="+vm.routeParams.stmtId+"&tradeWaterId="+wd.trade_water_id+"&packageId="+wd.packageId+"&feePrice="+vm.routeParams.totalPrice;
-													
-									// 				if(vm.uptonAmount != "未使用"){
-									// 					// alert("走到这一步")
-									// 					reqUrl += "&couponId="+vm.couponId;
-									// 					// alert(reqUrl)
-									// 				}
-													
-									// 				// if()098765z
-									// 				vm.receiveData.postData(vm,reqUrl,{},'reqUrlData',function(){
-									// 					vm.payInfo = vm.reqUrlData.result;
-									// 					// vm.payInfofee_data = vm.reqUrlData.result.fee_data;	  		
-									// 	  				var forwardUrl = "https://test.e-shequ.com/weixin/";
-									// 	  				// alert("支付成功");
-									// 	  				forwardUrl += "wuye/paymentquery.html";
-									// 	  				window.location.href = forwardUrl;
-									// 	  			})											
-								//          	    },
-
-								//          	    fail:function(res) {
-								//          	    	console.log(JSON.stringify(res))
-								//          	    },
-								//          	    cancel:function(res){
-								//          	    	alert('支付取消');
-									// 				// console.log(JSON.stringify(n));
-									// 				// o.isPaying = false;
-									// 		  //       commonui.hideAjaxLoading();
-									// 		  //       $("#zzmb").hide();
-									// 			}
-												
-								//          	});
-											
-											
-									// 	},
-									// 	function(){
-									// 		alert("单月账单的物业管理费和电梯、水泵运行费不能分开支付");
-									// 		alert(err.message);
-									// 	}
-				// )
-
 				this.axios.post(
 					url,
 					{},
@@ -712,23 +591,19 @@
 							
 			          	    success: function (res) {
 			          	    	// alert("起步走起");
-			          	    	// window.location.href = "https://www.baidu.com";
 								let reqUrl = "noticePayed?billId="+vm.routeParams.billIds+"&stmtId="+vm.routeParams.stmtId+"&tradeWaterId="+wd.result.trade_water_id+"&packageId="+wd.result.packageId+"&feePrice="+vm.routeParams.totalPrice;
-								
 								if(vm.uptonAmount != "未使用"){
 									// alert("走到这一步")
 									reqUrl += "&couponId="+vm.couponId;
-									// alert(reqUrl)
 								}
 								
-								// if()098765z
+								vm.Bindaddress();
+
 								vm.receiveData.postData(vm,reqUrl,{},'reqUrlData',function(){
 									vm.payInfo = vm.reqUrlData.result;
-									// vm.payInfofee_data = vm.reqUrlData.result.fee_data;	  		
-					  				var forwardUrl = "https://test.e-shequ.com/weixin/";
-					  				// alert("支付成功");
-					  				forwardUrl += "wuye/index.html?state=123#/paymentquery";
-					  				window.location.href = forwardUrl;
+									//支付成功跳转详情
+									  window.location.href = vm.basePageUrl+'wuye/index.html?state=123#/paymentquery';
+
 					  			})											
 			          	    },
 
@@ -738,10 +613,6 @@
 			          	    cancel:function(res){
 			          	    	alert('支付取消');
 			          	    	$('.box-bg').css("display",'none');
-								// console.log(JSON.stringify(n));
-								// o.isPaying = false;
-						  //       commonui.hideAjaxLoading();
-						  //       $("#zzmb").hide();
 							}
 			          	    
 			          	})
@@ -753,22 +624,17 @@
 				)
 			},
 
+			//成功绑定地址
+			 Bindaddress(){
+				 let url="/setDefaultAdressByBill?billId="+vm.routeParams.billIds
+				 vm.receiveData.postData(vm,url,{
+					 
+				 },'res',function(){
+					
+				 })	
+				 
+			 }	
 
-
-			notifyPaySuccess (){
-				let reqUrl = "noticePayed?billId="+vm.routeParams.billIds+"&stmtId="+vm.routeParams.stmtId;
-					vm.receiveData.getData(vm,reqUrl,'reqUrlData',function(){
-						vm.payInfo = vm.reqUrlData.result;
-						vm.payInfofee_data = vm.reqUrlData.result.fee_data;	  		
-		  				//console.log(999)
-		  		})
-			},
-			getUrlParams(){
-
-				var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");    //构造一个含有目标参数（name）的正则表达式。
-				var r = window.location.search.substr(1).match(reg);   // 用这则表达式筛选出含有目标参数(name)的 r。
-				if (r != null) return unescape(r[2]); return null;     //返回参数值。
-			},
 
 		}
 

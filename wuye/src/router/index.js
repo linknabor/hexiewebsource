@@ -1,25 +1,21 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Index from '@/pages/index'//入口
+// import Index from '@/pages/index'//入口
 
 // 公共组件
-import bill from '@/components/bill'
-import footer from '@/components/footer'
-
-import wuye from '@/pages/main/index'                       //物业首页
-import suggest from '@/pages/suggest/suggest'                 //业主意见
-import Paymentquery from '@/pages/paymentquery/paymentquery'  //已缴费查询
-
+// import bill from '@/components/bill'
+// import suggest from '@/pages/suggest/suggest'                 //业主意见
+// import Paymentquery from '@/pages/paymentquery/paymentquery'  //已缴费查询
+// import Message from '@/pages/main/message'
 //绑定房子
-import Myhouse from '@/pages/house/myhouse'
-import AddHouse from '@/pages/house/add-house'
-import BindHouse from '@/pages/house/bind-house'
-import IdentHouse from '@/pages/house/identify-house'
-
+// import Myhouse from '@/pages/house/myhouse'
+// import AddHouse from '@/pages/house/add-house'
+// import BindHouse from '@/pages/house/bind-house'
+// import IdentHouse from '@/pages/house/identify-house'
 //支付
-import Pay from '@/pages/pay/pay'
-import payStop from '@/pages/pay/pay-stop'
-import checkPay from '@/pages/pay/check-pay'
+// import Pay from '@/pages/pay/pay'
+// import payStop from '@/pages/pay/pay-stop'
+// import checkPay from '@/pages/pay/check-pay'
 
 
 Vue.use(Router)
@@ -29,30 +25,22 @@ const router= new Router({
         {
             path: '/',
             name: 'Index',
-            component: Index,
-            // children:[
-            //   {path:'',component:footer},
-            // ]
+            component: resolve=>require(['@/pages/index'],resolve)
         },
-          // {
-          //   path:'',
-          //   name:'wuye',
-          //   component:wuye
-          // },
+        {
+            path:'/message',
+            name:'message',
+            component:resolve=> require(['@/pages/main/message'],resolve)
+        },
         {
             path:'/suggest',
             name:'suggest',
-            component:suggest
-        },
-        {
-            path:'/bill',
-            name:'bill',
-            component:bill
+            component:resolve=> require(['@/pages/suggest/suggest'],resolve)
         },
         {
             path:'/Myhouse',
             name:'Myhouse',
-            component: Myhouse,
+            component: resolve=> require(['@/pages/house/myhouse'],resolve),
             meta:{
               title:'我的房子'
             }
@@ -60,7 +48,7 @@ const router= new Router({
         {
             path:'/identHouse',
             name:'IdentHouse',
-            component:IdentHouse,
+            component:resolve=> require(['@/pages/house/identify-house'],resolve),
             meta:{
               title:'绑定房子'
             }
@@ -68,7 +56,7 @@ const router= new Router({
         {
             path:'/addHouse',
             name:'AddHouse',
-            component:AddHouse,
+            component:resolve=> require(['@/pages/house/add-house'],resolve),
             meta:{
               title:'添加房子'
             }
@@ -76,7 +64,7 @@ const router= new Router({
         {
             path:'/bindHouse/:number',
             name:'BindHouse',
-            component:BindHouse,
+            component:resolve=> require(['@/pages/house/bind-house'],resolve),
             meta:{
               title:'绑定房子'
             }
@@ -84,7 +72,7 @@ const router= new Router({
         {
             path:'/Pay',
             name:'Pay',
-            component:Pay,
+            component:resolve=> require(['@/pages/pay/pay'],resolve),
             meta:{
               title:'缴费页面'
             }
@@ -92,7 +80,7 @@ const router= new Router({
         {
             path:'/payStop',
             name:'payStop',
-            component:payStop,
+            component:resolve=>require(['@/pages/pay/pay-stop'],resolve),
             meta:{
               title:'停车缴费'
             }
@@ -100,7 +88,7 @@ const router= new Router({
         {
             path:'/paymentquery',
             name:'paymentquery',
-            component:Paymentquery,
+            component:resolve=> require(['@/pages/paymentquery/paymentquery'],resolve),
             meta: {
               title:'缴费查询'
             }
@@ -108,16 +96,20 @@ const router= new Router({
         {
             path:'/checkPay',
             name:'checkPay',
-            component:checkPay,
+            component:resolve=> requier(['@/pages/pay/check-pay'],resolve),
             meta:{
             title:'绑定房子'
             }
-       }
+       },
+  
     ]
 });
 //路由的钩子函数，
 //在每一次路由跳转之前会进入这个方法 to：到哪去  from：从哪来 next() 调用这个方法来完成这个钩子函数
 router.beforeEach((to, from, next) => {
+    if(to.matched[0].name !== "index") {
+        common.checkRegisterStatus()
+      }
     //动态改变title
     changeTitle(to.meta.title)
     next();

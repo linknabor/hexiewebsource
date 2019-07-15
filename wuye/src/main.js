@@ -15,7 +15,6 @@ import 'mint-ui/lib/style.css'
 import $ from 'jquery'
 
 
-import Qs from 'qs';
 import axios from 'axios';
 //axios.defaults.withCredentials=true; //存储cookie？
 import VueAxios from 'vue-axios';
@@ -23,23 +22,22 @@ import './assets/css/base.css'
 import './assets/css/normalize.css'
 import './assets/js/rem.js'
 
-
 import './assets/font-icon/font_a2awfrh3fuq/iconfont.css'
-
 import cookie from 'js-cookie'
-import common from './common.js'
-Vue.prototype.common = common;
 
-import receiveData from './receiveData.js'
+import receiveData from './assets/js/receiveData'
 Vue.prototype.receiveData = receiveData;
+
+//本地用
+// import {common,MasterConfig} from './assets/js/common';
+
+Vue.prototype.common = common;
+Vue.prototype.baseUrl = MasterConfig.C('baseUrl');
+Vue.prototype.basePageUrl = MasterConfig.C('basePageUrl');
+Vue.prototype.payPageFolder =  MasterConfig.C('payPageFolder');
+
+
 Vue.prototype.$axios = axios;
-
-
-// 首页新闻
-let news = 'https://test.e-shequ.com/weixin/wuye/message.html?messageId=';
-Vue.prototype.news = news;
-
-
 Vue.use(MintUI)
 //创建axios 实例
 
@@ -58,7 +56,7 @@ var axiosInstance = axios.create({
         'Accept': 'application/json',
 
     },
-    baseURL: 'https://test.e-shequ.com/wechat/hexie/wechat',
+    baseURL:Vue.prototype.baseUrl,
    
     withCredentials:true,
     transformResponse: [function (data) {//数据转换
@@ -74,10 +72,6 @@ axiosInstance.interceptors.request.use(
         }else{//在请求头加 session
             config.headers.Cookie =`${ cookie.get('Cookie') }`
         }
-
-        // config.headers.Authorization = // token
-        //     `${ Cookies.get('yesmywine_mall$token_type') } ${ Cookies.get('yesmywine_mall$token') }`
-        // 不添加 return config 不会执行http请求
         return config
     },
     err => {

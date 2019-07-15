@@ -75,7 +75,6 @@
 	import Bill from '../../components/bill.vue';
 	
 	export default{
-		  components:{Bill},
 		data(){
 			return{
 				sectList:[],//小区列表
@@ -112,126 +111,124 @@
 				choosehouse:0
 			}
 		},
-		
-		mounted(){
-//		this.common.hasRegister();
-//			let url='/hexiehouses';
-//			this.receiveData.getData(vm,url,'response',function(){
-//				if(vm.response.result==null){
-//					vm.data={};
-//				}else{
-//					vm.data=vm.response.result["0"];
-//					 this.addRoom(vm.data.mng_cell_id);
-//					 console.log(vm.data.mng_cell_id);
-//				}
-//			})
+		created(){
+			vm=this;
 		},
+		mounted(){
+			// this.common.checkRegisterStatus();
+		},
+		components:{Bill},
 		
 		methods:{
 		
 			sousuo(name){
-				this.$axios({
-	             	url:'https://test.e-shequ.com/wechat/hexie/wechat/getVagueSectByName?sect_name='+name,
-	             	method:'get'
-	            }).then((res) =>{
-	             	let data=res.data.result;
-	             	if(data!=null){
-	             		vm.sectList=res.data.result.sect_info;
-	             		if(vm.sectList.length>0){
-	             			vm.shows=true;
-	             			var id='';
-							for(var i=0;i<vm.sectList.length; i++ ) {
-								if(vm.query.sect===vm.sectList[i].name) {
-									id=vm.sectList[i].id;
+				let url = '/getVagueSectByName?sect_name='+name;
+				vm.receiveData.getData(vm,url,'res',function(){
+						let data=vm.res.result;
+						if(data!=null){
+							vm.sectList=vm.res.result.sect_info;
+							if(vm.sectList.length>0){
+								vm.shows=true;
+								var id='';
+								for(var i=0;i<vm.sectList.length; i++ ) {
+									if(vm.query.sect===vm.sectList[i].name) {
+										id=vm.sectList[i].id;
+									}
 								}
+								vm.query.sectID=id;
 							}
-							vm.query.sectID=id;
-	             		}
-	             		
-	             		vm.showi=true;
-	             		
-						vm.add();
-	             	}else{
-	             		vm.shows=false;
-	             		vm.showi=true;
-	     //         		var id='';
-						// for(var i=0;i<vm.sectList.length; i++ ) {
-						// 	if(vm.query.sect===vm.sectList[i].name) {
-						// 		id=vm.sectList[i].id;
-						// 	}
-						// }
-						// this.query.sectID=id;
-						//vm.add();
-	             	}
-	            })
+							vm.showi=true;
+							vm.add();
+						}else{
+							vm.shows=false;
+							vm.showi=true;
+						}
+				});
+			
+
+				// this.$axios({
+					//  	url:'https://test.e-shequ.com/wechat/hexie/wechat/getVagueSectByName?sect_name='+name,
+					//  	method:'get'
+					// }).then((res) =>{
+					//  	let data=res.data.result;
+					//  	if(data!=null){
+					//  		vm.sectList=res.data.result.sect_info;
+					//  		if(vm.sectList.length>0){
+					//  			vm.shows=true;
+					//  			var id='';
+					// 			for(var i=0;i<vm.sectList.length; i++ ) {
+					// 				if(vm.query.sect===vm.sectList[i].name) {
+					// 					id=vm.sectList[i].id;
+					// 				}
+					// 			}
+					// 			vm.query.sectID=id;
+					//  		}
+							
+					//  		vm.showi=true;
+							
+					// 		vm.add();
+					//  	}else{
+					//  		vm.shows=false;
+					//  		vm.showi=true;
+					//  	}
+	            // })
 			},
 
 			addRoom(){
-//			 	localStorage.getItem('user_id')        
-//         let useruid=this.common.hasRegister("UID");
            		if(vm.query.sect==''||vm.query.area==''||vm.query.house==''||vm.query.unit==''){
            			MessageBox.alert('请输入完整信息');
            			return;
            		}else{
            			$('.pay').addClass('disabled');
 					$('.pay').text('正在处理...')
-           			this.$axios({
-           				url:'https://test.e-shequ.com/wechat/hexie/wechat/addhexiehouse2?area='+vm.query.area+'&houseId='+vm.choosehouse,
-           				method:'post'
-           			}).then((res) =>{
-                       if(res.data.result!=null){
-       				MessageBox.alert('添加房子成功').then(action =>{
-  						vm.$router.push("/myhouse")
-  					})
-       			}else if(res.data.errorCode === 0){
-       				MessageBox.alert(res.data.message).then( action =>{
-       					$('.pay').removeClass('disabled');
-						$('.pay').text('添加房屋')	
-  						vm.query.sect='';
-  						vm.query.build='';
-  						vm.query.unit='';
-			            vm.query.house='';
-			            vm.query.area='';
-  					})
-       			}
-           			})
+
+				let url='/addhexiehouse2?area='+vm.query.area+'&houseId='+vm.choosehouse;	
+				vm.receiveData.postData(vm,url,null,'res',function(){
+					if(vm.res.success) {
+						if(vm.res.result!=null){
+							MessageBox.alert('添加房子成功').then(action =>{
+								vm.$router.push("/myhouse")
+							})							
+						}
+					}else {
+						MessageBox.alert(vm.res.message).then( action =>{
+								$('.pay').removeClass('disabled');
+								$('.pay').text('添加房屋')	
+								vm.query.sect='';
+								vm.query.build='';
+								vm.query.unit='';
+								vm.query.house='';
+								vm.query.area='';
+							})
+					}
+				})	
+
+
+           		// 	this.$axios({
+					// 		url:'https://test.e-shequ.com/wechat/hexie/wechat/addhexiehouse2?area='+vm.query.area+'&houseId='+vm.choosehouse,
+					// 		method:'post'
+					// 	}).then((res) =>{
+					//        if(res.data.result!=null){
+					// 		MessageBox.alert('添加房子成功').then(action =>{
+					// 			vm.$router.push("/myhouse")
+					// 		})
+					// 		}else if(res.data.errorCode === 0){
+					// 			MessageBox.alert(res.data.message).then( action =>{
+					// 				$('.pay').removeClass('disabled');
+					// 				$('.pay').text('添加房屋')	
+					// 				vm.query.sect='';
+					// 				vm.query.build='';
+					// 				vm.query.unit='';
+					// 				vm.query.house='';
+					// 				vm.query.area='';
+					// 			})
+					// 		}
+           		// })
            			
            		}
            		
            },
-           //搜索小区
-		  // shousuo(name) {
-			 //  if(timer) {
-				//   clearTimeout(timer);
-			 //  }
-			 //  timer=setTimeout(() => {
-				//   this.getHousin(name);
-				// if(name == '') {
-				// 	this.shows=false;
-				// };
-				// // vm.add();
-			 //  }, 400);
-			   
-		  // },
-		  //获取小区
-		// getHousin(name) {
 
-  //           this.$axios({
-  //            	url:'https://www.e-shequ.com/wechat/hexie/wechat/getVagueSectByName?sect_name='+name,
-  //            	method:'get'
-  //           }).then((res) =>{
-  //            	let data=res.data.result;
-  //            	if(data!=null){
-  //            		vm.sectList=res.data.result.sect_info;
-  //            		vm.shows==true;
-  //            		vm.showi=true;
-
-  //            	}else{
-  //            		vm.shows=false;
-  //            		vm.showi=true;
-  //            	}
-  //           })
-		// },
 			//替换搜索内容
 		alertFN(s) {
 			 vm.$nextTick(function(){
@@ -247,33 +244,8 @@
 		
 		},
 			
-			//失去焦点
-		// shi() {
-		// 	if(vm.query.sect !='' && vm.sectList.length>=0) {
-				
-		// 	}
-		// 	// 
-		// 	if(vm.one!='two' && vm.query.sect!=''&& vm.sectList.length>=0) {
-		// 		vm.shows=false;
-		// 		vm.showi=true;
-		// 		var id='';
-		// 		for(var i=0;i<vm.sectList.length; i++ ) {
-		// 			if(vm.query.sect===vm.sectList[i].name) {
-		// 				id=vm.sectList[i].id;
-		// 			}
-		// 		}
-		// 		this.query.sectID=id;
-		// 			vm.add();
-		// 	}
-			
-		// },
-		//获取焦点
-		// huo() {
-		// 	if(vm.query.sect !='' && vm.sectList.length>0) {
-		// 		vm.shows=true;
-		// 		vm.showi=true;
-		// 	}
-		// },
+
+
 		clicki() {
 			if(vm.sectList.length<=0) {
 				vm.query.sect='';
@@ -368,81 +340,16 @@
 					}
 				}else if("01"==data_type){
 					vm.houseList = InfoList.house_info;
-					// vm.houseList .unshift({id:'0',name:'请选择'});
-//					vm.houseid=vm.houseList.id;
-//					this.addRoom(vm.houseid);
+
 				}
 				vm.showp=false;
-				// if ($("#phoneAjax") != null) {
-				// 	$("#phoneAjax").addClass("hidden");
-				// }
+			
 			},params)
 		},
-		// queryLoadBottom(){//查询缴费上拉加载数据
-	 //  		let tempArr = null;
-	 //  		//页码加1
-	 //  		vm.queryBillPage += 1;
-	 //  		vm.params.currentPage = vm.queryBillPage;
-	 //  		let url = 'billList';
-	 //  		vm.receiveData.getData(vm,url,'pageData4',function(){
-	 //  			tempArr = vm.pageData4.result.bill_info;
-	 //  			if( tempArr && tempArr.length > 0){
-  // 					vm.queryBillInfo =vm.queryBillInfo.concat(tempArr) //快捷缴费
-	 //  			}else{
-		// 			  vm.queryisLastPage = true;
-		// 			  vm.quan=true;
-	 //  			}
-		// 	},vm.params)
-		// 	vm.$refs.loadmore.onBottomLoaded();
-	 //  	},
-	 //  	itemClick:function(index,b){//3个页面对应不同的三个数组 
-	  		
-	 //  		let len = b.length;
-	 //  		// console.log(b[index].selected);
-	 //  		// console.log(b[index].pay_status);
-	 //  		if (b[index].pay_status!="02") {
-	 //  			return;
-	 //  		}
-	 //  		if(b[index].selected){//选中状态下
-	 //  			for(let i=index;i< len;i++){
-	 //  				//后面的全部取消选中
-	 //  				vm.$set(b[i],'selected',false);	
 
-	 //  			}
-	 //  			//某一个点击了取消后全选消失
-		// 		   vm.bAllSelect = false;
-		// 		   vm.queryAllselect=false;
-		// 		   vm.quickAllselect=false;
-		// 		//    console.log(vm.bAllSelect)
-	 //  		}else{//未选中状态下，前面全部选中
-	 //  			for(let j=index;j >= 0;j--){//
-		// 			  vm.$set(b[j],'selected',true);	
-					 
-	 //  			}
-	 //  		}
-	 //  	},
-	  	userInfo(){
-	  		let n = "GET",
-		        a = "userInfo",
-		        i = null,
-		        e = function(n) {
-		          console.log(JSON.stringify(n));
-		         vm.city = n.result.city;
-		          vm.xiaoquName = n.result.xiaoquName;
-		          vm.wuyeId=n.result.wuyeId;
-		        },
-		        r = function() {     
-		        };
-        	this.common.invokeApi(n, a, i, null, e, r);
-	  	}
 	  	
 		},
-		created(){
-			vm=this;
-//			this.userInfo();
-           
-		
-		}
+
 	}
 	
 </script>

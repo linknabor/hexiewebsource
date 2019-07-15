@@ -254,7 +254,6 @@
 			quan1:false,
 			quan2:false,
 			one:'one',
-			baseUrl:'https://test.e-shequ.com/weixin/',
 			permit_skip_pay:'1',
 		
 	  	}
@@ -277,7 +276,7 @@
 	  mounted(){
 		//   this.initSession4Test();
 	  	//微信配置
-	  	this.common.checkRegisterStatus();
+	  	// this.common.checkRegisterStatus();
 	  	let url = location.href.split('#')[0]
 		vm.receiveData.wxconfig(vm,wx,['scanQRCode'],url);
 		  
@@ -680,9 +679,11 @@
 				}
 			}
 	  		//----------过佳家
-	  		vm.str = 'https://test.e-shequ.com/weixin/';
-	  		let url = vm.str + "paymentdetail.html?#/?billIds="+bills+"&stmtId="+vm.stmtId+"&payAddr="+escape(pay_addr)+"&totalPrice="+vm[allPrice]+"&reduceMode="+vm.reduceMode;
-            window.location.href = url;
+	  		// vm.str = 'https://test.e-shequ.com/weixin/';
+	  		// let url = vm.str + "paymentdetail.html?#/?billIds="+bills+"&stmtId="+vm.stmtId+"&payAddr="+escape(pay_addr)+"&totalPrice="+vm[allPrice]+"&reduceMode="+vm.reduceMode;
+			// window.location.href = url;
+			
+			window.location.href =vm.basePageUrl+"wuyepay.html?#/?billIds="+bills+"&stmtId="+vm.stmtId+"&payAddr="+escape(pay_addr)+"&totalPrice="+vm[allPrice]+"&reduceMode="+vm.reduceMode;
 	  		
 	  	},
 

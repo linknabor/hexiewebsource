@@ -67,7 +67,6 @@
 				carBillPage :1, //停车缴费页码
 				reduceMode:1,
 				quan:false,
-				baseUrl:'https://test.e-shequ.com/weixin/',
 				permit_skip_pay:'1'
 			}
 		},
@@ -75,10 +74,10 @@
 		  	vm = this;
 		},
 		mounted(){
-			this.common.checkRegisterStatus();
+			// this.common.checkRegisterStatus();
 			//微信配置
-		  	let url = location.href.split('#')[0]
-		  	vm.receiveData.wxconfig(vm,wx,['scanQRCode'],url);
+		  	// let url = location.href.split('#')[0]
+		  	// vm.receiveData.wxconfig(vm,wx,['scanQRCode'],url);
 		  	
 		  	//请求 停车缴费 和 物业缴费首屏数据
 		  	vm.receiveData.getData(vm, vm.url, 'data',function(){
@@ -117,7 +116,7 @@
 		  	},
 		  	//点击物业缴费按钮
 			  pay(list,allPrice,allselect){//第一个参数 账单数组，第二个参数 总价 第三个参数 是否全选,所有参数 string
-		  		this.common.checkRegisterStatus();
+		  		
 		  		if( vm[allPrice] < 0.01){
 		  			alert('请选择账单后支付');
 		  			return
@@ -169,9 +168,11 @@
 					}
 				}
 		  		//------过佳家
-		  		vm.str = 'https://test.e-shequ.com/weixin/';
-		  		let url = vm.str + "paymentdetail.html?#/?billIds="+bills+"&stmtId="+vm.stmtId+"&payAddr="+escape(pay_addr)+"&totalPrice="+vm[allPrice]+"&reduceMode="+vm.reduceMode;
-	            window.location.href = url;
+		  		// vm.str = 'https://test.e-shequ.com/weixin/';
+		  		// let url = vm.str + "paymentdetail.html?#/?billIds="+bills+"&stmtId="+vm.stmtId+"&payAddr="+escape(pay_addr)+"&totalPrice="+vm[allPrice]+"&reduceMode="+vm.reduceMode;
+				// window.location.href = url;
+
+				window.location.href=vm.basePageUrl+"wuyepay.html?#/?billIds="+bills+"&stmtId="+vm.stmtId+"&payAddr="+escape(pay_addr)+"&totalPrice="+vm[allPrice]+"&reduceMode="+vm.reduceMode;
 
 		  	},
 		  	//点击某个选中按钮 params1:被点击按钮的下标 params2:被点击按钮所属的数组

@@ -11,7 +11,7 @@
 
 <script>
 import wuye from '../pages/main/index'
-import foot from '../components/footer'
+import foot from '../components/footer.vue'
 import cookie from "js-cookie";
 export default {
   components:{

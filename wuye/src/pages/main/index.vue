@@ -30,9 +30,9 @@ h6{text-align: right; padding: 0 15px;font-size: 11px;color:rgba(0,0,0,0.63);let
         <swiper :options="swiperOption" ref="mySwiper">
             <swiper-slide>
                 <div class="ban1">
-                    <router-link to="/" >
-                        <img src="../../assets/images/index/ysqban.png" alt="tt">
-                    </router-link>                  
+                    <a :href="this.basePageUrl+'rgroups.html?v=20160229'" >
+                        <img src="../../assets/images/index/sss22.png" alt="tt">
+                    </a>                  
                 </div> 
             </swiper-slide>
             <!-- <div class="swiper-pagination" slot="pagination"></div>        -->
@@ -81,12 +81,11 @@ h6{text-align: right; padding: 0 15px;font-size: 11px;color:rgba(0,0,0,0.63);let
                     </router-link>
                 </li>
                 <li class="jgg_li" >
-                    <a href="javascript:void(0);" class="link" @click="alerts()">
-
+                    <a :href="this.basePageUrl+'rgroups.html?v=20160229'" class="link" >
                         <div class="jgg_img">
-                            <img src="../../assets/images/index/bmwx1.png" alt="tt">
+                            <img src="../../assets/images/index/dairenglaji.png" alt="tt">
                         </div>
-                        <span class="jgg-span">便民维修</span>
+                        <span class="jgg-span">代扔垃圾</span>
                     </a>
                 </li>
             </ul>
@@ -136,6 +135,7 @@ export default {
     data () {
         return {
             dataArr:[],
+            shareCode:"",
             //swiper参数配置
             swiperOption:{
                 notNextTick:true,
@@ -160,10 +160,8 @@ export default {
     computed: {},
 
     mounted(){
-
         // this.initSession4Test();
         this.initUserInfo();
-        this.common.initWechat(['onMenuShareTimeline','onMenuShareAppMessage']);
     },
 
     methods: {
@@ -180,6 +178,7 @@ export default {
                 a = "userInfo",
                 i = null,
                 e = function(n) {
+                    vm.shareCode=n.result.shareCode;
                     // console.log(JSON.stringify(n));
                     vm.initNews();
                 },
@@ -214,7 +213,7 @@ export default {
             }else if(mid==17){
                 window.location.href="http://mp.weixin.qq.com/s?__biz=MzA3Njk4ODgwMA==&mid=410063784&idx=1&sn=558b520c28f984ad7c0ed2a6ef692faf#rd";
             }else{
-                window.location.href = vm.news+mid;
+                vm.$router.push({path:'/message',query:{'messageId':mid}})
             }
         },
         alerts(){
