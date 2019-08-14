@@ -10,14 +10,14 @@
 
     <!-- 主页面 -->
     <div class="zhi" v-show="currentPage=='main'" >
-        <div>
+        <!-- <div>
             <div class="rule_intro" @click="gotosgrouprulr" >
                 <img alt="" src="../assets/images/img_tuangou_zhifu.png" style="100%">
             </div>
             <div style="width:100%;" >
                  <img src="../assets/images/img_tuangou_zhifu.png" style="width: 100%;"/>
             </div>
-        </div>
+        </div> -->
             
         <div style="background: white;height: 15px;width:100%;">&nbsp;</div>
         <!-- 新增地址 -->
@@ -325,8 +325,6 @@ export default {
        vm=this;
    },
    mounted() {
-        let url = location.href.split('#')[0];
-        vm.receiveData.wxconfig(vm,wx,['chooseWXPay'],url);
        vm.common.checkRegisterStatus()
     
         vm.roady();
@@ -337,11 +335,22 @@ export default {
        
    },
     watch:{
-       suggestLocation(nw,nv) {
-           if(vm.suggestLocation.length>=2 && vm.suggestLocation!=vm.suggestion._name) {
-               vm.getSuggestion();
-           }
-       }
+      suggestLocation: {
+      handler(nv, ov) {
+        if (
+          vm.suggestLocation.length >= 2 &&
+          vm.suggestLocation != vm.suggestion._name
+        ) {
+          vm.getSuggestion();
+        }
+      },
+      deep: true
+    }
+    //    suggestLocation(nw,nv) {
+    //        if(vm.suggestLocation.length>=2 && vm.suggestLocation!=vm.suggestion._name) {
+    //            vm.getSuggestion();
+    //        }
+    //    }
    },
    methods: {
         roady() {
@@ -351,9 +360,9 @@ export default {
            }
         },
          //团购规则
-        gotosgrouprulr() {
-            vm.$router.push({path:'/sgrouprule'})
-        },
+        // gotosgrouprulr() {
+        //     vm.$router.push({path:'/sgrouprule'})
+        // },
         //模仿线上用户信息
 			//105/747/384
 		  initSession4Test(){
@@ -742,6 +751,7 @@ export default {
                    
                   });
             }else {
+                 alert(vm.n.message==null?"支付请求失败，请稍后重试！":vm.n.message);
                     vm.paying=false;
             }
             

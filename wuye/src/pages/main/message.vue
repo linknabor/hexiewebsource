@@ -22,7 +22,7 @@ let vm;
 export default {
    data () {
        return {
-           messageId:this.$route.query.messageId,
+           messageID:this.$route.query.messageId,
            message:{},
            // title:'资讯信息'
        };
@@ -31,17 +31,39 @@ export default {
        vm=this;
    },
    mounted() {
-       vm.showMessage();
+       vm.query();
 
    },
    methods: {
+      query() {
+           if(vm.messageID ==null || vm.messageID == "") {
+               vm.queryMessage();
+           }else {
+               vm.showMessage();
+           }
+       },
+       queryMessage() {
+           let url="/getmessages";
+            vm.receiveData.getData(vm,url,'data',function(){
+                if(vm.data.result !=null) {
+                    vm.message=vm.data.result
+                }else {
+                    alert('信息未发布');
+                    // location.href="https://test.e-shequ.com/guangming/weixin/home/date/index.html"
+                    vm.$router.push({path:'/'})
+                }
+                if(!vm.data.success) {
+                    alert("页面获取信息错误，请稍后重试！");
+                }
+            })
+       },
        showMessage() {
-           let url="/messageDetail/"+vm.messageId;
+           let url="/messageDetail/"+vm.messageID;
              vm.receiveData.getData(vm,url,'data',function(){
                  if(vm.data.success) {
                       if(vm.data.result !=null) {
-                            vm.message=vm.data.result;
-                        }
+                              vm.message=vm.data.result
+                         }
                  }else {
                       alert("加载消息失败！");
                  }

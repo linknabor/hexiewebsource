@@ -179,7 +179,7 @@ export default {
                     if(vm.res.success) {
                         if(vm.res.result) {
                             vm.product = vm.res.result;   
-			                vm.common.initShareConfig('代扔垃圾服务报名，限时优惠中！',vm.basePageUrl+"rgroups.html?state=123#/rgroupdetail?ruleId="+vm.ruleId,vm.product.smallPicture,"小区报名满50人开通",wx);
+			                vm.common.initShareConfig('代扔垃圾服务报名，限时优惠中！',vm.basePageUrlpay+"rgroups.html?state=123#/rgroupdetail?ruleId="+vm.ruleId,vm.product.smallPicture,"小区报名满50人开通",wx);
 
                         }
                     }else {
@@ -290,7 +290,7 @@ export default {
         //更多商品
         goclassify() {
             // vm.$router.push({path:'/'})
-            location.href=vm.basePageUrl+"rgroups.html?type="+vm.rule.productType;
+            location.href=vm.basePageUrlpay+"rgroups.html?type="+vm.rule.productType;
         },
         //马上参团
         buy() {
@@ -300,7 +300,7 @@ export default {
              
             let shareCode = getUrlParam("shareCode");
         	if(vm.common.checkRegisterStatus()&&vm.rule.id){
-				let url =vm.basePageUrl+"rgroups.html?state=123#/buy?type=4&ruleId="+vm.rule.id;
+				let url =vm.basePageUrlpay+"rgroups.html?state=123#/buy?type=4&ruleId="+vm.rule.id;
 				if(shareCode){
 					url+= "&shareCode="+shareCode;
 				}

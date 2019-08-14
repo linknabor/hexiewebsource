@@ -6,24 +6,28 @@ import App from './App'
 import router from './router'
 
 import 'babel-polyfill'
-import Es6Promise from 'es6-promise'
-Es6Promise.polyfill()
+require('es6-promise').polyfill();
+require('es6-promise/auto');
+// import Es6Promise from 'es6-promise'
+// Es6Promise.polyfill()
+
 
 /*自己添加的开始  引入mint-ui 和 axios*/
 import MintUI from 'mint-ui'
 import 'mint-ui/lib/style.css'
+Vue.use(MintUI)
+
 import $ from 'jquery'
-
-
 import axios from 'axios';
-//axios.defaults.withCredentials=true; //存储cookie？
+import cookie from 'js-cookie'
+
 import VueAxios from 'vue-axios';
+
+
 import './assets/css/base.css'
 import './assets/css/normalize.css'
 import './assets/js/rem.js'
-
 import './assets/font-icon/font_a2awfrh3fuq/iconfont.css'
-import cookie from 'js-cookie'
 
 import receiveData from './assets/js/receiveData'
 Vue.prototype.receiveData = receiveData;
@@ -34,11 +38,9 @@ Vue.prototype.receiveData = receiveData;
 Vue.prototype.common = common;
 Vue.prototype.baseUrl = MasterConfig.C('baseUrl');
 Vue.prototype.basePageUrl = MasterConfig.C('basePageUrl');
-Vue.prototype.payPageFolder =  MasterConfig.C('payPageFolder');
-
+Vue.prototype.basePageUrlpay = MasterConfig.C('basePageUrlpay');
 
 Vue.prototype.$axios = axios;
-Vue.use(MintUI)
 //创建axios 实例
 
 var axiosInstance = axios.create({
@@ -57,6 +59,7 @@ var axiosInstance = axios.create({
 
     },
     baseURL:Vue.prototype.baseUrl,
+    // baseURL:'api',
    
     withCredentials:true,
     transformResponse: [function (data) {//数据转换

@@ -18,17 +18,18 @@
         <div class="payStatus item" v-show="repairOrder.status==4">
                 <div class="content-bg">
                     <div class="content-top-bg">报修人还未支付维修费用</div>
-                    <div class="content-bottom-bg">?&nbsp;?</div>
+                    <!-- <div class="content-bottom-bg">?&nbsp;?</div> -->
                 </div>
          </div>
 
         <div v-show="repairOrder.opStatus==2">
                 <div class="top-info bottom-line">
-                    <div class="item">
+                    <!-- <div class="item">
                         <label>维修类型</label><span class="value">{{typeName}}</span>
-                    </div>
+                    </div> -->
                     <div class="item">
-                        <label>维修项目</label><span class="value">{{repairOrder.projectName}}</span>
+                        <!-- <label>维修项目</label><span class="value">{{repairOrder.projectName}}</span> -->
+                         <label>维修项目</label><span class="value">{{repairOrder.memo}}</span>
                     </div>
                 </div>
             
@@ -36,14 +37,15 @@
                     <div class="item">
                         <label>联系地址</label><span class="value">{{repairOrder.address}}</span>
                     </div>
-                    <div class="item">
+                    <!-- <div class="item">
                         <label>预约时间</label><span class="value">{{repairOrder.requireDateStr}}</span>
-                    </div>
+                    </div> -->
                     <div class="item">
                         <label>联系人</label><span class="value">{{repairOrder.receiverName}}</span>
                     </div>
                     <div class="item">
-                        <label>手机号</label><span class="value">{{repairOrder.tel}}</span>
+                        <label>手机号</label>
+                        <a  class="value" :href="'tel:'+repairOrder.tel">{{repairOrder.tel}}</a>
                     </div>
                 </div>
         </div>
@@ -165,8 +167,8 @@ export default {
 .content-top-bg {
     padding: 10px 20px;
     font-size: 20px;
-    color: #fff;
-    background: #999;
+    color: #FF8A00;
+    /* background: #999; */
     border-radius: 12px 12px 0 0;
 }
 .content-bottom-bg {

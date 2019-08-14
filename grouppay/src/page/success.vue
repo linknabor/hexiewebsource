@@ -27,7 +27,7 @@
         <div class="bottom-info divider pb30" style="text-align: center;">
             <div class="divider highlight" style="text-align: center;width:100%;font-size:16px">长按关注合协社区，尊享更多特卖产品</div>
             <!-- 公众号二维码 -->
-            <img style="width: 200px;" src="../assets/images/qrcode_for_gh_6892dbdf5ffc_258.jpg">
+            <img style="width: 200px;" src="http://img.e-shequ.com/FrNERaxTnTNFrFO-iYMY6vx2kRe6">
             
 	    </div>
         <div style="height:80px;"></div>
@@ -82,7 +82,7 @@ export default {
                             if(action == 'confirm') {
                                 if(confirm("获取订单信息失败")){
                                     if(vm.type==4){
-                                        location.href=vm.basePageUrl+"rgroups.html";        		
+                                        location.href=vm.basePageUrlpay+"rgroups.html";        		
                                     }else if(vm.type==3){
                                         location.href=vm.basePageUrl+'group/onsales.html?type=3';
                                     }else if(vm.type==5){
@@ -104,7 +104,7 @@ export default {
                         MessageBox.confirm('获取订单信息失败').then(action => {
                             if(action == 'confirm') {
                                  if(vm.type==4){
-                                        location.href=vm.basePageUrl+"rgroups.html";        		
+                                        location.href=vm.basePageUrlpay+"rgroups.html";        		
                                     }else if(vm.type==3){
                                         location.href=vm.basePageUrl+'group/onsales.html?type=3';
                                     }else if(vm.type==5){
@@ -130,7 +130,7 @@ export default {
             var desc="分享给小伙伴们一个超赞的限时特惠活动！";
             var img=order.productPic;
             if(order.orderType==4){
-			    link=vm.basePageUrl+"rgroups.html?state=123#/rgroupdetail?ruleId="+order.groupRuleId;
+			    link=vm.basePageUrlpay+"rgroups.html?state=123#/rgroupdetail?ruleId="+order.groupRuleId;
             }else if(order.orderType==0&&order.groupId!=0){
                 // link=MasterConfig.C('basePageUrl')+"group.html?groupId="+order.groupId;
             }
@@ -152,7 +152,7 @@ export default {
        //更多商品
        goback() {
             if(vm.type==4){
-                location.href=vm.basePageUrl+"rgroups.html";        		
+                location.href=vm.basePageUrlpay+"rgroups.html";        		
             }else if(vm.type==3){
                 location.href=vm.basePageUrl+'group/onsales.html?type=3';
             }else if(vm.type==5){

@@ -8,11 +8,11 @@ const path = require('path')
 module.exports = {
   build: {
     env: require('./prod.env'),
-    index: path.resolve(__dirname, '../dist/paymentdetail.html'),
+    index: path.resolve(__dirname, '../dist/wuyepay.html'),
     assetsRoot: path.resolve(__dirname, '../dist'),
-    assetsSubDirectory: 'staticvue', //放置静态文件的目录
+    assetsSubDirectory: 'wuyepay', //放置静态文件的目录
     assetsPublicPath: './', //放置静态文件的路径
-    productionSourceMap: true,
+    productionSourceMap: false,
     // Gzip off by default as many popular static hosts such as
     // Surge or Netlify already gzip all static assets for you.
     // Before setting to `true`, make sure to:

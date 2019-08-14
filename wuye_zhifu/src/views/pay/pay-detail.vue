@@ -244,6 +244,10 @@
 					<span class="fl" >物业优惠</span>
 					<span class="fr bigfont">￥{{reduceAmt}} </span>
 				</li>
+				<!-- <li class="ov coupon"  v-show="Member" @click="mebaerherf()">
+					<span class="fl" >支付立减50</span>
+					<span class="fr bigfont ">立刻开通VIP></span>
+				</li> -->
 			</ul>
 			
 			<!-- 支付金额 -->
@@ -251,6 +255,7 @@
 				<p class="fl">支付金额</p>
 				<p class="fr bigfont">￥{{count}}</p>
 			</div>
+
 			<!-- 发票 v-show="yins"-->
 			<form class="invoice" >
 				<div class="form-row">
@@ -318,6 +323,7 @@
 	export default {
 		data(){
 			return {
+				Member:true,
 				yins:false,
 				invoice_title:'',//发票抬头
 				credit_code:'',//公司税号
@@ -365,7 +371,7 @@
 		created(){
 
 			vm = this;		
-			// location.href.reload();
+			
 			this.directRightUrl();
 			if(vm.routeParams.stmtId == " "){
 				vm.routeParams.stmtId = ""
@@ -389,6 +395,7 @@
 
 			// this.initSession4Test()
 
+			// this.getMember(); 判断是否开通会员
 			//请求费用数据
 			let url = "getBillDetail";
 			vm.receiveData.getData(
@@ -468,7 +475,22 @@
 			    window.location.href = url
 			  }
 			},
-
+			//判断是否开通vip
+			// getMember() {
+			// 	let url = '/getMember';
+			// 		vm.receiveData.getData(vm,url,'res',function(){
+			// 			if(vm.res.length!=0) {
+			// 				if(vm.res[0].status==0) {
+			// 					vm.Member=false;
+			// 				}
+			// 			} 
+						
+			// 	});
+			// },
+			// //点击vip跳转
+			// mebaerherf() {
+			// 	window.location.href=vm.basePageUrlpay+'orderpay.html?start=123#/kaitong'
+			// },
 			//切换优惠券选中状态
 			showIcon(index){
 				if(vm.uptonData[index].selected){

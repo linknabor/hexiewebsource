@@ -1,7 +1,13 @@
 <template>
    <div class="success">
         <div class="brand-tip highlight" style="font-size: 24px;">恭喜你！交易成功</div>
-	    <!-- <div class="highlight fs16 divider p15" style="text-align:center;" >点击右上角将链接分享给您的朋友和邻居吧！</div> -->
+	    <div class="highlight fs16 divider p15" style="text-align:center; padding-top:0px;position: relative;" >
+            <div class="highpos">
+                <div>点击右上角将链接分享给您的邻居吧!</div>
+                <div style="color:red">推荐2位邻居下单享首单五折优惠;</div>
+                <div style="color:red">推荐4位邻居下单享首单免费优惠。</div>
+            </div>
+        </div>
         <div class="top-info lite-divider">
             <div class="item">
                 <label>订单编号</label><span class="value">{{order.orderNo}}</span>
@@ -27,7 +33,7 @@
         <div class="bottom-info divider pb30" style="text-align: center;">
             <div class="divider highlight" style="text-align: center;width:100%;font-size:16px">长按关注合协社区，尊享更多特卖产品</div>
             <!-- 公众号二维码 -->
-            <img style="width: 200px;" src="../../assets/images/group/qrcode_for_gh_6892dbdf5ffc_258.jpg">
+            <img style="width: 200px;" src="http://img.e-shequ.com/FrNERaxTnTNFrFO-iYMY6vx2kRe6">
             
 	    </div>
         <div style="height:80px;"></div>
@@ -82,13 +88,13 @@ export default {
                         MessageBox.confirm('获取订单信息失败').then(action => {
                                 if(action == 'confirm') {
                                     if(vm.type==4){
-                                        location.href=vm.basePageUrl+"rgroups.html";        		
+                                        location.href=vm.basePageUrlpay+"rgroups.html";        		
                                     }else if(vm.type==3){   
                                         location.href=vm.basePageUrl+'/group/onsales.html?type=3';
                                     }else if(vm.type==5){
                                         // location.href="../home/index.html?v=20160229";
                                     }else{
-                                        location.href=vm.basePageUrl+'group/rgroups.html?type=3';     		
+                                        location.href=vm.basePageUrlpay+'rgroups.html';     		
                                     } 
                                 }
                         }).catch(err => {
@@ -103,13 +109,13 @@ export default {
                         MessageBox.confirm('获取订单信息失败').then(action => {
                             if(action == 'confirm') {
                                  if(vm.type==4){
-                                        location.href=vm.basePageUrl+"rgroups.html";        		
+                                        location.href=vm.basePageUrlpay+"rgroups.html";        		
                                     }else if(vm.type==3){
                                         location.href=vm.basePageUrl+'/group/onsales.html?type=3';
                                     }else if(vm.type==5){
                                         // location.href="../home/index.html?v=20160229";
                                     }else{
-                                        location.href=vm.basePageUrl+'/group/rgroups.html?type=3';     		
+                                        location.href=vm.basePageUrlpay+'rgroups.html';     		
                                     }     
                             }
                         }).catch(err => {
@@ -124,11 +130,11 @@ export default {
        initShareSetting(order) {
             var title = "代扔垃圾服务报名，限时优惠中！";
            var link;
-           link=vm.basePageUrl+"rgroups.html?state=123#/rgroupdetail?ruleId="+order.groupRuleId;
+           link=vm.basePageUrlpay+"rgroups.html?state=123#/rgroupdetail?ruleId="+order.groupRuleId;
             var desc="小区报名满50人开通";
             var img=order.productPic;
             if(order.orderType==4){
-			    link=vm.basePageUrl+"rgroups.html?state=123#/rgroupdetail?ruleId="+order.groupRuleId;
+			    link=vm.basePageUrlpay+"rgroups.html?state=123#/rgroupdetail?ruleId="+order.groupRuleId;
             }else if(order.orderType==0&&order.groupId!=0){
                 // link=MasterConfig.C('basePageUrl')+"group.html?groupId="+order.groupId;
             }
@@ -154,13 +160,13 @@ export default {
        goback() {
          if(action == 'confirm') {
              if(vm.type==4){
-                    location.href=vm.basePageUrl+"rgroups.html";        		
+                    location.href=vm.basePageUrlpay+"rgroups.html";        		
                 }else if(vm.type==3){
                     location.href=vm.basePageUrl+'/group/onsales.html?type=3';
                 }else if(vm.type==5){
                     // location.href="../home/index.html?v=20160229";
                 }else{
-                    location.href=vm.basePageUrl+'/group/rgroups.html?type=3';     		
+                    location.href=vm.basePageUrlpay+'rgroups.html';     		
                 }     
         }
        }
@@ -178,14 +184,23 @@ export default {
     background: #ffffff;
 }
 .brand-tip {
-    padding: 30px 0;
+    margin-top: 30px ;
+    padding-bottom: 10px;
     padding-left: 20px;
     font-size: 30px;
+    padding-top:10px;
     background: url("../../assets/images/group/icon_successful.png") no-repeat;
     background-position: 35px center;
     background-size: 35px;
-    text-align:center
+    text-align:center;
+
 }
+.highpos {
+			text-align: left;
+			width: auto;
+			margin: 0px auto;
+			display: inline-block;
+		}
 .highlight {
     color: #ff8a00;
 }   

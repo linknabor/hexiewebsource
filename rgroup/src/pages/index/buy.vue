@@ -787,6 +787,7 @@ export default {
                     },
                     fail:function(res) {
                         console.log(JSON.stringify(res))
+                        vm.zzshow=false;
                     },
                     cancel:function(res){
                         vm.zzshow=false;

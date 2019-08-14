@@ -25,7 +25,7 @@ import cookie from 'js-cookie'
 Vue.prototype.common=common;
 Vue.prototype.baseUrl=MasterConfig.C('baseUrl');
 Vue.prototype.basePageUrl=MasterConfig.C('basePageUrl');
-
+Vue.prototype.basePageUrlpay=MasterConfig.C('basePageUrlpay');
 
 import receiveData from './assets/js/receiveData'
 Vue.prototype.receiveData=receiveData

@@ -17,13 +17,13 @@
 		</div>
         <!-- load -->
         <div v-show="currentPage=='main'">
-            <div class="rule_intro" @click="gotosgrouprulr" >
+            <!-- <div class="rule_intro" @click="gotosgrouprulr" >
                  <img alt="" src="../assets/images/img_tuangou_zhifu.png" style="width:100%;">
             </div>
             <div style="width:100%;" >
                 <img src="../assets/images/img_tuangou_zhifu.png" style="width: 100%;"/>
-            </div>
-            <div style="background: white;height: 15px;width:100%;">&nbsp;</div>
+            </div>-->
+            <div style="background: white;height: 15px;width:100%;">&nbsp;</div> 
             <div class="addr_area" @click="ShowAddress">
                 <div class="addr_top">&nbsp;</div>
                 <div style="text-align:center; background-color:#f7f7f1;">
@@ -328,8 +328,6 @@ export default {
 
         this.common.checkRegisterStatus()
 
-        let url = location.href.split('#')[0];
-        vm.receiveData.wxconfig(vm,wx,['chooseWXPay'],url);
         vm.queryBuyInfo();
         vm.queryAddress();
         vm.queryCoupon();
@@ -526,9 +524,9 @@ export default {
            }
        },
        //跳转规则
-       gotosgrouprulr() {
-           vm.$router.push({path:'/sgrouprule'})
-       },
+    //    gotosgrouprulr() {
+    //        vm.$router.push({path:'/sgrouprule'})
+    //    },
        check(item) {
            vm.addr.checkedAddress=item;
            vm.checkid=item.id;
@@ -686,7 +684,7 @@ export default {
        },
        requestPay() {
           let url ="/requestPay/"+vm.model.order.id;
-          vm.receiveData.getData(this,url,'res',function(){
+          vm.receiveData.getData(vm,url,'res',function(){
               if(vm.res.success) {
                 wx.config({
                     debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
@@ -710,7 +708,7 @@ export default {
                         console.log('支付错误了'+JSON.stringify(res))
                     },
                     cancel:function(res){
-                        // alert('支付取消');
+                        alert('支付取消');
                         
                     }
                 }) 

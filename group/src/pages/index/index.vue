@@ -16,6 +16,7 @@
 			<img src="../../assets/images/index/c3d7f369-4a5e-4c4a-9fb9-a4b9d274c7e1.gif" style="width:40px;height40px;vertical-align: middle;">
 		</div>
         <!-- load -->
+     <div id="indexdivs" @scroll="getscroll">
         <div class="mlr5" id="indexDiv">
             <div style="width: 50%;float:left;" v-for="(product,index) in temais" :key="product.id">
                 <div class="product-item" :class="{pleft:index%2==1,pright:index%2==0}" @click="Href(product.ruleId)">
@@ -34,6 +35,7 @@
             </div>
                 <div style="clear:both;"></div>
         </div>
+    </div>
         <div style="height:10px;clear:both"> </div>
    </div>
 </template>
@@ -62,7 +64,7 @@ export default {
    },
    mounted() {
 
-        window.addEventListener('scroll',vm.getscroll);
+        // window.addEventListener('scroll',vm.getscroll);
    },
 
    components: {},
@@ -106,8 +108,8 @@ export default {
        Href(id) {
            vm.$router.push({path:'/onsaledetail',query:{'ruleId':id,'type':vm.currentType}})
        },
-        getscroll() {
-            var st = $(window).scrollTop();
+        getscroll(e) {
+                 var st = e.srcElement.scrollTop;
                  loadheight = $("#indexDiv").height();
                 var hook=loadheight-st;
                 if(hook<800&&hasNext&&!isloadPage){
@@ -235,6 +237,14 @@ export default {
     overflow: auto;
     -moz-border-radius: 15px;
     -webkit-border-radius: 15px;
+}
+#indexdivs {
+    position:absolute;
+    left: 0;
+    top:0;
+    right: 0;
+    bottom: 0;
+    overflow:auto;
 }
  /* load */
 .mlr5 {

@@ -1,5 +1,6 @@
 import Vue from 'vue'
-import Router from 'vue-router'
+import VueRouter from 'vue-router'
+
 // import Index from '@/pages/index'//入口
 
 // 公共组件
@@ -18,9 +19,8 @@ import Router from 'vue-router'
 // import checkPay from '@/pages/pay/check-pay'
 
 
-Vue.use(Router)
 
-const router= new Router({
+const router= new VueRouter({
     routes: [
         {
             path: '/',
@@ -96,11 +96,51 @@ const router= new Router({
         {
             path:'/checkPay',
             name:'checkPay',
-            component:resolve=> requier(['@/pages/pay/check-pay'],resolve),
+            component:resolve=> require(['@/pages/pay/check-pay'],resolve),
             meta:{
             title:'绑定房子'
             }
        },
+       {
+        path:'/repair',
+        name:'repair',
+        component:resolve=> require(['@/pages/repair/repair'],resolve),
+        meta:{
+        title:''
+        }
+      }, 
+      {
+        path:'/submitSuccess',
+        name:'submitSuccess',
+        component:resolve=> require(['@/pages/repair/submitSuccess'],resolve),
+        meta:{
+        title:''
+        }
+      },
+      {
+        path:'/mysteward',
+        name:'mysteward',
+        component:resolve=> require(['@/pages/suggest/mysteward'],resolve),
+        meta:{
+        title:''
+        }
+      },
+      {
+        path:'/threadDetail',
+        name:'threadDetail',
+        component:resolve=> require(['@/pages/suggest/threadDetail'],resolve),
+        meta:{
+        title:''
+        }
+      },
+      {
+        path:'/maintain',
+        name:'maintain',
+        component:resolve=> require(['@/pages/suggest/maintain'],resolve),
+        meta:{
+        title:''
+        }
+      },
   
     ]
 });
@@ -114,6 +154,7 @@ router.beforeEach((to, from, next) => {
     changeTitle(to.meta.title)
     next();
 });
+Vue.use(VueRouter)
 
 
 //动态改变title

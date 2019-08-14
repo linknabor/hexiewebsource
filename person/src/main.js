@@ -20,7 +20,7 @@ import cookie from 'js-cookie'
 Vue.prototype.common=common;
 Vue.prototype.baseUrl=MasterConfig.C('baseUrl');
 Vue.prototype.basePageUrl=MasterConfig.C('basePageUrl');
-
+Vue.prototype.basePageUrlpay=MasterConfig.C('basePageUrlpay');
 
 import receiveData from './api/receiveData'
 Vue.prototype.receiveData=receiveData
@@ -42,6 +42,7 @@ var axiosInstance = axios.create({
 
   },
   baseURL: Vue.prototype.baseUrl,
+  // baseURL:'/api',
   withCredentials:true,
   transformResponse: [function (data) {//数据转换
     return data;

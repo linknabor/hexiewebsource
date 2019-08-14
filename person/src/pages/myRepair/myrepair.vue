@@ -4,12 +4,13 @@
                 <img class="icon-repair fl" :src="item.typeImg"/>
                 <!-- <img class="icon-repair fl" src="../../assets/images/img/btn2.png"/> -->
                 <div class="ov ptb15">
-                    <span class="fl fs15" style="color: #000">{{item.typeName}}</span>
-                    <span class="fr fs12" style="color: #999;">
+                   <!-- <span class="fl fs15" style="color: #000">便民维修</span> -->
+                  <!--  <span class="fl fs15" style="color: #000">{{item.typeName}}</span> -->
+                     <span class="fr fs12" style="color: #999;">
                         <i class="icon time-icon"></i>{{item.time}}</span>
                 </div>
                 <div class="comment ov  pb15">
-                    <span class="fl fs15" style="font-size: 16px;color: #666;max-width: 120px;height:30px;line-height:30px; overflow: hidden;">{{item.projectName}}</span>
+                    <span class="fl fs15" style="font-size: 16px;color: #666;max-width: 120px;height:30px;line-height:30px; overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">{{item.projectName}}</span>
                     <span class="fr fs12 status-font">{{item.statusStr}}</span>
               
              </div>
@@ -56,7 +57,7 @@ export default {
                 if(vm.res.success) {
                         vm.orders=vm.res.result;
                         for(var i in vm.orders)  {
-                            vm.orders[i].typeName = vm.typeConfig[vm.orders[i].repairType][0];
+                            // vm.orders[i].typeName = vm.typeConfig[vm.orders[i].repairType][0];
                             vm.orders[i].typeImg = vm.typeConfig[vm.orders[i].repairType][1];
                         }
                 }
@@ -77,7 +78,7 @@ export default {
     background: #fffff8;
     margin: 0;
     height: auto;
-    padding-bottom: 50px;
+    padding-bottom: 20px;
 }
 
 .ov {

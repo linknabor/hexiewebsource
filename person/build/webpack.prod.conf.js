@@ -12,6 +12,8 @@ const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 const env = require('../config/prod.env')
+const Verios = new Date().getTime();
+
 // ------------------
 //让打包的时候输出可配置的文件
 // const GenerateAssetPlugin = require('generate-asset-webpack-plugin'); 
@@ -32,8 +34,8 @@ const webpackConfig = merge(baseWebpackConfig, {
   devtool: config.build.productionSourceMap ? config.build.devtool : false,
   output: {
     path: config.build.assetsRoot,
-    filename: utils.assetsPath('js/[name].[chunkhash].js'),
-    chunkFilename: utils.assetsPath('js/[id].[chunkhash].js')
+    filename: utils.assetsPath('js/[name].[chunkhash]'+Verios+'.js'),
+    chunkFilename: utils.assetsPath('js/[id].[chunkhash]'+Verios+'.js')
   },
   plugins: [
     // ---------------------
@@ -57,8 +59,8 @@ const webpackConfig = merge(baseWebpackConfig, {
       uglifyOptions: {
         compress: {
           warnings: false,
-          // drop_debugger:true,
-          // drop_console:true
+          drop_debugger:true,
+          drop_console:true
         }
       },
       sourceMap: config.build.productionSourceMap,

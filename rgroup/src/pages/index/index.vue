@@ -1,6 +1,6 @@
 <template>
    <div >
-       <div id ="div11" v-show="rgoupscontent=='list'" style="margin:0 auto;border:0px solid #000;width:300px;height:100px;line-height: 450px;">
+       <div id ="div11" v-show="rgoupscontent=='list'" style="margin:0 auto;border:0px solid #000;width:300px;height:100px;line-height: 450px;text-align: center;">
            <span style='font-size: 18px;'>您的小区尚未开通报名，敬请期待！</span>
        </div>
        <div id="div12" v-show="rgoupscontent=='main'">
@@ -78,8 +78,8 @@ export default {
         vm.receiveData.wxconfig(vm,wx,['onMenuShareTimeline','onMenuShareAppMessage'],url);
 
         vm.initShareSetting();
-
-        vm.initSession4Test();
+        
+        // vm.initSession4Test();
        vm.query();
        vm.updateLeftTime();//计时器
         
@@ -97,8 +97,8 @@ export default {
    methods: {
         initShareSetting(){
             var title = "社区服务";
-            var link=vm.basePageUrl+"rgroups.html";
-            var img=vm.basePageUrl+"rgroupspay/share_tuan.jpg";
+            var link=vm.basePageUrlpay+"rgroups.html";
+            var img=vm.basePageUrlpay+"rgroupspay/share_tuan.jpg";
             var desc="【合协社区】为您提供更好的服务！";
             vm.common.initShareConfig(title,link,img,desc,wx);
         },

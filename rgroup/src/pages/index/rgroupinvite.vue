@@ -81,7 +81,7 @@
             </span>
         </div>
         <div v-if="share_page=='1'">
-            <div style="position: fixed;bottom:5px;left:5px;right:5px;text-align:center;background-color: #ff8600;height:40px;color:#ffffff;font-size: 16px;line-height: 40px">
+            <div style="position: fixed;bottom:5px;left:5px;right:5px;text-align:center;background-color: #ff8600;height:40px;color:#ffffff;font-size: 16px;line-height: 40px;z-index: 10000">
                 点击右上方分享，邀请好友一起参与
             </div>
         </div>
@@ -168,7 +168,7 @@ export default {
     },
     initShareSetting (product) {
         var title = "代扔垃圾服务报名，限时优惠中！";
-		var link=vm.basePageUrl+"rgroups.html?state=123#/rgroupdetail?ruleId="+vm.ruleId;
+		var link=vm.basePageUrlpay+"rgroups.html?state=123#/rgroupdetail?ruleId="+vm.ruleId;
 		var img=product.smallPicture;
 		var desc="小区报名满50人开通";
 		vm.common.initShareConfig(title,link,img,desc,wx)

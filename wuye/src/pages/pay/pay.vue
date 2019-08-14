@@ -487,12 +487,13 @@
 			vm.showp=true;
 			let url = 'billList';
 			vm.params.house_id = vm.query.house;
+			vm.params.sect_id = vm.query.sectID;
 			vm.params.currentPage = 1;
 			vm.receiveData.getData(vm,url,'queryBillInfo',function(){
 				vm.permit_skip_pay = vm.queryBillInfo.result.permit_skip_pay;
 				vm.pay_least_month = vm.queryBillInfo.result.pay_least_month;//3月份
 					vm.reduceMode=vm.queryBillInfo.result.reduce_mode;  //从新赋值减免方式
-				console.log('我是减免方式:'+vm.queryBillInfo.result.reduce_mode+'我把他赋值给'+vm.reduceMode)
+				// console.log('我是减免方式:'+vm.queryBillInfo.result.reduce_mode+'我把他赋值给'+vm.reduceMode)
 				
 				if(vm.queryBillInfo.result == null) {
 					vm.queryBillInfo=[]

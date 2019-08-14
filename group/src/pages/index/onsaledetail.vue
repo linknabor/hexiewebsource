@@ -86,7 +86,7 @@
         <div class="btn-home-fixed" style="color: white; position: fixed;z-index:10000;width: 100%;bottom: 0px;">
             <span  class="fl" 
                 style="height:40px;line-height:40px;width:36%;background-color:#444;text-align:center;font-size:15px;" @click="goclassify()">
-                更多团购
+                更多商品
             </span>
             <span  class="fl" 
                 style="height:40px;line-height:40px;width:64%;background-color:#ff8a00;text-align: center;font-size:15px;"  @click="buy" ms-class-useless="rule.leftSeconds < 0">
@@ -195,7 +195,7 @@ export default {
         collocations() {
             let url ="collocation/3/" + vm.ruleId;
              vm.receiveData.getData(vm,url,'res',function(){
-                    if(vm.res.success) {
+                    if(vm.res.success && vm.res.result!=null) {
                         vm.collocation=vm.res.result;
                         vm.collproducts=vm.res.result.products;
                     }
@@ -245,7 +245,7 @@ export default {
         buy() {
              if(vm.rule.id) {
                 //  vm.$router.push({path:'/buy',query:{type:'3',ruleId:vm.rule.id}})
-                location.href=vm.basePageUrl+'grouppay.html#/buy?type=3&ruleId='+vm.rule.id
+                location.href=vm.basePageUrlpay+'grouppay.html#/buy?type=3&ruleId='+vm.rule.id
              }   
         }
    },

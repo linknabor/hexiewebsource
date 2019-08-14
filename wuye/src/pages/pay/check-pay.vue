@@ -73,7 +73,7 @@
 	import { MessageBox } from 'mint-ui';
 	import axios from 'axios';
 	import Bill from '../../components/bill.vue';
-	
+	import '../../tap.js'
 	export default{
 		data(){
 			return{

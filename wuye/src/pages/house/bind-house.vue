@@ -72,15 +72,26 @@
 	  	//查询number下的房屋
 	  	 let url = '/hexiehouse?stmtId='+ this.axiosParams.number;
   		this.receiveData.getData(vm,url,'response',function(){
-
-			  if(vm.response.result== null) {
-				  vm.data={}
-				  alert('未查询到该房屋')
-				  vm.canAddhouse=false;
+			  if(vm.response.success){
+				if(vm.response.result== null) {
+					  vm.data={}
+					  alert('未查询到该房屋')
+					  vm.canAddhouse=false;
+				  }else {
+					  vm.data = vm.response.result
+					  vm.canAddhouse=true;
+				  }
 			  }else {
-				  vm.data = vm.response.result
-				  vm.canAddhouse=true;
+				alert(vm.response.message==null?'未查询到该房屋':vm.response.message)
 			  }
+			//   if(vm.response.result== null) {
+			// 	  vm.data={}
+			// 	  alert('未查询到该房屋')
+			// 	  vm.canAddhouse=false;
+			//   }else {
+			// 	  vm.data = vm.response.result
+			// 	  vm.canAddhouse=true;
+			//   }
   		})
 	  },
 	  methods:{
@@ -94,7 +105,7 @@
 	  		let url2 = '/addhexiehouse?stmtId='+stmtId+'&houseId='+this.data.mng_cell_id;
 	  		vm.receiveData.postData(vm,url2,{},'res',function(){
 			if(vm.res.success){ 
-	  			vm.loadingShow = false;
+	  			// vm.loadingShow = false;
 				if(vm.res.result !== null) {
                     MessageBox.alert('添加房子成功',wuye_myhouse.url).then( action =>{
 	  						vm.$router.push("/myhouse")
@@ -105,12 +116,12 @@
 	  						vm.$router.push("/myhouse")
 	  					})
 				}
-				if(!vm.res.success) {
+			}
+			if(!vm.res.success) {
                     MessageBox.alert(vm.res.message).then( action =>{
 						vm.$router.push("/addHouse")
 	  					})
 				}
-			}
 
 	  		})
 

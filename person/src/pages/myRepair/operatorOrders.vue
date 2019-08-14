@@ -11,11 +11,12 @@
         <div class="ov pr15 lite-divider" style="color:#3b3937"  v-for="(item,i) in orders" @click="gotoDetail(i)">
             <img class="icon-repair fl" :src="item.typeImg"/>
             <div class="ov ptb15">
-                <span class="fl fs15" style="color: #000">{{item.typeName}}</span>
-                <span class="fr fs12" style="color: #999;"><i class="icon time-icon"></i>{{item.time}}</span>
+                <!-- <span class="fl fs15" style="color: #000">便民维修</span>     -->
+                <!-- <span class="fl fs15" style="color: #000">{{item.typeName}}</span>-->
+                <span class="fr fs12" style="color: #999;"><i class="icon time-icon"></i>{{item.time}}</span> 
             </div>
             <div class="comment ov  pb15">
-                <span class="fl fs15" style="font-size: 16px;color: #666;max-width: 120px;height:30px;line-height:30px; overflow: hidden;">{{item.projectName}}</span>
+                <span class="fl fs15" style="font-size: 16px;color: #666;max-width: 120px;height:30px;line-height:30px; overflow: hidden;text-overflow: ellipsis;white-space: nowrap;   ">{{item.projectName}}</span>
                 <span class="fr fs12 status-font">{{item.statusStr}}</span>
             </div>
         </div>
@@ -59,15 +60,15 @@ export default {
        query() {
             vm.receiveData.getData(vm,'operator/repair/query/'+vm.status,'res',function(){
                 if(vm.res.success){
-                    vm.orders=vm.res.result;
-                    for(var i in vm.orders)  {
-                        vm.orders[i].typeName = vm.typeConfig[vm.orders[i].repairType][0];
-                        vm.orders[i].typeImg = vm.typeConfig[vm.orders[i].repairType][1];
-                    }
+                        vm.orders=vm.res.result;
+                        for(var i in vm.orders)  {
+                            // vm.orders[i].typeName = vm.typeConfig[vm.orders[i].repairType][0];
+                            vm.orders[i].typeImg = vm.typeConfig[vm.orders[i].repairType][1];
+                        }
                 }else {
                     alert("查询维修记录异常，请稍后重试");
                 }   
-                });
+            });
        },
        //点击导航
        changeStatus(s) {
@@ -96,6 +97,7 @@ export default {
     background: #fffff8;
     margin: 0;
     height: auto;
+    padding-bottom:20px;
 }
 
 .statusBar {

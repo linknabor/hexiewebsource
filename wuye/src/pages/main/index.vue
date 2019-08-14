@@ -1,6 +1,18 @@
 <style scoped>
-.wuye{font-family: PingFangSC-Regular;width: 100%;height: 800px;
-      background-color:#ccc;font-size: 14px;text-align: center}
+#divwuye {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:#fff;
+  overflow:auto;
+}
+.wuye{font-family: PingFangSC-Regular;width: 100%;
+  margin-bottom: 60px;
+/* height: 800px; */
+      background-color:#ccc;font-size: 14px;
+     }
 a{color: #000;opacity: 0.7;}
 .ban1{width: 100%;}
 .ban1 img{width: 100%;}
@@ -9,28 +21,142 @@ a{color: #000;opacity: 0.7;}
 .jgg_img{margin: 15px auto 3px;}
 .jgg_img img{width: 54px;}
 .jgg-span{color: black;}
-.inner{width: 100%;height: 350px;overflow: hidden; background-color: white;}
-.inner1{width: 80%;height: 20px; margin:15px auto 15px;line-height: 20px;}
-.spanl{font-size: 18px;letter-spacing: 1.38px;}
-.spanr{font-size: 12px;letter-spacing: 1.12px;opacity: 0.5;color: #171717;padding-top: 3px;}
-.title_li{width: 86%;height: 100px;overflow: hidden;margin: 0 auto;position: relative;}
-/* .title_li div{float: left;} */
-.title_img{width: 30%;height:86px;position: absolute;margin-left: 0;margin-top: 7px}
-.title_img img{width: 100%;height:100%;margin:auto;}
-.title_news{font-size: 14px; width: 70%;height: 85px; text-align: left;position: absolute;margin-left: 30%;margin-top:7px;}
-.title_news span{padding: 0 20px;color: black;}
-.xiaxian{height:1px;width:100%;background-color:#ccc; margin-top: 7px;}
-p{padding: 0 20px;color: #565252;letter-spacing: 1.14px;overflow: hidden;
-    display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;
-    overflow: hidden;height: 34px;line-height: 17px;}
-h6{text-align: right; padding: 0 15px;font-size: 11px;color:rgba(0,0,0,0.63);letter-spacing: 0.9px;}
+/* 资讯 */
+.inner{
+width: 100%;
+/* height: 350px; */
+overflow: hidden; background-color: white;}
+.tabmain {
+    border-bottom: 1px solid #d4cfc8;
+    height: 46px;
+}
+.tab {
+    height: 46px;
+    width: 100%;
+    overflow: auto;
+    -ms-touch-action: none;
+    touch-action: none;
+    position: absolute;
+    /* box-sizing: border-box; */
+}
+.tabscon {
+    width: 100%;
+    position: absolute;
+}
+.notice-tab-title {
+    display: inline-block;
+    width: 25%;
+    /* color: #dd9c4d; */
+    color: #000;
+    font-size: 14px;
+    text-align: center;
+    /* padding: 15px 0; */
+    height: 45px;
+    line-height: 45px;
+    transition: all 1s ;
+    -webkit-transition: all 1s;
+}  
+
+.tab .notice-tab-title.active {
+    color: #47B3FF;
+    /* border-color: #47B3FF; */
+    border-bottom: 1px solid #47B3FF;
+}  
+ .tabadd {
+     text-align: left;
+     transition: all 1s;
+     -webkit-transition: all 1s;
+ }
+   
+.tab::-webkit-scrollbar {
+        display: none;
+    }
+.section3_notice{
+    margin: 15px 0px 15px 4%;
+    font-size: 15px;
+    color: #000000;
+    text-align: left
+}
+.section3_divider{
+    border-bottom: 1px solid #e5e2dd;
+}    
+
+ .section3_zixuns{
+    /* padding: 10px 0px 10px 4%; */
+    height: 105px;
+    border-bottom: 1px solid #d4cfc8;
+}
+.section3_sub_main_left{
+    height: 105px;
+    float: left;
+}
+        
+.section3_sub_main_right{
+    height: 105px;
+    float: left;
+    width: 60%;
+    margin-left: 6%;
+    text-align:left;
+}  
+.section3_sub_img{
+    width: 100px;
+    height: 75px;
+    margin: 15px 0px 15px 0px;
+    float: left;
+}
+ .section3_sub_title{
+
+    /* height: 16px; */
+    margin: 16px 0px 0px 0px;
+    font-size: 15px;
+    color: #000000;
+    letter-spacing: 1.14px;
+    line-height: 20px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+        /*! autoprefixer: off */
+    -webkit-box-orient: vertical;
+    /* autoprefixer: on */
+    overflow: hidden;   
+}
+.section3_sub_content{    
+    /* height: 59px; */
+    margin: 5px 0px 0px 0px;
+    font-size: 13px;
+    color: #a1a1a1;
+    line-height: 20px;
+    letter-spacing: 1.14px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+        /*! autoprefixer: off */
+    -webkit-box-orient: vertical;
+    /* autoprefixer: on */
+    overflow: hidden;
+}
+
+
+.avatar-wraps {
+    overflow: hidden;
+    position: relative;
+    padding: 1px;
+    height: 5rem;
+    text-align: center;
+    }
+.center-bgs {
+    height: 5rem;
+    text-align: center;
+    background-image: url('../../assets/images/common/bg_publish.jpg');
+    background-size: cover;
+    background-position: 50%;
+}    
 </style>
 <template>
+<div id="divwuye" @scroll="getscroll">
     <div class="wuye">
         <swiper :options="swiperOption" ref="mySwiper">
             <swiper-slide>
                 <div class="ban1">
-                    <a :href="this.basePageUrl+'rgroups.html?v=20160229'" >
+                    <a :href="this.basePageUrlpay+'rgroups.html?v=20160229'" >
                         <img src="../../assets/images/index/sss22.png" alt="tt">
                     </a>                  
                 </div> 
@@ -73,69 +199,75 @@ h6{text-align: right; padding: 0 15px;font-size: 11px;color:rgba(0,0,0,0.63);let
                     </router-link>
                 </li>
                 <li class="jgg_li" >
-                    <router-link :to="{path:'/suggest',query:{category:9}}" class="link">
+                    <div class="link" @click="gotoThread()">
                         <div class="jgg_img">
                             <img src="../../assets/images/index/yzyj1.png" alt="tt">
                         </div>
                         <span class="jgg-span">业主意见</span>
-                    </router-link>
+                    </div>
                 </li>
                 <li class="jgg_li" >
-                    <a :href="this.basePageUrl+'rgroups.html?v=20160229'" class="link" >
+                    <div class="link"  @click="gotorepair()">
                         <div class="jgg_img">
-                            <img src="../../assets/images/index/dairenglaji.png" alt="tt">
+                            <img src="../../assets/images/index/bmwx1.png" alt="tt">
                         </div>
-                        <span class="jgg-span">代扔垃圾</span>
-                    </a>
+                        <span class="jgg-span">便民维修</span>
+                    </div>
                 </li>
             </ul>
         </div> 
 
         <div style="width:100%;height:7px;"></div>
-        <div class="inner">
-          <div class="inner1">
-            <span class="spanl fl"><strong>社区生活</strong></span>
-            <span class="spanr fr">更多&gt;</span>
-          </div>
-          <ul class="title_ul"> 
-            <li class="title_li" v-for="(news,index) in dataArr" :key="index">
-              <div v-on:click="href(news.id)">
-                <div class="title_img"> 
-                  <img v-bind:src="news.smallImage" alt="">
+      <div class="inner">
+        <!-- <div class="section3_notice">通知及公告</div> -->
+        <div class="section3_divider"></div>
+        <div class="tabmain">
+            <div class="tab" ref="tabs" >
+                <div ref="tabcon" class="tabscon">
+                    <div  ref="tabtitle" class="notice-tab-title" v-for="(tab,index) in tabs"  :key="index" :class="{active:tab.active,tabadd:tab.ali}" @click="changeTab(index,tab.type)">{{tab.name}}</div>
                 </div>
-                <div class="title_news">
-                  <p>{{news.summary}}</p>
-                  <!-- <span>…</span> -->
-                  <br>
-                  
-                  <h6 style="margin-top:10px;">生活百科</h6>
-                </div>
-                <div class="xiaxian"></div>
-              </div>                        
-            </li>
-          </ul>
+            </div>
         </div>
-        <div style="width:100%;height:80px;background:white;"></div> 
+         <!-- <div style="width:100%;height:47px;"></div> -->
+        <div id="word">
+            <div class="section3_zixuns" v-for="zixun in zixuns1" @click="jumpToDetail(zixun.id)" :key="zixun.id">
+					<div class="section3_sub_main_left">
+                    <img class="section3_sub_img" :src="zixun.smallImage"/>
+                    </div>
+                   
+					<div class="section3_sub_main_right">
+						<div class="section3_sub_title">{{zixun.title}}</div>
+						<div class="section3_sub_content">{{zixun.summary}}</div>
+					</div>
+			</div>
+            <div class="avatar-wraps " v-show="zixuns1.length == 0">
+        	    <div class="center-bgs" ></div>
+    	    </div>
+        </div>
+    </div>   
     </div>
+</div>    
 </template>
 
 <script>
-let vm
-import { MessageBox } from 'mint-ui';
-import {swiper,swiperSlide} from 'vue-awesome-swiper'
+let vm;
+let isloadPage=false;
+import {swiper,swiperSlide} from 'vue-awesome-swiper';
+import BScroll from 'better-scroll';
 export default {
     name: 'index',
     components: {
         swiper,
         swiperSlide
     },
-    created(){
-        vm = this;  
-    },
     data () {
         return {
-            dataArr:[],
-            shareCode:"",
+            zixuns1:[],
+            page : 0,
+            ONLINE_REPAIR:0,//判断维修
+            ONLINE_MESSAGE:0,//判断公告
+            ONLINE_SUGGESTION:0,//判断意见
+            messtype:'',
             //swiper参数配置
             swiperOption:{
                 notNextTick:true,
@@ -149,6 +281,13 @@ export default {
                 },
                 loop: false,
             },
+             tabs: [
+                  {
+                    name: '社区生活',
+                    type: 9,
+                    active:true  
+                }
+             ],
         };
     },
 
@@ -157,46 +296,100 @@ export default {
         swiperSlide
     },
 
-    computed: {},
-
+    computed: {
+        
+    },
+    created(){
+        vm = this;  
+ 
+    },
     mounted(){
         // this.initSession4Test();
         this.initUserInfo();
+    },
+    updated() {
+          vm.$nextTick(()=> {
+            // setTimeout(() => {
+                vm.personScroll();
+            // },2000)
+        })
     },
 
     methods: {
         //模仿线上用户信息/105/747/384/15184
         initSession4Test(){
-            let url = '/initSession4Test/15184';
-            vm.receiveData.getData(vm,url,'Data',function(){
-                vm.initNews();
+            let url = '/initSession4Test/79081';
+                vm.receiveData.getData(vm,url,'Data',function(){
             });
         },
-
         initUserInfo(){
             let n = "GET",
                 a = "userInfo",
                 i = null,
                 e = function(n) {
-                    vm.shareCode=n.result.shareCode;
+                    if(n.result.cfgParam && n.result.cfgParam.ONLINE_MESSAGE != undefined) {
+                        vm.ONLINE_MESSAGE = n.result.cfgParam.ONLINE_MESSAGE;
+                        vm.ONLINE_REPAIR = n.result.cfgParam.ONLINE_REPAIR;
+                        vm.ONLINE_SUGGESTION = n.result.cfgParam.ONLINE_SUGGESTION;
+                    }
                     // console.log(JSON.stringify(n));
-                    vm.initNews();
+                 vm.query(); 
+
                 },
                 r = function() { 
-
+                   vm.query(); 
                 };
             this.common.invokeApi(n, a, i, null, e, r);
+
+            // vm.receiveData.getData(vm, 'userInfo', "n", function() { 
+            //     if(vm.n.result.cfgParam && vm.n.result.cfgParam.ONLINE_MESSAGE != undefined) {
+            //             vm.ONLINE_MESSAGE = vm.n.result.cfgParam.ONLINE_MESSAGE;
+            //             vm.ONLINE_REPAIR =vm.n.result.cfgParam.ONLINE_REPAIR;
+            //             vm.ONLINE_SUGGESTION = vm.n.result.cfgParam.ONLINE_SUGGESTION;
+            //         }
+            //         // console.log(JSON.stringify(n));
+            //      vm.query(); 
+            // });
         },
-        initNews(){
-            var page = 0;
+        query() {
+                if(vm.ONLINE_MESSAGE==1) {
+                        vm.tabs=[ 
+                            {
+                                name: '社区生活',
+                                type: 9,
+                                active:true  
+                            },
+                            {
+                                name: '物业公告',
+                                type: 0 ,
+                                active:false
+                            },
+                            {
+                                name: '业委会公告',
+                                type: 1,
+                                active:false 
+                            },
+                            {
+                                name: '居委会公告',
+                                type: 2,
+                                active:false,
+                                ali:true
+                            },
+                            
+                        ]
+                }
+                vm.message(vm.tabs[0].type) 
+        },
+        message(type){
+            vm.page=0;
+            vm.messtype=type;
             let n = "GET",
-                a = "messages/"+page,
+                a = "messages/"+type+"/"+vm.page,
                 i = null,
                 e = function(n){
-                    // console.log(JSON.stringify(n));
                     if(n.result) {
-                        vm.dataArr = n.result;
-                        page++;
+                        vm.zixuns1=n.result;                     
+                        vm.page++;
                     }
                     
                 },
@@ -204,23 +397,123 @@ export default {
                     
                 };
             this.common.invokeApi(n,a,i,null,e,r);
+            //   vm.receiveData.getData(vm, "messages/"+type+"/"+vm.page, "n", function() { })
         },    
-        href(mid){
-            if(mid==15){
-                window.location.href="http://mp.weixin.qq.com/s?__biz=MzA3Njk4ODgwMA==&mid=406333448&idx=1&sn=9b318dec9225d8fc1ce28b7a52007773#rd";
-            }else if(mid==16){
-                window.location.href="http://mp.weixin.qq.com/s?__biz=MzA3Njk4ODgwMA==&mid=407927486&idx=1&sn=c1f51214b1947b1b222af9a18e5593d6#rd";
-            }else if(mid==17){
-                window.location.href="http://mp.weixin.qq.com/s?__biz=MzA3Njk4ODgwMA==&mid=410063784&idx=1&sn=558b520c28f984ad7c0ed2a6ef692faf#rd";
-            }else{
-                vm.$router.push({path:'/message',query:{'messageId':mid}})
+         //点击切换资讯
+        changeTab(index,type) {
+            for(var i=0; i<vm.tabs.length;i++) {
+                vm.tabs[i].active = false;
+            }
+             vm.tabs[index].active = true;
+            vm.message(type) 
+        },
+        jumpToDetail(mid) {
+            if(mid==29){
+    		   window.location.href="https://mp.weixin.qq.com/s/3N-yinJvq0jDJmh6fd6scw";
+    	   }else if(mid==30){
+    		   window.location.href="https://mp.weixin.qq.com/s/WTgWmG5lknKExBmOsughmQ";
+    	   }else if(mid==31){
+    		   window.location.href="https://mp.weixin.qq.com/s/-6gMOUi3vWJMRraOqtC2wQ";
+		   }else if(mid==76){
+			   window.location.href="http://mp.weixin.qq.com/s/LoJjEaaQ0xhi2wD7uuJVJQ";	
+		   }else if(mid==78){
+			   window.location.href="http://mp.weixin.qq.com/s/28gpc3gW7byK6k3kQHqX8A";
+		   }else if(mid==79){
+			   window.location.href="http://mp.weixin.qq.com/s/Em3EJ6lo4V8eITXpPcA3LQ";
+		   }else if(mid==86){
+			   window.location.href="http://m.eqxiu.com/s/kg2hoy34?from=singlemessage&isappinstalled=0";
+		   }else if(mid==110){
+			   window.location.href="http://mp.weixin.qq.com/s/4Ool8tH0lvij5PE8j14QMA";
+		   }else if(mid==112){
+			   window.location.href="http://mp.weixin.qq.com/s/gQGtpj_taPUXddQNh_EJWA";
+		   }else if(mid==189){
+			   window.location.href="http://mp.weixin.qq.com/s/8hjgD4eu7fhQHx8mKK9TRA";
+		   }else if(mid==190){
+			   window.location.href="http://mp.weixin.qq.com/s/L6OoaaJmRD72NHsUtRdqig";
+       	   }else if(mid==197){
+			   window.location.href="https://mp.weixin.qq.com/s/X34PcEoCP-GizVczTC73nA";
+		   }else if(mid==198){
+			   window.location.href="https://mp.weixin.qq.com/s/JEE5Yyx5ugzF8-WzrkVF4g";
+		   }else if(mid==225){
+			   window.location.href="https://mp.weixin.qq.com/s/f-N1W8U1Q3Py-vTC_TjR6Q";
+		   }else{
+    		   vm.$router.push({path:'/message',query:{'messageId':mid}})
+    	   }
+        },
+        gotoThread() {
+            if(vm.ONLINE_SUGGESTION ==0 || vm.ONLINE_SUGGESTION==null)
+        	{
+        		alert("您暂未绑定房屋，请前往“我是业主”\r\n进行操作，感谢！");
+        		return;
+        	}else {
+             	vm.$router.push({path:'/mysteward'})
             }
         },
-        alerts(){
-            MessageBox('该功能暂未开放','尽请期待!');
-        }
+        gotorepair() {
+            if(vm.ONLINE_REPAIR ==0 || vm.ONLINE_REPAIR==null)
+        	{
+        		alert("您暂未绑定房屋，请前往“我是业主”\r\n进行操作，感谢！");
+        		return;
+        	}else {
+             	vm.$router.push({path:'/repair',query:{'projectId':'1'}})
+            }
+        },
+        //左右滑动
+       personScroll() {
+                if(vm.tabs.length>1) {
+                    vm.$refs.tabcon.style.width= 33 *vm.tabs.length+'%';
+                }
+                vm.$nextTick(() => {
+                    if (!vm.scroll) {
+                        vm.listScroll  = new BScroll(vm.$refs.tabs, {
+                            startX:0,
+                            // click: true,
+                            scrollX: true,//
+                            scrollY: false,
+                            useTransition:false,
+                            eventPassthrough: "vertical"
+                        });               
+                    } else {
+                        vm.scroll.refresh();
+                    }
 
-    }
+                     vm.listScroll.on('scrollStart', (pos) => {
+                        $('.tabadd').css({'text-align':'center'})
+                     })
+                    
+                     vm.listScroll.on('scrollEnd', (pos) => {
+                         var add =Math.abs(pos.x);
+                        if(add==0) {
+                           $('.tabadd').css({'text-align':'left'})
+                        }
+                     })
+                })
+                
+       },
+       //分页
+       getscroll(e) {
+        var st = e.srcElement.scrollTop;
+        var ad=window.innerHeight
+        var hd=$('#word').height();
+        if( st+ad >=hd && !isloadPage) {
+            isloadPage=true;
+            vm.loadNextPage();
+        }
+       },
+       loadNextPage() {
+          vm.receiveData.getData(vm,"messages/"+vm.messtype+"/"+vm.page,'Data',function(){
+                 if(vm.Data.success) {
+                     if(vm.Data.result.length>0) {
+                        vm.zixuns1=vm.zixuns1.concat(vm.Data.result);
+                        isloadPage=false;
+                        vm.page++
+                     }
+                 }
+            });
+       }
+
+    },
+    
 }
 
 </script>

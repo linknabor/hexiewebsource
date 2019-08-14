@@ -9,6 +9,10 @@ var MasterConfig = function() {
         /uat/.test(location.origin)?'https://uat.e-shequ.com/weixin/':
         'https://www.e-shequ.com/weixin/',
         
+        basePageUrlpay:/127|test/.test(location.origin)?'https://test.e-shequ.com/weixin/pay/':
+        /uat/.test(location.origin)?'https://uat.e-shequ.com/weixin/pay/':
+        'https://www.e-shequ.com/weixin/pay/',
+        
         appId: /127|test/.test(location.origin)?'wx95f46f41ca5e570e':
         /uat/.test(location.origin)?'wx9ffe0a2b5a64a285':
         'wxbd214f5765f346c1',
