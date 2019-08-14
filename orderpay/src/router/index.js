@@ -1,15 +1,15 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Orders from '@/pages/orders'
-import Orderdetail from '@/pages/orderdetail'
-import Onsaleorders from '@/pages/onsaleorders'
-import Logistice from '@/pages/logistice'
-import Comment from '@/pages/comment'
-import Grouporders from '@/pages/grouporders'
-import RepairPay from '@/pages/repairPay'
-import Commentxiu from '@/pages/commentxiu'
-import Homeorders from '@/pages/homeorders'
-import Homeorderdetail from '@/pages/homeorderdetail'
+// import Orders from '@/pages/orders'
+// import Orderdetail from '@/pages/orderdetail'
+// import Onsaleorders from '@/pages/onsaleorders'
+// import Logistice from '@/pages/logistice'
+// import Comment from '@/pages/comment'
+// import Grouporders from '@/pages/grouporders'
+// import RepairPay from '@/pages/repairPay'
+// import Commentxiu from '@/pages/commentxiu'
+// import Homeorders from '@/pages/homeorders'
+// import Homeorderdetail from '@/pages/homeorderdetail'
 
 Vue.use(Router)
 
@@ -90,6 +90,26 @@ let router= new Router({
         title:'预约成功'
       }
     },
+    {
+      path: '/kaitong',
+      name: 'kaitong',
+      component:resolve=>require(['@/pages/kaitong'],resolve),
+      meta: {
+        title:'会员中心'
+      }
+
+    },
+    // {
+    //   path: '/success',
+    //   name: 'success',
+    //   component:resolve=>require(['@/pages/success'],resolve),
+    //   meta: {
+    //     title:'已开通'
+    //   }
+
+    // },
+    
+
   ]
 })
 
@@ -98,6 +118,7 @@ let router= new Router({
 router.beforeEach((to,from, next) => {
   if(to.matched[0].name !== "index") {
     common.checkRegisterStatus()
+    // checkRegisterStatus
   }
   //动态改变title
   changeTitle(to.meta.title);
