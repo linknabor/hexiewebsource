@@ -264,9 +264,11 @@ export default {
         return {
             zixuns1:[],
             page : 0,
-            ONLINE_REPAIR:0,//判断维修
-            ONLINE_MESSAGE:0,//判断公告
-            ONLINE_SUGGESTION:0,//判断意见
+            cfgParam:{},
+            sectId:0,
+            // ONLINE_REPAIR:0,//判断维修
+            // ONLINE_MESSAGE:0,//判断公告
+            // ONLINE_SUGGESTION:0,//判断意见
             messtype:'',
             //swiper参数配置
             swiperOption:{
@@ -327,11 +329,8 @@ export default {
                 a = "userInfo",
                 i = null,
                 e = function(n) {
-                    if(n.result.cfgParam && n.result.cfgParam.ONLINE_MESSAGE != undefined) {
-                        vm.ONLINE_MESSAGE = n.result.cfgParam.ONLINE_MESSAGE;
-                        vm.ONLINE_REPAIR = n.result.cfgParam.ONLINE_REPAIR;
-                        vm.ONLINE_SUGGESTION = n.result.cfgParam.ONLINE_SUGGESTION;
-                    }
+                    vm.cfgParam=n.result.cfgParam;
+                    vm.sectId=n.result.sectId;
                     // console.log(JSON.stringify(n));
                  vm.query(); 
 
@@ -441,7 +440,11 @@ export default {
     	   }
         },
         gotoThread() {
-            if(vm.ONLINE_SUGGESTION ==0 || vm.ONLINE_SUGGESTION==null)
+            if(vm.cfgParam==null || vm.cfgParam.ONLINE_SUGGESTION == undefined||vm.cfgParam.ONLINE_SUGGESTION==0) {
+                alert("当前所在的小区未开启当前业务");
+                return   
+            }
+            if(vm.sectId==0 || vm.sectId== null)
         	{
         		alert("您暂未绑定房屋，请前往“我是业主”\r\n进行操作，感谢！");
         		return;
@@ -450,7 +453,12 @@ export default {
             }
         },
         gotorepair() {
-            if(vm.ONLINE_REPAIR ==0 || vm.ONLINE_REPAIR==null)
+
+            if(vm.cfgParam==null || vm.cfgParam.ONLINE_REPAIR == undefined||vm.cfgParam.ONLINE_REPAIR==0) {
+                alert("当前所在的小区未开启当前业务");
+                return   
+            }
+            if(vm.sectId==0|| vm.sectId== null)
         	{
         		alert("您暂未绑定房屋，请前往“我是业主”\r\n进行操作，感谢！");
         		return;
