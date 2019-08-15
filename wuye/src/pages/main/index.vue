@@ -440,29 +440,27 @@ export default {
     	   }
         },
         gotoThread() {
-            if(vm.cfgParam==null || vm.cfgParam.ONLINE_SUGGESTION == undefined||vm.cfgParam.ONLINE_SUGGESTION==0) {
-                alert("当前所在的小区未开启当前业务");
-                return   
-            }
             if(vm.sectId==0 || vm.sectId== null)
         	{
         		alert("您暂未绑定房屋，请前往“我是业主”\r\n进行操作，感谢！");
         		return;
-        	}else {
+        	}else  if(vm.cfgParam==null || vm.cfgParam.ONLINE_SUGGESTION == undefined||vm.cfgParam.ONLINE_SUGGESTION==0) {
+                alert("当前所在的小区未开启当前业务");
+                return  
+            } else {
              	vm.$router.push({path:'/mysteward'})
+           
             }
         },
         gotorepair() {
-
-            if(vm.cfgParam==null || vm.cfgParam.ONLINE_REPAIR == undefined||vm.cfgParam.ONLINE_REPAIR==0) {
+            if(vm.sectId==0|| vm.sectId== null)
+            {
+                alert("您暂未绑定房屋，请前往“我是业主”\r\n进行操作，感谢！");
+                return;
+            }else  if(vm.cfgParam==null || vm.cfgParam.ONLINE_REPAIR == undefined||vm.cfgParam.ONLINE_REPAIR==0) {
                 alert("当前所在的小区未开启当前业务");
                 return   
-            }
-            if(vm.sectId==0|| vm.sectId== null)
-        	{
-        		alert("您暂未绑定房屋，请前往“我是业主”\r\n进行操作，感谢！");
-        		return;
-        	}else {
+            }else {
              	vm.$router.push({path:'/repair',query:{'projectId':'1'}})
             }
         },
