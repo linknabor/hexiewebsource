@@ -96,36 +96,37 @@
 	  },
 	  methods:{
 		  addHouse(){//添加房子 post 提交两个参数 
-		  	let  wuye_myhouse={
-				url: /127|test/.test(location.origin)?'test.e-shequ.com':
-						/uat/.test(location.origin)?'uat.e-shequ.com':
-						'www.e-shequ.com'       //提示框网址
-				}
-	  		let stmtId = this.axiosParams.number;
-	  		let url2 = '/addhexiehouse?stmtId='+stmtId+'&houseId='+this.data.mng_cell_id;
-	  		vm.receiveData.postData(vm,url2,{},'res',function(){
-			if(vm.res.success){ 
-	  			// vm.loadingShow = false;
-				if(vm.res.result !== null) {
-                    MessageBox.alert('添加房子成功',wuye_myhouse.url).then( action =>{
-	  						vm.$router.push("/myhouse")
-	  					})
-				}
-				if(vm.res.result == null) {
-					 MessageBox.alert('添加房子失败',wuye_myhouse.url).then( action =>{
-	  						vm.$router.push("/myhouse")
-	  					})
-				}
+				let  wuye_myhouse={
+					url: /127|test/.test(location.origin)?'test.e-shequ.com':
+							/uat/.test(location.origin)?'uat.e-shequ.com':
+							'www.e-shequ.com'       //提示框网址
+					}
+					let stmtId = this.axiosParams.number;
+					let url2 = '/addhexiehouse?stmtId='+stmtId+'&houseId='+this.data.mng_cell_id;
+					vm.receiveData.postData(vm,url2,{},'res',function(){
+					if(vm.res.success){ 
+						// vm.loadingShow = false;
+						if(vm.res.result !== null) {
+							MessageBox.alert('添加房子成功',wuye_myhouse.url).then( action =>{
+									vm.$router.push("/myhouse")
+								})
+						}
+						if(vm.res.result == null) {
+							MessageBox.alert('添加房子失败',wuye_myhouse.url).then( action =>{
+									vm.$router.push("/myhouse")
+								})
+						}
+					}
+					if(!vm.res.success) {
+							MessageBox.alert(vm.res.message).then( action =>{
+								vm.$router.push("/addHouse")
+								})
+						}
+
+					})
+
 			}
-			if(!vm.res.success) {
-                    MessageBox.alert(vm.res.message).then( action =>{
-						vm.$router.push("/addHouse")
-	  					})
-				}
-
-	  		})
-
-	  	}
+		  
 	
 	  }
 	}

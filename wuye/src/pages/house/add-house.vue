@@ -73,7 +73,7 @@
 	  	 	//调用微信扫一扫 成功数据返回到number
 	  	 	vm.receiveData.scan(vm,wx,'number')
 	  	 },
-		   submit(){//判断是否为正确账单号
+		submit(){//判断是否为正确账单号
 		   let  wuye_myhouse={
 				url: /127|test/.test(location.origin)?'test.e-shequ.com':
 						/uat/.test(location.origin)?'uat.e-shequ.com':
@@ -81,12 +81,26 @@
 				}
 	  	 	var reg = /^\d{18}$/
 	  	 	if(reg.test(this.number)){//为数字即通过
-	  	 		this.$router.push('/bindHouse/' + this.number);
+	  	 		vm.house();
 	  	 	}else{
 	  	 		MessageBox.alert('请输入正确账单号',wuye_myhouse.url);
 			   }
-		
-	  	 }
+		},
+		house() {
+	  	//查询number下的房屋
+	  	 let url = '/hexiehouse?stmtId='+ vm.number;
+  		this.receiveData.getData(vm,url,'response',function(){
+			  if(vm.response.success){
+				if(vm.response.result== null) {
+					  alert('未查询到该房屋')
+				  }else {
+					 	vm.$router.push('/bindHouse/' + vm.number);
+				  }
+			  }else {
+				alert(vm.response.message==null?'未查询到该房屋':vm.response.message)
+			  }
+  			})
+		}   
 	  }
 	}
 </script>
