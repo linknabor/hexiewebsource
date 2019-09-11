@@ -237,7 +237,7 @@
 			<!-- 优惠选项 -->
 			<ul class="discount">
 				<li class="ov" @click="uptonList" >
-					<div class="fl">现金券 <span class="can-use">&nbsp;<strong>{{uptonNumber}}</strong>&nbsp;张可用&nbsp;</span></div>
+					<div class="fl">现金券 <span class="can-use">&nbsp;<strong>{{uptonData.length}}</strong>&nbsp;张可用&nbsp;</span></div>
 					<div class="fr">{{uptonAmount}} &gt;</div> 
 				</li>
 				<li class="ov coupon">
@@ -257,15 +257,15 @@
 			</div>
 
 			<!-- 发票 v-show="yins"-->
-			<form class="invoice" >
+			<form class="invoice" v-show="show_invoice=='1'">
 				<div class="form-row">
 					是否需要发票:&nbsp;&nbsp;
-					 <input  type="radio" id="yes" value="yes" v-model="needInvoice">
+					 <input  type="radio" id="yes" value="1" v-model="needInvoice">
   					 <label for="yes" class="ty-label">是</label>
-					 <input type="radio" id="no" value="no" v-model="needInvoice">
+					 <input type="radio" id="no" value="0" v-model="needInvoice">
   					 <label for="no" class="ty-label">否</label>
 				</div>
-				<div v-if="needInvoice == 'yes'" class="form-row">
+				<div v-if="needInvoice == '1'" class="form-row">
 					申请发票类型:&nbsp;&nbsp;
 					 <input  type="radio" id="person" value="01" v-model="invoice_title_type">
   					 <label for="01" class="ty-label">个人</label>
@@ -273,11 +273,11 @@
 					 <input v-show="show_com_flag!=='0'" type="radio" id="company" value="02" v-model="invoice_title_type">
   					 <label v-show="show_com_flag!=='0' " for="02" class="ty-label">公司</label>
 				</div>
-				<div class="form-row" v-if="invoice_title_type == '02'&&needInvoice=='yes' ">
+				<div class="form-row" v-show="invoice_title_type == '02'&&needInvoice=='1' ">
 					<!-- <mt-field label="发票抬头" placeholder="发票抬头" v-model="invoice_title"></mt-field> -->
 					<label class="t-label">发票抬头: <input type="text" placeholder="发票抬头" v-model="invoice_title" class="t-input"> </label>
 				</div>
-				<div class="form-row" v-if="invoice_title_type == '02'&&needInvoice=='yes' ">
+				<div class="form-row" v-show="invoice_title_type == '02'&&needInvoice=='1' ">
 					<!-- <mt-field label="公司税号" placeholder="公司税号" v-model="credit_code"></mt-field> -->
 					<label class="t-label">公司税号: <input type="text" placeholder="公司税号" v-model="credit_code" class="t-input"> </label>
 				</div>
@@ -296,7 +296,7 @@
 			<!-- 可用券的数量 -->
 			<div class="can-use">
 				<p class="fl">可用现金券</p>
-				<p class="fr">共{{uptonNumber}}个</p>
+				<p class="fr">共{{uptonData.length}}个</p>
 			</div>
 			<!-- 详情 -->
 			<div class="uptonDetail" v-for="(item,index) in uptonData" @click="showIcon(index)">
@@ -327,9 +327,8 @@
 				yins:false,
 				invoice_title:'',//发票抬头
 				credit_code:'',//公司税号
-				invoiceType:'person',//公司或个人
-				invoice_title_type:'01',//公司或个人
-				needInvoice:'yes',//是否需要发票
+				invoice_title_type:'',//个人01或公司02 
+				needInvoice:'1',//是否需要发票
 				uptonAmount:'未使用',
 				upronAmountNumber:0,////优惠券金额 数量
 				uptonData:[
@@ -343,6 +342,7 @@
 					// 	amount:100,
 					// },
 				],
+				allCoupons:[],
 				selectUpton:true,//显示的是缴费详情页面还是选择优惠劵页面
 				routeParams:{
 					billIds : this.$route.query.billIds,//id 集合
@@ -357,12 +357,12 @@
 				addr:'',//地址
 				area:'',//面积
 				feeList:'',//费用列表
-				uptonNumber:0,//优惠劵数量
 				couponId:'',//优惠券id
 				mianBill:'0',//优惠的账单id
 				mianAmt:0.00,
 				show_invoice_flag:'0',
 				show_com_flag:'0',//是否允许开具公司发票
+				show_invoice:''//是否显示发票
 			}
 		},
 		beforeCreate(){//刷新页面
@@ -379,77 +379,32 @@
 			//得到实际支付金额 和是否减免 和减免了多少钱
 			vm.calcReduceAmt()
 		},
-		watch:{
-			needInvoice:function(){
-				if(this.needInvoice == 'yes'){
-					vm.invoice_title_type='01'
-					console.log('yes')
-				}else{
-					console.log('no')
-					vm.invoice_title_type=''
-				}
-			}
-		},
+
 		mounted(){
 			vm.common.checkRegisterStatus();
 
 			// this.initSession4Test()
+			this.getBillDetail();
+			this.Coupons();
 
 			// this.getMember(); 判断是否开通会员
-			//请求费用数据
-			let url = "getBillDetail";
-			vm.receiveData.getData(
-				vm,
-				url,
-				'data',
-				function(){
-					vm.show_com_flag=vm.data.result.show_com_flag;
-					vm.show_invoice_flag = vm.data.result.show_invoice_flag
-					if(vm.data.result.fee_data  == null){
-						
-						// var herf1 = "https://www.e-shequ.com/weixin/wuye/index.html";
-						// location.href = herf1;
-					}
-	  				let useDate = vm.data.result.fee_data[0];
-	  				let mianBill = vm.data.result.mianBill;
-	  				let mianAmt = vm.data.result.mianAmt;
-	  				if ( mianBill) {
-						vm.mianBill = vm.data.result.mianBill;
-					}
-					if ( mianAmt) {
-						vm.mianAmt = vm.data.result.mianAmt;
-					}
-
-	  				//户号
-	  				vm.verNumber = useDate.ver_no;
-	  				//地址
-	  				vm.addr = useDate.cell_addr;
-					
-	  				//面积
-	  				vm.area = useDate.cnst_area;
-	  				//费用列表
-	  				vm.feeList = useDate.fee_name;
-	  			},
-
-	  			{
-	  				billId :vm.routeParams.billIds,
-	  				stmtId :vm.routeParams.stmtId
-	  			}
-	  		);
-	  		//请求优惠券数据 第一步 更新优惠券 第二步:获取优惠券
-	  		let url2 = 'updateCouponStatus';
-	  		vm.receiveData.getData(vm,url2,'temp',function(){	  			
-	  		    //更新后 获取优惠劵
-	  			let url3 = 'getCouponsPayWuYe';
-	  			vm.receiveData.getData(vm,url3,'uptonDatas',function(){
-	  				// vm.uptonData = vm.uptonDatas.result;
-	  				// vm.uptonNumber = vm.uptonDatas.length;
-	  			})
-	  		});
-	  		// this.common.initWechat(['onMenuShareTimeline','onMenuShareAppMessage']);
-			// this.directRightUrl();
+			
 		},
-		
+		watch:{
+			invoice_title_type() {
+				if(this.invoice_title_type == '01') {
+					this.invoice_title='';
+					this.credit_code='';
+				}
+			},
+			needInvoice() {
+				if(this.needInvoice=='0') {
+					this.invoice_title_type =''
+					this.invoice_title='';
+					this.credit_code='';
+				}
+			}
+		},
 		methods:{
 			//创造用户
 			initSession4Test(){
@@ -457,7 +412,75 @@
 					vm.receiveData.getData(vm,url,'Data',function(){
 				});
 			},
+			getBillDetail() {
+					//请求费用数据
+					let url = "getBillDetail";
+					vm.receiveData.getData(
+						vm,
+						url,
+						'data',
+						function(){
+							vm.show_com_flag=vm.data.result.show_com_flag;
+							vm.show_invoice_flag = vm.data.result.show_invoice_flag
+							vm.show_invoice=vm.data.result.show_invoice;
+							if(vm.show_invoice=='1') {
+								vm.invoice_title_type='01';
+							}
+							if(vm.data.result.fee_data  == null){
+								// var herf1 = "https://www.e-shequ.com/weixin/wuye/index.html";
+								// location.href = herf1;
+							}
+							let useDate = vm.data.result.fee_data[0];
+							let mianBill = vm.data.result.mianBill;
+							let mianAmt = vm.data.result.mianAmt;
+							if ( mianBill) {
+								vm.mianBill = vm.data.result.mianBill;
+							}
+							if ( mianAmt) {
+								vm.mianAmt = vm.data.result.mianAmt;
+							}
 
+							//户号
+							vm.verNumber = useDate.ver_no;
+							//地址
+							vm.addr = useDate.cell_addr;
+							
+							//面积
+							vm.area = useDate.cnst_area;
+							//费用列表
+							vm.feeList = useDate.fee_name;
+						},
+
+						{
+							billId :vm.routeParams.billIds,
+							stmtId :vm.routeParams.stmtId
+						}
+					)	
+			},
+	  		//优惠券
+			Coupons(){
+				//请求优惠券数据 第一步 更新优惠券 第二步:获取优惠券
+				let url2 = 'updateCouponStatus';
+				vm.receiveData.getData(vm,url2,'temp',function(){	  			
+					//更新后 获取优惠劵
+					let url3 = 'getCouponsPayWuYe';
+					vm.receiveData.getData(vm,url3,'uptonDatas',function(){
+						vm.uptonData = vm.uptonDatas.result;
+						vm.allCoupons=vm.uptonDatas.result;
+						vm.filterCouponByAmount();
+					})
+				});
+			},
+			//使用filterCouponByAmount进行金额过滤
+			filterCouponByAmount() {
+				var c=[];
+				for(var i=0;i<vm.allCoupons.length;i++) {
+					if(vm.allCoupons[i].usageCondition<=vm.count) {
+						c.push(vm.allCoupons[i])
+					}
+				}
+				vm.uptonData=c;
+			},
 			// 重定向到正确的url
 			directRightUrl () {
 			  let paths = window.location.href.split('#')
@@ -477,19 +500,19 @@
 			},
 			//判断是否开通vip
 			// getMember() {
-			// 	let url = '/getMember';
-			// 		vm.receiveData.getData(vm,url,'res',function(){
-			// 			if(vm.res.length!=0) {
-			// 				if(vm.res[0].status==0) {
-			// 					vm.Member=false;
-			// 				}
-			// 			} 
-						
-			// 	});
+				// 	let url = '/getMember';
+				// 		vm.receiveData.getData(vm,url,'res',function(){
+				// 			if(vm.res.length!=0) {
+				// 				if(vm.res[0].status==0) {
+				// 					vm.Member=false;
+				// 				}
+				// 			} 
+							
+				// 	});
 			// },
 			// //点击vip跳转
 			// mebaerherf() {
-			// 	window.location.href=vm.basePageUrlpay+'orderpay.html?start=123#/kaitong'
+				// 	window.location.href=vm.basePageUrlpay+'orderpay.html?start=123#/kaitong'
 			// },
 			//切换优惠券选中状态
 			showIcon(index){
@@ -531,7 +554,7 @@
 			},
 			//跳转到优惠券列表
 			uptonList(){
-				if(vm.uptonNumber == 0){//无优惠券
+				if(vm.uptonData.length == 0){//无优惠券
 					return
 				}else{
 					vm.selectUpton = false;	
@@ -568,8 +591,7 @@
 			wechatPay(){
 				//vm, url, params,backdataname,callback
 				//let url = 'getPrePayInfo'
-				if(this.needInvoice=="yes"){
-					if(this.invoice_title_type=="02"){
+				if(this.invoice_title_type=="02"){
 						if(this.invoice_title==""){
 							alert("请填写发票抬头信息");
 							return;
@@ -578,7 +600,6 @@
 							alert("请填写发票公司税号信息");
 							return;
 						}
-					}
 				};
 				$('.box-bg').css("display",'block');
 				let url = "getPrePayInfo?billId="+vm.routeParams.billIds+"&stmtId="+vm.routeParams.stmtId+"&couponUnit="+vm.upronAmountNumber+"&couponNum=1&couponId="+vm.couponId+"&mianBill="+vm.mianBill+"&mianAmt="+vm.mianAmt+"&reduceAmt="+vm.reduceAmt+"&invoice_title_type="+this.invoice_title_type+"&credit_code="+this.credit_code+"&invoice_title="+this.invoice_title;
@@ -649,10 +670,9 @@
 			//成功绑定地址
 			 Bindaddress(){
 				 let url="/setDefaultAdressByBill?billId="+vm.routeParams.billIds
-				 vm.receiveData.postData(vm,url,{
+				 vm.receiveData.postData(vm,url,{},'res',function(){
 					 
-				 },'res',function(){
-					
+				 
 				 })	
 				 
 			 }	
