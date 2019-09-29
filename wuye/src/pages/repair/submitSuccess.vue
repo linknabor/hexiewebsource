@@ -155,7 +155,8 @@
 				})
 			},
 			goback(){
-				window.location.href = this.basePageUrl+'wuye/index.html?v=20162299'
+				vm.$router.push({path:'/'})
+				// window.location.href = this.basePageUrl+'wuye/index.html?v=20162299'
 			}
 		}
 	}

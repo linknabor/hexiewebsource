@@ -51,7 +51,7 @@
 		},
 		data(){
 			return {
-				url : '/billList',
+				url : '/billList?regionname=上海',
 				stmtId:'',//快捷缴费 扫描出来的账单号
 		  		params : {
 		  			startDate:'',
@@ -167,12 +167,9 @@
 						return false;
 					}
 				}
-		  		//------过佳家
-		  		// vm.str = 'https://test.e-shequ.com/weixin/';
-		  		// let url = vm.str + "paymentdetail.html?#/?billIds="+bills+"&stmtId="+vm.stmtId+"&payAddr="+escape(pay_addr)+"&totalPrice="+vm[allPrice]+"&reduceMode="+vm.reduceMode;
-				// window.location.href = url;
-
-				window.location.href=vm.basePageUrl+"wuyepay.html?#/?billIds="+bills+"&stmtId="+vm.stmtId+"&payAddr="+escape(pay_addr)+"&totalPrice="+vm[allPrice]+"&reduceMode="+vm.reduceMode;
+		  		//跳转支付
+				var oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
+				window.location.href=vm.basePageUrl+"wuyepay.html?"+oriapp+"#/?billIds="+bills+"&stmtId="+vm.stmtId+"&payAddr="+escape(pay_addr)+"&totalPrice="+vm[allPrice]+"&reduceMode="+vm.reduceMode;
 
 		  	},
 		  	//点击某个选中按钮 params1:被点击按钮的下标 params2:被点击按钮所属的数组

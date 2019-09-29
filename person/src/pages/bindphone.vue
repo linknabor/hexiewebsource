@@ -83,9 +83,12 @@ export default {
    methods: {
        getUserInfo() {
             var n = "GET",
-            a = "userInfo",
+            a = "userInfo?oriApp="+vm.getUrlParam('oriApp'),
             i = null,
             e = function(n) {
+                 if(n.success&&n.result==null) {
+                       reLogin();
+                 }
                 vm.user = n.result;
                 vm.oriPhone = vm.user.tel;
             },
@@ -143,7 +146,7 @@ export default {
         	   var tt=setInterval(function(){
                     vm.yzmstr=vm.yzmtime+"秒后重新获取";
                         vm.yzmtime--;
-                        console.log(vm.yzmtime)
+                        // console.log(vm.yzmtime)
                         if(vm.yzmtime<=0){
                             vm.yzmstr="重新获取";
                         }
@@ -154,7 +157,7 @@ export default {
                     vm.yzmtime = 60;
                     vm.yzmstr="重新获取";
                 }
-                   })
+            })
         },
         save() {
             if(vm.user.name=="" || vm.user.realName=="" || vm.user.tel=="") {

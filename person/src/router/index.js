@@ -147,8 +147,12 @@ let router= new Router({
 
 router.beforeEach((to, from, next) => {
   //动态改变title
-  if(to.matched[0].name !== "index") {
-    common.checkRegisterStatus()
+  var flag;
+  if(to.matched[0].name != "index"&& to.matched[0].name!='register') {
+     flag=common.checkRegisterStatus()
+     if(!flag) {
+       return
+     }
   }
 
   changeTitle(to.meta.title);

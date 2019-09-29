@@ -72,10 +72,8 @@ export default {
    mounted() {
         // 请求接口获取 后台返回的 微信配置项
         // vm.common.checkRegisterStatus();
-       vm.getThreadList();
-  
-    //    window.addEventListener('scroll',vm.getscroll);
 
+       vm.getThreadList();
    },
    watch:{
         
@@ -100,10 +98,6 @@ export default {
                     vm.zshow=false;
                     vm.threads = vm.hehe.result;
                     vm.threads_count=vm.hehe.result.length;
-
-                    // vm.threads = vm.hehe.result[0];
-                    // vm.userSectId = vm.hehe.result[1];
-                    // vm.threads_count = vm.hehe.result[0].length;
                  vm.page++; 
                 }else {
                     alert("加载消息失败！");
@@ -255,19 +249,12 @@ export default {
         },
         //点击返回
         gotoindex() {
-            // location.href='https://test.e-shequ.com/guangming/weixin/wuye/index.html?v=20160229#/';
              this.$router.push({path:'/'})
         },
         //点击发布
         publicnew() {
-            // if(vm.userSectId == 0 || vm.userSectId=='' || vm.userSectId==null)
-        	// {
-        	// 	alert("您暂未绑定房屋，请前往“我是业主”\r\n进行操作，感谢！");
-        	// 	return;
-        	// }else
-        	// {
+       
                this.$router.push({path:'/maintain'})
-        	// }
         }
    },
 

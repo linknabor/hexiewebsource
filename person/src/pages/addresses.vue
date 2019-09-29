@@ -1,5 +1,6 @@
 <template>
    <div class="addr">
+        <div id="zzmb"  class="zzmb" ></div>
         <div v-show="currentPage=='list'" class="menu-linksa fs14 address-wrap lite-divider" @click="check(item)" v-for="(item,i) in addresses" style="display: block;">
 		
                 <span style="margin-left:10px">{{item.receiveName}}</span>
@@ -225,7 +226,7 @@ export default {
                 homeAddress:""//例如：1号楼402室
             }
             vm.distinct='';
-            
+            vm.suggestLocation='';
         },
         //获取区域
         getRegions(type,id) {
@@ -341,7 +342,7 @@ export default {
 	    		alert("请填写完整相关信息！");
 	    		return;
 	    	}
-	    	if(!(/^1[3-9][0-9]\d{4,8}$/.test(vm.submitAddress.tel))) {
+	    	if(!(/^1[3-9][0-9]\d{8}$/.test(vm.submitAddress.tel))) {
 	    		alert("请填写正确的手机号！");
 	    		return;
             }
@@ -362,7 +363,7 @@ export default {
                     addr.amapDetailAddr=vm.submitAddress.amapDetailAddr;
                     addr.amapId=vm.submitAddress.amapId;
                     addr.main=vm.isDefault;
-                    
+                 $("#zzmb").show();   
             vm.receiveData.postData(vm,'/addAddress',addr,'n',function(){
                     if(vm.n.success) {
                         vm.addresses.push(vm.n.result);
@@ -370,8 +371,8 @@ export default {
                     }else {
                         alert(vm.n.message==null?"地址保存失败，请重试！":vm.n.message);
                     }
-                                   
-                       })  
+                 $("#zzmb").hide();                  
+               })  
         }
    },
 
@@ -379,6 +380,10 @@ export default {
 </script>
 
 <style  scoped>
+.zzmb {
+  z-index: 100000;position: fixed;top: 0;left: 0;
+  -moz-opacity: 0.65;opacity: 0.65;filter: alpha(opacity=65);
+  background: #000;width: 100%;height: 100%;display: none}
 .addr {
     background-color: #fffff8;
     padding-bottom: 1px;

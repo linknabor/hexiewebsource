@@ -90,7 +90,7 @@
 		  			area:'',//建筑面积id
 		  		},
 		  		stmtId:'',//快捷缴费 扫描出来的账单号
-		  		url : '/billList',
+		  		url : '/billList?regionname=上海市',
 		  		params : {
 		  			startDate:'',
 		  			endDate:'',
@@ -122,7 +122,7 @@
 		methods:{
 		
 			sousuo(name){
-				let url = '/getVagueSectByName?sect_name='+name;
+				let url = '/getVagueSectByName?sect_name='+name+'&regionname=上海市';
 				vm.receiveData.getData(vm,url,'res',function(){
 						let data=vm.res.result;
 						if(data!=null){
@@ -144,34 +144,6 @@
 							vm.showi=true;
 						}
 				});
-			
-
-				// this.$axios({
-					//  	url:'https://test.e-shequ.com/wechat/hexie/wechat/getVagueSectByName?sect_name='+name,
-					//  	method:'get'
-					// }).then((res) =>{
-					//  	let data=res.data.result;
-					//  	if(data!=null){
-					//  		vm.sectList=res.data.result.sect_info;
-					//  		if(vm.sectList.length>0){
-					//  			vm.shows=true;
-					//  			var id='';
-					// 			for(var i=0;i<vm.sectList.length; i++ ) {
-					// 				if(vm.query.sect===vm.sectList[i].name) {
-					// 					id=vm.sectList[i].id;
-					// 				}
-					// 			}
-					// 			vm.query.sectID=id;
-					//  		}
-							
-					//  		vm.showi=true;
-							
-					// 		vm.add();
-					//  	}else{
-					//  		vm.shows=false;
-					//  		vm.showi=true;
-					//  	}
-	            // })
 			},
 
 			addRoom(){
@@ -202,29 +174,7 @@
 							})
 					}
 				})	
-
-
-           		// 	this.$axios({
-					// 		url:'https://test.e-shequ.com/wechat/hexie/wechat/addhexiehouse2?area='+vm.query.area+'&houseId='+vm.choosehouse,
-					// 		method:'post'
-					// 	}).then((res) =>{
-					//        if(res.data.result!=null){
-					// 		MessageBox.alert('添加房子成功').then(action =>{
-					// 			vm.$router.push("/myhouse")
-					// 		})
-					// 		}else if(res.data.errorCode === 0){
-					// 			MessageBox.alert(res.data.message).then( action =>{
-					// 				$('.pay').removeClass('disabled');
-					// 				$('.pay').text('添加房屋')	
-					// 				vm.query.sect='';
-					// 				vm.query.build='';
-					// 				vm.query.unit='';
-					// 				vm.query.house='';
-					// 				vm.query.area='';
-					// 			})
-					// 		}
-           		// })
-           			
+	
            		}
            		
            },
@@ -315,7 +265,7 @@
 			// 	$("#phoneAjax").removeClass("hidden");
 			// }
 			vm.showp=true;
-			let url='/getHeXieCellById';
+			let url='/getHeXieCellById?regionname=上海市'
 			let params = {
 				sect_id, 
 				build_id,

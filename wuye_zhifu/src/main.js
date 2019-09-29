@@ -8,7 +8,6 @@ import MintUI from 'mint-ui'
 import 'mint-ui/lib/style.css'
 import $ from 'jquery'
 
-import Qs from 'qs';
 import axios from 'axios';
 //axios.defaults.withCredentials=true; //存储cookie？
 import VueAxios from 'vue-axios';
@@ -20,8 +19,10 @@ import './assets/js/rem.js'
 import cookie from 'js-cookie'
 
 //本地用
-// import {common,MasterConfig} from './assets/js/common';
+// import {common,MasterConfig,getUrlParam} from './assets/js/common';
+
 Vue.prototype.common = common;
+Vue.prototype.getUrlParam = getUrlParam;
 Vue.prototype.baseUrl = MasterConfig.C('baseUrl');
 Vue.prototype.basePageUrl = MasterConfig.C('basePageUrl');
 Vue.prototype.basePageUrlpay = MasterConfig.C('basePageUrlpay');

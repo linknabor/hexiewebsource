@@ -300,7 +300,7 @@ export default {
                    alert("所选图片超过6张。")
                    return false;
                }
-               vm.pic_length=localIds.length;
+               vm.pic_length+=localIds.length;
               var i=0;
                 if(window.__wxjs_is_wkwebview) {//ios 环境
                    function addimage(i) {
@@ -406,7 +406,8 @@ export default {
         id: 0,
         detailAddress: ""
         }   
-      vm.distinct=''
+      vm.distinct='';
+      vm.suggestLocation='';
     },
     //!--------------!
      getRegions(type,id) {
@@ -543,7 +544,7 @@ export default {
         alert("请填写完整相关信息！");
         return;
       }
-      if (!/^1[3-9][0-9]\d{4,8}$/.test(vm.submitAddress.tel)) {
+      if (!/^1[3-9][0-9]\d{8}$/.test(vm.submitAddress.tel)) {
         alert("请填写正确的手机号！");
         return;
       }

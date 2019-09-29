@@ -125,10 +125,7 @@ export default {
                     vm.thumbnailurls = vm.thread.thumbnailLink;
                     vm.updateUnreadComments();
                     console.log(vm.comments.length)
-                    //只能回复一次
-                    // if(vm.comments.length>0) {
-                    //       $("#add").hide();
-                    // }
+                    
                 }else {
                     //    alert(vm.data.message==null?"获取信息失败，请重试！":vm.data.message);
                 }
@@ -271,17 +268,14 @@ export default {
 				alert("回复内容不为空。");
 				return false;
         }
-         //限制回复 
-        // if(vm.comments.length<1) {
+        
             var pic_length = $("[name='pics']").length;
             if(pic_length>0){// 有没有图片上传
                 this.uploadToWechat();
             }else{
                  vm.addComment();
             } 
-        // }else {
-        //     alert('不可回复，请重新报修')
-        // }
+       
    },
    //回复发送
     addComment() {
@@ -297,6 +291,11 @@ export default {
                     vm.comments.push(vm.data.result)
                     vm.commentContent="";
                     // $('#imgdis').hide();
+                      var pic_length = $("[name='pics']").length;
+                     if(pic_length>2){
+                         $("#add").show();
+                     }
+                     $('#pic').empty()
 
                 }else{
                     alert(vm.data.message==null?"发布信息保存失败，请重试！":vm.data.message);

@@ -110,7 +110,7 @@
 
     <div class="info-wrap">
       <a
-        :href="this.basePageUrl+'wuye/index.html?#/Myhouse'"
+        :href="this.basePageUrl+'wuye/index.html?'+oriapp+'#/Myhouse'"
         class="input-wrap menu-person-link lite-divider"
       >
         <span class="input-info lf30 fs16">我是业主</span>
@@ -151,7 +151,7 @@
         class="divider highlight"
         style="text-align: center;width:100%;font-size:16px"
       >长按关注合协社区，尊享更多服务和商品</div>
-      <img style="width: 200px;" src="http://img.e-shequ.com/FrNERaxTnTNFrFO-iYMY6vx2kRe6" />
+      <img style="width: 200px;" :src="qrCode" />
     </div>
   </div>
 </template>
@@ -159,6 +159,7 @@
 <script>
 let vm;
 import img from "../../assets/images/common/logo.jpg";
+import Bus from '../../api/bus.js'
 export default {
   data() {
     return {
@@ -168,11 +169,12 @@ export default {
         level: "",
         zhima: "0",
         lvdou: "0",
-        couponCount: 0
+        couponCount: 0,
       },
+      oriapp:'', //我是业主
+      qrCode:'',//二维码
       // 默认未开通会员
       isMember: false,
-      // kaitongs1:'',
 
       user_info: {
         avatar: img,
@@ -194,6 +196,7 @@ export default {
     this.User();
     this.updateCouponStatus();
     // this.panduan(); //先判断
+    vm.oriApp();//判断我是业主地址
   },
   components: {},
   methods: {
@@ -213,24 +216,25 @@ export default {
     //模仿线上用户信息
     // 105/747/384
     initSession4Test() {
-      let url = "/initSession4Test/79081";
+      let url = "/initSession4Test/384";
       vm.receiveData.getData(vm, url, "Data", function() {});
     },
     User() {
       //获取页面数据
       let n = "GET",
-        a = "userInfo",
+        a = "userInfo?oriApp="+vm.getUrlParam('oriApp'),
         i = null,
         d = function() {},
         e = function(n) {
+           if(n.success&&n.result==null) {
+                 reLogin();
+           }
           vm.user = n.result;
-              vm.user.headimgurl =
-            "" != n.result.name || n.result
-              ? n.result.headimgurl
-              : vm.user_info.avatar;
-          vm.user.name =
-            "" != n.result.name ? n.result.name : vm.user_info.nickname;
-        
+          vm.user.headimgurl = "" != n.result.name || n.result? n.result.headimgurl: vm.user_info.avatar;  
+          vm.user.name ="" != n.result.name ? n.result.name : vm.user_info.nickname;
+            
+          vm.qrCode=n.result.qrCode;
+          Bus.$emit('sends',n.result.iconList)
         },
         r = function() {
           vm.user = {};
@@ -254,29 +258,22 @@ export default {
     },
     //点击头像
     gotoEdit() {
-      if (this.common.hasRegister()) {
-        this.$router.push({ path: "/bindphone" });
-      } else {
-        this.$router.push({ path: "/register" });
-      }
-    },
-    //跳转到开通页面,先判断是否开通
-    huiyuan() {
-      vm.$router.push({ path: "/kaitong" });
+        vm.$router.push({ path: "/bindphone" });
+     
     },
     //现金券
     coupons() {
       vm.$router.push({ path: "/coupons" });
     },
     gotoAddress() {
-      if (vm.common.hasRegister()) {
         vm.$router.push({ path: "/addresses" });
-      } else {
-        this.$router.push({ path: "/register" });
-      }
     },
     Notice() {
-    vm.$router.push({path:'/notices'})
+      vm.$router.push({path:'/notices'})
+    },
+    //我是业主
+    oriApp() {
+      vm.oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
     }
   },
   computed: {}

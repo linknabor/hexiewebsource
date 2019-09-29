@@ -37,9 +37,7 @@
 				{{data.mng_cell_id}}(户号)
 			</li>
 		</ul>
-		<!-- <loading v-show="loadingShow"></loading> -->
 		<div class="bottomBtn"  @click="addHouse">绑定房子</div>
-		<!-- <mt-button  size="large" class="bottomBtn" @click.native="addHouse" >绑定房子</mt-button> -->
 	</div>
 </template>
 
@@ -47,10 +45,9 @@
 <script>
 	let vm;
 	import { MessageBox } from 'mint-ui';
-	import loading from '../../components/loading.vue';
 
 	export default {
-	  components:{loading},
+	  components:{},
 	  created(){
 	  	vm = this;
 	  },

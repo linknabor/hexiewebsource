@@ -194,13 +194,13 @@
 	    },
 	    //查询缴费总价
 	    queryAllPrice :function(){
-	    	let ap = 0;
-	  		for(let i in this.queryBillInfo){
-	  			if(this.queryBillInfo[i].selected == true){
-	  				ap+=Number(this.queryBillInfo[i].fee_price)
-	  			}
-	  		}
-	  		return parseFloat(ap).toFixed(2)
+			let ap = 0;
+			for(let i in this.queryBillInfo){
+					if(this.queryBillInfo[i].selected == true){
+						ap+=Number(this.queryBillInfo[i].fee_price)
+					}
+			}
+			  return parseFloat(ap).toFixed(2)
 	    }
 	  },
 	  data(){
@@ -218,7 +218,7 @@
 	  		},
 
 	  		stmtId:'',//快捷缴费 扫描出来的账单号
-	  		url : '/billList',
+	  		url : '/billList?regionname=上海市',
 	  		params : {
 	  			startDate:'',
 	  			endDate:'',
@@ -321,7 +321,7 @@
 		  },
 		//获取小区
 		getHousin(name) {
-			let url = '/getVagueSectByName?sect_name='+name;
+			let url = '/getVagueSectByName?sect_name='+name+'&regionname=上海市';
 					vm.receiveData.getData(vm,url,'Datas',function(){
 							let link=null;
 							link=vm.Datas.result.sect_info;
@@ -444,7 +444,7 @@
 			// 	$("#phoneAjax").removeClass("hidden");
 			// }
 			vm.showp=true;
-			let url='/getHeXieCellById';
+			let url='/getHeXieCellById?regionname=上海市';
 			let params = {
 				sect_id, 
 				build_id,
@@ -485,29 +485,32 @@
 		//请求查询缴费 账单列表
 		queryBillList(){
 			vm.showp=true;
-			let url = 'billList';
+			let url = 'billList?regionname=上海市';
 			vm.params.house_id = vm.query.house;
 			vm.params.sect_id = vm.query.sectID;
 			vm.params.currentPage = 1;
 			vm.receiveData.getData(vm,url,'queryBillInfo',function(){
-				vm.permit_skip_pay = vm.queryBillInfo.result.permit_skip_pay;
-				vm.pay_least_month = vm.queryBillInfo.result.pay_least_month;//3月份
-					vm.reduceMode=vm.queryBillInfo.result.reduce_mode;  //从新赋值减免方式
-				// console.log('我是减免方式:'+vm.queryBillInfo.result.reduce_mode+'我把他赋值给'+vm.reduceMode)
-				
-				if(vm.queryBillInfo.result == null) {
-					vm.queryBillInfo=[]
-					vm.showp=false;
-				}
-				if(vm.queryBillInfo.result.bill_info && vm.queryBillInfo.result.bill_info.length>0) {
-					vm.queryBillInfo = vm.queryBillInfo.result.bill_info;
-					
-					vm.showp=false;
+				if(vm.queryBillInfo.success) {
+					if(vm.queryBillInfo.result == null) {
+						vm.queryBillInfo=[]
+					}else {
+						vm.permit_skip_pay = vm.queryBillInfo.result.permit_skip_pay;
+						vm.pay_least_month = vm.queryBillInfo.result.pay_least_month;//3月份
+						vm.reduceMode=vm.queryBillInfo.result.reduce_mode;  //从新赋值减免方式
+						// console.log('我是减免方式:'+vm.queryBillInfo.result.reduce_mode+'我把他赋值给'+vm.reduceMode)
+						if(vm.queryBillInfo.result.bill_info && vm.queryBillInfo.result.bill_info.length>0) {
+							vm.queryBillInfo = vm.queryBillInfo.result.bill_info;
+						}else {
+							alert('没有搜索到账单')
+							vm.queryBillInfo=[]
+						}
+					}
 				}else {
 					alert('没有搜索到账单')
 					vm.queryBillInfo=[]
 				}
-					vm.showp=false;
+				vm.showp=false;
+
 			},vm.params)
 		
 		},
@@ -543,7 +546,7 @@
 	  		//页码加1
 	  		vm.queryBillPage += 1;
 	  		vm.params.currentPage = vm.queryBillPage;
-	  		let url = 'billList';
+	  		let url = 'billList?regionname=上海市';
 	  		vm.receiveData.getData(vm,url,'pageData4',function(){
 	  			tempArr = vm.pageData4.result.bill_info;
 	  			if( tempArr && tempArr.length > 0){
@@ -679,12 +682,10 @@
 					return false;
 				}
 			}
-	  		//----------过佳家
-	  		// vm.str = 'https://test.e-shequ.com/weixin/';
-	  		// let url = vm.str + "paymentdetail.html?#/?billIds="+bills+"&stmtId="+vm.stmtId+"&payAddr="+escape(pay_addr)+"&totalPrice="+vm[allPrice]+"&reduceMode="+vm.reduceMode;
-			// window.location.href = url;
-			
-			window.location.href =vm.basePageUrl+"wuyepay.html?#/?billIds="+bills+"&stmtId="+vm.stmtId+"&payAddr="+escape(pay_addr)+"&totalPrice="+vm[allPrice]+"&reduceMode="+vm.reduceMode;
+	  		
+			//跳转支付页
+			var oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
+			window.location.href =vm.basePageUrl+"wuyepay.html?"+oriapp+"#/?billIds="+bills+"&stmtId="+vm.stmtId+"&payAddr="+escape(pay_addr)+"&totalPrice="+vm[allPrice]+"&reduceMode="+vm.reduceMode;
 	  		
 	  	},
 
@@ -926,7 +927,7 @@
 		width: 0.4rem;
 		background: url('../../assets/images/house/icon_scan.png') ;
 		background-size: cover;
-		margin-top: 10px;
+		margin-top: 0.36rem;
 	}
 	.subBtn{
 		height: 0.88rem;

@@ -106,16 +106,19 @@ export default {
     //     vm.receiveData.wxconfig(vm,wx,['chooseWXPay'],url);
   },
   mounted() {
+    // this.initSession4Test();
     this.firstALL();
-  //模仿线上用户信息
-    // 105/747/384
-      // let url = "/initSession4Test/105";
-      // vm.receiveData.getData(vm, url, "Data", function() {});
   },
 
   components: {},
 
   methods: {
+     //模仿线上用户信息
+    // 105/747/384
+    initSession4Test() {
+      let url = "/initSession4Test/105";
+      vm.receiveData.getData(vm, url, "Data", function() {});
+    },
     //初始获取订单数据
     firstALL() {
       vm.receiveData.getData(

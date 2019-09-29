@@ -254,6 +254,7 @@ let vm;
 let isloadPage=false;
 import {swiper,swiperSlide} from 'vue-awesome-swiper';
 import BScroll from 'better-scroll';
+import Bus from '../../api/bus.js'
 export default {
     name: 'index',
     components: {
@@ -266,9 +267,6 @@ export default {
             page : 0,
             cfgParam:{},
             sectId:0,
-            // ONLINE_REPAIR:0,//判断维修
-            // ONLINE_MESSAGE:0,//判断公告
-            // ONLINE_SUGGESTION:0,//判断意见
             messtype:'',
             //swiper参数配置
             swiperOption:{
@@ -307,7 +305,7 @@ export default {
     },
     mounted(){
         // this.initSession4Test();
-        this.initUserInfo();
+        this.initUserInfo(); 
     },
     updated() {
           vm.$nextTick(()=> {
@@ -318,40 +316,35 @@ export default {
     },
 
     methods: {
-        //模仿线上用户信息/105/747/384/15184
+        //模仿线上用户信息/105/747/384/
         initSession4Test(){
-            let url = '/initSession4Test/79081';
+            let url = '/initSession4Test/79179';
                 vm.receiveData.getData(vm,url,'Data',function(){
             });
         },
         initUserInfo(){
             let n = "GET",
-                a = "userInfo",
+                a = "userInfo?oriApp="+vm.getUrlParam('oriApp'),
                 i = null,
                 e = function(n) {
-                    vm.cfgParam=n.result.cfgParam;
-                    vm.sectId=n.result.sectId;
-                    // console.log(JSON.stringify(n));
+                    if(n.result!=null) {
+                        vm.cfgParam=n.result.cfgParam;
+                        vm.sectId=n.result.sectId;
+                        Bus.$emit('sends',n.result.iconList)
+                    }
+                    if(n.success&&n.result==null) {
+                         reLogin();
+                    }
                  vm.query(); 
-
                 },
                 r = function() { 
                    vm.query(); 
                 };
             this.common.invokeApi(n, a, i, null, e, r);
 
-            // vm.receiveData.getData(vm, 'userInfo', "n", function() { 
-            //     if(vm.n.result.cfgParam && vm.n.result.cfgParam.ONLINE_MESSAGE != undefined) {
-            //             vm.ONLINE_MESSAGE = vm.n.result.cfgParam.ONLINE_MESSAGE;
-            //             vm.ONLINE_REPAIR =vm.n.result.cfgParam.ONLINE_REPAIR;
-            //             vm.ONLINE_SUGGESTION = vm.n.result.cfgParam.ONLINE_SUGGESTION;
-            //         }
-            //         // console.log(JSON.stringify(n));
-            //      vm.query(); 
-            // });
         },
         query() {
-                if(vm.ONLINE_MESSAGE==1) {
+                if(vm.cfgParam.ONLINE_MESSAGE==1) {
                         vm.tabs=[ 
                             {
                                 name: '社区生活',
@@ -396,7 +389,7 @@ export default {
                     
                 };
             this.common.invokeApi(n,a,i,null,e,r);
-            //   vm.receiveData.getData(vm, "messages/"+type+"/"+vm.page, "n", function() { })
+
         },    
          //点击切换资讯
         changeTab(index,type) {

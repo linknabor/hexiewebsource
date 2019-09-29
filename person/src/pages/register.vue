@@ -57,9 +57,12 @@ export default {
    methods: {
         getUserInfo() {
             var n = "GET",
-            a = "userInfo",
+            a = "userInfo?oriApp="+vm.getUrlParam('oriApp'),
             i = null,
             e = function(n) {
+                 if(n.success&&n.result==null) {
+                       reLogin();
+                 }     
                 vm.user = n.result;
                 if(vm.common.hasRegister()) {
                     vm.$router.push({path:'/'})
@@ -120,21 +123,15 @@ export default {
              vm.receiveData.postData(vm,'simpleRegister',{mobile:vm.user.tel,name:vm.user.name,yzm:vm.captcha},'res',function(){
                  if(vm.res.success) {
                         vm.common.updateUserStatus(vm.res.result);
-                              var page = "";		    	
                             var forwardPage = "";
-                            
                             if(vm.comeFrom){
                                 forwardPage = vm.comeFrom;
                             } else {
-                                forwardPage = vm.basePageUrl+'person/index.html?v=20160229';
+                                let oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
+                                forwardPage = vm.basePageUrl+'person/index.html?'+oriapp;
                             }
-                            if (page) {
-                                location.href = page+"?comeFrom="+forwardPage;
-                            }else{
-                                alert("注册成功。");
-                                location.href = forwardPage;
-                            }
-                            
+                            alert("注册成功。");
+                            location.href = forwardPage;
                 }else {
                      vm.zzmb=false;
                     vm.isClick=false;

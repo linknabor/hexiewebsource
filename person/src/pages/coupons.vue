@@ -108,11 +108,7 @@ export default {
        validCoupons() {
         vm.receiveData.getData(vm,'/couponSummary','Data',function(){
             if(vm.Data.success) {
-                 if(vm.Data.success) {
                       vm.summary=vm.Data.result;
-                }else {
-                      alert("获取现金券信息失败！");
-                }
             }else {
                    alert("获取现金券信息失败！");  
             }

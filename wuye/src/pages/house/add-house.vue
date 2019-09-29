@@ -24,7 +24,7 @@
 		width: 0.4rem;
 		background: url('../../assets/images/house/icon_scan.png') no-repeat center ;
 		background-size: cover;
-		margin-top: 10px;
+		margin-top: 0.38rem;
 	}
 	.subBtn{
 		height: 0.88rem;

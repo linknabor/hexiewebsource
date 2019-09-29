@@ -381,6 +381,7 @@
 		},
 
 		mounted(){
+		
 			vm.common.checkRegisterStatus();
 
 			// this.initSession4Test()
@@ -414,7 +415,7 @@
 			},
 			getBillDetail() {
 					//请求费用数据
-					let url = "getBillDetail";
+					let url = "getBillDetail?regionname=上海市";
 					vm.receiveData.getData(
 						vm,
 						url,
@@ -602,7 +603,7 @@
 						}
 				};
 				$('.box-bg').css("display",'block');
-				let url = "getPrePayInfo?billId="+vm.routeParams.billIds+"&stmtId="+vm.routeParams.stmtId+"&couponUnit="+vm.upronAmountNumber+"&couponNum=1&couponId="+vm.couponId+"&mianBill="+vm.mianBill+"&mianAmt="+vm.mianAmt+"&reduceAmt="+vm.reduceAmt+"&invoice_title_type="+this.invoice_title_type+"&credit_code="+this.credit_code+"&invoice_title="+this.invoice_title;
+				let url = "getPrePayInfo?regionname=上海市&billId="+vm.routeParams.billIds+"&stmtId="+vm.routeParams.stmtId+"&couponUnit="+vm.upronAmountNumber+"&couponNum=1&couponId="+vm.couponId+"&mianBill="+vm.mianBill+"&mianAmt="+vm.mianAmt+"&reduceAmt="+vm.reduceAmt+"&invoice_title_type="+this.invoice_title_type+"&credit_code="+this.credit_code+"&invoice_title="+this.invoice_title;
 				this.axios.post(
 					url,
 					{},
@@ -645,7 +646,8 @@
 								vm.receiveData.postData(vm,reqUrl,{},'reqUrlData',function(){
 									vm.payInfo = vm.reqUrlData.result;
 									//支付成功跳转详情
-									  window.location.href = vm.basePageUrl+'wuye/index.html?state=123#/paymentquery';
+									var oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
+									  window.location.href = vm.basePageUrl+'wuye/index.html?'+oriapp+'#/paymentquery';
 
 					  			})											
 			          	    },

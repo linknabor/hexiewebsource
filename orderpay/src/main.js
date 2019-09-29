@@ -20,8 +20,10 @@ import './assets/js/rem';
 
 import cookie from 'js-cookie'
 
-// import {common,MasterConfig} from './assets/js/common'
+// import {common,MasterConfig,getUrlParam} from './assets/js/common'
+
 Vue.prototype.common=common;
+Vue.prototype.getUrlParam=getUrlParam;
 Vue.prototype.baseUrl=MasterConfig.C('baseUrl');
 Vue.prototype.basePageUrl=MasterConfig.C('basePageUrl');
 Vue.prototype.basePageUrlpay=MasterConfig.C('basePageUrlpay');
