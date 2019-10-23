@@ -71,6 +71,7 @@
 			  	:bottomMethod="carLoadBottom" 
 			  	:auto-fill = "false"
 			  	:bottomAllLoaded = "carisLastPage"
+				ref="loadmore11"
 			  >
 			  	<Bill :bill-info="carBillInfo" @itemClick="itemClick"></Bill>
 			  	<p></p>
@@ -218,7 +219,7 @@
 	  		},
 
 	  		stmtId:'',//快捷缴费 扫描出来的账单号
-	  		url : '/billList?regionname=上海市',
+	  		url : '/billList',
 	  		params : {
 	  			startDate:'',
 	  			endDate:'',
@@ -321,7 +322,7 @@
 		  },
 		//获取小区
 		getHousin(name) {
-			let url = '/getVagueSectByName?sect_name='+name+'&regionname=上海市';
+			let url = '/getVagueSectByName?sect_name='+name;
 					vm.receiveData.getData(vm,url,'Datas',function(){
 							let link=null;
 							link=vm.Datas.result.sect_info;
@@ -444,7 +445,7 @@
 			// 	$("#phoneAjax").removeClass("hidden");
 			// }
 			vm.showp=true;
-			let url='/getHeXieCellById?regionname=上海市';
+			let url='/getHeXieCellById';
 			let params = {
 				sect_id, 
 				build_id,
@@ -485,7 +486,7 @@
 		//请求查询缴费 账单列表
 		queryBillList(){
 			vm.showp=true;
-			let url = 'billList?regionname=上海市';
+			let url = 'billList';
 			vm.params.house_id = vm.query.house;
 			vm.params.sect_id = vm.query.sectID;
 			vm.params.currentPage = 1;
@@ -546,7 +547,7 @@
 	  		//页码加1
 	  		vm.queryBillPage += 1;
 	  		vm.params.currentPage = vm.queryBillPage;
-	  		let url = 'billList?regionname=上海市';
+	  		let url = 'billList';
 	  		vm.receiveData.getData(vm,url,'pageData4',function(){
 	  			tempArr = vm.pageData4.result.bill_info;
 	  			if( tempArr && tempArr.length > 0){
@@ -554,9 +555,9 @@
 	  			}else{
 					  vm.queryisLastPage = true;
 					  vm.quan=true;
-	  			}
-			},vm.params)
+				  }
 			vm.$refs.loadmore.onBottomLoaded();
+			},vm.params)
 	  	},
 
 	  	quickloadBottom(){//快捷缴费上拉加载数据
@@ -575,16 +576,14 @@
 	  				if( tempArr && tempArr.length > 0){
 	  					vm.quickBillInfo =vm.quickBillInfo.concat(tempArr) //快捷缴费
 	  					vm.quickAllselect = false;
-	  					// bottomLoaddingText = "";
-	  					// vm.$refs.loadmore.onBottomLoaded();
 
 	  				}else{
 						  vm.quickisLastPage = true;
 						  vm.quan1=true;
-  						// vm.$refs.loadmore.onBottomLoaded();
-	  				}
+					  }
+				  vm.$refs.loadmore1.onBottomLoaded()		
 	  			})
-			  vm.$refs.loadmore1.onBottomLoaded()		
+			//   vm.$refs.loadmore1.onBottomLoaded()		
 	  	},
 	  	loadBottom(){//物业缴费 上拉加载数据
 	  		//临时接收的数组
@@ -605,12 +604,12 @@
 	  				}else{
 						  vm.bisLastPage = true;
 						 vm.quan2=true;
-	  				}
-	  			},vm.params)
-			  vm.$refs.loadmore2.onBottomLoaded()  		
+					  }
+			 	 vm.$refs.loadmore2.onBottomLoaded()  		
+	  		},vm.params)
+			//   vm.$refs.loadmore2.onBottomLoaded()  		
 	  	},
-	  	carLoadBottom(){//停车缴费，上拉加载数据
-	  		setTimeout(()=>{
+	  carLoadBottom(){//停车缴费，上拉加载数据
 	  			//临时接收的数组
 		  		let tempArr = null;
 		  		//页码自增 
@@ -629,13 +628,10 @@
 		  				}else{
 		  					vm.carisLastPage = true;
 		  					alert("没有更多啦");
-		  				}
-		  			},
-		  			vm.params
-		  		)
-	  		},1500)
-	  		
-	  	},
+						  }
+						vm.$refs.loadmore11.onBottomLoaded()  
+		  			},vm.params)
+	 },
 	  	//点击物业缴费按钮
 	  	pay(list,allPrice,allselect){//第一个参数 账单数组，第二个参数 总价 第三个参数 是否全选,所有参数 string
 	  		if( vm[allPrice] < 0.01){

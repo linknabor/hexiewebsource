@@ -10,7 +10,7 @@
 			  	:bottomMethod="carLoadBottom" 
 			  	:auto-fill = "false"
 			  	:bottomAllLoaded = "carisLastPage"
-				  ref="loadmore"
+				ref="loadmore"
 			  >
 			  	<Bill :bill-info="carBillInfo" @itemClick="itemClick"></Bill>
 			  </mt-loadmore>
@@ -51,7 +51,7 @@
 		},
 		data(){
 			return {
-				url : '/billList?regionname=上海',
+				url : '/billList',
 				stmtId:'',//快捷缴费 扫描出来的账单号
 		  		params : {
 		  			startDate:'',
@@ -109,9 +109,9 @@
 		  				}else{
 							  vm.carisLastPage = true;
 							  vm.quan=true;
-		  				}
+						}
+		  			 vm.$refs.loadmore.onBottomLoaded()
 		  			},vm.params)
-		  		 vm.$refs.loadmore.onBottomLoaded()
 		  			
 		  	},
 		  	//点击物业缴费按钮
