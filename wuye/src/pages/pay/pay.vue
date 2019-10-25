@@ -1,5 +1,6 @@
 <template>
-	<div class="main">
+<div id="divwuye"  @scroll="getscroll">
+	<div class="main" >
 		<!-- 加载中 -->
 		<div id="phoneErro"></div>
 		<!-- class="hidden" -->
@@ -23,14 +24,10 @@
 	            <div class="scan-icon" @click="show"></div>
 	        </div>
 			<mt-button class="subBtn" size="large" @click.native="submit" >提交</mt-button>
-			<mt-loadmore 
-			  	:bottomMethod="quickloadBottom" 
-			  	:auto-fill = "false"
-			  	:bottomAllLoaded = "quickisLastPage"
-				ref="loadmore1"
-			  	>
+		
+				<div id=word>
 			  		<Bill :bill-info="quickBillInfo" @itemClick="itemClick"></Bill>
-			</mt-loadmore>
+				</div>		  
 			<div style="width:100%;height:0.92rem;"></div>
 			<div class="btn-fixed">
 	    		<div class="fl select-btn" v-show="quan1" :class="{allSelected:quickAllselect}" @click="allSelect(quickBillInfo,'quickAllselect')">全选&nbsp;</div>
@@ -45,14 +42,10 @@
 		  </mt-tab-container-item>
 		  <mt-tab-container-item id="b">
 			<!-- 物业缴费开始 -->
-		    	<mt-loadmore 
-			  	:bottomMethod="loadBottom" 
-			  	:auto-fill = "false"
-			  	:bottomAllLoaded = "bisLastPage"
-				ref="loadmore2"
-			  	>
+		    	
+				<div id=word>
 			  		<Bill :bill-info="billInfo" @itemClick="itemClick"></Bill>
-			 	</mt-loadmore>
+				</div>	  
 			 	<div style="width:100%;height:0.92rem;"></div>
 		    	<div class="btn-fixed">
 		    		<div class="fl select-btn" v-show="quan2" :class="{allSelected:bAllSelect }" @click="allSelect(billInfo,'bAllSelect')">全选&nbsp;</div>
@@ -65,29 +58,7 @@
         		</div> 
 		    <!-- 物业缴费结束 -->
 		  </mt-tab-container-item>
-		  <mt-tab-container-item id="c">
-			<!-- 停车缴费开始 -->
-			  <mt-loadmore 
-			  	:bottomMethod="carLoadBottom" 
-			  	:auto-fill = "false"
-			  	:bottomAllLoaded = "carisLastPage"
-				ref="loadmore11"
-			  >
-			  	<Bill :bill-info="carBillInfo" @itemClick="itemClick"></Bill>
-			  	<p></p>
-			  </mt-loadmore>
-			  <div style="widtt:100%;height:0.92rem;"></div>
-			  	<div class="btn-fixed">
-		    		<div class="fl select-btn" :class="{allSelected:carAllselect }" @click="allSelect(carBillInfo,'carAllselect')">全选&nbsp;</div>
-		    		<div class="pay" @click="pay('carBillInfo','carAllPrice','carAllselect')">
-		    			我要缴费
-		    			<span>
-		    				￥{{carAllPrice}}
-		    			</span>
-		    		</div>
-        		</div>
-			<!-- 停车缴费结束 -->
-		  </mt-tab-container-item>
+
 		  <!-- 查询缴费开始 -->
 		  <mt-tab-container-item id="d">
 		  	
@@ -127,14 +98,10 @@
 			  		</select>
 			  	</div>	
 		  	</div>
-		  	<mt-loadmore 
-			  	:bottomMethod="queryLoadBottom" 
-			  	:bottomAllLoaded = "queryisLastPage"
-			  	:auto-fill = "false"
-				ref="loadmore"
-			>
+
+			<div id=word>
 			  	<Bill :bill-info="queryBillInfo" @itemClick="itemClick"></Bill>
-			</mt-loadmore>
+			</div>	  
 			<div style="widtt:100%;height:0.92rem;"></div>
 			<div class="btn-fixed" id="st" v-show="showt">
 	    		<div v-show="quan" class="fl select-btn" :class="{allSelected:queryAllselect }" @click="allSelect(queryBillInfo,'queryAllselect')">全选&nbsp;</div>
@@ -145,14 +112,15 @@
 	    			</span>
 	    		</div>
        		</div>
-		  	
 		  </mt-tab-container-item>
 		</mt-tab-container>
 	</div>
+</div>	
 </template>
 <script>
 	let vm;
 	let timer;
+	let isloadPage=false;
 	import wx from 'weixin-js-sdk';
 	import '../../tap.js'
 	import axios from 'axios';
@@ -173,16 +141,6 @@
 	  		}
 	  		return parseFloat(ap).toFixed(2)
 	  	},
-	  	//停车缴费总价
-	  	carAllPrice : function(){
-	  		let ap = 0;
-	  		for(let i in this.carBillInfo){
-	  			if(this.carBillInfo[i].selected == true){
-	  				ap+=Number(this.carBillInfo[i].fee_price)
-	  			}
-	  		}
-	  		return parseFloat(ap).toFixed(2)
-	    },
 	    //快捷缴费总价
 	    quickAllPrice : function(){
 	    	let ap = 0;
@@ -227,21 +185,14 @@
 	  			currentPage : 1, //页码
 	  			totalCount : 0, //第几条开始
 	  		},
-	  		bisLastPage:false,//物业缴费是否为最后一页
-	  		carisLastPage:false,//停车缴费是否最后一页
-	  		quickisLastPage:false,//快捷缴费是否为最后一页
-	  		queryisLastPage:false,//查询缴费是否为最后一页
 	  		bAllSelect:false,//物业缴费全选
-	  		carAllselect:false,//停车缴费全选
 	  		quickAllselect:false,//快速缴费全选
 	  		queryAllselect:false,//查询缴费全选
 	  		billInfo:[],//物业缴费数据
-	  		carBillInfo:[],//停车缴费数据
 	  		queryBillInfo : [],//查询缴费数据
 	  		quickBillInfo:[],//快捷查询数据
 	  		selected:'a', //选项卡 默认选中
 	  		billPage :1, // 物业缴费页码
-	  		carBillPage :1, //停车缴费页码
 	  		queryBillPage : 1,//查询缴费页码
 			quickBillpage:1,
 			pay_least_month:1,
@@ -259,45 +210,32 @@
 		
 	  	}
 	  },
-	  watch:{
-		//   query:{//查询缴费数据
-	  	// 		sect:'',//小区
-	  	// 		build:'',//楼宇id
-	  	// 		unit:'',//门牌id
-	  	// 		house:'',//室号id
-	  	// 	},
-		//   'query.sect'(name,van) {
-			 
-		//   }
-
-	  },
+	 watch:{
+		selected(newv,old) {
+			//监控导航回复加载状态
+			isloadPage=false;
+		}
+	 },
+	  
 	  created(){
 	  	vm = this;
 	  },
 	  mounted(){
 		//   this.initSession4Test();
 	  	//微信配置
-	  	// this.common.checkRegisterStatus();
 	  	let url = location.href.split('#')[0]
 		vm.receiveData.wxconfig(vm,wx,['scanQRCode'],url);
-		  
 	  	//请求 停车缴费 和 物业缴费首屏数据
 	  	vm.receiveData.getData(vm, vm.url, 'data',function(){
 	  		vm.pay_least_month = vm.data.result.pay_least_month;
 	  		vm.billInfo = vm.data.result.bill_info;//物业缴费
 	  		vm.reduceMode = vm.data.result.reduce_mode;//减免方式
-			vm.carBillInfo = vm.data.result.car_bill_info;//停车缴费
 			vm.permit_skip_pay=vm.data.result.permit_skip_pay;//判断跳跃付款  
+			vm.billPage += 1;
 	  	},vm.params) ;
-	  	//查询缴费 小区数据
-	  	// vm.receiveData.getData(vm,'/getSect','sectList',function(){
-	  	// 	vm.sectList = vm.sectList.result
-		  // });
-
-		
-
 	  },
 	  methods:{
+		
 		  //模仿线上用户信息
 			//105/747/384
 		  initSession4Test(){
@@ -428,13 +366,13 @@
 			
 		},
 		//室号选中
-		getCoupons() {
-			
+		getCoupons() {			
 				//获取用户数据
 			//重置
 		  		vm.queryBillInfo= [];//清空查询账单列表
-    			vm.queryBillPage = 1;//页码重置
-    			vm.queryisLastPage=false;//是否最后一页重置
+				vm.queryBillPage = 1;//页码重置
+				isloadPage=false;//重置加载状态
+				 vm.queryAllselect=false;//重置全选状态
     			// 请求查询账单数据
     			vm.queryBillList();
 		},
@@ -489,12 +427,14 @@
 			let url = 'billList';
 			vm.params.house_id = vm.query.house;
 			vm.params.sect_id = vm.query.sectID;
-			vm.params.currentPage = 1;
+			//页码
+			vm.params.currentPage = vm.queryBillPage;
 			vm.receiveData.getData(vm,url,'queryBillInfo',function(){
 				if(vm.queryBillInfo.success) {
 					if(vm.queryBillInfo.result == null) {
 						vm.queryBillInfo=[]
 					}else {
+						vm.queryBillPage+=1;
 						vm.permit_skip_pay = vm.queryBillInfo.result.permit_skip_pay;
 						vm.pay_least_month = vm.queryBillInfo.result.pay_least_month;//3月份
 						vm.reduceMode=vm.queryBillInfo.result.reduce_mode;  //从新赋值减免方式
@@ -522,7 +462,8 @@
 	  			alert('请输入正确账单号');
 	  			return ;
 	  		}
-
+			isloadPage=false; //重置加载状态
+			vm.quickAllselect = false;//重置加载状态
 	  		vm.quickBillpage = 1;
 	  		let url = "quickPayBillList/"+vm.stmtId+"/"+vm.quickBillpage+"/"+vm.params.totalCount;
 	  		vm.receiveData.getData(
@@ -535,38 +476,57 @@
 						vm.quickBillInfo = vm.quickData.result.bill_info;
 						vm.reduceMode = vm.quickData.result.reduce_mode;
 						vm.pay_least_month = vm.quickData.result.pay_least_month;
+						vm.quickBillpage +=1
 	  				}else{
 	  					alert('未查询到数据')
 	  				}
 	  			}
 	  		)
 
-	  	},
+		},
+		
+		//分页 
+		 getscroll(e) {
+			var st = e.srcElement.scrollTop;
+			// console.log(st);
+			var ad=window.innerHeight
+			var hd=$('#word').height();
+			// console.log(st+ad)
+			if( st+ad >=hd && !isloadPage) {
+				isloadPage=true;
+				if(vm.selected=='a'){
+					vm.quickloadBottom();
+				}else if(vm.selected=='b') {
+					vm.loadBottom();
+				}else {
+					vm.queryLoadBottom();
+				}
+			}
+       },  	
 	  	queryLoadBottom(){//查询缴费上拉加载数据
 	  		let tempArr = null;
-	  		//页码加1
-	  		vm.queryBillPage += 1;
+	  		//页码加1	  		
 	  		vm.params.currentPage = vm.queryBillPage;
 	  		let url = 'billList';
 	  		vm.receiveData.getData(vm,url,'pageData4',function(){
 	  			tempArr = vm.pageData4.result.bill_info;
 	  			if( tempArr && tempArr.length > 0){
-  					vm.queryBillInfo =vm.queryBillInfo.concat(tempArr) //快捷缴费
+					  vm.queryBillInfo =vm.queryBillInfo.concat(tempArr) //快捷缴费
+					  vm.queryAllselect=false;
+					  vm.queryBillPage += 1;
+					  isloadPage=false;    
 	  			}else{
-					  vm.queryisLastPage = true;
 					  vm.quan=true;
 				  }
-			vm.$refs.loadmore.onBottomLoaded();
 			},vm.params)
 	  	},
 
 	  	quickloadBottom(){//快捷缴费上拉加载数据
 	  		//临时接收的数组
 	  		let tempArr = null;
-	  		//页码加1
-	  		vm.quickBillpage +=1;
+			//页码加1
   			let url = "quickPayBillList/"+vm.stmtId+"/"+vm.quickBillpage+"/"+vm.params.totalCount;
-	  		//请求接口数据
+			  //请求接口数据
 	  		vm.receiveData.getData(
 	  			vm,
 	  			url,
@@ -575,21 +535,18 @@
 	  				tempArr = vm.pageData3.result.bill_info;
 	  				if( tempArr && tempArr.length > 0){
 	  					vm.quickBillInfo =vm.quickBillInfo.concat(tempArr) //快捷缴费
-	  					vm.quickAllselect = false;
-
+						vm.quickAllselect = false;
+						vm.quickBillpage +=1;
+						isloadPage=false;
 	  				}else{
-						  vm.quickisLastPage = true;
 						  vm.quan1=true;
-					  }
-				  vm.$refs.loadmore1.onBottomLoaded()		
+					}
 	  			})
-			//   vm.$refs.loadmore1.onBottomLoaded()		
 	  	},
 	  	loadBottom(){//物业缴费 上拉加载数据
 	  		//临时接收的数组
   			let tempArr = null;
 	  		//页码自增 
-	  		vm.billPage += 1;
 			vm.params.currentPage = vm.billPage;
 			//请求接口数据
 			vm.receiveData.getData(
@@ -597,41 +554,18 @@
 				vm.url,
 				'pageData',
 				function(){
+					vm.billPage += 1;
 	  				tempArr = vm.pageData.result.bill_info;//物业缴费
 	  				if(tempArr && tempArr.length > 0){
 	  					vm.billInfo =vm.billInfo.concat(tempArr) //物业缴费
-	  					vm.bAllSelect = false;
+						vm.bAllSelect = false;
+						isloadPage=false;  
 	  				}else{
-						  vm.bisLastPage = true;
 						 vm.quan2=true;
 					  }
-			 	 vm.$refs.loadmore2.onBottomLoaded()  		
 	  		},vm.params)
-			//   vm.$refs.loadmore2.onBottomLoaded()  		
 	  	},
-	  carLoadBottom(){//停车缴费，上拉加载数据
-	  			//临时接收的数组
-		  		let tempArr = null;
-		  		//页码自增 
-		  		vm.carBillPage+=1
-				vm.params.currentPage = vm.carBillPage;
-				//请求接口数据
-				vm.receiveData.getData(
-					vm,
-					vm.url,
-					'pageData2',
-					function(){
-		  				tempArr = vm.pageData2.result.car_bill_info;//停车缴费
-		  				if(tempArr && tempArr.length > 0){
-		  					vm.carBillInfo =vm.carBillInfo.concat(tempArr) //停车缴费
-		  					vm.carAllselect = false;
-		  				}else{
-		  					vm.carisLastPage = true;
-		  					alert("没有更多啦");
-						  }
-						vm.$refs.loadmore11.onBottomLoaded()  
-		  			},vm.params)
-	 },
+
 	  	//点击物业缴费按钮
 	  	pay(list,allPrice,allselect){//第一个参数 账单数组，第二个参数 总价 第三个参数 是否全选,所有参数 string
 	  		if( vm[allPrice] < 0.01){
@@ -681,7 +615,7 @@
 	  		
 			//跳转支付页
 			var oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
-			window.location.href =vm.basePageUrl+"wuyepay.html?"+oriapp+"#/?billIds="+bills+"&stmtId="+vm.stmtId+"&payAddr="+escape(pay_addr)+"&totalPrice="+vm[allPrice]+"&reduceMode="+vm.reduceMode;
+			window.location.href =vm.basePageUrl+"wuyepay.html?oriApp="+oriapp+"#/?billIds="+bills+"&stmtId="+vm.stmtId+"&payAddr="+escape(pay_addr)+"&totalPrice="+vm[allPrice]+"&reduceMode="+vm.reduceMode;
 	  		
 	  	},
 
@@ -758,6 +692,7 @@
 	}
 </style>
 <style scoped> 
+
 	a{color:black}
 	/*查询缴费*/
 	.input-row .classinput {
@@ -882,7 +817,15 @@
 
 	 
 	/*footbtn end*/
-
+	#divwuye {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background:#fff;
+		overflow:auto;
+	}
 	.main{
  		margin:0 0.3rem;
  	}

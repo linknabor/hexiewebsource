@@ -1,4 +1,5 @@
 <template>
+<div id="divwuye"  @scroll="getscroll">
 	<div class="main">
 		<!-- <mt-navbar id="navBar"  v-model="selected">
 	    	<mt-tab-item id="c">停车缴费</mt-tab-item>
@@ -6,14 +7,9 @@
 		<mt-tab-container v-model="selected"> 
 		  <mt-tab-container-item id="c">
 			<!-- 停车缴费开始 -->
-			  <mt-loadmore 
-			  	:bottomMethod="carLoadBottom" 
-			  	:auto-fill = "false"
-			  	:bottomAllLoaded = "carisLastPage"
-				ref="loadmore"
-			  >
+			<div id=word>
 			  	<Bill :bill-info="carBillInfo" @itemClick="itemClick"></Bill>
-			  </mt-loadmore>
+			</div> 
 			  <div style="widtt:100%;height:0.92rem;"></div>
 			  	<div class="btn-fixed">
 		    		<div class="fl select-btn" v-show="quan" :class="{allSelected:carAllselect }" @click="allSelect(carBillInfo,'carAllselect')">全选&nbsp;</div>
@@ -29,9 +25,11 @@
 		  
 		</mt-tab-container>
 	</div>
+</div>	
 </template>
 <script>
 	let vm;
+	let isloadPage=false;
 	import wx from 'weixin-js-sdk';
 	import Bill from '../../components/bill.vue';
 	export default {
@@ -60,7 +58,6 @@
 		  			currentPage : 1, //页码
 		  			totalCount : 0, //第几条开始
 		  		},
-				carisLastPage:false,//停车缴费是否最后一页
 				carAllselect:false,//停车缴费全选
 				carBillInfo:[],//停车缴费数据
 				selected:'c', //选项卡 默认选中
@@ -74,14 +71,10 @@
 		  	vm = this;
 		},
 		mounted(){
-			// this.common.checkRegisterStatus();
-			//微信配置
-		  	// let url = location.href.split('#')[0]
-		  	// vm.receiveData.wxconfig(vm,wx,['scanQRCode'],url);
+
 		  	
 		  	//请求 停车缴费 和 物业缴费首屏数据
 		  	vm.receiveData.getData(vm, vm.url, 'data',function(){
-		  		vm.billInfo = vm.data.result.bill_info;//物业缴费
 		  		vm.reduceMode = vm.data.result.reduce_mode;//减免方式
 		  		vm.carBillInfo = vm.data.result.car_bill_info;//停车缴费
 				vm.pay_least_month = vm.data.result.pay_least_month; //最少支付月数 
@@ -90,11 +83,22 @@
 		  	
 		},
 		methods:{
+		//分页 
+		getscroll(e) {
+				var st = e.srcElement.scrollTop;
+				// console.log(st);
+				var ad=window.innerHeight
+				var hd=$('#word').height();
+				// console.log(st+ad)
+				if( st+ad >=hd && !isloadPage) {
+					isloadPage=true;
+					vm.carLoadBottom();
+				}
+		}, 
 			carLoadBottom(){//停车缴费，上拉加载数据
 		  		//临时接收的数组
 		  		let tempArr = null;
 		  		//页码自增 
-		  		vm.carBillPage+=1
 				vm.params.currentPage = vm.carBillPage;
 				//请求接口数据
 				vm.receiveData.getData(
@@ -105,12 +109,12 @@
 		  				tempArr = vm.pageData2.result.car_bill_info;//停车缴费
 		  				if(tempArr && tempArr.length > 0){
 		  					vm.carBillInfo =vm.carBillInfo.concat(tempArr) //停车缴费
-		  					vm.carAllselect = false;
+							vm.carAllselect = false;
+							vm.carBillPage+=1;
+							isloadPage=false;  
 		  				}else{
-							  vm.carisLastPage = true;
 							  vm.quan=true;
 						}
-		  			 vm.$refs.loadmore.onBottomLoaded()
 		  			},vm.params)
 		  			
 		  	},
@@ -169,7 +173,7 @@
 				}
 		  		//跳转支付
 				var oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
-				window.location.href=vm.basePageUrl+"wuyepay.html?"+oriapp+"#/?billIds="+bills+"&stmtId="+vm.stmtId+"&payAddr="+escape(pay_addr)+"&totalPrice="+vm[allPrice]+"&reduceMode="+vm.reduceMode;
+				window.location.href=vm.basePageUrl+"wuyepay.html?oriApp="+oriapp+"#/?billIds="+bills+"&stmtId="+vm.stmtId+"&payAddr="+escape(pay_addr)+"&totalPrice="+vm[allPrice]+"&reduceMode="+vm.reduceMode;
 
 		  	},
 		  	//点击某个选中按钮 params1:被点击按钮的下标 params2:被点击按钮所属的数组
@@ -282,7 +286,15 @@ a{color:black}
 	background: #ff8a00;
 	text-align: center;	
 }	
-
+#divwuye {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background:#fff;
+	overflow:auto;
+}
 .main{
 	margin:0 0.3rem;
 }
