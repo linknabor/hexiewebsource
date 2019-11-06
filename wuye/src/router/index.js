@@ -85,6 +85,23 @@ const router= new VueRouter({
               title:'停车缴费'
             }
         },
+        //查找
+        {
+          path:'/fontUnit',
+          name:'fontUnit',
+          component:resolve=>require(['@/pages/pay/font-unit'],resolve),
+          meta:{
+            title:'查询缴费'
+          }
+      },
+      {
+        path:'/location',
+        name:'location',
+        component:resolve=>require(['@/pages/pay/location'],resolve),
+        meta:{
+          title:'查询缴费'
+        }
+    },
         {
             path:'/paymentquery',
             name:'paymentquery',
@@ -149,10 +166,10 @@ const router= new VueRouter({
 router.beforeEach((to, from, next) => {
     var flag;
     if(to.matched[0].name != "index"&& to.matched[0].name!='register') {
-       flag= common.checkRegisterStatus()
-        if(!flag) {
-            return
-        }
+      //  flag= common.checkRegisterStatus()
+      //   if(!flag) {
+      //       return
+      //   }
       }
     //动态改变title
     changeTitle(to.meta.title)

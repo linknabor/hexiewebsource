@@ -157,7 +157,7 @@ overflow: hidden; background-color: white;}
             <swiper-slide>
                 <div class="ban1">
                     <a :href="this.basePageUrlpay+'rgroups.html?v=20160229'" >
-                        <img src="../../assets/images/index/sss22.png" alt="tt">
+                        <img src="http://img.e-shequ.cn/Fve-2SL7nQhr87csiSJmZ-pbv0dI" alt="tt">
                     </a>                  
                 </div> 
             </swiper-slide>
@@ -254,7 +254,7 @@ let vm;
 let isloadPage=false;
 import {swiper,swiperSlide} from 'vue-awesome-swiper';
 import BScroll from 'better-scroll';
-import Bus from '../../api/bus.js'
+// import Bus from '../../api/bus.js'
 export default {
     name: 'index',
     components: {
@@ -318,7 +318,7 @@ export default {
     methods: {
         //模仿线上用户信息/105/747/384/
         initSession4Test(){
-            let url = '/initSession4Test/79179';
+            let url = '/initSession4Test/79187';
                 vm.receiveData.getData(vm,url,'Data',function(){
             });
         },
@@ -330,7 +330,7 @@ export default {
                     if(n.result!=null) {
                         vm.cfgParam=n.result.cfgParam;
                         vm.sectId=n.result.sectId;
-                        Bus.$emit('sends',n.result.iconList)
+                        // Bus.$emit('sends',n.result.iconList)
                     }
                     if(n.success&&n.result==null) {
                          reLogin();
