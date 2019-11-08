@@ -156,7 +156,7 @@ overflow: hidden; background-color: white;}
         <swiper :options="swiperOption" ref="mySwiper">
             <swiper-slide>
                 <div class="ban1">
-                    <a :href="this.basePageUrlpay+'rgroups.html?v=20160229'" >
+                    <a href="#" >
                         <img src="http://img.e-shequ.cn/Fve-2SL7nQhr87csiSJmZ-pbv0dI" alt="tt">
                     </a>                  
                 </div> 
@@ -304,8 +304,11 @@ export default {
  
     },
     mounted(){
+
         // this.initSession4Test();
-        this.initUserInfo(); 
+        // this.initUserInfo(); 
+        Bus.$on("sends",this.getMsgFromZha)
+        vm.query()
     },
     updated() {
           vm.$nextTick(()=> {
@@ -322,6 +325,13 @@ export default {
                 vm.receiveData.getData(vm,url,'Data',function(){
             });
         },
+         getMsgFromZha(result) {
+         if(result!=null) {
+            vm.cfgParam=result.cfgParam;
+            vm.sectId=result.sectId;
+            }
+            vm.query();
+         } ,
         initUserInfo(){
             let n = "GET",
                 a = "userInfo?oriApp="+vm.getUrlParam('oriApp'),
@@ -330,7 +340,7 @@ export default {
                     if(n.result!=null) {
                         vm.cfgParam=n.result.cfgParam;
                         vm.sectId=n.result.sectId;
-                        // Bus.$emit('sends',n.result.iconList)
+                     
                     }
                     if(n.success&&n.result==null) {
                          reLogin();

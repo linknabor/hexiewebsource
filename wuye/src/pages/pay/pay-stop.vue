@@ -9,7 +9,7 @@
 		  <mt-tab-container-item id="c">
 			<!-- 停车缴费开始 -->
 			<div id=word>
-			  	<Bill :bill-info="carBillInfo" @itemClick="itemClick"></Bill>
+			  	<Bill :bill-info="carBillInfo" @itemClick="itemClick"  ></Bill>
 			</div> 
 			  <div style="widtt:100%;height:0.92rem;"></div>
 			  	<div class="btn-fixed">
@@ -49,10 +49,11 @@
 		},
 		data(){
 			return {
+				// version:"02",
 				url : '/billList',
 				stmtId:'',//快捷缴费 扫描出来的账单号
 		  		params : {
-		  			startDate:'',
+					startDate:'',
 		  			endDate:'',
 		  			payStatus: '02', //写死
 		  			currentPage : 1, //页码

@@ -1,6 +1,7 @@
 //开发环境
 var MasterConfig = function() {
     var t = {
+        // baseUrl:'api',
         baseUrl: /127|test/.test(location.origin)?'https://test.e-shequ.com/wechat/hexie/wechat/':
         /uat/.test(location.origin)?'https://uat.e-shequ.com/wechat/hexie/wechat/':
         'https://www.e-shequ.com/wechat/hexie/wechat/',

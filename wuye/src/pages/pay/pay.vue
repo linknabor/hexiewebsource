@@ -159,18 +159,18 @@
             @click="pay('queryBillInfo','queryAllPrice','queryAllselect','otherbillinfo','queryAllPrice1')"
           >
           
-            我要缴费
-            <span v-if="zhuanpay=='zhuanye'">￥{{queryAllPrice}}</span>
-            <span v-if="zhuanpay=='biaozhun'">￥{{queryAllPrice1}}</span>
+            <span style="position: absolute;left: 30%;">我要缴费</span>
+            <span v-if="zhuanpay=='zhuanye'" style="right: -11%;position: relative;">￥{{queryAllPrice}}</span>
+            <span v-if="zhuanpay=='biaozhun'"  style="right: -11%;position: relative;">￥{{queryAllPrice1}}</span>
           </div>
         </div>
       </mt-tab-container-item>
     </mt-tab-container>
     <Foot></Foot>
-    <div  v-show="isshow"
-      style=" background: rgba(0,0,0,0.5);display: none;width: 100%;height: 38.5%;top: 7.25rem; position: absolute;"></div>
-  </div>
     
+  </div>
+    <div  v-show="isshow"
+      style=" background: rgba(0,0,0,0.5);display: none;width: 100%;height: 100%;top: 0rem; position: absolute;"></div>
   </div>
 
 </template>
@@ -238,7 +238,7 @@ export default {
   },
   data() {
     return {
-      isshow:true,
+      isshow:false,
       version: "02",
       zhuanpay: "zhuanye",
       getversion: "02",
@@ -297,7 +297,7 @@ export default {
       reduceMode: 1, //减免金额的方式
       shows: false,
       id: "",
-      showi: true,
+      showi: false,
       showp: false,
       showt: true,
       quan: false,
@@ -315,6 +315,9 @@ export default {
   watch: {
     selected(newv,old){
       isloadPage=false;
+      if(newv=="d"){
+        vm.getHousin();
+      }
     }
   },
   created() {
@@ -322,7 +325,7 @@ export default {
   },
   mounted() {
      vm.city();
-    vm.getHousin();
+    // vm.getHousin();
      vm.unitselect();
     // this.initSession4Test();
     let url = location.href.split("#")[0];
@@ -353,11 +356,13 @@ export default {
           startData=vm.startData;
           // startData = vm.formatDate(startData,'yyyyMMdd');
           vm.wuzhangdan(startData,endData);
+          vm. isshow=true;
           }else{
             
             startData = vm.formatDate(vm.startData,'yyyyMMdd');
             endData=vm.formatDate(vm.endData,'yyyyMMdd');
             vm.wuzhangdan(startData,endData);
+            vm. isshow=true;
           }
           
         
@@ -449,6 +454,9 @@ getRegionurl(longitude, latitude) {
 
     //获取小区
     getHousin() {
+      if(vm.query.sect==''){
+
+      }else{
       let url =
         "/getVagueSectByName?sect_name=" +
         this.$route.query.userunit +
@@ -479,6 +487,7 @@ getRegionurl(longitude, latitude) {
           // return false;
         }
       });
+      }
     },
     // 查询小区
     fond() {
@@ -648,8 +657,13 @@ getRegionurl(longitude, latitude) {
         "res",
         function() {
           if (vm.res.success) {
+            if(vm.res.result==null){
+              vm.isshow=false;
+             }
             vm.otherbillinfo = vm.res.result.other_bill_info;
+             vm.isshow=false;
           }
+         
           console.log(addr);
         }
       );
