@@ -1,3 +1,4 @@
+
 <template>
 <div id="divwuye"  @scroll="getscroll">
 	<div class="main">
@@ -45,7 +46,6 @@
 		  		}
 		  		return parseFloat(ap).toFixed(2)
 		    },
-
 		},
 		data(){
 			return {
@@ -71,7 +71,6 @@
 		  	vm = this;
 		},
 		mounted(){
-
 		  	
 		  	//请求 停车缴费 和 物业缴费首屏数据
 		  	vm.receiveData.getData(vm, vm.url, 'data',function(){
@@ -174,7 +173,6 @@
 		  		//跳转支付
 				var oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
 				window.location.href=vm.basePageUrl+"wuyepay.html?oriApp="+oriapp+"#/?billIds="+bills+"&stmtId="+vm.stmtId+"&payAddr="+escape(pay_addr)+"&totalPrice="+vm[allPrice]+"&reduceMode="+vm.reduceMode;
-
 		  	},
 		  	//点击某个选中按钮 params1:被点击按钮的下标 params2:被点击按钮所属的数组
 		  	itemClick:function(index,b){//3个页面对应不同的三个数组 
@@ -204,7 +202,6 @@
 					}
 			}	
 		  	},
-
 		  	//点击全选按钮 params:需要被全部选中的数组
 		  	allSelect:function(arr,a){
 		  		if(vm[a] ){//取消全选
@@ -226,7 +223,6 @@
 <style scoped>
 a{color:black}
 /*查询缴费*/
-
 .query-data{
 	height: 100%;
 	padding: 0.25rem 1.2rem;
@@ -249,9 +245,7 @@ a{color:black}
 .top2{
 	position: relative;
 	top: -0.2rem;
-
 }
-
 .btn-fixed{
 	position: fixed;
 	color: #fff;
@@ -262,7 +256,6 @@ a{color:black}
     line-height: 0.92rem;
     text-align: center;
 }
-
 .select-btn{
 	padding-left: 36px;
     background: url('../../assets/images/pay/icon_unselect_white.png') no-repeat;
@@ -272,15 +265,12 @@ a{color:black}
     height: 0.92rem;
     line-height: 0.92rem;
 }
-
 .allSelected{
 	background: url('../../assets/images/pay/icon_selected_white.png') no-repeat;
 	 background-color: rgba(0,0,0,0.6);
     background-size: 16px;
     background-position: 15px center;
-
 }
-
 .pay{
 	overflow: hidden;
 	background: #ff8a00;
@@ -298,14 +288,13 @@ a{color:black}
 .main{
 	margin:0 0.3rem;
 }
-
  .mint-navbar .mint-tab-item{
  	border-bottom: 1px solid #cdcdcb;
  }
-
  .mint-navbar .mint-tab-item.is-selected{
  	border-bottom: 1px solid #ff8a00;
  	margin-bottom: 0;
  	color:#ff8a00;
  }
 </style>
+
