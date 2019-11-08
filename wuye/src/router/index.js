@@ -85,6 +85,23 @@ const router= new VueRouter({
               title:'停车缴费'
             }
         },
+        //查找
+        {
+          path:'/fontUnit',
+          name:'fontUnit',
+          component:resolve=>require(['@/pages/pay/font-unit'],resolve),
+          meta:{
+            title:'查询缴费'
+          }
+      },
+      {
+        path:'/location',
+        name:'location',
+        component:resolve=>require(['@/pages/pay/location'],resolve),
+        meta:{
+          title:'查询缴费'
+        }
+    },
         {
             path:'/paymentquery',
             name:'paymentquery',

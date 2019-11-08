@@ -1,6 +1,7 @@
 //开发环境
 var MasterConfig = function() {
     var t = {
+        // baseUrl:'api',
         baseUrl: /127|test/.test(location.origin)?'https://test.e-shequ.com/wechat/hexie/wechat/':
         /uat/.test(location.origin)?'https://uat.e-shequ.com/wechat/hexie/wechat/':
         'https://www.e-shequ.com/wechat/hexie/wechat/',
@@ -374,6 +375,7 @@ updateUserStatus(user) {
         end = MasterConfig.C("oauthUrlPostFix");
         location.href = t + "appid=" + e + "&redirect_uri=" + encodeURIComponent(n) +end+ "#wechat_redirect";
     },
+    //分享链接
     initShareConfig(title,link,img,desc,wx){
         if(link.indexOf(MasterConfig.C("basePageUrl"))>=0
                 &&link.indexOf('shareCode')<0
