@@ -254,7 +254,7 @@ let vm;
 let isloadPage=false;
 import {swiper,swiperSlide} from 'vue-awesome-swiper';
 import BScroll from 'better-scroll';
-import Bus from '../../api/bus.js'
+// import Bus from '../../api/bus.js'
 export default {
     name: 'index',
     components: {

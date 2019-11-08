@@ -58,7 +58,7 @@
 
 <script>
 let vm;
-import Bus from '../api/bus.js'
+// import Bus from '../api/bus.js'
 export default{
     data(){
       return {
@@ -74,7 +74,7 @@ export default{
       //           vm.receiveData.getData(vm,url,'Data',function(){
       //       });
       vm.initUserInfo();
-      
+      // Bus.$on("sends",this.getMsgFromZha)
       vm.geturl();
     },
     updated(){
@@ -86,13 +86,12 @@ export default{
                 a = "userInfo?oriApp="+vm.getUrlParam('oriApp'),
                 i = null,
                 e = function(n) {
-                    Bus.$emit('sends',n.result)
                     if(n.result!=null) {
                       vm.list=n.result.iconList;
                     }
-                    if(n.success&&n.result==null) {
-                         reLogin();
-                    }
+                    // if(n.success&&n.result==null) {
+                    //      reLogin();
+                    // }
                 //  vm.query(); 
                 },
                 r = function() { 
@@ -101,7 +100,10 @@ export default{
             this.common.invokeApi(n, a, i, null, e, r);
 
         },
-    
+      //   getMsgFromZha(info) {
+      //     vm.list=info;
+        
+      //  } ,
        getclass(){
          for(var i=0;i<vm.$refs.listli.length;i++) {
             vm.$refs.listli[i].style.width=100/vm.$refs.listli.length+'%'
