@@ -254,7 +254,7 @@ let vm;
 let isloadPage=false;
 import {swiper,swiperSlide} from 'vue-awesome-swiper';
 import BScroll from 'better-scroll';
-// import Bus from '../../api/bus.js'
+import Bus from '../../api/bus.js'
 export default {
     name: 'index',
     components: {
@@ -306,12 +306,12 @@ export default {
     mounted(){
 
         // this.initSession4Test();
-        // this.initUserInfo(); 
         Bus.$on("sends",this.getMsgFromZha)
         vm.query()
+
     },
     updated() {
-          vm.$nextTick(()=> {
+        vm.$nextTick(()=> {
             // setTimeout(() => {
                 vm.personScroll();
             // },2000)
@@ -327,32 +327,11 @@ export default {
         },
          getMsgFromZha(result) {
          if(result!=null) {
-            vm.cfgParam=result.cfgParam;
-            vm.sectId=result.sectId;
+             vm.cfgParam=result.cfgParam;
+             vm.sectId=result.sectId;
             }
-            vm.query();
-         } ,
-        initUserInfo(){
-            let n = "GET",
-                a = "userInfo?oriApp="+vm.getUrlParam('oriApp'),
-                i = null,
-                e = function(n) {
-                    if(n.result!=null) {
-                        vm.cfgParam=n.result.cfgParam;
-                        vm.sectId=n.result.sectId;
-                     
-                    }
-                    if(n.success&&n.result==null) {
-                         reLogin();
-                    }
-                 vm.query(); 
-                },
-                r = function() { 
-                   vm.query(); 
-                };
-            this.common.invokeApi(n, a, i, null, e, r);
-
-        },
+         vm.query();   
+         },
         query() {
                 if(vm.cfgParam.ONLINE_MESSAGE==1) {
                         vm.tabs=[ 
