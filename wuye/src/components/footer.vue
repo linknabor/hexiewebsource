@@ -58,7 +58,7 @@
 
 <script>
 let vm;
-// import Bus from '../api/bus.js'
+import Bus from '../api/bus.js'
 export default{
     data(){
       return {
@@ -70,11 +70,10 @@ export default{
       vm=this;
     },
     mounted(){
-      // let url = '/initSession4Test/79187';
+      // let url = '/initSession4Test/1';
       //           vm.receiveData.getData(vm,url,'Data',function(){
       //       });
       vm.initUserInfo();
-      // Bus.$on("sends",this.getMsgFromZha)
       vm.geturl();
     },
     updated(){
@@ -86,24 +85,19 @@ export default{
                 a = "userInfo?oriApp="+vm.getUrlParam('oriApp'),
                 i = null,
                 e = function(n) {
+                   Bus.$emit('sends',n.result)
                     if(n.result!=null) {
                       vm.list=n.result.iconList;
                     }
-                    // if(n.success&&n.result==null) {
-                    //      reLogin();
-                    // }
-                //  vm.query(); 
+                    if(n.success&&n.result==null) {
+                         reLogin();
+                    }
                 },
                 r = function() { 
-                  //  vm.query(); 
                 };
             this.common.invokeApi(n, a, i, null, e, r);
 
         },
-      //   getMsgFromZha(info) {
-      //     vm.list=info;
-        
-      //  } ,
        getclass(){
          for(var i=0;i<vm.$refs.listli.length;i++) {
             vm.$refs.listli[i].style.width=100/vm.$refs.listli.length+'%'
@@ -112,10 +106,8 @@ export default{
        geturl() {
         var geturl=vm.getUrlParam('oriApp');
         if(geturl) {
-            //  console.log(location.origin+location.pathname+'?oriApp='+geturl);
              vm.link=location.origin+location.pathname+'?oriApp='+geturl;
         }else {
-          // console.log(location.origin+location.pathname);
           vm.link=location.origin+location.pathname;
         }
        },
