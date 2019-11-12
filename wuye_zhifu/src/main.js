@@ -19,7 +19,7 @@ import './assets/js/rem.js'
 import cookie from 'js-cookie'
 
 //本地用
-// import {common,MasterConfig,getUrlParam} from './assets/js/common';
+import {common,MasterConfig,getUrlParam} from './assets/js/common';
 
 Vue.prototype.common = common;
 Vue.prototype.getUrlParam = getUrlParam;
