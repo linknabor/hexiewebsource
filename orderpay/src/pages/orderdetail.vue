@@ -129,8 +129,8 @@ export default {
           vm.timeStr = vm.getTimeStr();
           vm.common.initShareConfig(
             "代扔垃圾服务报名，限时优惠中！",
-            vm.basePageUrl +
-              "pay/rgroups.html?state=123#/rgroupdetail?ruleId=" +
+            vm.basePageUrlpay +
+              "hxrgroups.html?state=123#/rgroupdetail?ruleId=" +
               vm.order.groupRuleId,
             vm.order.productThumbPic,
             "小区报名满50人开通",
@@ -258,10 +258,10 @@ export default {
     gotoGroupDetail(order) {
       window.location.href =
         vm.basePageUrlpay+
-        "rgroups.html?#/rgroupinvite?ruleId=" +
+        "hxrgroups.html?#/rgroupinvite?ruleId=" +
         order.groupRuleId +
         "&share=1";
-    }
+     }
   },
 
   computed: {}

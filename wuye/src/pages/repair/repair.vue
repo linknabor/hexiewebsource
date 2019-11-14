@@ -29,7 +29,7 @@
         </div>
         
         <div>
-          <textarea class="text" placeholder="输入问题描述内容..." v-model="memo">
+          <textarea class="text" @blur="fixScroll" placeholder="输入问题描述内容..." v-model="memo">
           </textarea>
         </div>
         <div style="margin-top:15px;width:100%;height:40px;font-size: 14px;color: #666">
@@ -266,7 +266,6 @@ export default {
   },
   components: {},
   methods: {
-  
     initInfo() {
         let url = 'repair/project/'+vm.projectId;
         vm.receiveData.getData(vm, url, "res", function() {
@@ -277,12 +276,19 @@ export default {
           // if(vm.res.result.project){
           //   vm.project = vm.res.result.project;
           // }
-
         } else {
           alert(vm.res.message == null ? "请稍后重试！" : vm.res.message);
         }
       });
     },
+    //ios中留白问题
+    fixScroll() {
+        let u = navigator.userAgent;
+        let isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+        if (isiOS) {
+          window.scrollTo(0,0);
+        }
+      },
     //点击添加上传图片
     addPic:function(){
         wx.chooseImage({
@@ -657,7 +663,7 @@ export default {
   line-height: 30px;padding: 5px 4px;overflow: hidden;}
 .lite-divider {border-bottom: 1px solid #d4cfc8;}
 .liteDivider{border-bottom: 1px solid #d4cfc8;}
-.address {margin-top: 15px;}
+.address { margin-top: 15px;}
 .addr_area {background: #f7f7f1;}
 .addrtop {height: 5px;background-size: 100% 5px;
   background: url("../../assets/images/pay/icon_address_top_02.png") repeat-x;}

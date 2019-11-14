@@ -1,5 +1,5 @@
 <template>
-   <div class="myrepair" :class="{emptybg:orders.length==0}">
+   <div class="myrepair" >
         <div class="ov pr15 lite-divider" style="color:#3b3937" v-for="(item,i) in orders" @click="gotoDetail(i)">
                 <img class="icon-repair fl" :src="item.typeImg"/>
                 <!-- <img class="icon-repair fl" src="../../assets/images/img/btn2.png"/> -->
@@ -11,10 +11,13 @@
                 </div>
                 <div class="comment ov  pb15">
                     <span class="fl fs15" style="font-size: 16px;color: #666;max-width: 120px;height:30px;line-height:30px; overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">{{item.projectName}}</span>
-                    <span class="fr fs12 status-font">{{item.statusStr}}</span>
-              
+                    <span class="fr fs12 status-font">{{item.statusStr}}</span>              
              </div>
         </div>
+        <div class="emptybg" v-show="orders.length==0">
+		    <!-- <img class="adimg" src="../../assets/images/img/bg_weixiudan.jpg"/> -->
+            <img :src="bgImage" alt="" class="adimg">
+	    </div>
    </div>
 </template>
 
@@ -39,20 +42,21 @@ export default {
                 5:["门窗维修",btn5],
                 6:["其它维修",btn6],
                 7:["家电",btn7]
-                    },
+             },
+            bgImage:this.common.GetImages('3'), //背景图        
        };
    },
    created() {
        vm=this;
    },
    mounted() {
-       this.add();
+       vm.query();
    },
 
    components: {},
 
-   methods: {
-       add() {
+   methods: {    
+       query() {
            vm.receiveData.getData(vm,'repair/query','res',function(){
                 if(vm.res.success) {
                         vm.orders=vm.res.result;
@@ -74,11 +78,16 @@ export default {
 </script>
 
 <style  scoped>
+.adimg {
+        width: 100%;
+        height: auto;
+}
 .myrepair {
     background: #fffff8;
     margin: 0;
     height: auto;
     padding-bottom: 20px;
+    position: relative;
 }
 
 .ov {
@@ -139,12 +148,12 @@ export default {
     border-radius: 3px;
 }
 .emptybg{
-            position:absolute;
+            position:fixed;
             left:0;
             right: 0;
             top: 0;
             bottom: 0;
-        	background: url(../../assets/images/img/bg_weixiudan.jpg) no-repeat;
-        	background-size: 100%;
+        	/* background: url(../../assets/images/img/bg_weixiudan.jpg) no-repeat;
+        	background-size: 100%; */
         }
 </style>

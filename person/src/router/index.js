@@ -17,7 +17,6 @@ import Router from 'vue-router'
 // import Addresses from '@/pages/addresses'//常用地址
 // import Abort from '@/pages/abort'//关注我们
 
-
 Vue.use(Router)
 
 let router= new Router({

@@ -130,7 +130,6 @@ router.beforeEach((to,from, next) => {
 
 //动态改变title
 function changeTitle(title) {
-  console.log(title)
   title = title ? title : '合协社区';
   window.document.title = title;
 };

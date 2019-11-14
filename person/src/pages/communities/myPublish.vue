@@ -15,7 +15,8 @@
         <div id="divconf" class="divconf" style="display:block; position:fixed; z-index: 2147483647;" @click="hideImg"></div>
 
         <div v-show="threads_count==0">
-		    <img class="adimg" src="../../assets/images/common/bg_publish.jpg"/>
+		    <!-- <img class="adimg" src="../../assets/images/common/bg_publish.jpg"/> -->
+            <img :src="bgImage" alt="" class="adimg">
 	    </div>
 
         <!-- 评论  -->
@@ -60,6 +61,8 @@ export default {
            zshow:true,
            duo:false,
            page:0,
+           bgImage:this.common.GetImages('4'),//背景图
+
        };
    },
    created() {

@@ -102,6 +102,9 @@ function dealWithAjaxData(o, e, i, r) {
 }
 //没授权在授权登录
 function reLogin() {
+	setTimeout(function(){
+		console.log("waiting 1s for relogin.")
+	},1000)
     setCookie("UID", "", 0),
     common.login(!0)
 }
@@ -128,7 +131,7 @@ function isWeChatBrowser() {
 function getUrlParam(name) {
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
     var r = window.location.search.substr(1).match(reg);  //匹配目标参数
-    if (r != null) return unescape(r[2]); return ''; //返回参数值
+    if (r != null) return unescape(r[2]); return ""; //返回参数值
 }
 
 //检查微信状态  检查用户可不可用
@@ -198,7 +201,6 @@ function isRegisted(){
     return tel&&tel!='null';
 }
  //没注册 跳转注册页
-
 function toRegisterAndBack(){
     var n = location.origin + common.removeParamFromUrl(["from", "bind", "code", "share_id", "isappinstalled", "state", "m", "c", "a"])+common.addParamHsah();
     let appurl='';
@@ -261,6 +263,27 @@ window.common = {
         };
         common.invokeApi(n, a, i, null, e, r);
     },
+    GetImages:function(type) {
+        let imgUrl=getCookie(type);
+        if(imgUrl == undefined ||imgUrl == ''){
+            let n = "GET",
+            a = "userInfo?oriApp="+getUrlParam('oriApp'),
+            i = null,
+            e = function(n) {
+                var duration = new Date().getTime()/1000 + 3600*24*30;
+                for(var j=0;j<n.result.bgImageList.length;j++){
+                    setCookie(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl,duration)
+                } 
+                location.reload();
+            },
+            r = function() { 
+            };
+            common.invokeApi(n, a, i, null, e, r);
+        }else {
+            imgUrl=getCookie(type)
+        }
+        return imgUrl;
+   },
      //授权
     login: function() {
 		var o = this._GET().code;
@@ -271,10 +294,11 @@ window.common = {
 			t = MasterConfig.C("oauthUrl"),
 		    end = MasterConfig.C("oauthUrlPostFix");
 			var url = t + "appid=" ;
-			if(oriApp){
+			var mainAppId = MasterConfig.C("appId") ;
+			if(oriApp && oriApp!=mainAppId){
 				url +=  oriApp + "&component_appid=" + MasterConfig.C("componentAppId"); 
 			}else{
-				url +=  MasterConfig.C("appId") 
+				url +=  mainAppId;
 			}
 			url+="&redirect_uri=" + encodeURIComponent(n) +end+ "#wechat_redirect";
 			console.log("url:"+url);
@@ -298,6 +322,7 @@ updateUserStatus(user) {
     setCookie("currentAddrId", user.currentAddrId, duration);
     setCookie("tel", user.tel, duration);
     setCookie("shareCode", user.shareCode, duration);
+	setCookie("appId", user.appId);
 },
      //入口程序 检查状态
     checkRegisterStatus:function(){
@@ -385,7 +410,10 @@ updateUserStatus(user) {
             if(link.indexOf('?')<link.length-1){
                 link = link + "&";
             }
+
             link = link + "shareCode="+getCookie("shareCode");
+			var appId = getCookie("appId");
+			link += "&oriApp=" + appId;
         }
     
         wx.ready(function(){
