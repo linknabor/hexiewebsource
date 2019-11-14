@@ -1,12 +1,13 @@
 <template>
    <div class="invite">
        <div style="background-color:#fff;">
-        <!-- <div class="rule_intro" @click="gotosgrouprulr">
-            <img alt="" src="../../assets/images/index/img_tuangou_zhifu.png" style="width: 100%;">
+         <div   @click="gotosgrouprulr" style="width:100%;">
+                 <img alt="" src="../../assets/images/index/img_tuangou_zhifu.png" style="width: 100%;">
+        </div>  
+        <div class="rule_intro"  @click="gotosgrouprulr" style="width:100%;">
+                 <img alt="" src="../../assets/images/index/img_tuangou_zhifu.png" style="width: 100%;">
         </div>
-        <div style="width:100%;">
-            <img alt="" src="../../assets/images/index/img_tuangou_zhifu.png" style="width: 100%;"/>
-        </div> -->
+           
         <div class="divider"></div>
 
         <div class="mt2 bb3">
@@ -129,16 +130,15 @@ export default {
        vm=this;
    },
    mounted() {
-    //    vm.common.checkRegisterStatus();
         let url = location.href.split('#')[0];
         vm.receiveData.wxconfig(vm,wx,['onMenuShareTimeline','onMenuShareAppMessage'],url);
-           
         vm.query();
    },
 
    components: {},
 
    methods: {
+  
     query() {
         let url ="getRgroupRule/"+vm.ruleId;
         vm.receiveData.getData(vm,url,'Data',function(){
@@ -167,10 +167,10 @@ export default {
         });
     },
     initShareSetting (product) {
-        var title = "代扔垃圾服务报名，限时优惠中！";
-		var link=vm.basePageUrlpay+"rgroups.html?state=123#/rgroupdetail?ruleId="+vm.ruleId;
+        var title = vm.rule.name;
+		var link=vm.basePageUrlpay+"hxrgroups.html?state=123#/rgroupinvite?ruleId="+vm.ruleId;
 		var img=product.smallPicture;
-		var desc="小区报名满50人开通";
+		var desc="我在"+vm.common.newname+"参与了一个"+vm.rule.name+"的团购，大家一起来参与吧";
 		vm.common.initShareConfig(title,link,img,desc,wx)
     },
     //剩余时间
@@ -201,7 +201,7 @@ export default {
         vm.$router.push({path:'/sgrouprule'})
     },
     golist() {
-        location.href=vm.config.rgrops_url.url;
+       location.href=vm.basePageUrlpay+"hxrgroups.html?type="+vm.rule.productType;
     },
     goGroupProduct() {
         vm.$router.push({path:'/rgroupdetail',query:{'ruleId':vm.ruleId}})
@@ -226,7 +226,6 @@ export default {
 	    top: 0;
 	    z-index: 10;
 		background:#f7f7f1;
-		width:100%;
 }
 .divider {
     border-bottom: 10px solid #f7f7f2;

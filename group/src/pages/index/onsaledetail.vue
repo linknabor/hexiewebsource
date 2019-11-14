@@ -158,7 +158,7 @@ export default {
          vm.collocations();
    },
    mounted() {
-        this.common.checkRegisterStatus()
+        // this.common.checkRegisterStatus()
         let url = location.href.split('#')[0];
         vm.receiveData.wxconfig(vm,wx,['onMenuShareTimeline','onMenuShareAppMessage'],url);
    },
@@ -186,7 +186,7 @@ export default {
                 vm.receiveData.getData(vm,url,'res',function(){
                     if(vm.res.success) {
                             vm.product = vm.res.result;  
-                            vm.common.initShareConfig(vm.rule.name,vm.basePageUrl+"group/onsales.html?trpe=3#/onsaledetail?ruleId="+vm.ruleId,vm.product.smallPicture,"快来参加合协社区的优惠商品抢购吧",wx);   
+                            vm.common.initShareConfig(vm.rule.name,vm.basePageUrl+"group/onsales.html?state=123#/onsaledetail?ruleId="+vm.ruleId,vm.product.smallPicture,"快来参加"+vm.common.newname+"的优惠商品抢购吧",wx);   
                     }else {
                         alert(vm.res.message==null ?"获取产品信息失败！":vm.res.message);
                     }
@@ -238,14 +238,13 @@ export default {
         },
         //更多商品
         goclassify() {
-            // vm.$router.push({path:'/',query:{'type':vm.rule.productType}})
-            window.location.href=vm.basePageUrl+'group/onsales.html?state=123';
+            vm.$router.push({path:'/onsalesitem',query:{'type':vm.rule.productType,'flush':1}})
+            // location.href=vm.basePageUrl+'group/onsales.html?#/onsalesitem?type='+vm.rule.productType;
         },
         //立即购买
         buy() {
              if(vm.rule.id) {
-                //  vm.$router.push({path:'/buy',query:{type:'3',ruleId:vm.rule.id}})
-                location.href=vm.basePageUrlpay+'grouppay.html#/buy?type=3&ruleId='+vm.rule.id
+                location.href=vm.basePageUrlpay+'hxgrouppay.html?state=123/#/buy?type=3&ruleId='+vm.rule.id
              }   
         }
    },

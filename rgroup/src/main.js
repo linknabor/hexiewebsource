@@ -25,8 +25,9 @@ import './assets/js/rem';
 import cookie from 'js-cookie'
 
 //本地使用
-// import {common,MasterConfig} from './assets/js/common'
+// import {common,MasterConfig,getUrlParam} from './assets/js/common'
 Vue.prototype.common=common;
+Vue.prototype.getUrlParam=getUrlParam;
 Vue.prototype.baseUrl=MasterConfig.C('baseUrl');
 Vue.prototype.basePageUrl=MasterConfig.C('basePageUrl');
 Vue.prototype.basePageUrlpay=MasterConfig.C('basePageUrlpay');
@@ -52,7 +53,6 @@ var axiosInstance = axios.create({
       'Accept': 'application/json',
 
   },
-  // baseURL: "https://test.e-shequ.com/dhzj3/wechat/hexie/wechat/",
   baseURL: Vue.prototype.baseUrl,
   withCredentials:true,
   transformResponse: [function (data) {//数据转换

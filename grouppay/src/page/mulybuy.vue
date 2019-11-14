@@ -207,8 +207,10 @@
         <div style="background-color: #fffff8" v-show="currentPage=='xiaoquForm'">
             <div class="location-wrap">
 				<div class="location-input-wrap">
-					<input placeholder="请输入小区名称" class="location-input" v-model="suggestLocation" />
-					<i class="location-btn-cancel" @click="cancelLocation" v-if="suggestion"></i>
+					<div class="location-i">
+                        <input placeholder="请输入小区名称" class="location-input" v-model="suggestLocation" />    
+                    </div>
+                    <i class="location-btn-cancel" @click="cancelLocation" v-if="suggestion"></i>
 				</div>
 				<span class="location-btn-ensure" @click="submitLocation">确定</span>
 			</div>
@@ -293,6 +295,7 @@ export default {
             //    }
 
            ],
+           allCoupons:[],
            selectedIndex:-1,
            submitAddress:{
                 receiveName:"",
@@ -326,7 +329,7 @@ export default {
         //     this.receiveData.getData(this,url1,'Data',function(){
         // });
 
-        this.common.checkRegisterStatus()
+        // this.common.checkRegisterStatus()
 
         vm.queryBuyInfo();
         vm.queryAddress();
@@ -374,6 +377,8 @@ export default {
             vm.receiveData.getData(vm,url,'res',function(){
                 if(vm.res.success) {
                     vm.coupons = vm.res.result;
+                    vm.allCoupons=vm.res.result;
+                    vm.model.couponNum=vm.coupons.length;
                 }else {
                     alert("获取现金券信息失败！！");
 		            vm.coupons = [];
@@ -409,18 +414,18 @@ export default {
        toAddAddress() {
            vm.currentPage='addAddressForm';
            vm.submitAddress={
-            xiaoquEntId: 0,
-            receiveName: "",
-            province: "",
-            city: "",
-            county: "",
-            tel: "",
-            xiaoquAddr: "",
-            xiaoquName: "",
-            id: 0,
-            detailAddress: ""
+            receiveName:"",
+            tel:"",
+            provinceId:0,province:"",
+            cityId:0,city:"",
+            countyId:0,county:"",
+            xiaoquName:"",
+            amapId:0,
+            amapDetailAddr:"",
+            homeAddress:""
             } 
-            vm.distinct=''  
+            vm.distinct='';
+             vm.suggestLocation='';  
        },
        cancelLocation() {
            vm.suggestLocation='';
@@ -508,8 +513,9 @@ export default {
            if(vm.model.collocation.freeShipAmount <=0 || vm.model.collocation.freeShipAmount > amount) {
                vm.model.logisticsFee=vm.model.collocation.shipAmount;
                amount=amount+vm.model.collocation.shipAmount;
-               vm.disLogisticsFee=false;
+               vm.disLogisticsFee=true;
            }else {
+               vm.model.logisticsFee = 0;
                vm.disLogisticsFee=false;
            }
 
@@ -607,7 +613,7 @@ export default {
 	    		alert("请填写完整相关信息！");
 	    		return;
 	    	}
-	    	if(!(/^1[3-9][0-9]\d{4,8}$/.test(vm.submitAddress.tel))) {
+	    	if(!(/^1[3-9][0-9]\d{8}$/.test(vm.submitAddress.tel))) {
 	    		alert("请填写正确的手机号！");
 	    		return;
             }
@@ -654,8 +660,7 @@ export default {
            if(vm.model.coupon != null) {
                order.couponId=vm.model.coupon.id;
            }
-          console.log()
-          if(vm.addr.checkedAddress.id==undefined || vm.addr.checkedAddress.id==0) {
+          if(vm.addr.checkedAddress==null||vm.addr.checkedAddress.id==undefined || vm.addr.checkedAddress.id==0) {
               alert('请选择地址')
               return;
           }
@@ -1041,6 +1046,7 @@ margin-right: 15px;
 }
 .address-wrap {
     padding-bottom: 15px;
+    padding-right:15px;
 }
 .mt1 {
     margin-top:.3rem;
@@ -1253,15 +1259,19 @@ margin-right: 15px;
     width:100%;
     height: 36px;
     outline: none;
-    border:1px solid #d4cfc8;
-    border-radius: 4px;
+    border:none;
     vertical-align: middle;
     font-size: 15px;
 }
+.location-i {
+    padding-right: 30px;
+    border-radius: 4px;
+    border: 1px solid #d4cfc8;
+}
 .location-btn-cancel {
     position: absolute;
-    top:5px;
-    right: 4px;
+    top:6px;
+    right: 10px;
     display: inline-block;
     width:36px;
     height: 36px;
