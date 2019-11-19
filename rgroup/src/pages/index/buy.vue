@@ -192,7 +192,7 @@
 
     <div class="line p15 fs15" style="height:20px" @click="showCoupons">
 		<span class="fl">现金券</span> 
-		<span class="fl baoyou_desc" >&nbsp;&nbsp;{{coupons.length}}张可用</span>
+		<span class="fl baoyou_desc" >&nbsp;&nbsp;{{couponNum}}张可用</span>
 		<div class="fr right_menu">{{couponDesc}}  </div>
 	</div>
 
@@ -251,7 +251,28 @@ export default {
             productAmount:0, //商品价格
             postFee:0,// 是否包邮
             amount:0,//总价格
-            coupons:[],
+            coupons:[
+                // {
+                //     id:1,
+                //     title:'滴滴滴',
+                //     leftDayDes:'11',
+                //     useStartDateStr:0,
+                //     useEndDateStr:'33',
+                //     amount:0.01,
+                //     usageCondition:0
+                // }
+            ],
+            allCoupons:[
+                //  {
+                //    id:1,
+                //    title:'滴滴滴',
+                //    leftDayDes:'11',
+                //    useStartDateStr:1,
+                //    useEndDateStr:'33',
+                //    amount:0.01,
+                //    usageCondition:0
+                // }
+               ],
             couponNum:0,
         	coupon:null,
             couponDesc:'未使用',
@@ -374,6 +395,8 @@ export default {
            vm.receiveData.getData(vm,'/coupon/valid/'+vm.type+'/'+vm.ruleId,'res',function() {
                if(vm.res.success) {
                     vm.coupons=vm.res.result;
+                     vm.allCoupons=vm.res.result;
+                     vm.couponNum=vm.coupons.length;
                      vm.computeAmount();
             //    console.log(vm.couponNum)
                }else {
@@ -402,7 +425,8 @@ export default {
            pa=vm.rule.price*vm.count;
            pf=vm.count <vm.rule.freeShippingNum ? vm.rule.postageFee :0;
            a=pa+pf;
-
+           vm.filterCouponByAmount(a); 
+           vm.couponNum=vm.coupons.length;
         if(vm.coupon == null) {
            ta = a;
         } else if(vm.coupon.usageCondition>a){
@@ -419,6 +443,15 @@ export default {
             } else {
                vm.totalAmount = "0.01";
             }
+        },
+        filterCouponByAmount(amount){
+            var c = [];
+            for(var i=0;i<vm.allCoupons.length;i++){
+                if(vm.allCoupons[i].usageCondition<=amount){
+                    c.push(vm.allCoupons[i]);
+                }
+            }
+            vm.coupons= c;
         },
        //点击优惠券
        showCoupons() {

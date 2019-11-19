@@ -71,10 +71,10 @@
             style="margin-left:35px"
           >{{item.province}}{{item.city}}{{item.county}}{{item.locationAddr}}({{item.xiaoquName}}){{item.detailAddress}}</div>
         </div>
-        <div class="tc mt2">
+        <!-- <div class="tc mt2">
           <div class="btn-plain" @click="toAddAddress">新增收货地址</div>
           <br>
-        </div>
+        </div> -->
       </div>
 
       <div v-show="lian=='xing'">
@@ -385,7 +385,8 @@ export default {
     },
     //获取地址
     dataAddress() {
-      vm.receiveData.getData(vm, "/addresses", "data", function() {
+      var repair='repair';
+      vm.receiveData.getData(vm, "/addresses?module="+repair, "data", function() {
         if (vm.data.success) {
           vm.addresses = vm.data.result;
         } else {
