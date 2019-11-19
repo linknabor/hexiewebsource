@@ -1,19 +1,21 @@
-import wx from "weixin-js-sdk"
+//开发环境
 var MasterConfig = function() {
-    
     var t = {
-
         baseUrl: /127|test/.test(location.origin)?'https://test.e-shequ.com/wechat/hexie/wechat/':
         /uat/.test(location.origin)?'https://uat.e-shequ.com/wechat/hexie/wechat/':
         'https://www.e-shequ.com/wechat/hexie/wechat/',
         
         basePageUrl:/127|test/.test(location.origin)?'https://test.e-shequ.com/weixin/':
-        /uat/.test(location.origin)?'https://uat.e-shequ.com/weixin/':
+        /uat/.test(location.origin)?'https://uat.e-shequ.com/hexie/weixin/':
         'https://www.e-shequ.com/weixin/',
-         
-        basePageUrlpay:/127|test/.test(location.origin)?'https://test.e-shequ.com/weixin/pay':
-        /uat/.test(location.origin)?'https://uat.e-shequ.com/weixin/pay':
+        
+        basePageUrlpay:/127|test/.test(location.origin)?'https://test.e-shequ.com/weixin/pay/':
+        /uat/.test(location.origin)?'https://uat.e-shequ.com/hexie/weixin/pay/':
         'https://www.e-shequ.com/weixin/pay/',
+
+        payPageFolder:/127|test/.test(location.origin)?'https://test.e-shequ.com/pay/':
+        /uat/.test(location.origin)?'https://uat.e-shequ.com/pay/':
+        'https://www.e-shequ.com/pay/',
 
         appId: /127|test/.test(location.origin)?'wx95f46f41ca5e570e':
         /uat/.test(location.origin)?'wx9ffe0a2b5a64a285':
@@ -21,25 +23,30 @@ var MasterConfig = function() {
 
         bindAppId: /127|test/.test(location.origin)?'wx95f46f41ca5e570e':
         /uat/.test(location.origin)?'wx9ffe0a2b5a64a285':
-        'wx6b7f7d4010183c46',
+        'wxa48ca61b68163483',
 
-        oauthUrl: "http://open.weixin.qq.com/connect/oauth2/authorize?",
-        oauthUrlPostFix:"&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect",
+		componentAppId:'wx4d706a1a7a139d1f',
+        
+		oauthUrl: "https://open.weixin.qq.com/connect/oauth2/authorize?",
+        oauthUrlPostFix:"&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect",		
+		//https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE&state=STATE&component_appid=component_appid#wechat_redirect
+
+
 		oauthUrlPostSilent:"&response_type=code&scope=snsapi_base&state=123#wechat_redirect",
-        
-        
         baidu_map_key:"RUWUgrEEF5VjoaWsstMMZwOD",
+        shop_name: "合协",
+        payPageSuffix:"hx",
 
         is_debug:true
-    },   
+    },
 
     e = {};
     return e.C = function(e) {
         return t[e]
     },
     e
-} (); 
-
+} ();
+//角色
 var Config = function() {
     var t = {
         download: {
@@ -71,75 +78,19 @@ var Config = function() {
     e
 } ();
 
-function showDialog(title,placeholder,content,onConfirmMsg,onCancelClick){
-    if(!placeholder) {
-        placeholder = "";
-    }
-    if(!title) {
-        title = "提交内容";
-    }
-    if(!content){
-        content = "";
-    }
-    var chatHtml =
-            "<div class='weui_mask' id='dialog_overlay'></div>                                                   "
-            +"<div class='weui_dialog'>                                                       "
-            +"  <div class='dialog_title'>"+title+"</div>                                          "
-            +"  <div class='dialog_content'>                                                  "
-            +"      <textarea class='dialog_textarea' placeholder='"+placeholder+"' id='dialog_content'>"+content+"</textarea>"
-            +"  </div>                                                                        "
-            +"  <div class='dialog_btn_bar'>                                                  "
-            +"      <div class='dialog_btn' id='dialog_cancel'>取消</div>                     "
-            +"      <div class='dialog_btn' id='dialog_confirm'>确定</div>                    "
-            +"  </div>                                                                        "
-            +"</div>                                                                          ";
 
-    $("#dialog").html('');
-    var loadHtml = "";
-    $("#dialog").html(chatHtml);
-    $("#dialog_confirm").click(function(){
-        if(onConfirmMsg){
-            onConfirmMsg($("#dialog_content").val());
-        }
-        $("#dialog").html('');
-    });
-    $("#dialog_cancel").click(function(){
-        $("#dialog").html('');
-        if(onCancelClick){
-            onCancelClick();
-        }
-    });
-}
-Date.prototype.format = function(fmt){
-      var o = {
-        "M+" : this.getMonth()+1,
-        "d+" : this.getDate(),
-        "h+" : this.getHours(),
-        "m+" : this.getMinutes(),
-        "s+" : this.getSeconds(),
-        "q+" : Math.floor((this.getMonth()+3)/3),
-        "S"  : this.getMilliseconds()
-      };
-      if(/(y+)/.test(fmt))
-        fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));
-      for(var k in o)
-        if(new RegExp("("+ k +")").test(fmt))
-                fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ?
-                         (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
-     return fmt;
-}
+ // 请求状态码
 function dealWithAjaxData(o, e, i, r) {
     if (common.log(o, e), e.success) {
         i(e);
         return;
     }
-
     switch ("" + e.errorCode) {
         case "40001":
             reLogin();
             break;
         case "40002":
-            toBindLink();
+            alert("40002");
             break;
         case "42032":
             common.wechatAuthorize();
@@ -149,32 +100,41 @@ function dealWithAjaxData(o, e, i, r) {
             break;
     }
 }
+//没授权在授权登录
 function reLogin() {
+	setTimeout(function(){
+		console.log("waiting 1s for relogin.")
+	},1000)
     setCookie("UID", "", 0),
     common.login(!0)
 }
+// 读取cookie方法
 function getCookie(e) {
-    let c_start;
-    let c_end;
+    var c_start;
+    var c_end;
     return document.cookie.length > 0 && (c_start = document.cookie.indexOf(e + "="), -1 != c_start) ? (c_start = c_start + e.length + 1, c_end = document.cookie.indexOf(";", c_start), -1 == c_end && (c_end = document.cookie.length), unescape(document.cookie.substring(c_start, c_end))) : ""
 }
+ //定义存储cookie方法
 function setCookie(e, o, n) {
     var t = e + "=" + o + "; ",
     i = "";
     null !== n && void 0 !== n && (i = "expires=" + new Date(1e3 * n) + "; "),
     document.cookie = t + i + "path=/"
 }
+
+//判断是不是微信环境
 function isWeChatBrowser() {
     var e = navigator.userAgent.toLowerCase();
     return "micromessenger" == e.match(/MicroMessenger/i) ? !0 : !1
 }
+//获取参数方法
 function getUrlParam(name) {
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
     var r = window.location.search.substr(1).match(reg);  //匹配目标参数
-    if (r != null) return unescape(r[2]); return null; //返回参数值
+    if (r != null) return unescape(r[2]); return ""; //返回参数值
 }
 
-
+//检查微信状态  检查用户可不可用
 function checkFromShare(salePlanType,salePlanId) {
     var shareCode = getUrlParam("shareCode");
     if(shareCode!=null&&shareCode!=''){
@@ -198,51 +158,70 @@ function checkCodeAndLogin(){
         return true;
     }
 }
+ //子公众号  挂载父级 
+ /*
 function toBindLink(){
     var p = common.removeParamObject(["from","bind", "code", "share_id", "isappinstalled", "state", "m", "c", "a"]);
     p = common.addParamObject(p,"bind","true");
-    var n = location.origin + location.pathname + common.buildUrlParamString(p),
+    var n = location.origin + location.pathname + common.buildUrlParamString(p)+common.addParamHsah(),
     t = MasterConfig.C("oauthUrl");
-   var end = MasterConfig.C("oauthUrlPostFix");
+    end = MasterConfig.C("oauthUrlPostFix");
     var url = t + "appid=" + MasterConfig.C("bindAppId") + "&redirect_uri=" + encodeURIComponent(n) +end+ "#wechat_redirect";
+    // console.log(url);
     location.href = url;
 }
+*/
+// 检查绑定没绑定
+/*
 function checkBindAndBind(){
     var getData = common._GET();
     var b = getData.bind;
     var o = getData.code;
     if(b&&o) {
-        common.alert("start api bind"),
+        // common.alert("start api bind"),
         common.invokeApi("POST", "bindWechat/"+MasterConfig.C("bindAppId")+"/" + o, null,
             null,
         function(x) {
-            common.alert("api binded")
+            // common.alert("api binded")
+            // console.log(location.origin);
             location.href = location.origin +common.removeParamFromUrl(["bind","code"]);
         })
     }
 }
+*/
 
+//只更新地址
 function updateCurrentAddrId(addrId){
     var duration = new Date().getTime()/1000 + 3600*24*30;
     setCookie("currentAddrId", addrId, duration);
 }
+//注册没注册   根据电话判断
 function isRegisted(){
     var tel = getCookie("tel");
     return tel&&tel!='null';
 }
-
+ //没注册 跳转注册页
 function toRegisterAndBack(){
-    var n = location.origin + common.removeParamFromUrl(["from", "bind", "code", "share_id", "isappinstalled", "state", "m", "c", "a"]);
-    location.href=MasterConfig.C('basePageUrl')+"person/index.html?#/register?comeFrom="+encodeURIComponent(n)+common.addParamHsah();
+    var n = location.origin + common.removeParamFromUrl(["from", "bind", "code", "share_id", "isappinstalled", "state", "m", "c", "a"])+common.addParamHsah();
+    let appurl='';
+    if(getUrlParam('oriApp')){
+        appurl='oriApp='+getUrlParam('oriApp');
+    }else {
+        appurl='';
+    }
+    location.href=MasterConfig.C('basePageUrl')+"person/index.html?"+appurl+"#/register?comeFrom="+encodeURIComponent(n);
 }
 
-let AJAXFlag = !0;
+
+var AJAXFlag = !0;
 window.common = {
+    newname:"合协社区",
     isDebug: !1,
     getApi: function(e) {
         var o = parseInt(getCookie("BackendPort"));
         return MasterConfig.C("baseUrl") + (o ? ":" + o: "") + "/" + e;
     },
+    //定义请求方法
     invokeApi: function(e, o, n, t, i, r) {
         if (common.alert("url: " + o), AJAXFlag) { (null === t || void 0 === t) && (t = function() {}),
             (null === i || void 0 === i) && (i = function() {}),
@@ -256,7 +235,7 @@ window.common = {
                 dataType: "json",
                 beforeSend: t,
                 success: function(e) {
-                    // common.alert("success data: " + JSON.stringify(e)),
+                    common.alert("success data: " + JSON.stringify(e));
                     dealWithAjaxData(o, e, i, r);
                 },
                 error: function(e) {
@@ -285,50 +264,85 @@ window.common = {
         };
         common.invokeApi(n, a, i, null, e, r);
     },
-    /**变更才需要重设置*/
-        updateUserStatus:function (user) {
-            var duration = new Date().getTime()/1000 + 3600*24*30;
-            setCookie("UID", user.uid,  duration);
-            setCookie("currentAddrId", user.currentAddrId, duration);
-            setCookie("tel", user.tel, duration);
-            setCookie("shareCode", user.shareCode, duration);
-        },
+    GetImages:function(type) {
+        let imgUrl=getCookie(type);
+        if(imgUrl == undefined ||imgUrl == ''){
+            let n = "GET",
+            a = "userInfo?oriApp="+getUrlParam('oriApp'),
+            i = null,
+            e = function(n) {
+                var duration = new Date().getTime()/1000 + 3600*24*30;
+                for(var j=0;j<n.result.bgImageList.length;j++){
+                    setCookie(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl,duration)
+                } 
+                location.reload();
+            },
+            r = function() { 
+            };
+            common.invokeApi(n, a, i, null, e, r);
+        }else {
+            imgUrl=getCookie(type)
+        }
+        return imgUrl;
+   },
+     //授权
     login: function() {
-        var o = this._GET().code;
+		var o = this._GET().code;
+		var oriApp = getUrlParam("oriApp");
+		var param = {"oriApp":oriApp};
         if (common.alert("code: " + o), void 0 === o) {
-            var n = location.origin + common.removeParamFromUrl(["from","bind", "code", "share_id", "isappinstalled", "state", "m", "c", "a"])+common.addParamHsah(),
-            t = MasterConfig.C("oauthUrl"),
-            end = MasterConfig.C("oauthUrlPostFix");
-            location.href = t + "appid=" + MasterConfig.C("appId") + "&redirect_uri=" + encodeURIComponent(n) +end+ "#wechat_redirect"
+			var n = location.origin + common.removeParamFromUrl(["from","bind", "code", "share_id", "isappinstalled", "state", "m", "c", "a"]),
+			t = MasterConfig.C("oauthUrl"),
+		    end = MasterConfig.C("oauthUrlPostFix");
+			var url = t + "appid=" ;
+			var mainAppId = MasterConfig.C("appId") ;
+			if(oriApp && oriApp!=mainAppId){
+				url +=  oriApp + "&component_appid=" + MasterConfig.C("componentAppId"); 
+			}else{
+				url +=  mainAppId;
+			}
+			url+="&redirect_uri=" + encodeURIComponent(n) +end+ "#wechat_redirect";
+			console.log("url:"+url);
+            location.href = url;
+			
         } else common.alert("start api login"),
-        this.invokeApi("POST", "login/" + o, null,
+        this.invokeApi("POST", "login/" + o, param,
         function() {
             AJAXFlag = !1
         },
         function(x) {
             common.updateUserStatus(x.result);
             AJAXFlag = !0,
-            location.href = location.origin +common.removeParamFromUrl(["code"]);
+            location.href = location.origin +common.removeParamFromUrl(["code"])+common.addParamHsah();
         })
     },
+    /**变更才需要重设置*/
+updateUserStatus(user) {
+    var duration = new Date().getTime()/1000 + 3600*24*30;
+    setCookie("UID", user.uid,  duration);
+    setCookie("currentAddrId", user.currentAddrId, duration);
+    setCookie("tel", user.tel, duration);
+    setCookie("shareCode", user.shareCode, duration);
+	setCookie("appId", user.appId);
+},
+     //入口程序 检查状态
     checkRegisterStatus:function(){
-        let type=getUrlParam('type');
         if(!getCookie("UID")){
             common.login();/**不应该出现*/
             return false;
         }
-        if(type !== '1'){
-            if(!isRegisted()){
-                alert("请先完成注册！");
-                toRegisterAndBack();
-                return false;
-            }
-        }        
+        if(!isRegisted()){
+            alert("请先完成注册！");
+            toRegisterAndBack();
+            return false;
+        }
         return true;
     },
+    //需不需要注册
     hasRegister:function(){
         return getCookie("UID")&&isRegisted();
     },
+    //结合微信授权  
     _GET: function() {
         var e = location.search,
         o = {};
@@ -348,13 +362,11 @@ window.common = {
     alert: function(e) {
         "" === getCookie("DevDebug") ? console.log(e) : alert(e)
     },
-    errorTip: function() {
-        var e = '<div class="wrapper"></div><div class="box"><p>请重新刷新</p></div>';
-        $("body").prepend(e)
-    },
+    //设置title
     setTitle: function(e) {
         $("title").text(e)
     },
+
     addParamObject:function(e, name,value){
         e[name]=value;
         return e;
@@ -365,11 +377,13 @@ window.common = {
         for (var n in e) delete o[e[n]];
         return o;
     },
-    // 添加
+    // 添加 定义获取哈希值
     addParamHsah:function() {
+        // console.log(location.hash)
         return  location.hash 
     },
     removeParamFromUrl: function(e) {
+        // console.log(location.pathname);
         return location.pathname + common.buildUrlParamString(common.removeParamObject(e));
     },
     buildUrlParamString: function(e) {
@@ -397,7 +411,10 @@ window.common = {
             if(link.indexOf('?')<link.length-1){
                 link = link + "&";
             }
+
             link = link + "shareCode="+getCookie("shareCode");
+			var appId = getCookie("appId");
+			link += "&oriApp=" + appId;
         }
     
         wx.ready(function(){
@@ -415,45 +432,9 @@ window.common = {
         });
     }
 
-
 };
-var commonui = {
-        initPage:function() {
-            if ($("#LoadingBar") != null) {
-                $("#LoadingBar").css("display","none");
-                $("#fade").css("display","none");
-            }
-        },
-        loadingPage:function() {
-            if ($("#LoadingBar") != null) {
-                $("#LoadingBar").css("display","block");
-                $("#fade").css("display","block");
-            }
-        },
-        showMessage:function(msg) {
-            commonui.showMsg(msg, 1500);
-        },
-        showMsg:function(msg, times) {
-            commonui.hideAjaxLoading();
-            if ($("#phoneErro") != null) {
-                $("#phoneErro").html(msg);
-                $("#phoneErro").fadeIn("slow");
-                setTimeout('$("#phoneErro").fadeOut("slow")', times);
-            }
-        },
-        showAjaxLoading:function() {
-            if ($("#phoneAjax") != null) {
-                $("#phoneAjax").removeClass("hidden");
-            }
-        },
-        hideAjaxLoading:function() {
-            if ($("#phoneAjax") != null) {
-                $("#phoneAjax").addClass("hidden");
-            }
-        }
-}
-checkBindAndBind();
-checkCodeAndLogin();
-// common.setTitle(MasterConfig.C("shop_name")+"社区");
 
-export {common,MasterConfig};
+//checkBindAndBind();
+checkCodeAndLogin();
+common.setTitle(MasterConfig.C("shop_name") + "社区");
+export {common,MasterConfig,getUrlParam} 

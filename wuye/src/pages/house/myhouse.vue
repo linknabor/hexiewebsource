@@ -60,7 +60,8 @@
 <template>
 	<div class="myhouse">
 		<div class="nohouse" v-if="dataArr.length == 0">
-			<img src="../../assets/images/house/bg_nohouse.jpg" alt="">
+			<!-- <img src="../../assets/images/house/bg_nohouse.jpg" alt=""> -->
+			<img :src='bgImage' alt="">
 		</div>
 		<ul class="house-list" v-else>
 			<li v-for="(i,index) in dataArr" :key="index">
@@ -89,17 +90,18 @@
 	let vm;
 	import { MessageBox, Toast } from 'mint-ui';
 	export default {
+	  data(){
+	  	return {
+			dataArr:[],
+			bgImage:this.common.GetImages('5'),
+	  	}
+	  },
 	  created(){
 	  	vm = this;
 	  },
 	  mounted(){//查看房子列表
 	  	// this.common.checkRegisterStatus();
 	  	vm.showList();
-	  },
-	  data(){
-	  	return {
-	  		dataArr:[]
-	  	}
 	  },
 	  methods:{
 	  	showList(){

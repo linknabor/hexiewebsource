@@ -79,4 +79,11 @@ module.exports = {
     tls: 'empty',
     child_process: 'empty'
   },
+  // plugins: [
+  //   new webpack.optimize.CommonsChunkPlugin('../src/assets/js/common.js'),
+  //   new webpack.ProvidePlugin({
+  //     jQuery: "jquery",
+  //     $: "jquery"
+  //   })
+  // ],
 }

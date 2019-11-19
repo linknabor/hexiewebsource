@@ -11,7 +11,6 @@
         @blur="storeMemo"
       ></div>
     </div>
-
     <div class="main_btn">
       <div class="btn" @click="onlinePay" :class="{useless:paying}">立即微信支付</div>
       <div class="btn" @click="offlinePay" :class="{useless:paying}">我已现金支付</div>
@@ -33,8 +32,6 @@ export default {
   },
   created() {
     vm = this;
-    //    let url = location.href.split('#')[0];
-    //     vm.receiveData.wxconfig(vm,wx,['chooseWXPay'],url);
   },
   mounted() {
     vm.repairOrderId = this.$route.query.orderId;
@@ -76,11 +73,11 @@ export default {
         if (vm.res.success) {
           wx.config({
             debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
-          appId: vm.res.result.appId, // 必填，公众号的唯一标识
-          timestamp: vm.res.result.timestamp, // 必填，生成签名的时间戳
-          nonceStr: vm.res.result.nonceStr, // 必填，生成签名的随机串
-          signature: vm.res.result.signature, // 必填，签名，见附录1
-          jsApiList: ["chooseWXPay"] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+            appId: vm.res.result.appId, // 必填，公众号的唯一标识
+            timestamp: vm.res.result.timestamp, // 必填，生成签名的时间戳
+            nonceStr: vm.res.result.nonceStr, // 必填，生成签名的随机串
+            signature: vm.res.result.signature, // 必填，签名，见附录1
+            jsApiList: ["chooseWXPay"] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
           });
           wx.chooseWXPay({
             timestamp: vm.res.result.timestamp,
@@ -95,11 +92,19 @@ export default {
                 path: "/commentxiu",
                 query: { ordersID: vm.$route.query.orderId }
               });
+            },
+            fail(res){
+              vm.paying = false;
+              console.log(JSON.stringify(res))
+            },
+            cancel(res){
+              alert('支付取消')
+              vm.paying = false;
             }
           });
         } else {
           alert("支付请求失败，请稍后重试!");
-          vm.payingk = false;
+          vm.paying = false;
         }
       });
     },
@@ -134,6 +139,7 @@ export default {
                   });
                 } else {
                   alert("信息提交异常，请稍后重试！");
+
                 }
               }
             );
@@ -151,6 +157,7 @@ export default {
 </script>
 
 <style  scoped>
+
 .repay {
   background: #f9f9e9;
   margin: 0;

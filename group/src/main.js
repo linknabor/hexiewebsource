@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import store from './store/index'
 
 /*自己添加的开始  引入mint-ui 和 axios*/
 import Mint from 'mint-ui';
@@ -25,12 +26,13 @@ import './assets/js/rem';
 import cookie from 'js-cookie'
 
 //本地使用
-// import {common,MasterConfig} from './assets/js/common'
+// import {common,MasterConfig,getUrlParam} from './assets/js/common';
 
-Vue.prototype.common=common;
-Vue.prototype.baseUrl=MasterConfig.C('baseUrl');
-Vue.prototype.basePageUrl=MasterConfig.C('basePageUrl');
-Vue.prototype.basePageUrlpay=MasterConfig.C('basePageUrlpay');
+Vue.prototype.common = common;
+Vue.prototype.getUrlParam = getUrlParam;
+Vue.prototype.baseUrl = MasterConfig.C('baseUrl');
+Vue.prototype.basePageUrl = MasterConfig.C('basePageUrl');
+Vue.prototype.basePageUrlpay = MasterConfig.C('basePageUrlpay');
 
 
 import receiveData from './assets/js/receiveData'
@@ -88,5 +90,6 @@ new Vue({
   el: '#app',
   router,
   components: { App },
-  template: '<App/>'
+  template: '<App/>',
+  store
 })

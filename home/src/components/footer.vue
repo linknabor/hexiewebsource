@@ -17,27 +17,34 @@
 /* .footer_home{background-image: url('../assets/images/icon_daojia_selected.png');}  */
 
 /* 合协 */
-.footer_wuye_selected{background-image: url('../assets/images/icon/icon_property.png');}
-.footer_person{background-image: url('../assets/images/icon/icon_my.png');} 
+.footer_wuye_selected{background-image: url('../assets/images/fonter/icon_property.png');}
+.footer_person{background-image: url('../assets/images/fonter/icon_my.png');} 
+.footer_home{background-image: url('../assets/images/fonter/icon_daojia_selected.png');}
+.footer_group{background-image: url('../assets/images/fonter/icon_pindan.png');}
 
 /* 大楼 */
 .footer_fuwu_baofang {background-image: url('../assets/images/icon/icon_property.png')}
 .footer_shequ_baofang {background-image: url('../assets/images/icon/icon_daojia_selected.png')}
 .footer_person_baofang {background-image: url('../assets/images/icon/icon_my.png')}
+.footer_group_baofang{background-image: url('../assets/images/fonter/icon_pindan.png');}
+
 /* 奉贤 */
 .footer_fuwu_liangyou {background-image: url('../assets/images/icon/icon_property.png')}
 .footer_shequ_liangyou {background-image: url('../assets/images/icon/icon_daojia_selected.png')}
 .footer_person_liangyou {background-image: url('../assets/images/icon/icon_my.png')}
+.footer_group_liangyou{background-image: url('../assets/images/fonter/icon_pindan.png');}
 
 /* 金桥 */
 .footer_fuwu_weifa {background-image: url('../assets/images/icon/icon_property.png')}
 .footer_shequ_weifa {background-image: url('../assets/images/icon/icon_daojia_selected.png')}
 .footer_person_weifa {background-image: url('../assets/images/icon/icon_my.png')}
+.footer_group_weifa{background-image: url('../assets/images/fonter/icon_pindan.png');}
 
 /* 友宜 */
 .footer_fuwu_youyi {background-image: url('../assets/images/icon/icon_property.png')}
 .footer_shequ_youyi {background-image: url('../assets/images/icon/icon_daojia_selected.png')}
 .footer_person_youyi {background-image: url('../assets/images/icon/icon_my.png')}
+.footer_group_youyi{background-image: url('../assets/images/fonter/icon_pindan.png');}
 </style>
 
 <template>

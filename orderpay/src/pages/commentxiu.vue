@@ -133,6 +133,12 @@ export default {
 	    },
         storeComment(e) {
            vm.comment=e.srcElement.innerText
+
+            let u = navigator.userAgent;
+            let isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+            if (isiOS) {
+                window.scrollTo(0, 0);
+            }
         },
         //点击添加图片
         addPic() {
@@ -212,6 +218,7 @@ export default {
 </script>
 
 <style  scoped>
+
 .title_area {
     padding: 45px 0;
     background: #f7f7f1;

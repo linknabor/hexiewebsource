@@ -77,7 +77,7 @@
 
         <div class="line p15 fs15" style="height:20px" @click="showCoupons">
             <span class="fl">现金券</span> 
-            <span class="fl baoyou_desc" >&nbsp;&nbsp;{{coupons.length}}张可用</span>
+            <span class="fl baoyou_desc" >&nbsp;&nbsp;{{couponNum}}张可用</span>
             <div class="fr right_menu">{{couponDesc}}  </div>
         </div>
 
@@ -212,7 +212,9 @@
             <div style="background-color: #fffff8" >
                 <div class="location-wrap">
                     <div class="location-input-wrap">
-                        <input placeholder="请输入小区名称" class="location-input" v-model="suggestLocation" />
+                        <div class="location-i">
+                                <input placeholder="请输入小区名称" class="location-input" v-model="suggestLocation" />    
+                        </div>
                         <i class="location-btn-cancel" @click="cancelLocation" v-if="suggestion"></i>
                     </div>
                     <span class="location-btn-ensure" @click="submitLocation">确定</span>
@@ -255,11 +257,23 @@ export default {
             //        id:1,
             //        title:'滴滴滴',
             //        leftDayDes:'11',
-            //        useStartDateStr:'22',
+            //        useStartDateStr:0,
             //        useEndDateStr:'33',
-            //        amount:100
+            //        amount:0.01,
+            //        usageCondition:0
             //    }
             ],
+            allCoupons:[
+                //  {
+                //    id:1,
+                //    title:'滴滴滴',
+                //    leftDayDes:'11',
+                //    useStartDateStr:1,
+                //    useEndDateStr:'33',
+                //    amount:0.01,
+                //    usageCondition:0
+                // }
+               ],
             couponNum:0,
         	coupon:null,
             couponDesc:'未使用',
@@ -297,16 +311,15 @@ export default {
             //地址参数
             addresses:[],
             submitAddress:{
-                xiaoquEntId: 0,
-                receiveName: "",
-                province: "",
-                city: "",
-                county: "",
-                tel: "",
-                xiaoquAddr: "",
-                xiaoquName: "",
-                id: 0,
-                detailAddress: ""
+                receiveName:"",
+                tel:"",
+                provinceId:0,province:"",
+                cityId:0,city:"",
+                countyId:0,county:"",
+                xiaoquName:"",
+                amapId:0,
+                amapDetailAddr:"",
+                homeAddress:""
               },
               currentRegionType:1,
               regions:[],
@@ -325,7 +338,6 @@ export default {
        vm=this;
    },
    mounted() {
-       vm.common.checkRegisterStatus()
     
         vm.roady();
         vm.dataAddress();
@@ -390,6 +402,8 @@ export default {
            vm.receiveData.getData(vm,'/coupon/valid/'+vm.type+'/'+vm.ruleId,'res',function() {
                if(vm.res.success) {
                     vm.coupons=vm.res.result;
+                    vm.allCoupons=vm.res.result;
+                    vm.couponNum=vm.coupons.length;
                      vm.computeAmount();
             //    console.log(vm.couponNum)
                }else {
@@ -509,23 +523,33 @@ export default {
            pa=vm.rule.price*vm.count;
            pf=vm.count <vm.rule.freeShippingNum ? vm.rule.postageFee :0;
            a=pa+pf;
-
-        if(vm.coupon == null) {
-           ta = a;
-        } else if(vm.coupon.usageCondition>a){
-          vm.coupon = null;
-        } else if(vm.coupon.amount>0){
-            ta = a - vm.coupon.amount;
-        }
-
-        vm.productAmount=pa.toFixed(2);
-        vm.postFee=pf.toFixed(2);
-        vm.amount=a.toFixed(2);
-        if(ta>0) {
-                vm.totalAmount = ta.toFixed(2);
-            } else {
-               vm.totalAmount = "0.01";
+           vm.filterCouponByAmount(a);
+           vm.couponNum=vm.coupons.length;
+            if(vm.coupon == null) {
+            ta = a;
+            } else if(vm.coupon.usageCondition>a){
+            vm.coupon = null;
+            } else if(vm.coupon.amount>0){
+                ta = a - vm.coupon.amount;
             }
+
+            vm.productAmount=pa.toFixed(2);
+            vm.postFee=pf.toFixed(2);
+            vm.amount=a.toFixed(2);
+            if(ta>0) {
+                    vm.totalAmount = ta.toFixed(2);
+                } else {
+                vm.totalAmount = "0.01";
+                }
+        },
+        filterCouponByAmount(amount){
+            var c = [];
+            for(var i=0;i<vm.allCoupons.length;i++){
+                if(vm.allCoupons[i].usageCondition<=amount){
+                    c.push(vm.allCoupons[i]);
+                }
+            }
+            vm.coupons= c;
         },
        //点击优惠券
        showCoupons() {
@@ -623,25 +647,22 @@ export default {
     toAddAddress() {
          vm.currentPage='addAddressForm';
         vm.submitAddress={
-            xiaoquEntId: 0,
-            receiveName: "",
-            province: "",
-            city: "",
-            county: "",
-            tel: "",
-            xiaoquAddr: "",
-            xiaoquName: "",
-            id: 0,
-            detailAddress: ""
+                receiveName:"",
+                tel:"",
+                provinceId:0,province:"",
+                cityId:0,city:"",
+                countyId:0,county:"",
+                xiaoquName:"",
+                amapId:0,
+                amapDetailAddr:"",
+                homeAddress:""
             }   
-        vm.distinct=''       
+        vm.distinct='';
+        vm.suggestLocation='';       
     },
-
-
-
     /** 保存地址 */
      addAddress() {
-             if(vm.submitAddress.province==""||vm.submitAddress.city==""||vm.submitAddress.county==""){
+            if(vm.submitAddress.province==""||vm.submitAddress.city==""||vm.submitAddress.county==""){
 	    		alert("请选择地址！");
 	    		return;
 	    	}
@@ -650,7 +671,7 @@ export default {
 	    		alert("请填写完整相关信息！");
 	    		return;
 	    	}
-	    	if(!(/^1[3-9][0-9]\d{4,8}$/.test(vm.submitAddress.tel))) {
+	    	if(!(/^1[3-9][0-9]\d{8}$/.test(vm.submitAddress.tel))) {
 	    		alert("请填写正确的手机号！");
 	    		return;
             }    
@@ -701,7 +722,7 @@ export default {
                  if(vm.coupon != null) {
                     order.couponId=vm.coupon.id;
 	        	}
-                if(vm.checkedAddress.id== undefined|| vm.checkedAddress.id==0){
+                if(vm.checkedAddress== null||vm.checkedAddress.id== undefined|| vm.checkedAddress.id==0){
 	        		alert("请选择地址！");
 	        		return;
                 }
@@ -745,7 +766,6 @@ export default {
                     success: function (res) {
                             // 支付成功后的回调函数
                         alert("下单成功！");
-                        //   location.href="https://test.e-shequ.com/weixin/success.html?orderId="+vm.order.id + "&type="+vm.type;
                         vm.$router.push({path:'/success',query:{'orderId':vm.order.id,'type':vm.type}})
                     },
                    
@@ -1309,19 +1329,22 @@ btn[data-v-11058882] {
     height: 36px;
     width: 100%;
     outline: none;
-    border: 1px solid #d4cfc8;
-    border-radius: 4px;
+    border:none;;
     vertical-align: middle;
     font-size: 15px;
 }
-
+.location-i {
+    padding-right: 30px;
+    border-radius: 4px;
+    border: 1px solid #d4cfc8;
+}
 .location-btn-cancel {
     position: absolute;
-    top: 5px;
-    right: 4px;
+    top: 6px;
+    right: 10px;
     display: inline-block;
     height: 36px;
-    width: 36px;
+    width: 30px;
     background: url(../assets/images/icon_cancel.png) no-repeat;
     background-size: 15px;
     background-position: center;

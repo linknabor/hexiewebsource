@@ -82,7 +82,7 @@ export default {
                     //评论
                 } else if(notice.noticeType==3){
                     //团购
-                    location.href=vm.basePageUrlpay+"rgroups.html?state=123#/rgroupdetail?groupId="+notice.bizId;
+                    location.href=vm.basePageUrlpay+"hxrgroups.html?state=123#/rgroupdetail?groupId="+notice.bizId;
                 } else if(notice.noticeType==4){
                     //系统推送
                 } else if(notice.noticeType==5){
