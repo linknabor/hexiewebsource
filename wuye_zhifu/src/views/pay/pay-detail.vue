@@ -465,9 +465,9 @@
 
 		mounted(){
 		
-			vm.common.checkRegisterStatus();
+			// vm.common.checkRegisterStatus();
 
-			// this.initSession4Test()
+			this.initSession4Test()
 			this.getBillDetail();
 			this.Coupons();
 
@@ -501,9 +501,11 @@
 				});
 			},
 			getBillDetail() {
-			if(vm.version=='01'){
+					if(vm.version=='01'){
 		       let url="getPayListStd?regionname="+this.regionname+"&house_id="+ this.house_id +
 		      "&sect_id="+this.sect_id +"&start_date="+this.start_date +"&end_date="+this.end_date; 
+             
+
              vm.receiveData.getData(
                 vm,url,'data',function(){
 						  
