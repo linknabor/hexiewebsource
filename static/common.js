@@ -9,9 +9,9 @@ var MasterConfig = function() {
         /uat/.test(location.origin)?'https://uat.e-shequ.com/hexie/weixin/':
         'https://www.e-shequ.com/weixin/',
         
-        basePageUrlpay:/127|test/.test(location.origin)?'https://test.e-shequ.com/weixin/pay/':
-        /uat/.test(location.origin)?'https://uat.e-shequ.com/hexie/weixin/pay/':
-        'https://www.e-shequ.com/weixin/pay/',
+        basePageUrlpay:/127|test/.test(location.origin)?'https://test.e-shequ.com/pay/':
+        /uat/.test(location.origin)?'https://uat.e-shequ.com/pay/':
+        'https://www.e-shequ.com/pay/',
 
         payPageFolder:/127|test/.test(location.origin)?'https://test.e-shequ.com/pay/':
         /uat/.test(location.origin)?'https://uat.e-shequ.com/pay/':

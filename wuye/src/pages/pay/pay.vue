@@ -594,8 +594,8 @@ getRegionurl(longitude, latitude) {
     getCoupons() {
       //获取用户数据
       //重置
-      vm.startData= '';
-      vm.endData= '';
+      // vm.startData= '';
+      // vm.endData= '';
      
       vm.queryBillInfo = []; //清空查询账单列表
        vm.otherbillinfo = []; 
@@ -622,18 +622,33 @@ getRegionurl(longitude, latitude) {
         "res",
         function() {
           if (vm.res.success) {
-           
             vm.is_null=vm.res.result.is_null;
             if(vm.is_null=='0'){
               vm.startData=vm.res.result.start_date;
+              // ---
+                  vm.endData=vm.res.result.end_date;
+                  vm.endData=vm.endData.replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3");
+                  startData=vm.startData;
+                  endData=vm.formatDate(vm.endData,'yyyyMMdd');
+                  vm.wuzhangdan(startData,endData);
+                  vm.isshow=true;
+              // ---
               vm.standard3 =true;
               vm.standard2=true;
               }else{
 
               vm.standard1=true;
               vm.standard2=true;
-              
-             
+               // -----
+                vm.startData=vm.res.result.start_date;
+                vm.endData=vm.res.result.end_date;
+                vm.startData=vm.startData.replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3");
+                vm.endData=vm.endData.replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3");
+                endData=vm.formatDate(vm.endData,'yyyyMMdd');
+                startData=vm.formatDate(vm.startData,'yyyyMMdd');
+                vm.wuzhangdan(startData,endData);
+                vm.isshow=true;
+              // -----
             }
            
           }
