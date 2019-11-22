@@ -164,6 +164,11 @@ export default {
 	background-size: 0.32rem;
    background-position: center;
 }
+.payed {
+  background: url("../assets/images/common/icon_cancel.png") no-repeat;
+  background-size: 0.32rem;
+  background-position: center;
+}
 
 .info1{
 padding: 0.2rem 0.3rem 0.1rem;

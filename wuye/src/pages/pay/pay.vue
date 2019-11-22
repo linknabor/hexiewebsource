@@ -125,11 +125,6 @@
             <input class="virtual-input classinput1" type="date" value="" v-model="endData" @change="specifiName()">
               
           </div>
-          <!-- <div class="input-row" v-if="standard4">
-            <label>结束日期：</label>
-            <div class="virtual-input classinput1 aa" type="date">{{endData | moment("YYYY/MM/DD")}}</div>
-              
-          </div> -->
         </div>
         <div id="word">
           
@@ -139,10 +134,7 @@
             :other-billinfo="otherbillinfo"
             @itemClick="itemClick"
           ></Bill>
-          <!-- <div  v-show="isshow"
-      style=" background: rgba(0,0,0,0.5);display: none;width: 100%;height: 38.5%;top: 6.8rem; position: absolute;"></div> -->
-
-        </div>
+          </div>
         <!-- <div style="width:100%;height:0.92rem;background:#eee;"></div> -->
         <div style="wdith:100%;height:2.2rem;background:#eee;"></div>
         <div class="btn-fixed" id="st" v-show="showt">
@@ -305,7 +297,10 @@ export default {
       quan2: false,
       one: "one",
       permit_skip_pay: "1",
-       is_null:''
+       is_null:'',
+      //  billfee_discount_rule_conf:'',
+      //  billfee_discount_rule:''
+
     };
   },
   //时间戳转换成日期
@@ -381,44 +376,49 @@ export default {
         vm.billInfo = vm.data.result.bill_info; //物业缴费
         vm.reduceMode = vm.data.result.reduce_mode; //减免方式
         vm.permit_skip_pay = vm.data.result.permit_skip_pay; //判断跳跃付款
+        // vm.billfee_discount_rule_conf=vm.data.result.billfee_discount_rule_conf;
+        // vm.billfee_discount_rule=vm.data.result.billfee_discount_rule;//物业减免方式
         vm.billPage += 1;
+        console.log(vm.billPage)
       },
       vm.params
-      
-    );
+      );
     },
      city() {
-        wx.ready(function() {
-        wx.checkJsApi({
-          jsApiList: ['getLocation'],
-          success: function(res) {
-            if (res.checkResult.getLocation == false) {
-              alert(
-                "你的微信版本太低，不支持微信JS接口，请升级到最新的微信版本！"
-              );
-              return;
-            }
-          }
-        });
-        wx.getLocation({
+       let latitude = 31.22114; // 纬度，浮点数，范围为90 ~ -90
+        let longitude = 121.54409; // 经度，浮点数，范围为180 ~ -180。
+        vm.getRegionurl(longitude, latitude);
+      //   wx.ready(function() {
+      //   wx.checkJsApi({
+      //     jsApiList: ['getLocation'],
+      //     success: function(res) {
+      //       if (res.checkResult.getLocation == false) {
+      //         alert(
+      //           "你的微信版本太低，不支持微信JS接口，请升级到最新的微信版本！"
+      //         );
+      //         return;
+      //       }
+      //     }
+      //   });
+      //   wx.getLocation({
 
-          type: "wgs84",
-          success: function(res) {
+      //     type: "wgs84",
+      //     success: function(res) {
              
-            let latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
-            let longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
-            vm.getRegionurl(longitude, latitude);
-            return;
+      //       let latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+      //       let longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+      //       vm.getRegionurl(longitude, latitude);
+      //       return;
             
-          },
-          cancel: function(res) {
-            console.log("用户取消");
-          }
-        });
-        wx.error(function(res) {
-          alert("获取位置失败");
-        });
-      });
+      //     },
+      //     cancel: function(res) {
+      //       console.log("用户取消");
+      //     }
+      //   });
+      //   wx.error(function(res) {
+      //     alert("获取位置失败");
+      //   });
+      // });
     },
 getRegionurl(longitude, latitude) {
       vm.receiveData.getData(
@@ -615,10 +615,7 @@ getRegionurl(longitude, latitude) {
     getBillStartDate() {
       vm.receiveData.getData(
         vm,
-        "/getBillStartDateSDO?regionname=" +
-          this.$route.query.City +
-          "&house_id=" +
-          vm.query.house,
+        "/getBillStartDateSDO?house_id=" + vm.query.house+"&regionname="+this.$route.query.City,
         "res",
         function() {
           if (vm.res.success) {
@@ -628,12 +625,24 @@ getRegionurl(longitude, latitude) {
               vm.startData=vm.res.result.start_date;
               vm.standard3 =true;
               vm.standard2=true;
+              vm.endData=vm.res.result.end_date;
+              vm.endData=vm.endData.replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3");
+              startData=vm.startData;
+              endData=vm.formatDate(vm.endData,'yyyyMMdd');
+              vm.wuzhangdan(startData,endData);
+              vm.isshow=true;
               }else{
 
               vm.standard1=true;
               vm.standard2=true;
-              
-             
+              vm.startData=vm.res.result.start_date;
+              vm.endData=vm.res.result.end_date;
+              vm.startData=vm.startData.replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3");
+              vm.endData=vm.endData.replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3");
+              endData=vm.formatDate(vm.endData,'yyyyMMdd');
+              startData=vm.formatDate(vm.startData,'yyyyMMdd');
+              vm.wuzhangdan(startData,endData);
+              vm.isshow=true;
             }
            
           }
@@ -739,6 +748,8 @@ getRegionurl(longitude, latitude) {
               vm.permit_skip_pay = vm.queryBillInfo.result.permit_skip_pay;
               vm.pay_least_month = vm.queryBillInfo.result.pay_least_month; //3月份
               vm.reduceMode = vm.queryBillInfo.result.reduce_mode; //从新赋值减免方式
+              // vm.billfee_discount_rule_conf=vm.queryBillInfo.result.billfee_discount_rule_conf;//物业减免优惠
+              // vm.billfee_discount_rule=vm.queryBillInfo.result.billfee_discount_rule;//物业减免方式
               // console.log('我是减免方式:'+vm.queryBillInfo.result.reduce_mode+'我把他赋值给'+vm.reduceMode)
 
               if (
@@ -785,6 +796,8 @@ getRegionurl(longitude, latitude) {
           vm.quickBillInfo = vm.quickData.result.bill_info;
           vm.reduceMode = vm.quickData.result.reduce_mode;
           vm.pay_least_month = vm.quickData.result.pay_least_month;
+          // vm.billfee_discount_rule_conf=vm.quickData.result.billfee_discount_rule_conf;//物业减免优惠
+          // vm.billfee_discount_rule=vm.quickData.result.billfee_discount_rule;//物业减免方式
           vm.quickBillpage+=1
            
         } else {
@@ -903,7 +916,6 @@ getRegionurl(longitude, latitude) {
     //点击物业缴费按钮
     pay(list, allPrice, allselect, otherbillinfo, queryallPrice1) {
  
-
       //第一个参数 账单数组，第二个参数 总价 第三个参数 是否全选,所有参数 string
       if (vm.getversion == "01") {
         if (vm[queryallPrice1] < 0.01) {
@@ -911,7 +923,7 @@ getRegionurl(longitude, latitude) {
           return;
         }
         var oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
-        window.location.href =vm.basePageUrl +"wuyepay.html?"+oriapp+"#/?regionname=" +this.$route.query.City +"&totalPrice="+vm[queryallPrice1] +"&house_id=" +
+        window.location.href =vm.basePageUrl +"wuyepay1.html?"+oriapp+"#/?regionname=" +this.$route.query.City +"&totalPrice="+vm[queryallPrice1] +"&house_id=" +
           vm.query.house +"&sect_id=" +vm.query.sectID + "&start_date=" +startData + "&end_date=" + endData +"&getversion=" + '01';
       } else {
         if (vm[allPrice] < 0.01) {
@@ -968,7 +980,7 @@ getRegionurl(longitude, latitude) {
         // let url = vm.str + "paymentdetail.html?#/?billIds="+bills+"&stmtId="+vm.stmtId+"&payAddr="+escape(pay_addr)+"&totalPrice="+vm[allPrice]+"&reduceMode="+vm.reduceMode;
         // window.location.href = url;
    var oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
-        window.location.href =vm.basePageUrl +"wuyepay.html?"+oriapp+"#/?billIds=" +bills + "&stmtId=" + vm.stmtId + "&payAddr=" + escape(pay_addr) +
+        window.location.href =vm.basePageUrl +"wuyepay1.html?"+oriapp+"#/?billIds=" +bills + "&stmtId=" + vm.stmtId + "&payAddr=" + escape(pay_addr) +
           "&totalPrice=" +vm[allPrice] + "&reduceMode=" + vm.reduceMode + "&regionname=" +vm.regionname +"&getversion=" + "02";
       }
     },

@@ -33,7 +33,7 @@ import receiveData from './assets/js/receiveData'
 Vue.prototype.receiveData = receiveData;
 
 //本地用
-// import {common,MasterConfig,getUrlParam} from './assets/js/common';
+import {common,MasterConfig,getUrlParam} from './assets/js/common';
 
 Vue.prototype.common = common;
 Vue.prototype.getUrlParam = getUrlParam;

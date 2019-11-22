@@ -70,10 +70,10 @@ export default{
       vm=this;
     },
     mounted(){
-      // let url = '/initSession4Test/1';
-      //           vm.receiveData.getData(vm,url,'Data',function(){
-      //       });
-      vm.initUserInfo();
+      let url = '/initSession4Test/1';
+                vm.receiveData.getData(vm,url,'Data',function(){
+            });
+      // vm.initUserInfo();
       vm.geturl();
     },
     updated(){

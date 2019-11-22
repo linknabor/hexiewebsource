@@ -9,7 +9,7 @@
 		  <mt-tab-container-item id="c">
 			<!-- 停车缴费开始 -->
 			<div id=word>
-			  	<Bill :bill-info="carBillInfo" @itemClick="itemClick"  ></Bill>
+			  	<Bill :bill-info="carBillInfo" @itemClick="itemClick" :version="version" ></Bill>
 			</div> 
 			  <div style="widtt:100%;height:0.92rem;"></div>
 			  	<div class="btn-fixed">
@@ -49,7 +49,7 @@
 		},
 		data(){
 			return {
-				// version:"02",
+				version:"02",
 				url : '/billList',
 				stmtId:'',//快捷缴费 扫描出来的账单号
 		  		params : {
@@ -65,24 +65,82 @@
 				carBillPage :1, //停车缴费页码
 				reduceMode:1,
 				quan:false,
-				permit_skip_pay:'1'
+				permit_skip_pay:'1',
+				// park_discount_rule_conf:'',//停车减免优惠规则
+				// park_discount_rule:'',//停车减免方式
+				// before_condition:'',
+				regionname:'上海市'
 			}
 		},
 		created(){
 		  	vm = this;
 		},
 		mounted(){
-		  	
+			   vm.city();
+			    let url2 = location.href.split("#")[0];
+    			vm.receiveData.wxconfig(vm, wx, ["getLocation"], url2);
 		  	//请求 停车缴费 和 物业缴费首屏数据
 		  	vm.receiveData.getData(vm, vm.url, 'data',function(){
 		  		vm.reduceMode = vm.data.result.reduce_mode;//减免方式
 		  		vm.carBillInfo = vm.data.result.car_bill_info;//停车缴费
 				vm.pay_least_month = vm.data.result.pay_least_month; //最少支付月数 
 				vm.permit_skip_pay=vm.data.result.permit_skip_pay;  
-		  	},vm.params) ;
+				vm.carBillPage+=1;
+
+                
+			  },vm.params) ;
+			 
 		  	
 		},
 		methods:{
+			//定位城市
+
+    city() {
+		
+      wx.ready(function() {
+        wx.checkJsApi({
+          jsApiList: ["getLocation"],
+          success: function(res) {
+            if (res.checkResult.getLocation == false) {
+              alert(
+                "你的微信版本太低，不支持微信JS接口，请升级到最新的微信版本！"
+              );
+              return;
+            }
+          }
+        });
+        wx.getLocation({
+          type: "wgs84",
+          success: function(res) {
+            let latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+            let longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+			vm.getRegionurl(longitude, latitude);
+            return;
+          },
+          cancel: function(res) {
+            console.log("用户取消");
+          }
+        });
+        wx.error(function(res) {
+          alert("获取位置失败");
+        });
+      });
+    },
+    getRegionurl(longitude, latitude) {
+      vm.receiveData.getData(
+        vm,
+        "/getRegionUrl?coordinate=" + longitude + "," + latitude,
+        "res",
+        function() {
+          if (vm.res.success) {
+            vm.regionname = vm.res.result.address;
+            
+          } else {
+            alert("获取数据失败");
+          }
+        }
+      );
+    },
 		//分页 
 		getscroll(e) {
 				var st = e.srcElement.scrollTop;
@@ -106,12 +164,12 @@
 					vm.url,
 					'pageData2',
 					function(){
+						vm.carBillPage+=1;
 		  				tempArr = vm.pageData2.result.car_bill_info;//停车缴费
 		  				if(tempArr && tempArr.length > 0){
-		  					vm.carBillInfo =vm.carBillInfo.concat(tempArr) //停车缴费
-							vm.carAllselect = false;
-							vm.carBillPage+=1;
-							isloadPage=false;  
+							vm.carBillInfo =vm.carBillInfo.concat(tempArr) //停车缴费
+							  vm.carAllselect = false;
+							   isloadPage=false;  
 		  				}else{
 							  vm.quan=true;
 						}
@@ -120,7 +178,6 @@
 		  	},
 		  	//点击物业缴费按钮
 			  pay(list,allPrice,allselect){//第一个参数 账单数组，第二个参数 总价 第三个参数 是否全选,所有参数 string
-		  		
 		  		if( vm[allPrice] < 0.01){
 		  			alert('请选择账单后支付');
 		  			return
@@ -173,10 +230,11 @@
 				}
 		  		//跳转支付
 				var oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
-				window.location.href=vm.basePageUrl+"wuyepay.html?oriApp="+oriapp+"#/?billIds="+bills+"&stmtId="+vm.stmtId+"&payAddr="+escape(pay_addr)+"&totalPrice="+vm[allPrice]+"&reduceMode="+vm.reduceMode;
+				window.location.href=vm.basePageUrl+"wuyepay1.html?oriApp="+oriapp+"#/?billIds="+bills+"&stmtId="+vm.stmtId+"&payAddr="+escape(pay_addr)+"&totalPrice="+vm[allPrice]+"&reduceMode="+vm.reduceMode+"&getversion=03"+"&regionname="+vm.regionname;
 		  	},
 		  	//点击某个选中按钮 params1:被点击按钮的下标 params2:被点击按钮所属的数组
-		  	itemClick:function(index,b){//3个页面对应不同的三个数组 
+			  itemClick:function(index, version, b){//3个页面对应不同的三个数组 
+			
 				  let len = b.length
 				//permit_skip_pay  0允许  1不允许
 			if(vm.permit_skip_pay == '1') {
