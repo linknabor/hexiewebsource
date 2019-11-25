@@ -397,7 +397,7 @@
 				yins:false,
 				invoice_title:'',//发票抬头
 				credit_code:'',//公司税号
-				invoice_title_type:'',//个人01或公司02 
+				invoice_title_type:'01',//个人01或公司02 
 				needInvoice:'1',//是否需要发票
 				uptonAmount:'未使用',
 				upronAmountNumber:0,////优惠券金额 数量
@@ -486,6 +486,8 @@
 					this.invoice_title_type =''
 					this.invoice_title='';
 					this.credit_code='';
+				}else {
+					this.invoice_title_type ='01'
 				}
 			},
 			bind_switch(na,nw) {
