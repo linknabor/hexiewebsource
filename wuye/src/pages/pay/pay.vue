@@ -39,7 +39,7 @@
         <div class="btn-fixed">
           <!-- <img src="../../assets/images/house/paymoney.png" /> -->
           <div class="fl select-btn" v-show="quan1" :class="{allSelected:quickAllselect}"  @click="allSelect(quickBillInfo,'quickAllselect')">全选&nbsp;</div>
-          <div class="pay" @click="pay('quickBillInfo','quickAllPrice','quickAllselect')">
+          <div class="pay" @click="pays('quickBillInfo','quickAllPrice','quickAllselect')">
             我要缴费
             <span>￥{{quickAllPrice}}</span>
           </div>
@@ -61,7 +61,7 @@
             :class="{allSelected:bAllSelect }"
             @click="allSelect(billInfo,'bAllSelect')"
           >全选&nbsp;</div>
-          <div class="pay" @click="pay('billInfo','allPrice','bAllSelect')">
+          <div class="pay" @click="pays('billInfo','allPrice','bAllSelect')">
             我要缴费
             <span>￥{{allPrice}}</span>
           </div>
@@ -385,40 +385,38 @@ export default {
       );
     },
      city() {
-       let latitude = 31.22114; // 纬度，浮点数，范围为90 ~ -90
-        let longitude = 121.54409; // 经度，浮点数，范围为180 ~ -180。
-        vm.getRegionurl(longitude, latitude);
-      //   wx.ready(function() {
-      //   wx.checkJsApi({
-      //     jsApiList: ['getLocation'],
-      //     success: function(res) {
-      //       if (res.checkResult.getLocation == false) {
-      //         alert(
-      //           "你的微信版本太低，不支持微信JS接口，请升级到最新的微信版本！"
-      //         );
-      //         return;
-      //       }
-      //     }
-      //   });
-      //   wx.getLocation({
+      
+        wx.ready(function() {
+        wx.checkJsApi({
+          jsApiList: ['getLocation'],
+          success: function(res) {
+            if (res.checkResult.getLocation == false) {
+              alert(
+                "你的微信版本太低，不支持微信JS接口，请升级到最新的微信版本！"
+              );
+              return;
+            }
+          }
+        });
+        wx.getLocation({
 
-      //     type: "wgs84",
-      //     success: function(res) {
+          type: "wgs84",
+          success: function(res) {
              
-      //       let latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
-      //       let longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
-      //       vm.getRegionurl(longitude, latitude);
-      //       return;
+            let latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+            let longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+            vm.getRegionurl(longitude, latitude);
+            return;
             
-      //     },
-      //     cancel: function(res) {
-      //       console.log("用户取消");
-      //     }
-      //   });
-      //   wx.error(function(res) {
-      //     alert("获取位置失败");
-      //   });
-      // });
+          },
+          cancel: function(res) {
+            console.log("用户取消");
+          }
+        });
+        wx.error(function(res) {
+          alert("获取位置失败");
+        });
+      });
     },
 getRegionurl(longitude, latitude) {
       vm.receiveData.getData(
@@ -912,21 +910,8 @@ getRegionurl(longitude, latitude) {
       );
       // vm.$refs.loadmore2.onBottomLoaded();
     },
-  
-    //点击物业缴费按钮
-    pay(list, allPrice, allselect, otherbillinfo, queryallPrice1) {
- 
-      //第一个参数 账单数组，第二个参数 总价 第三个参数 是否全选,所有参数 string
-      if (vm.getversion == "01") {
-        if (vm[queryallPrice1] < 0.01) {
-          alert("请选择帐单后支付");
-          return;
-        }
-        var oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
-        window.location.href =vm.basePageUrl +"wuyepay1.html?"+oriapp+"#/?regionname=" +this.$route.query.City +"&totalPrice="+vm[queryallPrice1] +"&house_id=" +
-          vm.query.house +"&sect_id=" +vm.query.sectID + "&start_date=" +startData + "&end_date=" + endData +"&getversion=" + '01';
-      } else {
-        if (vm[allPrice] < 0.01) {
+  pays(list, allPrice, allselect){
+    if (vm[allPrice] < 0.01) {
           alert("请选择账单后支付");
           return;
         }
@@ -982,6 +967,22 @@ getRegionurl(longitude, latitude) {
    var oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
         window.location.href =vm.basePageUrl +"wuyepay1.html?"+oriapp+"#/?billIds=" +bills + "&stmtId=" + vm.stmtId + "&payAddr=" + escape(pay_addr) +
           "&totalPrice=" +vm[allPrice] + "&reduceMode=" + vm.reduceMode + "&regionname=" +vm.regionname +"&getversion=" + "02";
+      
+  },
+    //点击物业缴费按钮
+    pay(list, allPrice, allselect, otherbillinfo, queryallPrice1) {
+ 
+      //第一个参数 账单数组，第二个参数 总价 第三个参数 是否全选,所有参数 string
+      if (vm.getversion == "01") {
+        if (vm[queryallPrice1] < 0.01) {
+          alert("请选择帐单后支付");
+          return;
+        }
+        var oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
+        window.location.href =vm.basePageUrl +"wuyepay1.html?"+oriapp+"#/?regionname=" +this.$route.query.City +"&totalPrice="+vm[queryallPrice1] +"&house_id=" +
+          vm.query.house +"&sect_id=" +vm.query.sectID + "&start_date=" +startData + "&end_date=" + endData +"&getversion=" + '01';
+      } else {
+        vm.pays(list, allPrice, allselect);
       }
     },
 

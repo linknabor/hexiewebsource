@@ -403,15 +403,15 @@ export default {
       uptonAmount: "未使用",
       upronAmountNumber: 0, ////优惠券金额 数量
       uptonData: [
-        // {
-        // 	id:1,
-        // 	selected:false,
-        // 	title:'滴滴滴',
-        // 	leftDayDes:'11',
-        // 	useStartDateStr:'22',
-        // 	useEndDateStr:'33',
-        // 	amount:100,
-        // },
+        {
+        	// id:1,
+        	// selected:false,
+        	// title:'滴滴滴',
+        	// leftDayDes:'11',
+        	// useStartDateStr:'22',
+        	// useEndDateStr:'33',
+        	// amount:1,
+        },
       ],
       allCoupons: [],
       selectUpton: true, //显示的是缴费详情页面还是选择优惠劵页面
@@ -474,8 +474,8 @@ export default {
   },
 
   mounted() {
-    vm.common.checkRegisterStatus();
-    // this.initSession4Test();
+    // vm.common.checkRegisterStatus();
+    this.initSession4Test();
     this.getBillDetail();
     this.Coupons();
 
@@ -788,7 +788,7 @@ export default {
       vm.reduceAmt =
         parseFloat(vm.routeParams.totalPrice) - parseFloat(vm.count);
       vm.reduceAmt = vm.reduceAmt.toFixed(2); //减少的钱
-      vm.reduceMoney=vm.reduceAmt;
+      // vm.reduceMoney=vm.reduceAmt;
     },
     //跳转到优惠券列表
     uptonList() {
@@ -858,7 +858,7 @@ export default {
           "&mianAmt=" +
           vm.mianAmt +
           "&reduceAmt=" +
-          vm.reduceMoney +
+          vm.reduceAmt +
           "&invoice_title_type=" +
           this.invoice_title_type +
           "&credit_code=" +
