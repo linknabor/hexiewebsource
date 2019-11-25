@@ -156,7 +156,7 @@ Vue.use(VueRouter)
 
 //动态改变title
 function changeTitle(title) {
-    title = title ? title : '合协社区';
+    title = title ? title : Vue.prototype.common.newname;
     window.document.title = title;
 };
 

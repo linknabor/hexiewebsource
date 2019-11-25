@@ -465,9 +465,9 @@
 
 		mounted(){
 		
-			// vm.common.checkRegisterStatus();
+			vm.common.checkRegisterStatus();
 
-			this.initSession4Test()
+			// this.initSession4Test()
 			this.getBillDetail();
 			this.Coupons();
 

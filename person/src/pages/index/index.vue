@@ -150,7 +150,7 @@
       <div
         class="divider highlight"
         style="text-align: center;width:100%;font-size:16px"
-      >长按关注合协社区，尊享更多服务和商品</div>
+      >长按关注公众号，尊享更多服务和商品</div>
       <img style="width: 200px;" :src="qrCode" />
     </div>
   </div>
