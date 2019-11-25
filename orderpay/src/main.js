@@ -9,6 +9,7 @@ import Mint from 'mint-ui';
 import 'mint-ui/lib/style.css';
 Vue.use(Mint);
 
+
 import axios from 'axios';
 import VueAxios from 'vue-axios';
 
@@ -27,7 +28,6 @@ Vue.prototype.getUrlParam=getUrlParam;
 Vue.prototype.baseUrl=MasterConfig.C('baseUrl');
 Vue.prototype.basePageUrl=MasterConfig.C('basePageUrl');
 Vue.prototype.basePageUrlpay=MasterConfig.C('basePageUrlpay');
-
 import receiveData from './assets/js/receiveData'
 Vue.prototype.receiveData=receiveData
 

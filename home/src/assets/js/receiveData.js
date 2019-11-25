@@ -1,13 +1,6 @@
-import xml2js from'xml2js' 
-var xmlParser = new xml2js.Parser({explicitArray : false, ignoreAttrs : true})
-    //xml转json
-import wx from 'weixin-js-sdk';
 
 
 let receiveData = {
-
-
-
     /*
      * 微信配置提取的公共方法
      * @param  {objec} vm     [Vue实例]
@@ -110,33 +103,18 @@ let receiveData = {
                 params: params
             })
             .then(function (res){
+                // console.log(res)
                 let a = JSON.parse(res.data)
+                // dealWithAjaxData(null,a,function(e){},function(){})
                 vm[backdataname] = a
                 if (typeof (callback) == 'function') {//回调
                     callback()
-                    // switch (""+ vm[backdataname].errorCode) {
-                    //     case "40001":
-                    //         console.log(2)
-                    //         common.dealWithAjaxData();
-                    //         break;
-                    //     case "40002":
-                    //         toBindLink();
-                    //         break;
-                    //     case "42032":
-                    //         common.wechatAuthorize();
-                    //         break;
-                    //     default:
-                    //         // r(e)
-                    //         console.log(1)
-                    //         break;
-                       
-                    // }
+
                 }
             })
             .catch(function (err) {
                 //alert('暂放-接口调用失败')
                 console.log(err);
-                // alert(err.message);
             })
     },
    /**
@@ -146,19 +124,15 @@ let receiveData = {
      * @param  {object} params       [请求参数]
      * @param  {object} callback     [请求成功后的回调函数]
      */
-    postData: function (vm, url, params,backdataname,callback,failback) {
+    postData: function (vm, url, params,backdataname,callback) {
         if (typeof (params) == 'undefined' || typeof (params) != 'object') {
             params = {}
         };
         vm.axios.post(url, params)
             .then(function (res) {
-
                 let a = res.data;
-                 vm[backdataname] = JSON.parse(a);
-                // xmlParser.parseString(a, function (err, result) {
-                // //将返回的结果赋值
-                //  vm[backdataname] = result.BaseResult
-                // });
+                // dealWithAjaxData(null,a,function(e){},function(){})
+                 vm[backdataname] = JSON.parse(a)
                 if (typeof (callback) == 'function') {//回调
                         callback()
                 }
@@ -168,203 +142,14 @@ let receiveData = {
                 if(vm.loadingShow){
                     vm.loadingShow = false;
                 }
-                if (typeof (failback) == 'function') {//回调
-                        failback()
-                }
-                // alert(err.message)
-                // console.log('fail', err);
+                if(err.message){
+                    
+                }              
+                console.log('fail', err);
             });
     },
-    //将字符串转为xml对象
-    toxml:function(xmlStr){
-        var root = document.createElement('XMLROOT');
-        root.innerHTML = xmlStr
-        return root
-    },
-
-    //字符串转为json对象
-    loadxml: function(xmlStr){
-        
-        var root = document.createElement('XMLROOT');
-        root.innerHTML = xmlStr;
-        return this.parse(root)
-    },
-    
-    //递归解析 将xml对象转为 json对象
-    parse: function(node){
-        var result = {};
-        for(var i = 0 ; i < node.childNodes.length ; ++i){
-            if(node.childNodes[i].nodeType == 1){//元素节点 继续递归解析
-                result[node.childNodes[i].nodeName.toLowerCase()] = this.parse(node.childNodes[i]);
-            }else if(node.childNodes[i].nodeType==3){//文本节点 返回
-                return node.childNodes[i].nodeValue;
-            }
-        }
-        return result;
-    } ,
-
 
 
 };
-// let AJAXFlag = !0;
-// let fangfa = {
-//     reLogin: function () {
-//         console.log(3)
-//         fangfa.setCookie("UID", "", 0),
-//         fangfa.login(!0)
-//     },
 
-//     setCookie: function (e, o, n) {
-//         console.log(4)
-//         var t = e + "=" + o + "; ",
-//         i = "";
-//         null !== n && void 0 !== n && (i = "expires=" + new Date(1e3 * n) + "; "),
-//         document.cookie = t + i + "path=/"
-//     },
-
-//     login: function() {
-//         console.log(5)
-//         var o = fangfa._GET().code;
-//         if (fangfa.alert("code: " + o), void 0 === o) {
-//             console.log(9)
-//             var n = location.origin + fangfa.removeParamFromUrl(["from","bind", "code", "share_id", "isappinstalled", "state", "m", "c", "a"]),
-//             t = "http://open.weixin.qq.com/connect/oauth2/authorize?",
-//             end = "&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect";
-//             console.log(t)
-//             console.log(o)
-//             //location.href = t + "appid=" + "wx89c743b2fa762a2c" + "&redirect_uri=" + encodeURIComponent(n) +end+ "#wechat_redirect"
-//         } else fangfa.alert("start api login"),
-//         console.log(14);
-//         $.ajax({
-//             url: "login/"+o,
-//             type: 'POST',
-//             dataType: 'json',
-//             data: JSON.stringify({
-//                   qaq:1,
-//             }),
-//             success:function(data){
-//                 alert(99999)
-//                 location.href = location.origin + fangfa.removeParamFromUrl(["code"])
-//             },
-//             error:function(err){
-//                 console.log(err)
-//             }
-//         })
-//     },
-    
-//     _GET: function() {
-//         console.log(6)
-//         var e = location.search,
-//         o = {};
-//         console.log(e);
-//         if ("" === e || void 0 === e) return o;
-//         console.log(7)
-//         e = e.substr(1).split("&");
-//         for (var n in e) {
-//             var t = e[n].split("=");
-//             o[t[0]] = t[1]
-//         }
-//         return o.from && delete o.code,
-//         o
-//     },
-//     alert: function(e) {
-//         console.log(8)
-//         "" === fangfa.getCookie("DevDebug") ? console.log(e) : alert(e)
-//     },
-//     log: function() {
-//         console.log(12)
-//         for (var e = arguments.length,
-//         o = 0; e > o; o++) console.log(arguments[o])
-//     },
-//     getCookie: function (e) {
-//         let c_start;
-//         let c_end;
-//         return document.cookie.length > 0 && (c_start = document.cookie.indexOf(e + "="), -1 != c_start) ? (c_start = c_start + e.length + 1, c_end = document.cookie.indexOf(";", c_start), -1 == c_end && (c_end = document.cookie.length), unescape(document.cookie.substring(c_start, c_end))) : ""
-//     },
-//     removeParamFromUrl: function(e) {
-//         console.log(10)
-//         console.log(location.pathname);
-//         return location.pathname + fangfa.buildUrlParamString(fangfa.removeParamObject(e));
-//     },
-//     removeParamObject:function(e){
-//         console.log(11)
-//         var o = fangfa._GET();
-//         fangfa.log(o);
-//         for (var n in e) delete o[e[n]];
-//         return o;
-//     },
-//     buildUrlParamString: function(e) {
-//         var o = "";
-//         console.log(13)
-//         for (var n in e) o += n + "=" + e[n] + "&";
-//         o = o.slice(0, o.length - 1);
-//         var t = "" === o || void 0 === o;
-//         return t ? "": "?" + o
-//     },
-//     checkBindAndBind: function (){
-//         console.log(1111111)
-//         var getData = fangfa._GET();
-//         var b = getData.bind;
-//         console.log(b)
-//         var o = getData.code;
-//         console.log(o);
-//         console.log(b&&o);
-//         if(b&&o) {
-//             console.log(55)
-//             fangfa.alert("start api bind"),
-//             console.log(88888)
-//             $.ajax({
-//             url: "bindWechat/"+MasterConfig.C("bindAppId")+"/" + o,
-//                 type: 'POST',
-//                 dataType: 'json',
-//                 data: JSON.stringify({
-//                       qaq:1,
-//                 }),
-//                 success:function(data){
-//                     alert(99999)
-//                     location.href = location.origin +fangfa.removeParamFromUrl(["bind","code"]);
-//                 },
-//                 error:function(err){
-//                     console.log(err)
-//                 }
-//             })
-            
-//         }
-//     },
-//     checkCodeAndLogin: function (){
-//         var getData = fangfa._GET();
-//         var b = getData.bind;
-//         console.log(b)
-//         var o = getData.code;
-//         console.log(o)
-//         if(!b&&o){
-//             fangfa.login();
-//             return false;
-//         } else {
-//             return true;
-//         }
-//     },
-//     checkRegisterStatus:function(){
-//         if(!getCookie("UID")){
-//             fangfa.login();/**不应该出现*/
-//             return false;
-//         }
-//         if(!fangfa.isRegisted()){
-//             alert("请先完成注册！");
-//             toRegisterAndBack();
-//             return false;
-//         }
-//         return true;
-//     },
-//     isRegisted: function (){
-//         var tel = fangfa.getCookie("tel");
-//         return tel&&tel!='null';
-//     },
-//     toRegisterAndBack: function (){
-//         var n = location.origin + fangfa.removeParamFromUrl(["from", "bind", "code", "share_id", "isappinstalled", "state", "m", "c", "a"]);
-//         location.href=MasterConfig.C('basePageUrl')+"person/register.html?comeFrom="+encodeURIComponent(n);
-//     }
-// }
-// common.checkBindAndBind();
-// common.checkCodeAndLogin();        
 export default receiveData;

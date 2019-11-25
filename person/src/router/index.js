@@ -17,7 +17,6 @@ import Router from 'vue-router'
 // import Addresses from '@/pages/addresses'//常用地址
 // import Abort from '@/pages/abort'//关注我们
 
-
 Vue.use(Router)
 
 let router= new Router({
@@ -161,7 +160,7 @@ router.beforeEach((to, from, next) => {
 
 //动态改变title
 function changeTitle(title) {
-  title = title ? title : '合协社区';
+  title = title ? title : Vue.prototype.common.newname;
   window.document.title = title;
 };
 

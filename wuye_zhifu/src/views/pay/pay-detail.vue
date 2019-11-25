@@ -209,6 +209,50 @@
 .qufapiao{color: red;margin-bottom: .2rem;}
 .box-bg {width: 100%;opacity: .5;height: 100%;position: fixed;
 	    background-color: #666;top: 0;left: 0;z-index: 100;display: none}
+/* 绑定房子 */
+.card {
+	margin-bottom: 15px;
+	border: 1px solid #d4cfc8;
+	border-radius: 3px;
+	color: #666;
+	margin-top: 20px;
+}
+.fs15{
+	font-size: 15px;
+}
+.item {
+	padding:20px 10px;
+	border-top: 1px solid #d4cfc8;
+}
+.fs13  {
+	font-size:13px;
+}
+.addse:after {
+	content: '\2713';
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	color: #758794;
+	width: 100%;
+	text-align: center;
+	font-size: 1.4em;
+	padding: 1px 0 0 0;
+	vertical-align: text-top;
+}
+.chendad{
+	background-color: #FFF;
+	border: 1px solid #C1CACA;
+	width:20px;
+	height: 20px;
+	border-radius: 5px;
+	display: inline-block;
+	position: relative;
+	margin-right: 2px;
+	top: 5px;
+}
+.chk_1 {
+	display: none;
+}		
 </style>
 <template>
 	<div>
@@ -295,6 +339,21 @@
 				<h4 class="qufapiao" v-show="show_invoice_flag==1">申请的电子发票预计在3个工作日内通过短信发送至您手机上,请注意查收</h4>
 			</form>
 			<!-- 支付按钮 -->
+			<div class="card fs15 item" >
+				<div class="ov fs13 " >
+					<span  style="padding:9px 5px 5px 5px; float:left;">是否自动绑定为该房屋的业主：</span>
+					<div class="ov" style="padding:0px 5px 5px 0px;">
+						<label class="chendad " :class="{addse:bind_switch=='1'}" for="checkbox_a1"></label>
+						<span>是&nbsp;&nbsp;</span>
+						<input type="radio" id="checkbox_a1" name="flag" value="1" v-model="bind_switch" class="chk_1"  />
+
+						<label for="checkbox_a2" class="chendad" :class="{addse:bind_switch=='0'}" ></label>
+						<span>否</span>	
+						<input type="radio" id="checkbox_a2" name="flag" value="0"  v-model="bind_switch" class="chk_1"  />
+						</div>		
+				</div>	
+			</div>
+
 			<div style="height:1rem;"></div>
 			<div class="pay-btn" @click="wechatPay">立即微信支付</div>
 			<!-- <div class="pay-btn" @click="add">价格</div> -->
@@ -338,7 +397,7 @@
 				yins:false,
 				invoice_title:'',//发票抬头
 				credit_code:'',//公司税号
-				invoice_title_type:'',//个人01或公司02 
+				invoice_title_type:'01',//个人01或公司02 
 				needInvoice:'1',//是否需要发票
 				uptonAmount:'未使用',
 				upronAmountNumber:0,////优惠券金额 数量
@@ -374,7 +433,8 @@
 				show_invoice_flag:'0',
 				show_com_flag:'0',//是否允许开具公司发票
 				show_invoice:'',//是否显示发票
-				version:''
+				version:'',
+				bind_switch:"1",
 			}
 		},
 		filters:{
@@ -405,9 +465,9 @@
 
 		mounted(){
 		
-			// vm.common.checkRegisterStatus();
+			vm.common.checkRegisterStatus();
 
-			this.initSession4Test()
+			// this.initSession4Test()
 			this.getBillDetail();
 			this.Coupons();
 
@@ -426,13 +486,19 @@
 					this.invoice_title_type =''
 					this.invoice_title='';
 					this.credit_code='';
+				}else {
+					this.invoice_title_type ='01'
 				}
+			},
+			bind_switch(na,nw) {
+				this.bind_switch=na;
+				
 			}
 		},
 		methods:{
 			//创造用户
 			initSession4Test(){
-				let url = '/initSession4Test/105';
+				let url = '/initSession4Test/1';
 					vm.receiveData.getData(vm,url,'Data',function(){
 				});
 			},
@@ -693,13 +759,11 @@
 							
 			          	    success: function (res) {
 			          	    	// alert("起步走起");
-								let reqUrl = "noticePayed?billId="+vm.routeParams.billIds+"&stmtId="+vm.routeParams.stmtId+"&tradeWaterId="+wd.result.trade_water_id+"&packageId="+wd.result.packageId+"&feePrice="+vm.routeParams.totalPrice;
+								let reqUrl = "noticePayed?billId="+vm.routeParams.billIds+"&stmtId="+vm.routeParams.stmtId+"&tradeWaterId="+wd.result.trade_water_id+"&packageId="+wd.result.packageId+"&feePrice="+vm.routeParams.totalPrice+"&bind_switch="+vm.bind_switch;
 								if(vm.uptonAmount != "未使用"){
 									// alert("走到这一步")
 									reqUrl += "&couponId="+vm.couponId;
 								}
-								
-								vm.Bindaddress();
 
 								vm.receiveData.postData(vm,reqUrl,{},'reqUrlData',function(){
 									vm.payInfo = vm.reqUrlData.result;
@@ -726,16 +790,7 @@
 					}
 				)
 			},
-
-			//成功绑定地址
-			 Bindaddress(){
-				 let url="/setDefaultAdressByBill?billId="+vm.routeParams.billIds
-				 vm.receiveData.postData(vm,url,{},'res',function(){
-					 
-				 
-				 })	
-				 
-			 }	
+	
 
 
 		}

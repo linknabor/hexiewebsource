@@ -1,42 +1,36 @@
 //开发环境
 var MasterConfig = function() {
     var t = {
-        // baseUrl:'api',
         baseUrl: /127|test/.test(location.origin)?'https://test.e-shequ.com/wechat/hexie/wechat/':
         /uat/.test(location.origin)?'https://uat.e-shequ.com/wechat/hexie/wechat/':
-        'https://www.e-shequ.com/wechat/hexie/wechat/',
+        'https://www.e-shequ.cn/wechat/hexie/wechat/',
         
         basePageUrl:/127|test/.test(location.origin)?'https://test.e-shequ.com/weixin/':
         /uat/.test(location.origin)?'https://uat.e-shequ.com/hexie/weixin/':
-        'https://www.e-shequ.com/weixin/',
+        'https://www.e-shequ.cn/weixin/',
         
-        basePageUrlpay:/127|test/.test(location.origin)?'https://test.e-shequ.com/weixin/pay/':
-        /uat/.test(location.origin)?'https://uat.e-shequ.com/hexie/weixin/pay/':
-        'https://www.e-shequ.com/weixin/pay/',
+        basePageUrlpay:/127|test/.test(location.origin)?'https://test.e-shequ.com/pay/':
+        /uat/.test(location.origin)?'https://uat.e-shequ.com/pay/':
+        'https://www.e-shequ.cn/weixin/',
 
         payPageFolder:/127|test/.test(location.origin)?'https://test.e-shequ.com/pay/':
         /uat/.test(location.origin)?'https://uat.e-shequ.com/pay/':
-        'https://www.e-shequ.com/pay/',
+        'https://www.e-shequ.cn/pay/',
 
         appId: /127|test/.test(location.origin)?'wx95f46f41ca5e570e':
         /uat/.test(location.origin)?'wx9ffe0a2b5a64a285':
         'wxbd214f5765f346c1',
-
-        bindAppId: /127|test/.test(location.origin)?'wx95f46f41ca5e570e':
-        /uat/.test(location.origin)?'wx9ffe0a2b5a64a285':
-        'wxa48ca61b68163483',
-
-		componentAppId:'wx4d706a1a7a139d1f',
+        
+        componentAppId: /127|test/.test(location.origin)?'wx4d706a1a7a139d1f':
+        /uat/.test(location.origin)?'wx4d706a1a7a139d1f':
+        'wx0d408844b35d85e2',
         
 		oauthUrl: "https://open.weixin.qq.com/connect/oauth2/authorize?",
         oauthUrlPostFix:"&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect",		
 		//https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE&state=STATE&component_appid=component_appid#wechat_redirect
 
-
 		oauthUrlPostSilent:"&response_type=code&scope=snsapi_base&state=123#wechat_redirect",
         baidu_map_key:"RUWUgrEEF5VjoaWsstMMZwOD",
-        shop_name: "合协",
-        payPageSuffix:"hx",
 
         is_debug:true
     },
@@ -59,7 +53,7 @@ var Config = function() {
             no_goods: "更多新品正在陆续推出..."
         },
         user_info: {
-            avatar: "https://www.e-shequ.com/weixin/static/images/logo.jpg",
+            avatar: "https://www.e-shequ.cn/weixin/static/images/logo.jpg",
             nickname: "游客",
             levelname: "普通会员"
         },
@@ -69,7 +63,7 @@ var Config = function() {
             2 : "大楼VIP"
         },
         coupon:{
-            seedImg:"https://www.e-shequ.com/weixin/static/img/banner/banner_market_shuiguo.jpg"
+            seedImg:"https://www.e-shequ.cn/weixin/static/img/banner/banner_market_shuiguo.jpg"
         }
     },
     e = {};
@@ -103,6 +97,9 @@ function dealWithAjaxData(o, e, i, r) {
 }
 //没授权在授权登录
 function reLogin() {
+	setTimeout(function(){
+		console.log("waiting 1s for relogin.")
+	},1000)
     setCookie("UID", "", 0),
     common.login(!0)
 }
@@ -129,7 +126,7 @@ function isWeChatBrowser() {
 function getUrlParam(name) {
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
     var r = window.location.search.substr(1).match(reg);  //匹配目标参数
-    if (r != null) return unescape(r[2]); return ''; //返回参数值
+    if (r != null) return unescape(r[2]); return ""; //返回参数值
 }
 
 //检查微信状态  检查用户可不可用
@@ -156,37 +153,6 @@ function checkCodeAndLogin(){
         return true;
     }
 }
- //子公众号  挂载父级 
- /*
-function toBindLink(){
-    var p = common.removeParamObject(["from","bind", "code", "share_id", "isappinstalled", "state", "m", "c", "a"]);
-    p = common.addParamObject(p,"bind","true");
-    var n = location.origin + location.pathname + common.buildUrlParamString(p)+common.addParamHsah(),
-    t = MasterConfig.C("oauthUrl");
-    end = MasterConfig.C("oauthUrlPostFix");
-    var url = t + "appid=" + MasterConfig.C("bindAppId") + "&redirect_uri=" + encodeURIComponent(n) +end+ "#wechat_redirect";
-    // console.log(url);
-    location.href = url;
-}
-*/
-// 检查绑定没绑定
-/*
-function checkBindAndBind(){
-    var getData = common._GET();
-    var b = getData.bind;
-    var o = getData.code;
-    if(b&&o) {
-        // common.alert("start api bind"),
-        common.invokeApi("POST", "bindWechat/"+MasterConfig.C("bindAppId")+"/" + o, null,
-            null,
-        function(x) {
-            // common.alert("api binded")
-            // console.log(location.origin);
-            location.href = location.origin +common.removeParamFromUrl(["bind","code"]);
-        })
-    }
-}
-*/
 
 //只更新地址
 function updateCurrentAddrId(addrId){
@@ -199,7 +165,6 @@ function isRegisted(){
     return tel&&tel!='null';
 }
  //没注册 跳转注册页
-
 function toRegisterAndBack(){
     var n = location.origin + common.removeParamFromUrl(["from", "bind", "code", "share_id", "isappinstalled", "state", "m", "c", "a"])+common.addParamHsah();
     let appurl='';
@@ -210,10 +175,16 @@ function toRegisterAndBack(){
     }
     location.href=MasterConfig.C('basePageUrl')+"person/index.html?"+appurl+"#/register?comeFrom="+encodeURIComponent(n);
 }
-
+function Getofficial() {
+    var appid=getCookie('appId');
+    if(appid=='undefined') {
+        common.newname='社区'
+    }
+}
 
 var AJAXFlag = !0;
 window.common = {
+    newname:"社区",
     isDebug: !1,
     getApi: function(e) {
         var o = parseInt(getCookie("BackendPort"));
@@ -233,7 +204,7 @@ window.common = {
                 dataType: "json",
                 beforeSend: t,
                 success: function(e) {
-                    common.alert("success data: " + JSON.stringify(e));
+                    // common.alert("success data: " + JSON.stringify(e));
                     dealWithAjaxData(o, e, i, r);
                 },
                 error: function(e) {
@@ -262,6 +233,27 @@ window.common = {
         };
         common.invokeApi(n, a, i, null, e, r);
     },
+    GetImages:function(type) {
+        let imgUrl=getCookie(type);
+        if(imgUrl == undefined ||imgUrl == ''){
+            let n = "GET",
+            a = "userInfo?oriApp="+getUrlParam('oriApp'),
+            i = null,
+            e = function(n) {
+                var duration = new Date().getTime()/1000 + 3600*24*30;
+                for(var j=0;j<n.result.bgImageList.length;j++){
+                    setCookie(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl,duration)
+                } 
+                location.reload();
+            },
+            r = function() { 
+            };
+            common.invokeApi(n, a, i, null, e, r);
+        }else {
+            imgUrl=getCookie(type)
+        }
+        return imgUrl;
+   },
      //授权
     login: function() {
 		var o = this._GET().code;
@@ -272,10 +264,11 @@ window.common = {
 			t = MasterConfig.C("oauthUrl"),
 		    end = MasterConfig.C("oauthUrlPostFix");
 			var url = t + "appid=" ;
-			if(oriApp){
+			var mainAppId = MasterConfig.C("appId") ;
+			if(oriApp && oriApp!=mainAppId){
 				url +=  oriApp + "&component_appid=" + MasterConfig.C("componentAppId"); 
 			}else{
-				url +=  MasterConfig.C("appId") 
+				url +=  mainAppId;
 			}
 			url+="&redirect_uri=" + encodeURIComponent(n) +end+ "#wechat_redirect";
 			console.log("url:"+url);
@@ -299,6 +292,7 @@ updateUserStatus(user) {
     setCookie("currentAddrId", user.currentAddrId, duration);
     setCookie("tel", user.tel, duration);
     setCookie("shareCode", user.shareCode, duration);
+	setCookie("appId", user.appId);
 },
      //入口程序 检查状态
     checkRegisterStatus:function(){
@@ -337,10 +331,6 @@ updateUserStatus(user) {
     alert: function(e) {
         "" === getCookie("DevDebug") ? console.log(e) : alert(e)
     },
-    //设置title
-    setTitle: function(e) {
-        $("title").text(e)
-    },
 
     addParamObject:function(e, name,value){
         e[name]=value;
@@ -375,7 +365,6 @@ updateUserStatus(user) {
         end = MasterConfig.C("oauthUrlPostFix");
         location.href = t + "appid=" + e + "&redirect_uri=" + encodeURIComponent(n) +end+ "#wechat_redirect";
     },
-    //分享链接
     initShareConfig(title,link,img,desc,wx){
         if(link.indexOf(MasterConfig.C("basePageUrl"))>=0
                 &&link.indexOf('shareCode')<0
@@ -387,7 +376,10 @@ updateUserStatus(user) {
             if(link.indexOf('?')<link.length-1){
                 link = link + "&";
             }
+
             link = link + "shareCode="+getCookie("shareCode");
+			var appId = getCookie("appId");
+			link += "&oriApp=" + appId;
         }
     
         wx.ready(function(){
@@ -406,8 +398,7 @@ updateUserStatus(user) {
     }
 
 };
-
-//checkBindAndBind();
+Getofficial()
 checkCodeAndLogin();
-common.setTitle(MasterConfig.C("shop_name") + "社区");
 export {common,MasterConfig,getUrlParam} 
+

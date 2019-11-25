@@ -1,8 +1,9 @@
 <template>
   <div class="home">
     <!--没有订单式时显示背景图 -->
-    <div class="avatar-wrap rel ov" v-if="groupsNum == 0">
-      <div class="filter-img avatar-wrap center-bg"></div>
+     <div class="rels" v-if="groupsNum == 0">
+      <!-- <img src="../assets/images/bg_orders.jpg"  class="center-bgs" alt=""> -->
+      <img :src="bgImage" alt="" class="center-bgs">
     </div>
     <!-- 隐藏需要在线支付，但是没有生成订单的   -->
     <div v-for="(item,index) in orders">
@@ -185,7 +186,8 @@ export default {
         //    }
       ],
       groupsNum: 1,
-      url: ""
+      url: "",
+      bgImage:this.common.GetImages('1'),//背景图
     };
   },
   created() {
@@ -323,6 +325,11 @@ export default {
 }
 .rel {
   position: relative;
+}
+.rels {
+  height:100%;
+  width:100%;
+  position: fixed;
 }
 .ov {
   overflow: hidden;

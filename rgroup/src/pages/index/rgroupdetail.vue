@@ -9,12 +9,12 @@
 		<div id="fade" class="black_overlay" v-show="load">
 		</div>
          <!-- load -->
-        <!-- <div class="rule_intro" @click="gotosgrouprulr">
+         <div   @click="gotosgrouprulr"  style="width:100%;">
+             <img alt="" src="../../assets/images/index/img_tuangou_zhifu.png" style="width: 100%;">
+         </div>
+        <div  class="rule_intro" @click="gotosgrouprulr" style="width:100%;">
                  <img alt="" src="../../assets/images/index/img_tuangou_zhifu.png" style="width: 100%;">
         </div> 
-        <div style="width:100%;">
-            <img alt="" src="../../assets/images/index/img_tuangou_zhifu.png" style="width: 100%;"/>
-        </div> -->
         <!-- 轮播图 -->
         <div>
             <swiper v-if="product.pictureList.length>0" :options="swiperOption" ref="mySwiper">
@@ -31,14 +31,14 @@
                 <div class="product-detail-name fs16">{{rule.name}}</div>
                 <div style="width: 100%;height:30px;">
                     <div class="highlight fs22 fl three_div">¥&nbsp;{{rule.price}}&nbsp;</div>
-                    <div class="ori-price2 fl three_div" style="margin-top:3%"><span>满<span class="highlight" >{{rule.groupMinNum}}</span>人开通</span></div>
-                    <!-- <div class="highlight fl fs14 three_div" style="padding-top:8px">{{rule.discount}}&nbsp;</div> -->
-                    <!-- <div class="ori-price2 three_div"  style="padding-top:8px">运费&nbsp;&nbsp;<span class="highlight">¥{{rule.postageFee}}</span></div> -->
+                    <!-- <div class="ori-price2 fl three_div" style="margin-top:3%"><span>满<span class="highlight" >{{rule.groupMinNum}}</span>人开通</span></div> -->
+                    <div class="highlight fl fs14 three_div" style="padding-top:8px">{{rule.discount}}&nbsp;</div>
+                    <div class="ori-price2 three_div"  style="padding-top:8px">运费&nbsp;&nbsp;<span class="highlight">¥{{rule.postageFee}}</span></div>
                 </div>
                 <div style="width: 100%;height:20px">
-                    <!-- <div class="ori-price2 fl three_div">市场价<del>¥&nbsp;{{product.oriPrice}}</del></div>
+                    <div class="ori-price2 fl three_div">市场价<del>¥&nbsp;{{product.oriPrice}}</del></div>
                     <div class="ori-price2 fl three_div">目标份数<span class="highlight" >{{rule.groupMinNum}}</span>份</div>
-                    <div class="ori-price2 three_div" ms-visible="rule.freeShippingNum<999"><span class="highlight">{{rule.freeShippingNum}}</span>件包邮</div> -->
+                    <div class="ori-price2 three_div" ms-visible="rule.freeShippingNum<999"><span class="highlight">{{rule.freeShippingNum}}</span>件包邮</div>
                 </div>
                 <div style="width:100%;height:1px">&nbsp;</div>
 	    </div>
@@ -81,18 +81,15 @@
         </div>
 
         <div class="btn-home-fixed" style="color: white; position: fixed;width: 100%;bottom: 0px;">
-            <!-- <span  class="fl" 
+            <span  class="fl" 
                 style="height:40px;line-height:40px;width:36%;background-color:#444;text-align:center;font-size:15px;" @click="goclassify()">
                 更多团购
             </span>
             <span  class="fl" 
                 style="height:40px;line-height:40px;width:64%;background-color:#ff8a00;text-align: center;font-size:15px;"  @click="buy" :class="{useless:rule.leftSeconds < 0}">
                 马上参团
-            </span> -->
-            <span  class="fl" 
-			    style="height:40px;line-height:40px;width:100%;background-color:#ff8a00;text-align: center;font-size:15px;"  @click="buy" :class="{useless:rule.leftSeconds < 0}">
-			    马上报名
-		    </span>
+            </span>
+          
     	</div>
 
    </div>
@@ -133,7 +130,6 @@ export default {
                 },
                 loop: true,
             },
-
        };
    },
    created(){
@@ -143,15 +139,14 @@ export default {
         // this.common.checkRegisterStatus()
          let url = location.href.split('#')[0];
         vm.receiveData.wxconfig(vm,wx,['onMenuShareTimeline','onMenuShareAppMessage'],url);
-        
-       vm.read();
-     vm.query()
+        vm.read();
    },
    updated(){
        vm.drawP()
    },
 
    methods: {
+      
         read() {
             if(vm.ruleId!=""){
                 vm.query()
@@ -179,8 +174,7 @@ export default {
                     if(vm.res.success) {
                         if(vm.res.result) {
                             vm.product = vm.res.result;   
-			                vm.common.initShareConfig('代扔垃圾服务报名，限时优惠中！',vm.basePageUrlpay+"rgroups.html?state=123#/rgroupdetail?ruleId="+vm.ruleId,vm.product.smallPicture,"小区报名满50人开通",wx);
-
+			                vm.common.initShareConfig(vm.rule.name,vm.basePageUrlpay+"hxrgroups.html?state=123#/rgroupdetail?ruleId="+vm.ruleId,vm.product.smallPicture,"快来参加"+vm.common.newname+"的优惠商品抢购吧",wx);
                         }
                     }else {
                         alert(vm.res.message==null ?"获取产品信息失败！":vm.res.message);
@@ -284,28 +278,18 @@ export default {
             vm.showDetail = !vm.showDetail;
         },
         // //团购规则
-        // gotosgrouprulr() {
-        //     vm.$router.push({path:'/sgrouprule'})
-        // },
+        gotosgrouprulr() {
+            vm.$router.push({path:'/sgrouprule'})
+        },
         //更多商品
         goclassify() {
-            // vm.$router.push({path:'/'})
-            location.href=vm.basePageUrlpay+"rgroups.html?type="+vm.rule.productType;
+            location.href=vm.basePageUrlpay+"hxrgroups.html?type="+vm.rule.productType;
         },
-        //马上参团
+         //马上参团
         buy() {
-            //  if(vm.rule.id) {
-            //      vm.$router.push({path:'/buy',query:{type:'4',ruleId:vm.rule.id}})
-            //  }
-             
-            let shareCode = getUrlParam("shareCode");
-        	if(vm.common.checkRegisterStatus()&&vm.rule.id){
-				let url =vm.basePageUrlpay+"rgroups.html?state=123#/buy?type=4&ruleId="+vm.rule.id;
-				if(shareCode){
-					url+= "&shareCode="+shareCode;
-				}
-        		location.href=url;
-        	}
+             if(vm.rule.id) {
+                 vm.$router.push({path:'/buy',query:{type:'4',ruleId:vm.rule.id}})
+             }   
         }
    },
     components: {
@@ -384,8 +368,8 @@ export default {
 	    top: 0;
 	    z-index: 10;
 		background:#f7f7f1;
-		width:100%;
-}      
+}    
+ 
 .ban1{width: 100%;}
 .ban1 img{width: 100%; }
 .product-info {
