@@ -24,13 +24,14 @@ var MasterConfig = function() {
         componentAppId: /127|test/.test(location.origin)?'wx4d706a1a7a139d1f':
         /uat/.test(location.origin)?'wx4d706a1a7a139d1f':
         'wx0d408844b35d85e2',
-        
-		oauthUrl: "https://open.weixin.qq.com/connect/oauth2/authorize?",
-        oauthUrlPostFix:"&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect",		
-		//https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE&state=STATE&component_appid=component_appid#wechat_redirect
 
-		oauthUrlPostSilent:"&response_type=code&scope=snsapi_base&state=123#wechat_redirect",
+	    	oauthUrl: "https://open.weixin.qq.com/connect/oauth2/authorize?",
+        oauthUrlPostFix:"&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect",		
+	  	//https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE&state=STATE&component_appid=component_appid#wechat_redirect
+
+	    	oauthUrlPostSilent:"&response_type=code&scope=snsapi_base&state=123#wechat_redirect",
         baidu_map_key:"RUWUgrEEF5VjoaWsstMMZwOD",
+
 
         is_debug:true
     },
@@ -54,6 +55,7 @@ var Config = function() {
         },
         user_info: {
             avatar: "https://www.e-shequ.cn/weixin/static/images/logo.jpg",
+
             nickname: "游客",
             levelname: "普通会员"
         },
@@ -64,6 +66,7 @@ var Config = function() {
         },
         coupon:{
             seedImg:"https://www.e-shequ.cn/weixin/static/img/banner/banner_market_shuiguo.jpg"
+
         }
     },
     e = {};
@@ -153,6 +156,7 @@ function checkCodeAndLogin(){
         return true;
     }
 }
+
 
 //只更新地址
 function updateCurrentAddrId(addrId){
@@ -396,3 +400,4 @@ updateUserStatus(user) {
 
 checkCodeAndLogin();
 export {common,MasterConfig,getUrlParam} 
+

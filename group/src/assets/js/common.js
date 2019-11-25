@@ -29,7 +29,7 @@ var MasterConfig = function() {
         oauthUrlPostFix:"&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect",		
 		//https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE&state=STATE&component_appid=component_appid#wechat_redirect
 
-		oauthUrlPostSilent:"&response_type=code&scope=snsapi_base&state=123#wechat_redirect",
+		  oauthUrlPostSilent:"&response_type=code&scope=snsapi_base&state=123#wechat_redirect",
         baidu_map_key:"RUWUgrEEF5VjoaWsstMMZwOD",
 
         is_debug:true
@@ -199,7 +199,7 @@ window.common = {
                 dataType: "json",
                 beforeSend: t,
                 success: function(e) {
-                    common.alert("success data: " + JSON.stringify(e));
+                    // common.alert("success data: " + JSON.stringify(e));
                     dealWithAjaxData(o, e, i, r);
                 },
                 error: function(e) {
@@ -396,3 +396,4 @@ updateUserStatus(user) {
 
 checkCodeAndLogin();
 export {common,MasterConfig,getUrlParam} 
+
