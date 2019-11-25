@@ -73,7 +73,7 @@ export default {
        };
    },
    mounted() {
-        this.common.checkRegisterStatus()
+        // this.common.checkRegisterStatus()
    },
 
    components: {},

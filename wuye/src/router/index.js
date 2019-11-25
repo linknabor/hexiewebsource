@@ -1,25 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-// import Index from '@/pages/index'//入口
-
-// 公共组件
-// import bill from '@/components/bill'
-// import suggest from '@/pages/suggest/suggest'                 //业主意见
-// import Paymentquery from '@/pages/paymentquery/paymentquery'  //已缴费查询
-// import Message from '@/pages/main/message'
-//绑定房子
-// import Myhouse from '@/pages/house/myhouse'
-// import AddHouse from '@/pages/house/add-house'
-// import BindHouse from '@/pages/house/bind-house'
-// import IdentHouse from '@/pages/house/identify-house'
-//支付
-// import Pay from '@/pages/pay/pay'
-// import payStop from '@/pages/pay/pay-stop'
-// import checkPay from '@/pages/pay/check-pay'
-
-
-
 const router= new VueRouter({
     routes: [
         {
@@ -31,11 +12,6 @@ const router= new VueRouter({
             path:'/message',
             name:'message',
             component:resolve=> require(['@/pages/main/message'],resolve)
-        },
-        {
-            path:'/suggest',
-            name:'suggest',
-            component:resolve=> require(['@/pages/suggest/suggest'],resolve)
         },
         {
             path:'/Myhouse',
@@ -180,7 +156,7 @@ Vue.use(VueRouter)
 
 //动态改变title
 function changeTitle(title) {
-    title = title ? title : '合协社区';
+    title = title ? title : Vue.prototype.common.newname;
     window.document.title = title;
 };
 

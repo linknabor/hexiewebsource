@@ -1,7 +1,9 @@
 <template>
- <!-- :class="{emptybg:orders.length==0}" -->
    <div class="oper" >
-       <div :class="{emptybg:orders.length==0}"></div>
+       <div class="emptybg" v-show="orders.length==0">
+           <!-- <img class="adimg" src="../../assets/images/img/bg_weixiudan.jpg" alt=""> -->
+           <img :src="bgImage" alt="" class="adimg">
+       </div>
         <div class="statusBar">
             <div class="statusTitle" :class="{current:status==1}" @click="changeStatus(1)">可接单</div>
             <div class="statusTitle" :class="{current:status==2}" @click="changeStatus(2)">已接单</div>
@@ -46,6 +48,7 @@ export default {
                 6:["其它维修",btn6],
                 7:["家电",btn7]
                     },
+            bgImage:this.common.GetImages('3'),//背景图          
        };
    },
    created() {
@@ -90,8 +93,6 @@ export default {
     height:100%;
     width:100%;
     position: fixed;
-    	background: url(../../assets/images/img/bg_weixiudan.jpg) no-repeat;
-        	background-size: 100%;
 }
 .oper {
     background: #fffff8;

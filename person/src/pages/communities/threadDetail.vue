@@ -244,7 +244,7 @@ export default {
            vm.receiveData.postData( vm, url,{threadId : vm.threadId},'data', function(){
                if(vm.data.success) {
                    alert('删除成功');
-                    vm.$router.push({path:'/mysteward'})
+                    vm.$router.push({path:'/myPublish'})
                }else {
                     alert(vm.data.message==null?"发布信息保存失败，请重试！":vm.data.message);
                 } 

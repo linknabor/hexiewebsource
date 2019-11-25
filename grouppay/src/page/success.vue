@@ -1,7 +1,14 @@
 <template>
    <div class="success">
         <div class="brand-tip highlight" style="font-size: 24px;">恭喜你！交易成功</div>
-	    <div class="highlight fs16 divider p15" style="text-align:center;" >点击右上角将链接分享给您的朋友和邻居吧！</div>
+	    <!-- <div class="highlight fs16 divider p15" style="text-align:center;" >点击右上角将链接分享给您的朋友和邻居吧！</div> -->
+        <div class="highlight fs16 divider p15" style="text-align:center; padding-top:0px;position: relative;" >
+            <div class="highpos">
+                <div>点击右上角将链接分享给您的邻居吧!</div>
+                <div style="color:red">推荐2位邻居下单享首单五折优惠;</div>
+                <div style="color:red">推荐4位邻居下单享首单免费优惠。</div>
+            </div>
+        </div>
         <div class="top-info lite-divider">
             <div class="item">
                 <label>订单编号</label><span class="value">{{order.orderNo}}</span>
@@ -66,7 +73,7 @@ export default {
        vm=this;
    },
    mounted() {
-        vm.common.checkRegisterStatus()
+        
        vm.query();
        vm.notifyPaySuccess();
         let url = location.href.split('#')[0];
@@ -82,13 +89,13 @@ export default {
                             if(action == 'confirm') {
                                 if(confirm("获取订单信息失败")){
                                     if(vm.type==4){
-                                        location.href=vm.basePageUrlpay+"rgroups.html";        		
+                                        location.href=vm.basePageUrlpay+"hxrgroups.html?state=1";        		
                                     }else if(vm.type==3){
-                                        location.href=vm.basePageUrl+'group/onsales.html?type=3';
+                                        location.href=vm.basePageUrl+'group/onsales.html';
                                     }else if(vm.type==5){
-                                        // location.href="../home/index.html?v=20160229";
+                                        location.href=vm.basePageUrl+"/home/index.html";
                                     }else{
-                                        location.href=vm.basePageUrl+'group/onsales.html?type=3';     		
+                                        location.href=vm.basePageUrl+'group/onsales.html';     		
                                     }
                         } 
                             }
@@ -104,13 +111,13 @@ export default {
                         MessageBox.confirm('获取订单信息失败').then(action => {
                             if(action == 'confirm') {
                                  if(vm.type==4){
-                                        location.href=vm.basePageUrlpay+"rgroups.html";        		
+                                        location.href=vm.basePageUrlpay+"hxrgroups.html?state=1";        		
                                     }else if(vm.type==3){
-                                        location.href=vm.basePageUrl+'group/onsales.html?type=3';
+                                        location.href=vm.basePageUrl+'group/onsales.html';
                                     }else if(vm.type==5){
-                                        // location.href="../home/index.html?v=20160229";
+                                        location.href=vm.basePageUrl+"/home/index.html";
                                     }else{
-                                        location.href=vm.basePageUrl+'group/onsales.html?type=3';     		
+                                        location.href=vm.basePageUrl+'group/onsales.html';     		
                                     } 
                                   
                             }
@@ -126,19 +133,19 @@ export default {
        initShareSetting(order) {
            var title = order.productName;
            var link;
-           link=vm.basePageUrl+"group/onsales.html?type=3";
+           link=vm.basePageUrl+"group/onsales.html";
             var desc="分享给小伙伴们一个超赞的限时特惠活动！";
             var img=order.productPic;
             if(order.orderType==4){
-			    link=vm.basePageUrlpay+"rgroups.html?state=123#/rgroupdetail?ruleId="+order.groupRuleId;
+			    link=vm.basePageUrlpay+"hxrgroups.html?state=123#/rgroupdetail?ruleId="+order.groupRuleId;
             }else if(order.orderType==0&&order.groupId!=0){
                 // link=MasterConfig.C('basePageUrl')+"group.html?groupId="+order.groupId;
             }
 
             if(order.seedStr!=null&&order.seedStr!=''){
-                title = "合协社区专享现金券";
+                title = vm.common.newname+"专享现金券";
                 desc="分享给小伙伴们一个超赞的购物现金券！";
-                img="../assets/images/coupon_share_icon.jpg"
+                // img="../assets/images/coupon_share_icon.jpg"
                 // link=baseurl+"coupon.html?o="+order.seedStr;
             }
             vm.common.initShareConfig(title,link,img,desc,wx);
@@ -152,13 +159,13 @@ export default {
        //更多商品
        goback() {
             if(vm.type==4){
-                location.href=vm.basePageUrlpay+"rgroups.html";        		
+                location.href=vm.basePageUrlpay+"hxrgroups.html?state=1";        		
             }else if(vm.type==3){
-                location.href=vm.basePageUrl+'group/onsales.html?type=3';
+                location.href=vm.basePageUrl+'group/onsales.html';
             }else if(vm.type==5){
-                // location.href="../home/index.html?v=20160229";
+                location.href=vm.basePageUrl+"/home/index.html";
             }else{
-                location.href=vm.basePageUrl+'group/onsales.html?type=3';     		
+                location.href=vm.basePageUrl+'group/onsales.html';     		
             } 
        }
    },
@@ -183,6 +190,12 @@ export default {
     background-size: 35px;
     text-align:center
 }
+.highpos {
+			text-align: left;
+			width: auto;
+			margin: 0px auto;
+			display: inline-block;
+		}
 .highlight {
     color: #ff8a00;
 }   

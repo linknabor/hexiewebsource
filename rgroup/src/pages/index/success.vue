@@ -88,13 +88,13 @@ export default {
                         MessageBox.confirm('获取订单信息失败').then(action => {
                                 if(action == 'confirm') {
                                     if(vm.type==4){
-                                        location.href=vm.basePageUrlpay+"rgroups.html";        		
+                                        location.href=vm.basePageUrlpay+"hxrgroups.html?state=123";        		
                                     }else if(vm.type==3){   
-                                        location.href=vm.basePageUrl+'/group/onsales.html?type=3';
+                                        location.href=vm.basePageUrl+'/group/onsales.html';
                                     }else if(vm.type==5){
-                                        // location.href="../home/index.html?v=20160229";
+                                        location.href=vm.basePageUrl+"/home/index.html";
                                     }else{
-                                        location.href=vm.basePageUrlpay+'rgroups.html';     		
+                                        location.href=vm.basePageUrlpay+'hxrgroups.html?state=123';     		
                                     } 
                                 }
                         }).catch(err => {
@@ -109,13 +109,13 @@ export default {
                         MessageBox.confirm('获取订单信息失败').then(action => {
                             if(action == 'confirm') {
                                  if(vm.type==4){
-                                        location.href=vm.basePageUrlpay+"rgroups.html";        		
+                                        location.href=vm.basePageUrlpay+"hxrgroups.html?state=123";        		
                                     }else if(vm.type==3){
-                                        location.href=vm.basePageUrl+'/group/onsales.html?type=3';
+                                        location.href=vm.basePageUrl+'/group/onsales.html';
                                     }else if(vm.type==5){
-                                        // location.href="../home/index.html?v=20160229";
+                                        location.href=vm.basePageUrl+"/home/index.html";
                                     }else{
-                                        location.href=vm.basePageUrlpay+'rgroups.html';     		
+                                        location.href=vm.basePageUrlpay+'hxrgroups.html?state=123';     		
                                     }     
                             }
                         }).catch(err => {
@@ -128,21 +128,21 @@ export default {
        },
         //分享
        initShareSetting(order) {
-            var title = "代扔垃圾服务报名，限时优惠中！";
+            var title = order.productName;;
            var link;
-           link=vm.basePageUrlpay+"rgroups.html?state=123#/rgroupdetail?ruleId="+order.groupRuleId;
-            var desc="小区报名满50人开通";
+           link=vm.basePageUrlpay+"hxrgroups.html?state=123#/rgroupdetail?ruleId="+order.groupRuleId;
+            var desc=order.productPic;
             var img=order.productPic;
             if(order.orderType==4){
-			    link=vm.basePageUrlpay+"rgroups.html?state=123#/rgroupdetail?ruleId="+order.groupRuleId;
+			    link=vm.basePageUrlpay+"hxrgroups.html?state=123#/rgroupdetail?ruleId="+order.groupRuleId;
             }else if(order.orderType==0&&order.groupId!=0){
                 // link=MasterConfig.C('basePageUrl')+"group.html?groupId="+order.groupId;
             }
 
             if(order.seedStr!=null&&order.seedStr!=''){
-                title = "合协社区专享现金券";
+                title = vm.common.newname+"专享现金券";
                 desc="分享给小伙伴们一个超赞的购物现金券！";
-                img="../assets/images/coupon_share_icon.jpg"
+                // img="../assets/images/coupon_share_icon.jpg"
                 // link=baseurl+"coupon.html?o="+order.seedStr;
             }
             vm.receiveData.initShareConfig(title,link,img,desc,wx);
@@ -158,17 +158,15 @@ export default {
        },
        //更多商品
        goback() {
-         if(action == 'confirm') {
              if(vm.type==4){
-                    location.href=vm.basePageUrlpay+"rgroups.html";        		
+                    location.href=vm.basePageUrlpay+"hxrgroups.html?state=123";        		
                 }else if(vm.type==3){
-                    location.href=vm.basePageUrl+'/group/onsales.html?type=3';
+                    location.href=vm.basePageUrl+'/group/onsales.html';
                 }else if(vm.type==5){
-                    // location.href="../home/index.html?v=20160229";
+                    location.href=vm.basePageUrl+"/home/index.html";
                 }else{
-                    location.href=vm.basePageUrlpay+'rgroups.html';     		
+                    location.href=vm.basePageUrlpay+'hxrgroups.html?state=123';     		
                 }     
-        }
        }
    },
    components: {},

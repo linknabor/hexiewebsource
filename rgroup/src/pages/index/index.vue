@@ -1,8 +1,8 @@
 <template>
    <div >
-       <div id ="div11" v-show="rgoupscontent=='list'" style="margin:0 auto;border:0px solid #000;width:300px;height:100px;line-height: 450px;text-align: center;">
+       <!-- <div id ="div11" v-show="rgoupscontent=='list'" style="margin:0 auto;border:0px solid #000;width:300px;height:100px;line-height: 450px;text-align: center;">
            <span style='font-size: 18px;'>您的小区尚未开通报名，敬请期待！</span>
-       </div>
+       </div> -->
        <div id="div12" v-show="rgoupscontent=='main'">
         <!-- load -->
 		<div class="load6" id="LoadingBar" v-show="load">
@@ -23,9 +23,9 @@
 		</div>
 	    <!-- load -->
         <div class="mb_6" id="indexDiv" >
-            <!-- <div class="banner">
+            <div class="banner">
                 <img alt="" src="http://img.e-shequ.com/Frjki5qYnDFQ3SxPoPKMJvWb36g8" style="width:100%">
-            </div> -->
+            </div>
             <!-- 商品 -->
             <div id="products" class="mlr1">
                 <div class="tuangou-item" v-for="(rgroup,index) in  rgroups" :key="index" style="padding-bottom:75px;width:100%" @click="Hrefs(rgroup.ruleId)" >
@@ -37,7 +37,7 @@
                             <div class="mt1 ml1" >
                                 <span class="highlight fs20">¥&nbsp;{{rgroup.price}}&nbsp;</span>
                                 <span class="ori-price"><del>¥&nbsp;{{rgroup.oriPrice}}&nbsp;</del></span>
-                                <span class="ml1 product-lefttime" >{{leftTimeStrs(index)}}</span>
+                                <span class=" product-lefttime" >{{leftTimeStrs(index)}}</span>
                             </div>
                         </div>
                          <div class="fr process-left-border" id="processImg">
@@ -56,6 +56,7 @@
 <script>
 let vm;
 import wx from 'weixin-js-sdk';
+import But from '../api/but.js'
 let hasNext=true,isloadPage=false;
 export default {
    data () {
@@ -72,7 +73,6 @@ export default {
        vm=this;
        },
    mounted() {
-        // vm.common.checkRegisterStatus()
 
          let url = location.href.split('#')[0];
         vm.receiveData.wxconfig(vm,wx,['onMenuShareTimeline','onMenuShareAppMessage'],url);
@@ -80,6 +80,7 @@ export default {
         vm.initShareSetting();
         
         // vm.initSession4Test();
+       vm.User();
        vm.query();
        vm.updateLeftTime();//计时器
         
@@ -97,18 +98,32 @@ export default {
    methods: {
         initShareSetting(){
             var title = "社区服务";
-            var link=vm.basePageUrlpay+"rgroups.html";
+            var link=vm.basePageUrlpay+"hxrgroups.html?state=123";
             var img=vm.basePageUrlpay+"rgroupspay/share_tuan.jpg";
-            var desc="【合协社区】为您提供更好的服务！";
+            var desc="【"+vm.common.newname+"】为您提供更好的服务！";
             vm.common.initShareConfig(title,link,img,desc,wx);
         },
         
         //模仿线上用户信息
             // 105/747/384
         initSession4Test(){
-                let url ='/initSession4Test/105';
+                let url ='/initSession4Test/1';
                     vm.receiveData.getData(vm,url,'Data',function(){
                 });
+        },
+         User() {
+        //获取页面数据
+        let n = "GET",
+            a = "userInfo?oriApp="+vm.getUrlParam('oriApp'),
+            i = null,
+            d = function() {},
+            e = function(n) {
+            But.$emit('sends',n.result.iconList)
+            },
+            r = function() {
+            };
+        this.common.invokeApi(n, a, i, d, e, r);
+
         },
        query() {
         let n = "GET",
@@ -119,9 +134,9 @@ export default {
                  vm.rgroups = n.result;
                  vm.load=false;
                  vm.page++;  
-                 if(vm.rgroups.length==0) {
-                     vm.rgoupscontent="list"
-                 }
+                //  if(vm.rgroups.length==0) {
+                //      vm.rgoupscontent="list"
+                //  }
             },
             r = function(){
                 vm.load=false;
@@ -440,7 +455,7 @@ export default {
 }
 .product-lefttime {
     color: #666666;
-    padding-left: 10px;
+    /* padding-left: 10px; */
 }
 
 .process-left-border {

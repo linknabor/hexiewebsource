@@ -209,6 +209,50 @@
 .qufapiao{color: red;margin-bottom: .2rem;}
 .box-bg {width: 100%;opacity: .5;height: 100%;position: fixed;
 	    background-color: #666;top: 0;left: 0;z-index: 100;display: none}
+/* 绑定房子 */
+.card {
+	margin-bottom: 15px;
+	border: 1px solid #d4cfc8;
+	border-radius: 3px;
+	color: #666;
+	margin-top: 20px;
+}
+.fs15{
+	font-size: 15px;
+}
+.item {
+	padding:20px 10px;
+	border-top: 1px solid #d4cfc8;
+}
+.fs13  {
+	font-size:13px;
+}
+.addse:after {
+	content: '\2713';
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	color: #758794;
+	width: 100%;
+	text-align: center;
+	font-size: 1.4em;
+	padding: 1px 0 0 0;
+	vertical-align: text-top;
+}
+.chendad{
+	background-color: #FFF;
+	border: 1px solid #C1CACA;
+	width:20px;
+	height: 20px;
+	border-radius: 5px;
+	display: inline-block;
+	position: relative;
+	margin-right: 2px;
+	top: 5px;
+}
+.chk_1 {
+	display: none;
+}		
 </style>
 <template>
 	<div>
@@ -223,8 +267,8 @@
 				</div>
 			</div>
 			
-			<!-- 费用列表 -->
-			<dl v-for="item in feeList" class="fee-list ">
+		<!-- 费用列表 -->
+			<dl v-for="item in feeList" class="fee-list" v-if="version=='02'">
 				<dt class="ov">
 					<p class="fee-name fl" >{{item.service_fee_name}}</p>
 					<p class="fee-price fr" >￥{{item.totalFee.toFixed(2)}}</p>
@@ -232,6 +276,16 @@
 				<dd class="ov" v-for="i in item.fee_detail">
 					<p class="detail-date fl">{{i.service_fee_cycle}}</p>
 					<p class="detail-price fr">{{i.fee_price}}</p>
+				</dd>
+			</dl>
+			<dl v-for="item in feeList" class="fee-list" v-if="version=='01'">
+				<dt class="ov">
+					<p class="fee-name fl" >{{item.fee_type_show_name}}</p>
+					<p class="fee-price fr" >￥{{item.fee_price}}</p>
+				</dt>
+				<dd class="ov">
+					<p class="detail-date fl">{{item.start_date | moment("YYYY年MM月DD日")}}-{{item.end_date | moment("YYYY年MM月DD日")}}</p>
+					<p class="detail-price fr">{{item.fee_price}}</p>
 				</dd>
 			</dl>
 			<!-- 优惠选项 -->
@@ -285,6 +339,21 @@
 				<h4 class="qufapiao" v-show="show_invoice_flag==1">申请的电子发票预计在3个工作日内通过短信发送至您手机上,请注意查收</h4>
 			</form>
 			<!-- 支付按钮 -->
+			<div class="card fs15 item" >
+				<div class="ov fs13 " >
+					<span  style="padding:9px 5px 5px 5px; float:left;">是否自动绑定为该房屋的业主：</span>
+					<div class="ov" style="padding:0px 5px 5px 0px;">
+						<label class="chendad " :class="{addse:bind_switch=='1'}" for="checkbox_a1"></label>
+						<span>是&nbsp;&nbsp;</span>
+						<input type="radio" id="checkbox_a1" name="flag" value="1" v-model="bind_switch" class="chk_1"  />
+
+						<label for="checkbox_a2" class="chendad" :class="{addse:bind_switch=='0'}" ></label>
+						<span>否</span>	
+						<input type="radio" id="checkbox_a2" name="flag" value="0"  v-model="bind_switch" class="chk_1"  />
+						</div>		
+				</div>	
+			</div>
+
 			<div style="height:1rem;"></div>
 			<div class="pay-btn" @click="wechatPay">立即微信支付</div>
 			<!-- <div class="pay-btn" @click="add">价格</div> -->
@@ -320,6 +389,7 @@
 <script>
 	let vm;
 	import wx from 'weixin-js-sdk';
+	import moment from "../filter/datafromat";
 	export default {
 		data(){
 			return {
@@ -327,7 +397,7 @@
 				yins:false,
 				invoice_title:'',//发票抬头
 				credit_code:'',//公司税号
-				invoice_title_type:'',//个人01或公司02 
+				invoice_title_type:'01',//个人01或公司02 
 				needInvoice:'1',//是否需要发票
 				uptonAmount:'未使用',
 				upronAmountNumber:0,////优惠券金额 数量
@@ -362,8 +432,13 @@
 				mianAmt:0.00,
 				show_invoice_flag:'0',
 				show_com_flag:'0',//是否允许开具公司发票
-				show_invoice:''//是否显示发票
+				show_invoice:'',//是否显示发票
+				version:'',
+				bind_switch:"1",
 			}
+		},
+		filters:{
+			moment
 		},
 		beforeCreate(){//刷新页面
 			
@@ -378,6 +453,14 @@
 			}
 			//得到实际支付金额 和是否减免 和减免了多少钱
 			vm.calcReduceAmt()
+			//无账单缴费
+			    this.house_id = this.$route.query.house_id;
+                this.sect_id = this.$route.query.sect_id;
+                this.start_date=this.$route.query.start_date;
+                this.end_date=this.$route.query.end_date;
+                this.regionname=this.$route.query.regionname;
+                this.getversion=this.$route.query.getversion;
+                vm.version=this.$route.query.getversion;
 		},
 
 		mounted(){
@@ -403,60 +486,95 @@
 					this.invoice_title_type =''
 					this.invoice_title='';
 					this.credit_code='';
+				}else {
+					this.invoice_title_type ='01'
 				}
+			},
+			bind_switch(na,nw) {
+				this.bind_switch=na;
+				
 			}
 		},
 		methods:{
 			//创造用户
 			initSession4Test(){
-				let url = '/initSession4Test/105';
+				let url = '/initSession4Test/1';
 					vm.receiveData.getData(vm,url,'Data',function(){
 				});
 			},
 			getBillDetail() {
-					//请求费用数据
-					let url = "getBillDetail?regionname=上海市";
-					vm.receiveData.getData(
-						vm,
-						url,
-						'data',
-						function(){
-							vm.show_com_flag=vm.data.result.show_com_flag;
-							vm.show_invoice_flag = vm.data.result.show_invoice_flag
-							vm.show_invoice=vm.data.result.show_invoice;
-							if(vm.show_invoice=='1') {
+					if(vm.version=='01'){
+		       let url="getPayListStd?regionname="+this.regionname+"&house_id="+ this.house_id +
+		      "&sect_id="+this.sect_id +"&start_date="+this.start_date +"&end_date="+this.end_date; 
+             
+
+             vm.receiveData.getData(
+                vm,url,'data',function(){
+						  
+				    vm.show_com_flag=vm.data.result.other_bill_info[0].show_com_flag;
+					vm.show_invoice_flag = vm.data.result.other_bill_info[0].show_invoice_flag;
+					vm.show_invoice=vm.data.result.other_bill_info[0].show_invoice;
+					if(vm.data.result.fee_data  == null){
+						
+						
+					}
+                    let useDate = vm.data.result.other_bill_info[0];
+                    vm.verNumber = useDate.ver_no;
+                 			//地址
+                    vm.addr = useDate.cell_addr;
+	
+              				//面积
+                    vm.area = useDate.cnst_area;
+               				//费用列表
+                    vm.feeList = vm.data.result.other_bill_info;
+
+                }
+             )
+            }else{
+			let url = "getBillDetail?regionname="+this.regionname;
+			vm.receiveData.getData(
+				vm,
+				url,
+				'data',
+				function(){
+					vm.show_com_flag=vm.data.result.show_com_flag;
+					vm.show_invoice_flag = vm.data.result.show_invoice_flag
+					vm.show_invoice=vm.data.result.show_invoice;
+					if(vm.show_invoice=='1') {
 								vm.invoice_title_type='01';
 							}
-							if(vm.data.result.fee_data  == null){
-								// var herf1 = "https://www.e-shequ.com/weixin/wuye/index.html";
-								// location.href = herf1;
-							}
-							let useDate = vm.data.result.fee_data[0];
-							let mianBill = vm.data.result.mianBill;
-							let mianAmt = vm.data.result.mianAmt;
-							if ( mianBill) {
-								vm.mianBill = vm.data.result.mianBill;
-							}
-							if ( mianAmt) {
-								vm.mianAmt = vm.data.result.mianAmt;
-							}
+					if(vm.data.result.fee_data  == null){
+						
+						// var herf1 = "https://www.e-shequ.com/weixin/wuye/index.html";
+						// location.href = herf1;
+					}
+	  				let useDate = vm.data.result.fee_data[0];
+	  				let mianBill = vm.data.result.mianBill;
+	  				let mianAmt = vm.data.result.mianAmt;
+	  				if ( mianBill) {
+						vm.mianBill = vm.data.result.mianBill;
+					}
+					if ( mianAmt) {
+						vm.mianAmt = vm.data.result.mianAmt;
+					}
 
-							//户号
-							vm.verNumber = useDate.ver_no;
-							//地址
-							vm.addr = useDate.cell_addr;
-							
-							//面积
-							vm.area = useDate.cnst_area;
-							//费用列表
-							vm.feeList = useDate.fee_name;
-						},
+	  				//户号
+	  				vm.verNumber = useDate.ver_no;
+	  				//地址
+	  				vm.addr = useDate.cell_addr;
+					
+	  				//面积
+	  				vm.area = useDate.cnst_area;
+	  				//费用列表
+	  				vm.feeList = useDate.fee_name;
+	  			},
 
-						{
-							billId :vm.routeParams.billIds,
-							stmtId :vm.routeParams.stmtId
-						}
-					)	
+	  			{
+	  				billId :vm.routeParams.billIds,
+	  				stmtId :vm.routeParams.stmtId
+	  			}
+			  );
+}
 			},
 	  		//优惠券
 			Coupons(){
@@ -603,7 +721,13 @@
 						}
 				};
 				$('.box-bg').css("display",'block');
-				let url = "getPrePayInfo?regionname=上海市&billId="+vm.routeParams.billIds+"&stmtId="+vm.routeParams.stmtId+"&couponUnit="+vm.upronAmountNumber+"&couponNum=1&couponId="+vm.couponId+"&mianBill="+vm.mianBill+"&mianAmt="+vm.mianAmt+"&reduceAmt="+vm.reduceAmt+"&invoice_title_type="+this.invoice_title_type+"&credit_code="+this.credit_code+"&invoice_title="+this.invoice_title;
+				let url;
+				if(vm.version=='01'){
+				 url = "getOtherPrePayInfo?houseId="+this.house_id+"&regionname="+this.regionname+"&start_date="+ this.start_date+"&end_date="+this.end_date+"&couponUnit="+vm.upronAmountNumber+"&couponNum=1&couponId="+vm.couponId+"&mianBill="+vm.mianBill+"&mianAmt="+vm.mianAmt+"&reduceAmt="+vm.reduceAmt+"&invoice_title_type="+this.invoice_title_type+"&credit_code="+this.credit_code+"&invoice_title="+this.invoice_title;
+				}else{
+
+			    url = "getPrePayInfo?billId="+vm.routeParams.billIds+"&stmtId="+vm.routeParams.stmtId+"&regionname="+this.regionname+"&couponUnit="+vm.upronAmountNumber+"&couponNum=1&couponId="+vm.couponId+"&mianBill="+vm.mianBill+"&mianAmt="+vm.mianAmt+"&reduceAmt="+vm.reduceAmt+"&invoice_title_type="+this.invoice_title_type+"&credit_code="+this.credit_code+"&invoice_title="+this.invoice_title;
+				}
 				this.axios.post(
 					url,
 					{},
@@ -635,13 +759,11 @@
 							
 			          	    success: function (res) {
 			          	    	// alert("起步走起");
-								let reqUrl = "noticePayed?billId="+vm.routeParams.billIds+"&stmtId="+vm.routeParams.stmtId+"&tradeWaterId="+wd.result.trade_water_id+"&packageId="+wd.result.packageId+"&feePrice="+vm.routeParams.totalPrice;
+								let reqUrl = "noticePayed?billId="+vm.routeParams.billIds+"&stmtId="+vm.routeParams.stmtId+"&tradeWaterId="+wd.result.trade_water_id+"&packageId="+wd.result.packageId+"&feePrice="+vm.routeParams.totalPrice+"&bind_switch="+vm.bind_switch;
 								if(vm.uptonAmount != "未使用"){
 									// alert("走到这一步")
 									reqUrl += "&couponId="+vm.couponId;
 								}
-								
-								vm.Bindaddress();
 
 								vm.receiveData.postData(vm,reqUrl,{},'reqUrlData',function(){
 									vm.payInfo = vm.reqUrlData.result;
@@ -668,16 +790,7 @@
 					}
 				)
 			},
-
-			//成功绑定地址
-			 Bindaddress(){
-				 let url="/setDefaultAdressByBill?billId="+vm.routeParams.billIds
-				 vm.receiveData.postData(vm,url,{},'res',function(){
-					 
-				 
-				 })	
-				 
-			 }	
+	
 
 
 		}

@@ -10,12 +10,9 @@
         style="width:40px;height:40px;vertical-align: middle;"
       />
     </div>
-
     <mt-navbar id="navBar" v-model="selected">
       <mt-tab-item id="a">账单缴费</mt-tab-item>
-      <!--  -->
       <mt-tab-item id="b">物业缴费</mt-tab-item>
-      <!-- <mt-tab-item id="c">停车缴费</mt-tab-item> -->
       <mt-tab-item id="d">查询缴费</mt-tab-item>
     </mt-navbar>
     <mt-tab-container v-model="selected">
@@ -39,7 +36,7 @@
         <div class="btn-fixed">
           <!-- <img src="../../assets/images/house/paymoney.png" /> -->
           <div class="fl select-btn" v-show="quan1" :class="{allSelected:quickAllselect}"  @click="allSelect(quickBillInfo,'quickAllselect')">全选&nbsp;</div>
-          <div class="pay" @click="pay('quickBillInfo','quickAllPrice','quickAllselect')">
+          <div class="pay" @click="pays('quickBillInfo','quickAllPrice','quickAllselect')">
             我要缴费
             <span>￥{{quickAllPrice}}</span>
           </div>
@@ -61,15 +58,13 @@
             :class="{allSelected:bAllSelect }"
             @click="allSelect(billInfo,'bAllSelect')"
           >全选&nbsp;</div>
-          <div class="pay" @click="pay('billInfo','allPrice','bAllSelect')">
+          <div class="pay" @click="pays('billInfo','allPrice','bAllSelect')">
             我要缴费
             <span>￥{{allPrice}}</span>
           </div>
         </div>
         <!-- 物业缴费结束 -->
       </mt-tab-container-item>
-     
-           
       <!-- 查询缴费开始 -->
       <mt-tab-container-item id="d">
         <div class="query-data">
@@ -120,18 +115,18 @@
             <div class="virtual-input classinput1" type="date">{{startData | moment("YYYY/MM/DD")}}</div>
           
           </div>
-          <div class="input-row" v-if="standard2">
+          <div class="input-row" v-if="standard2" v-show="andios=='Android'">
             <label>结束日期：</label>
-            <input class="virtual-input classinput1" type="date" value="" v-model="endData" @change="specifiName()">
-              
+            <input class="virtual-input classinput1" type="date" value="" v-model="endData" @change="Changename()">
           </div>
-          <!-- <div class="input-row" v-if="standard4">
+
+          <div class="input-row" v-if="standard2" v-show="andios=='ios'">
             <label>结束日期：</label>
-            <div class="virtual-input classinput1 aa" type="date">{{endData | moment("YYYY/MM/DD")}}</div>
-              
-          </div> -->
-        </div>
-        <div id="word">
+            <input class="virtual-input classinput1" type="date" value="" v-model="endData" @blur="Blurname()"> 
+          </div>
+          
+          </div>
+          <div id="word">
           
           <Bill
             :bill-info="queryBillInfo"
@@ -139,26 +134,19 @@
             :other-billinfo="otherbillinfo"
             @itemClick="itemClick"
           ></Bill>
-          <!-- <div  v-show="isshow"
-      style=" background: rgba(0,0,0,0.5);display: none;width: 100%;height: 38.5%;top: 6.8rem; position: absolute;"></div> -->
-
         </div>
-        <!-- <div style="width:100%;height:0.92rem;background:#eee;"></div> -->
         <div style="wdith:100%;height:2.2rem;background:#eee;"></div>
         <div class="btn-fixed" id="st" v-show="showt">
-          <!-- <img src="../../assets/images/house/paymoney.png" /> -->
           <div
             v-show="quan"
             class="fl select-btn"
             :class="{allSelected:queryAllselect }"
             @click="allSelect(queryBillInfo,'queryAllselect')"
           >全选&nbsp;</div>
-
           <div
             class="pay"
             @click="pay('queryBillInfo','queryAllPrice','queryAllselect','otherbillinfo','queryAllPrice1')"
           >
-          
             <span style="position: absolute;left: 30%;">我要缴费</span>
             <span v-if="zhuanpay=='zhuanye'" style="right: -11%;position: relative;">￥{{queryAllPrice}}</span>
             <span v-if="zhuanpay=='biaozhun'"  style="right: -11%;position: relative;">￥{{queryAllPrice1}}</span>
@@ -167,7 +155,6 @@
       </mt-tab-container-item>
     </mt-tab-container>
     <Foot></Foot>
-    
   </div>
     <div  v-show="isshow"
       style=" background: rgba(0,0,0,0.5);display: none;width: 100%;height: 100%;top: 0rem; position: absolute;"></div>
@@ -249,7 +236,6 @@ export default {
       standard3: false,
       // standard4: false,
       startData: "",
-      addr: "",
       verNumber: "",
       endData: "",
       sectList: [], //小区列表
@@ -275,12 +261,7 @@ export default {
         currentPage: 1, //页码
         totalCount: 0 //第几条开始
       },
-      // bisLastPage: false, //物业缴费是否为最后一页
-      // carisLastPage: false, //停车缴费是否最后一页
-      // quickisLastPage: false, //快捷缴费是否为最后一页
-      // queryisLastPage: false, //查询缴费是否为最后一页
       bAllSelect: false, //物业缴费全选
-      // carAllselect: false, //停车缴费全选
       quickAllselect: false, //快速缴费全选
       queryAllselect: false, //查询缴费全选
       billInfo: [], //物业缴费数据
@@ -305,7 +286,8 @@ export default {
       quan2: false,
       one: "one",
       permit_skip_pay: "1",
-       is_null:''
+      is_null:'',
+      andios:''
     };
   },
   //时间戳转换成日期
@@ -330,7 +312,7 @@ export default {
     // this.initSession4Test();
     let url = location.href.split("#")[0];
     vm.receiveData.wxconfig(vm, wx, ["scanQRCode","getLocation"], url);
-   
+    vm.Compatibility();
     // 判断是否是专业版
   },
   methods: {
@@ -350,20 +332,40 @@ export default {
                 if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
             return fmt;
     },
+    
+    Compatibility(){
+      const u = navigator.userAgent, app = navigator.appVersion;
+      // Android 判断
+      const isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1;
+      // iOS 判断
+      const isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); 
+      if (isAndroid) {
+        vm.andios='Android';
+      }
+      if (isIOS) {
+        vm.andios='ios';
+      }
+    },
+    Changename(){
+      vm.specifiName();
+    },
+    Blurname(){
+      window.scrollTo(0,0);
+      vm.specifiName();
+    },
     specifiName(){
       if(vm.is_null=="0"){
           endData=vm.formatDate(vm.endData,'yyyyMMdd');
           startData=vm.startData;
           // startData = vm.formatDate(startData,'yyyyMMdd');
           vm.wuzhangdan(startData,endData);
-          vm. isshow=true;
-          }else{
-            
-            startData = vm.formatDate(vm.startData,'yyyyMMdd');
-            endData=vm.formatDate(vm.endData,'yyyyMMdd');
-            vm.wuzhangdan(startData,endData);
-            vm. isshow=true;
-          }
+          vm.isshow=true;
+        }else{
+          startData = vm.formatDate(vm.startData,'yyyyMMdd');
+          endData=vm.formatDate(vm.endData,'yyyyMMdd');
+          vm.wuzhangdan(startData,endData);
+          vm.isshow=true;
+        }
           
         
     },
@@ -594,8 +596,8 @@ getRegionurl(longitude, latitude) {
     getCoupons() {
       //获取用户数据
       //重置
-      vm.startData= '';
-      vm.endData= '';
+      // vm.startData= '';
+      // vm.endData= '';
      
       vm.queryBillInfo = []; //清空查询账单列表
        vm.otherbillinfo = []; 
@@ -622,18 +624,28 @@ getRegionurl(longitude, latitude) {
         "res",
         function() {
           if (vm.res.success) {
-           
             vm.is_null=vm.res.result.is_null;
             if(vm.is_null=='0'){
-              vm.startData=vm.res.result.start_date;
-              vm.standard3 =true;
-              vm.standard2=true;
+                  vm.startData=vm.res.result.start_date;
+                  vm.endData=vm.res.result.end_date;
+                  vm.endData=vm.endData.replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3");
+                  startData=vm.startData;
+                  endData=vm.formatDate(vm.endData,'yyyyMMdd');
+                  vm.wuzhangdan(startData,endData);
+                  vm.isshow=true;
+                  vm.standard3 =true;
+                  vm.standard2=true;
               }else{
-
-              vm.standard1=true;
-              vm.standard2=true;
-              
-             
+                  vm.standard1=true;
+                  vm.standard2=true;
+                  vm.startData=vm.res.result.start_date;
+                  vm.endData=vm.res.result.end_date;
+                  vm.startData=vm.startData.replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3");
+                  vm.endData=vm.endData.replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3");
+                  endData=vm.formatDate(vm.endData,'yyyyMMdd');
+                  startData=vm.formatDate(vm.startData,'yyyyMMdd');
+                  vm.wuzhangdan(startData,endData);
+                  vm.isshow=true;
             }
            
           }
@@ -664,7 +676,6 @@ getRegionurl(longitude, latitude) {
              vm.isshow=false;
           }
          
-          console.log(addr);
         }
       );
     },
@@ -702,7 +713,6 @@ getRegionurl(longitude, latitude) {
               if (vm.unitList.length == 1) {
                 vm.getCellMng(
                   vm.query.sectID,
-
                   vm.query.build,
                   vm.query.unit,
                   "01"
@@ -746,8 +756,6 @@ getRegionurl(longitude, latitude) {
                 vm.queryBillInfo.result.bill_info.length > 0
               ) {
                 vm.queryBillInfo = vm.queryBillInfo.result.bill_info;
-
-                // vm.showp = false;
               } else {
                 alert("没有搜索到账单");
                 vm.queryBillInfo = [];
@@ -786,7 +794,6 @@ getRegionurl(longitude, latitude) {
           vm.reduceMode = vm.quickData.result.reduce_mode;
           vm.pay_least_month = vm.quickData.result.pay_least_month;
           vm.quickBillpage+=1
-           
         } else {
           alert("未查询到数据");
         }
@@ -814,7 +821,6 @@ getRegionurl(longitude, latitude) {
       //查询缴费上拉加载数据
       let tempArr = null;
       //页码加1
-      // vm.queryBillPage += 1;
       vm.params.currentPage = vm.queryBillPage;
       let url = "billList?regionname=" + this.$route.query.City;
       vm.receiveData.getData(
@@ -829,14 +835,11 @@ getRegionurl(longitude, latitude) {
             vm.queryBillPage+=1;
             isloadPage=false;
           } else {
-            // vm.queryisLastPage = true;
             vm.quan = true;
           }
-
         },
         vm.params
       );
-      // vm.$refs.loadmore.onBottomLoaded();
     },
 
     quickloadBottom() {
@@ -844,7 +847,6 @@ getRegionurl(longitude, latitude) {
       //临时接收的数组
       let tempArr = null;
       //页码加1
-      // vm.quickBillpage += 1;
       let url =
         "quickPayBillList/" +
         vm.stmtId +
@@ -860,21 +862,16 @@ getRegionurl(longitude, latitude) {
           vm.quickAllselect = false;
           vm.quickBillpage += 1;
           isloadPage=false;
-          
         } else {
           vm.quan1 = true;
-          
         }
-        
       });
-      // vm.$refs.loadmore1.onBottomLoaded();
     },
     loadBottom() {
       //物业缴费 上拉加载数据
       //临时接收的数组
       let tempArr = null;
       //页码自增
-      // vm.billPage += 1;
       vm.params.currentPage = vm.billPage;
       //请求接口数据
       vm.receiveData.getData(
@@ -893,27 +890,11 @@ getRegionurl(longitude, latitude) {
             // vm.bisLastPage = true;
             vm.quan2 = true;
           }
-          
         },
         vm.params
       );
-      // vm.$refs.loadmore2.onBottomLoaded();
     },
-  
-    //点击物业缴费按钮
-    pay(list, allPrice, allselect, otherbillinfo, queryallPrice1) {
- 
-
-      //第一个参数 账单数组，第二个参数 总价 第三个参数 是否全选,所有参数 string
-      if (vm.getversion == "01") {
-        if (vm[queryallPrice1] < 0.01) {
-          alert("请选择帐单后支付");
-          return;
-        }
-        var oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
-        window.location.href =vm.basePageUrl +"wuyepay.html?"+oriapp+"#/?regionname=" +this.$route.query.City +"&totalPrice="+vm[queryallPrice1] +"&house_id=" +
-          vm.query.house +"&sect_id=" +vm.query.sectID + "&start_date=" +startData + "&end_date=" + endData +"&getversion=" + '01';
-      } else {
+     pays(list, allPrice, allselect){ // 专业版
         if (vm[allPrice] < 0.01) {
           alert("请选择账单后支付");
           return;
@@ -962,15 +943,24 @@ getRegionurl(longitude, latitude) {
             return false;
           }
         }
-
-        //----------过佳家
-        // vm.str = 'https://test.e-shequ.com/weixin/';
-        // let url = vm.str + "paymentdetail.html?#/?billIds="+bills+"&stmtId="+vm.stmtId+"&payAddr="+escape(pay_addr)+"&totalPrice="+vm[allPrice]+"&reduceMode="+vm.reduceMode;
-        // window.location.href = url;
-   var oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
+        var oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
         window.location.href =vm.basePageUrl +"wuyepay.html?"+oriapp+"#/?billIds=" +bills + "&stmtId=" + vm.stmtId + "&payAddr=" + escape(pay_addr) +
-          "&totalPrice=" +vm[allPrice] + "&reduceMode=" + vm.reduceMode + "&regionname=" +vm.regionname +"&getversion=" + "02";
-      }
+        "&totalPrice=" +vm[allPrice] + "&reduceMode=" + vm.reduceMode + "&regionname=" +vm.regionname +"&getversion=" + "02";
+    },
+    //点击物业缴费按钮
+    pay(list, allPrice, allselect, otherbillinfo, queryallPrice1) {
+      //第一个参数 账单数组，第二个参数 总价 第三个参数 是否全选,所有参数 string
+      if (vm.getversion == "01") { //标准版
+        if (vm[queryallPrice1] < 0.01) {
+          alert("请选择帐单后支付");
+          return;
+        }
+        var oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
+        window.location.href =vm.basePageUrl +"wuyepay.html?"+oriapp+"#/?regionname=" +this.$route.query.City +"&totalPrice="+vm[queryallPrice1] +"&house_id=" +
+          vm.query.house +"&sect_id=" +vm.query.sectID + "&start_date=" +startData + "&end_date=" + endData +"&getversion=" + '01';
+      } else { // 专业版
+         vm.pays(list, allPrice, allselect)
+      }   
     },
 
     //调用微信扫一扫接口, 成功 数据返回到stmtId,显示在input上
@@ -1096,7 +1086,8 @@ a {
 .query-data {
   /* height: 100%; */
   padding: 0.25rem 0.4rem;
-  margin-bottom: 0.2rem;
+  /* margin-bottom: 0.2rem; */
+  overflow: hidden; 
 }
 .virtual-input {
   width: 4rem;
@@ -1117,6 +1108,7 @@ a {
   font: 0.26rem/0.5rem "";
   color: #2e2e2e;
   height: 0.6rem;
+  line-height: 0.6rem;
   position: relative;
   font-size: 0.28rem;
   float: left;
@@ -1185,8 +1177,7 @@ a {
   color: #fff;
   left: 0;
   right: 0;
-  /* bottom: 1.5rem; */
-  bottom: 1.55rem;
+  bottom: 1.25rem;
   height: 0.92rem;
   line-height: 0.92rem;
   text-align: center;

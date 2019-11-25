@@ -123,10 +123,10 @@
     </div>
 
     <div class="info-wrap" style="border-bottom: none;">
-      <!-- /abort -->
-      <router-link :to="{path:'/abort'}" href="#" class="input-wrap menu-person-link lite-divider">
+      
+      <!-- <router-link :to="{path:'/abort'}" href="#" class="input-wrap menu-person-link lite-divider">
         <span class="input-info lf30 fs16">关注我们</span>
-      </router-link>
+      </router-link> -->
 
       <a
         :href="'tel:'+user.officeTel"
@@ -150,7 +150,7 @@
       <div
         class="divider highlight"
         style="text-align: center;width:100%;font-size:16px"
-      >长按关注合协社区，尊享更多服务和商品</div>
+      >长按关注公众号，尊享更多服务和商品</div>
       <img style="width: 200px;" :src="qrCode" />
     </div>
   </div>
@@ -160,6 +160,7 @@
 let vm;
 import img from "../../assets/images/common/logo.jpg";
 import Bus from '../../api/bus.js'
+import cookie from 'js-cookie';
 export default {
   data() {
     return {
@@ -216,7 +217,7 @@ export default {
     //模仿线上用户信息
     // 105/747/384
     initSession4Test() {
-      let url = "/initSession4Test/384";
+      let url = "/initSession4Test/79187";
       vm.receiveData.getData(vm, url, "Data", function() {});
     },
     User() {
@@ -232,9 +233,16 @@ export default {
           vm.user = n.result;
           vm.user.headimgurl = "" != n.result.name || n.result? n.result.headimgurl: vm.user_info.avatar;  
           vm.user.name ="" != n.result.name ? n.result.name : vm.user_info.nickname;
-            
+           
           vm.qrCode=n.result.qrCode;
           Bus.$emit('sends',n.result.iconList)
+          
+          //保存图片
+          var duration = new Date().getTime()/1000 + 3600*24*30;
+          for(var j=0;j<n.result.bgImageList.length;j++){
+              cookie.set(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl,duration)
+          }
+          
         },
         r = function() {
           vm.user = {};

@@ -46,11 +46,11 @@ module.exports = {
 
   build: {
     // Template for index.html
-    index: path.resolve(__dirname, '../dist/rgroups.html'),
+    index: path.resolve(__dirname, '../dist/hxrgroups.html'),
 
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
-    assetsSubDirectory: 'rgroupspay',
+    assetsSubDirectory: 'hxrgroupspay',
     assetsPublicPath: './',
 
     /**

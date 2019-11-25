@@ -251,7 +251,6 @@ overflow: hidden; background-color: white;}
 
 <script>
 let vm;
-let isloadPage=false;
 import {swiper,swiperSlide} from 'vue-awesome-swiper';
 import BScroll from 'better-scroll';
 import Bus from '../../api/bus.js'
@@ -263,6 +262,7 @@ export default {
     },
     data () {
         return {
+            isloadPage:false,
             zixuns1:[],
             page : 0,
             cfgParam:{},
@@ -304,11 +304,9 @@ export default {
  
     },
     mounted(){
-
         // this.initSession4Test();
-        Bus.$on("sends",this.getMsgFromZha)
-        vm.query()
-
+        Bus.$on("sends",this.getMsgFromZha);
+        
     },
     updated() {
         vm.$nextTick(()=> {
@@ -317,20 +315,22 @@ export default {
             // },2000)
         })
     },
-
+    beforeDestroy() {
+            Bus.$off();
+　　},
     methods: {
         //模仿线上用户信息/105/747/384/
         initSession4Test(){
-            let url = '/initSession4Test/79187';
+            let url = '/initSession4Test/1';
                 vm.receiveData.getData(vm,url,'Data',function(){
             });
         },
          getMsgFromZha(result) {
-         if(result!=null) {
+           if(result!=null) {
              vm.cfgParam=result.cfgParam;
              vm.sectId=result.sectId;
-            }
-         vm.query();   
+           }
+           vm.query();   
          },
         query() {
                 if(vm.cfgParam.ONLINE_MESSAGE==1) {
@@ -356,10 +356,10 @@ export default {
                                 active:false,
                                 ali:true
                             },
-                            
                         ]
                 }
-                vm.message(vm.tabs[0].type) 
+            vm.message(vm.tabs[0].type) 
+
         },
         message(type){
             vm.page=0;
@@ -385,7 +385,8 @@ export default {
             for(var i=0; i<vm.tabs.length;i++) {
                 vm.tabs[i].active = false;
             }
-             vm.tabs[index].active = true;
+            vm.tabs[index].active = true;
+            vm.isloadPage=false;//重置分页
             vm.message(type) 
         },
         jumpToDetail(mid) {
@@ -483,8 +484,8 @@ export default {
         var st = e.srcElement.scrollTop;
         var ad=window.innerHeight
         var hd=$('#word').height();
-        if( st+ad >=hd && !isloadPage) {
-            isloadPage=true;
+        if( st+ad >=hd && !vm.isloadPage) {
+            vm.isloadPage=true;
             vm.loadNextPage();
         }
        },
@@ -493,7 +494,7 @@ export default {
                  if(vm.Data.success) {
                      if(vm.Data.result.length>0) {
                         vm.zixuns1=vm.zixuns1.concat(vm.Data.result);
-                        isloadPage=false;
+                        vm.isloadPage=false;
                         vm.page++
                      }
                  }
