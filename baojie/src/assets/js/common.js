@@ -20,18 +20,17 @@ var MasterConfig = function() {
         appId: /127|test/.test(location.origin)?'wx95f46f41ca5e570e':
         /uat/.test(location.origin)?'wx9ffe0a2b5a64a285':
         'wxbd214f5765f346c1',
-        
+      
         componentAppId: /127|test/.test(location.origin)?'wx4d706a1a7a139d1f':
         /uat/.test(location.origin)?'wx4d706a1a7a139d1f':
         'wx0d408844b35d85e2',
         
-		oauthUrl: "https://open.weixin.qq.com/connect/oauth2/authorize?",
+	    	oauthUrl: "https://open.weixin.qq.com/connect/oauth2/authorize?",
         oauthUrlPostFix:"&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect",		
-		//https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE&state=STATE&component_appid=component_appid#wechat_redirect
+	  	//https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE&state=STATE&component_appid=component_appid#wechat_redirect
 
-		oauthUrlPostSilent:"&response_type=code&scope=snsapi_base&state=123#wechat_redirect",
+	    	oauthUrlPostSilent:"&response_type=code&scope=snsapi_base&state=123#wechat_redirect",
         baidu_map_key:"RUWUgrEEF5VjoaWsstMMZwOD",
- 
         is_debug:true
     },
 

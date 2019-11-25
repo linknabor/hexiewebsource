@@ -64,6 +64,7 @@ var Config = function() {
         },
         coupon:{
             seedImg:"https://www.e-shequ.cn/weixin/static/img/banner/banner_market_shuiguo.jpg"
+
         }
     },
     e = {};

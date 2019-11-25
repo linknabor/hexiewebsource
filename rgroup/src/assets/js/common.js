@@ -25,11 +25,11 @@ var MasterConfig = function() {
         /uat/.test(location.origin)?'wx4d706a1a7a139d1f':
         'wx0d408844b35d85e2',
         
-		oauthUrl: "https://open.weixin.qq.com/connect/oauth2/authorize?",
+	    	oauthUrl: "https://open.weixin.qq.com/connect/oauth2/authorize?",
         oauthUrlPostFix:"&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect",		
-		//https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE&state=STATE&component_appid=component_appid#wechat_redirect
+		  //https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE&state=STATE&component_appid=component_appid#wechat_redirect
 
-		oauthUrlPostSilent:"&response_type=code&scope=snsapi_base&state=123#wechat_redirect",
+	  	oauthUrlPostSilent:"&response_type=code&scope=snsapi_base&state=123#wechat_redirect",
         baidu_map_key:"RUWUgrEEF5VjoaWsstMMZwOD",
 
         is_debug:true
@@ -153,6 +153,7 @@ function checkCodeAndLogin(){
         return true;
     }
 }
+
 
 //只更新地址
 function updateCurrentAddrId(addrId){

@@ -396,3 +396,4 @@ updateUserStatus(user) {
 
 checkCodeAndLogin();
 export {common,MasterConfig,getUrlParam} 
+
