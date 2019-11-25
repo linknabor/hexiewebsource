@@ -3,39 +3,34 @@ var MasterConfig = function() {
     var t = {
         baseUrl: /127|test/.test(location.origin)?'https://test.e-shequ.com/wechat/hexie/wechat/':
         /uat/.test(location.origin)?'https://uat.e-shequ.com/wechat/hexie/wechat/':
-        'https://www.e-shequ.com/wechat/hexie/wechat/',
+        'https://www.e-shequ.cn/wechat/hexie/wechat/',
         
         basePageUrl:/127|test/.test(location.origin)?'https://test.e-shequ.com/weixin/':
         /uat/.test(location.origin)?'https://uat.e-shequ.com/hexie/weixin/':
-        'https://www.e-shequ.com/weixin/',
+        'https://www.e-shequ.cn/weixin/',
         
-        basePageUrlpay:/127|test/.test(location.origin)?'https://test.e-shequ.com/weixin/pay/':
-        /uat/.test(location.origin)?'https://uat.e-shequ.com/hexie/weixin/pay/':
-        'https://www.e-shequ.com/weixin/pay/',
+        basePageUrlpay:/127|test/.test(location.origin)?'https://test.e-shequ.com/pay/':
+        /uat/.test(location.origin)?'https://uat.e-shequ.com/pay/':
+        'https://www.e-shequ.cn/weixin/',
 
         payPageFolder:/127|test/.test(location.origin)?'https://test.e-shequ.com/pay/':
         /uat/.test(location.origin)?'https://uat.e-shequ.com/pay/':
-        'https://www.e-shequ.com/pay/',
+        'https://www.e-shequ.cn/pay/',
 
         appId: /127|test/.test(location.origin)?'wx95f46f41ca5e570e':
         /uat/.test(location.origin)?'wx9ffe0a2b5a64a285':
         'wxbd214f5765f346c1',
-
-        bindAppId: /127|test/.test(location.origin)?'wx95f46f41ca5e570e':
-        /uat/.test(location.origin)?'wx9ffe0a2b5a64a285':
-        'wxa48ca61b68163483',
-
-		componentAppId:'wx4d706a1a7a139d1f',
+        
+        componentAppId: /127|test/.test(location.origin)?'wx4d706a1a7a139d1f':
+        /uat/.test(location.origin)?'wx4d706a1a7a139d1f':
+        'wx0d408844b35d85e2',
         
 		oauthUrl: "https://open.weixin.qq.com/connect/oauth2/authorize?",
         oauthUrlPostFix:"&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect",		
 		//https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE&state=STATE&component_appid=component_appid#wechat_redirect
 
-
 		oauthUrlPostSilent:"&response_type=code&scope=snsapi_base&state=123#wechat_redirect",
         baidu_map_key:"RUWUgrEEF5VjoaWsstMMZwOD",
-        shop_name: "合协",
-        payPageSuffix:"hx",
 
         is_debug:true
     },
@@ -58,7 +53,7 @@ var Config = function() {
             no_goods: "更多新品正在陆续推出..."
         },
         user_info: {
-            avatar: "https://www.e-shequ.com/weixin/static/images/logo.jpg",
+            avatar: "https://www.e-shequ.cn/weixin/static/images/logo.jpg",
             nickname: "游客",
             levelname: "普通会员"
         },
@@ -68,7 +63,7 @@ var Config = function() {
             2 : "大楼VIP"
         },
         coupon:{
-            seedImg:"https://www.e-shequ.com/weixin/static/img/banner/banner_market_shuiguo.jpg"
+            seedImg:"https://www.e-shequ.cn/weixin/static/img/banner/banner_market_shuiguo.jpg"
         }
     },
     e = {};
@@ -158,37 +153,6 @@ function checkCodeAndLogin(){
         return true;
     }
 }
- //子公众号  挂载父级 
- /*
-function toBindLink(){
-    var p = common.removeParamObject(["from","bind", "code", "share_id", "isappinstalled", "state", "m", "c", "a"]);
-    p = common.addParamObject(p,"bind","true");
-    var n = location.origin + location.pathname + common.buildUrlParamString(p)+common.addParamHsah(),
-    t = MasterConfig.C("oauthUrl");
-    end = MasterConfig.C("oauthUrlPostFix");
-    var url = t + "appid=" + MasterConfig.C("bindAppId") + "&redirect_uri=" + encodeURIComponent(n) +end+ "#wechat_redirect";
-    // console.log(url);
-    location.href = url;
-}
-*/
-// 检查绑定没绑定
-/*
-function checkBindAndBind(){
-    var getData = common._GET();
-    var b = getData.bind;
-    var o = getData.code;
-    if(b&&o) {
-        // common.alert("start api bind"),
-        common.invokeApi("POST", "bindWechat/"+MasterConfig.C("bindAppId")+"/" + o, null,
-            null,
-        function(x) {
-            // common.alert("api binded")
-            // console.log(location.origin);
-            location.href = location.origin +common.removeParamFromUrl(["bind","code"]);
-        })
-    }
-}
-*/
 
 //只更新地址
 function updateCurrentAddrId(addrId){
@@ -211,11 +175,17 @@ function toRegisterAndBack(){
     }
     location.href=MasterConfig.C('basePageUrl')+"person/index.html?"+appurl+"#/register?comeFrom="+encodeURIComponent(n);
 }
-
+//判断当前是那个公众号
+function Getofficial() {
+    var appid=getCookie('appId');
+    if(appid=='undefined') {
+        common.newname='社区'
+    }
+}
 
 var AJAXFlag = !0;
 window.common = {
-    newname:"合协社区",
+    newname:"社区",
     isDebug: !1,
     getApi: function(e) {
         var o = parseInt(getCookie("BackendPort"));
@@ -362,10 +332,6 @@ updateUserStatus(user) {
     alert: function(e) {
         "" === getCookie("DevDebug") ? console.log(e) : alert(e)
     },
-    //设置title
-    setTitle: function(e) {
-        $("title").text(e)
-    },
 
     addParamObject:function(e, name,value){
         e[name]=value;
@@ -433,8 +399,6 @@ updateUserStatus(user) {
     }
 
 };
-
-//checkBindAndBind();
+Getofficial();
 checkCodeAndLogin();
-common.setTitle(MasterConfig.C("shop_name") + "社区");
 // export {common,MasterConfig,getUrlParam} 

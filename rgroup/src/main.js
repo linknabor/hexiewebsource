@@ -31,8 +31,6 @@ Vue.prototype.getUrlParam=getUrlParam;
 Vue.prototype.baseUrl=MasterConfig.C('baseUrl');
 Vue.prototype.basePageUrl=MasterConfig.C('basePageUrl');
 Vue.prototype.basePageUrlpay=MasterConfig.C('basePageUrlpay');
-// import config from './assets/js/config'
-// Vue.prototype.config=config;
 
 import receiveData from './assets/js/receiveData'
 Vue.prototype.receiveData=receiveData
