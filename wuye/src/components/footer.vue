@@ -90,16 +90,19 @@ export default{
                 a = "userInfo?oriApp="+vm.getUrlParam('oriApp'),
                 i = null,
                 e = function(n) {
-                   Bus.$emit('sends',n.result)
-                    if(n.result!=null) {
-                      vm.list=n.result.iconList;
-                    }
-                    var duration = new Date().getTime()/1000 + 3600*24*30;
-                      for(var j=0;j<n.result.bgImageList.length;j++){
-                          cookie.set(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl,duration)
-                    }
                     if(n.success&&n.result==null) {
                          reLogin();
+                         return
+                    }
+                    if(n.result!=null) {
+                      vm.list=n.result.iconList;
+                      Bus.$emit('sends',n.result)
+                    }
+                    var duration = new Date().getTime()/1000 + 3600*24*30;
+                    if(n.result.bgImageList) {
+                      for(var j=0;j<n.result.bgImageList.length;j++){
+                          cookie.set(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl,duration)
+                      }
                     }
                 },
                 r = function(res) { 
@@ -116,8 +119,6 @@ export default{
        geturl() {
         var geturl=vm.getUrlParam('oriApp');
         if(geturl) {
-             vm.link=location.origin+location.pathname+'?oriApp='+geturl;
-        }else {
              vm.link=location.origin+location.pathname;
         }
        },
