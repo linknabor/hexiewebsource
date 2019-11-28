@@ -326,11 +326,9 @@ export default {
             });
         },
          getMsgFromZha(result) {
-           if(result!=null) {
+             vm.query();   
              vm.cfgParam=result.cfgParam;
              vm.sectId=result.sectId;
-           }
-           vm.query();   
          },
         query() {
                 if(vm.cfgParam.ONLINE_MESSAGE==1) {

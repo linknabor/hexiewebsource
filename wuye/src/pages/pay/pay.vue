@@ -11,9 +11,9 @@
       />
     </div>
     <mt-navbar id="navBar" v-model="selected">
-      <mt-tab-item id="a">账单缴费</mt-tab-item>
-      <mt-tab-item id="b">物业缴费</mt-tab-item>
       <mt-tab-item id="d">查询缴费</mt-tab-item>
+      <mt-tab-item id="b">我的账单</mt-tab-item>
+      <mt-tab-item id="a">扫描账单</mt-tab-item>
     </mt-navbar>
     <mt-tab-container v-model="selected">
       <mt-tab-container-item id="a">
@@ -269,7 +269,7 @@ export default {
       queryBillInfo: [], //查询缴费数据
       quickBillInfo: [], //快捷查询数据
       otherbillinfo: [], //无账单缴费
-      selected: "a", //选项卡 默认选中
+      selected: "d", //选项卡 默认选中
       billPage: 1, // 物业缴费页码
       // carBillPage: 1, //停车缴费页码
       queryBillPage: 1, //查询缴费页码
@@ -297,9 +297,9 @@ export default {
   watch: {
     selected(newv,old){
       isloadPage=false;
-      if(newv=="d"){
-        vm.getHousin();
-      }
+      // if(newv=="d"){
+      //   vm.getHousin();
+      // }
     }
   },
   created() {
@@ -307,8 +307,8 @@ export default {
   },
   mounted() {
      vm.city();
-    // vm.getHousin();
      vm.unitselect();
+     vm.getHousin();
     // this.initSession4Test();
     let url = location.href.split("#")[0];
     vm.receiveData.wxconfig(vm, wx, ["scanQRCode","getLocation"], url);
@@ -457,8 +457,8 @@ getRegionurl(longitude, latitude) {
     //获取小区
     getHousin() {
       if(vm.query.sect==''){
-
-      }else{
+       return
+      }
       let url =
         "/getVagueSectByName?sect_name=" +
         this.$route.query.userunit +
@@ -489,7 +489,7 @@ getRegionurl(longitude, latitude) {
           // return false;
         }
       });
-      }
+      
     },
     // 查询小区
     fond() {
@@ -1144,7 +1144,7 @@ a {
 .classc {
   position: absolute;
   right: -0.5rem;
-  top: 0.04rem;
+  /* top: 0.04rem; */
   color: #ccc;
 }
 .test::-webkit-scrollbar {
