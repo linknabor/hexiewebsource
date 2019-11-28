@@ -81,22 +81,14 @@
 			  }else {
 				alert(vm.response.message==null?'未查询到该房屋':vm.response.message)
 			  }
-			//   if(vm.response.result== null) {
-			// 	  vm.data={}
-			// 	  alert('未查询到该房屋')
-			// 	  vm.canAddhouse=false;
-			//   }else {
-			// 	  vm.data = vm.response.result
-			// 	  vm.canAddhouse=true;
-			//   }
   		})
 	  },
 	  methods:{
 		  addHouse(){//添加房子 post 提交两个参数 
 				let  wuye_myhouse={
 					url: /127|test/.test(location.origin)?'test.e-shequ.com':
-							/uat/.test(location.origin)?'uat.e-shequ.com':
-							'www.e-shequ.com'       //提示框网址
+						/uat/.test(location.origin)?'uat.e-shequ.com':
+						'www.e-shequ.com'       //提示框网址
 					}
 					let stmtId = this.axiosParams.number;
 					let url2 = '/addhexiehouse?stmtId='+stmtId+'&houseId='+this.data.mng_cell_id;

@@ -13,29 +13,33 @@
 .footer .nav-controller i {display: block;font-size: 12px;margin-bottom: 0px; height:28px}
 .footer_logo{background-position: 50% 0;background-size: 22px;
     background-repeat: no-repeat;}
-/* .footer_home{background-image: url('../assets/images/common/icon_daojia.png');} */
-/* .footer_temai{background-image: url('../assets/images/common/icon_shopping.png');} */
 
 /* 合协 */
 .footer_wuye_selected{background-image: url('../assets/images/common/icon_property_selected.png');}
 .footer_person{background-image: url('../assets/images/common/icon_my.png');}
+.footer_home{background-image: url('../assets/images/common/icon_daojia.png');}
+.footer_group{background-image: url('../assets/images/common/icon_pindan.png');}
 
 /* 大楼 */
 .footer_fuwu_baofang {background-image: url('../assets/images/icon/icon_property_selected.png')}
 .footer_shequ_baofang {background-image: url('../assets/images/icon/icon_daojia.png')}
 .footer_person_baofang {background-image: url('../assets/images/icon/icon_my.png')}
+.footer_group_baofang{background-image: url('../assets/images/common/icon_pindan.png');}
 /* 奉贤 */
 .footer_fuwu_liangyou {background-image: url('../assets/images/icon/icon_property_selected.png')}
 .footer_shequ_liangyou {background-image: url('../assets/images/icon/icon_daojia.png')}
 .footer_person_liangyou {background-image: url('../assets/images/icon/icon_my.png')}
+.footer_group_lianyou{background-image: url('../assets/images/common/icon_pindan.png');}
 /* 金桥 */
 .footer_fuwu_weifa {background-image: url('../assets/images/icon/icon_property_selected.png')}
 .footer_shequ_weifa {background-image: url('../assets/images/icon/icon_daojia.png')}
 .footer_person_weifa {background-image: url('../assets/images/icon/icon_my.png')}
+.footer_group_weifa{background-image: url('../assets/images/common/icon_pindan.png');}
 /* 友宜 */
 .footer_fuwu_youyi {background-image: url('../assets/images/icon/icon_property_selected.png')}
 .footer_shequ_youyi {background-image: url('../assets/images/icon/icon_daojia.png')}
 .footer_person_youyi {background-image: url('../assets/images/icon/icon_my.png')}
+.footer_group_youyi{background-image: url('../assets/images/common/icon_pindan.png');}
 
 </style>
 
@@ -59,6 +63,7 @@
 <script>
 let vm;
 import Bus from '../api/bus.js'
+import cookie  from 'js-cookie';
 export default{
     data(){
       return {
@@ -70,10 +75,10 @@ export default{
       vm=this;
     },
     mounted(){
-      let url = '/initSession4Test/1';
-                vm.receiveData.getData(vm,url,'Data',function(){
-            });
-      // vm.initUserInfo();
+      // let url = '/initSession4Test/1';
+      //           vm.receiveData.getData(vm,url,'Data',function(){
+      //       });
+      vm.initUserInfo();
       vm.geturl();
     },
     updated(){
@@ -89,11 +94,16 @@ export default{
                     if(n.result!=null) {
                       vm.list=n.result.iconList;
                     }
+                    var duration = new Date().getTime()/1000 + 3600*24*30;
+                      for(var j=0;j<n.result.bgImageList.length;j++){
+                          cookie.set(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl,duration)
+                    }
                     if(n.success&&n.result==null) {
                          reLogin();
                     }
                 },
-                r = function() { 
+                r = function(res) { 
+                   
                 };
             this.common.invokeApi(n, a, i, null, e, r);
 
@@ -108,7 +118,7 @@ export default{
         if(geturl) {
              vm.link=location.origin+location.pathname+'?oriApp='+geturl;
         }else {
-          vm.link=location.origin+location.pathname;
+             vm.link=location.origin+location.pathname;
         }
        },
 

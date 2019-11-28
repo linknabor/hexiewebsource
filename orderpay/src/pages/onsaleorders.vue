@@ -18,8 +18,9 @@
       </div>
     </div>
 
-    <div class="avatar-wraps rels ovs" v-if="groupsNum == 0">
-      <div class="filter-imgs avatar-wraps center-bgs"></div>
+    <div class="rels" v-if="groupsNum == 0">
+      <!-- <img src="../assets/images/bg_orders.jpg"  class="center-bgs" alt=""> -->
+      <img :src="bgImage" alt="" class="center-bgs">
     </div>
 
     <div class="order-item p15 divider" v-for="order in orders" @click="gotoDetail(order.id)">
@@ -101,7 +102,8 @@ export default {
           name: "已取消订单",
           value: "CANCELD" //根据需要传给后台的查询参数修改这些value
         }
-      ]
+      ],
+      bgImage:this.common.GetImages('1'),//背景图
     };
   },
   created() {
@@ -365,20 +367,13 @@ a {
   color: #888;
 }
 /* 没有数据 */
-.avatar-wraps {
-  height: 10rem;
-  text-align: center;
-}
 .rels {
-  position: relative;
-}
-.ovs {
-  overflow: hidden;
-  padding: 1px;
+  height:100%;
+  width:100%;
+  position: fixed;
 }
 .center-bgs {
-  background-image: url(../assets/images/bg_orders.jpg);
-  background-size: cover;
-  background-position: center;
+  width: 100%;
+  height: auto;
 }
 </style>

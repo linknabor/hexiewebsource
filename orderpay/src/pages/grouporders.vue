@@ -31,8 +31,10 @@
         >{{item.name}}</div>
       </div>
     </div>
-    <div class="avatar-wrap rel ov" v-if="groupsNum == 0">
-      <div class="filter-img avatar-wrap center-bg"></div>
+
+    <div class="rels" v-if="groupsNum == 0">
+      <!-- <img src="../assets/images/bg_orders.jpg"  class="center-bgs" alt=""> -->
+      <img :src="bgImage" alt="" class="center-bgs">
     </div>
 
     <div class="order-item p15 divider" v-for="order in orders" :key="order.id">
@@ -115,13 +117,12 @@ export default {
           name: "已取消订单",
           value: "CANCELD" //根据需要传给后台的查询参数修改这些value
         }
-      ]
+      ],
+      bgImage:this.common.GetImages('1'),//背景图
     };
   },
   created() {
     vm = this;
-    //    let url = location.href.split('#')[0];
-    //     vm.receiveData.wxconfig(vm,wx,['chooseWXPay'],url);
   },
   mounted() {
     vm.grouprders();
@@ -423,6 +424,11 @@ export default {
 }
 .rel {
   position: relative;
+}
+.rels {
+  height:100%;
+  width:100%;
+  position: fixed;
 }
 .ov {
   overflow: hidden;

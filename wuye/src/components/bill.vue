@@ -103,6 +103,14 @@ export default {
   background-size: 0.32rem;
   background-position: center;
 }
+.select-item1 {
+    background: url('../assets/images/common/icon_unselect.png') no-repeat ;
+    background-size: 0.32rem;
+    background-position: center;
+    width:0.7rem;
+    height: 2.6rem;
+    border-right: 1px solid #cdcdcb;
+}
 .payed {
   background: url("../assets/images/common/icon_cancel.png") no-repeat;
   background-size: 0.32rem;
@@ -151,14 +159,7 @@ export default {
 	border:1px solid #cdcdcb;
   background: white;
 }
-.select-item1 {
-    background: url('../assets/images/common/icon_unselect.png') no-repeat ;
-    background-size: 0.32rem;
-    background-position: center;
-    width:0.7rem;
-    height: 2.6rem;
-    border-right: 1px solid #cdcdcb;
-}
+
 .selected {
 	background: url('../assets/images/common/icon_selected.png') no-repeat ;
 	background-size: 0.32rem;

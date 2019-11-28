@@ -1,21 +1,47 @@
 <style scoped>
-.footer {width: 100%;height: 72px;position: fixed;bottom: 0;
+.footer {width: 100%;height: 60px;position: fixed;bottom: 0;z-index:1000000;
   left: 50%;-webkit-transform: translate3d(-50%,0,0);transform: translate3d(-50%,0,0);
   overflow: hidden;background-color: #fff;border-top: #eceded;
-  z-index:1000;
   -webkit-box-shadow: 0 0 4px rgba(0,0,0,.2);box-shadow: 0 0 4px rgba(0,0,0,.2)}
-.footer li {float: left;width: 50%;text-align: center;height: 57px}
+.footer li {float: left;text-align: center;height: 100%;
+/* width:33.3%; */
+}
 .footer a {color: #777;font-size: 14px}
 .footer a:hover,.footer a:focus {color: #666;font-size: 18px}
 .footer a.active {color: #ff8a00}
-.footer .nav-controller {position: relative;height: 47px;display: block;padding-top: 10px}
+.footer .nav-controller {position: relative;height: 100%;display: block;padding-top: 10px}
 .footer .nav-controller i {display: block;font-size: 12px;margin-bottom: 0px; height:28px}
 .footer_logo{background-position: 50% 0;background-size: 22px;
     background-repeat: no-repeat;}
-/* .footer_home{background-image: url('../assets/images/common/icon_daojia.png');}  */
-/* .footer_temai{background-image: url('../assets/images/footer/icon_daojia.png');} */
-.footer_wuye_selected{background-image: url('../assets/images/footer/icon_property.png');}
- .footer_person{background-image: url('../assets/images/footer/icon_my.png');}
+
+/* 合协 */
+.footer_wuye_selected{background-image: url('../assets/images/common/icon_property.png')}
+ .footer_person{background-image: url('../assets/images/common/icon_my_selected.png')}
+.footer_home{background-image: url('../assets/images/common/icon_daojia.png');}
+.footer_group{background-image: url('../assets/images/common/icon_pindan.png');}
+
+/* 大楼 */
+.footer_fuwu_baofang {background-image: url('../assets/images/icon/icon_property.png')}
+.footer_shequ_baofang {background-image: url('../assets/images/icon/icon_daojia.png')}
+.footer_person_baofang {background-image: url('../assets/images/icon/icon_my.png')}
+.footer_group_baofang{background-image: url('../assets/images/common/icon_pindan.png');} 
+/* 奉贤 */
+.footer_fuwu_liangyou {background-image: url('../assets/images/icon/icon_property.png')}
+.footer_shequ_liangyou {background-image: url('../assets/images/icon/icon_daojia.png')}
+.footer_person_liangyou {background-image: url('../assets/images/icon/icon_my.png')}
+.footer_group_liangyou{background-image: url('../assets/images/common/icon_pindan.png');} 
+
+/* 金桥 */
+.footer_fuwu_weifa {background-image: url('../assets/images/icon/icon_property.png')}
+.footer_shequ_weifa {background-image: url('../assets/images/icon/icon_daojia.png')}
+.footer_person_weifa {background-image: url('../assets/images/icon/icon_my.png')}
+.footer_group_weifa{background-image: url('../assets/images/common/icon_pindan.png');} 
+
+/* 友宜 */
+.footer_fuwu_youyi {background-image: url('../assets/images/icon/icon_property.png')}
+.footer_shequ_youyi {background-image: url('../assets/images/icon/icon_daojia.png')}
+.footer_person_youyi {background-image: url('../assets/images/icon/icon_my.png')}
+.footer_group_youyi{background-image: url('../assets/images/common/icon_pindan.png');} 
 </style>
 
 <template>
@@ -24,19 +50,10 @@
     <footer class="footer">
       <nav>
         <ul>
-          <!-- <li>
-            <a :href="this.config.footer.home" class="nav-controller">
-              <i class="footer_logo footer_temai"></i>社区生活
-            </a>
-          </li>  -->
-          <li>
-            <a :href="this.basePageUrl+'/wuye/index.html?v=20162299'" class="nav-controller ">
-              <i class="footer_logo footer_wuye_selected"></i>社区
-            </a>
-          </li>
-          <li>
-            <a :href="this.basePageUrl+'/person/index.html?v=20162299'" class="nav-controller  ">
-              <i class="footer_logo footer_person"></i>我的
+          <li ref="listli" v-for="item in list" :key="item.id">
+            <a ref="lista" :href='item.iconLink' class="nav-controller" :class="item.iconLink==link?'active':''">
+              <i :class='item.iconClass'></i>
+              {{item.iconName}}
             </a>
           </li>
         </ul>
@@ -46,17 +63,49 @@
 </template>
 
 <script>
-  import cookie from 'js-cookie'
+let vm;
+import But from './api/but.js'
 	export default{
     data() {
       return {
-
+        list:[],
+        link:''
       }
-    }
-	}
+    },
+    created() {
+      vm=this;
+    },
+    mounted(){
+      But.$on("sends",this.getMsgFromZha);
+      vm.geturl();   
+    },
+    updated() {
+      vm.getclass();
+    },
+    methods:{
+        getMsgFromZha(info) {
+          vm.list=info;
+       } ,
+       getclass(){
+         for(var i=0;i<vm.$refs.listli.length;i++) {
+            vm.$refs.listli[i].style.width=100/vm.$refs.listli.length+'%'
+         }
+       },  
+      geturl() {
+        var geturl=vm.getUrlParam('oriApp');
+        if(geturl) {
+            //  console.log(location.origin+location.pathname+'?oriApp='+geturl);
+             vm.link=location.origin+location.pathname+'?oriApp='+geturl;
+        }else {
+          // console.log(location.origin+location.pathname);
+          vm.link=location.origin+location.pathname;
+        }
+       },  
+  }
+}
 </script>
 <style scoped>
 .contetn {
-  padding-bottom:72px;
+  padding-bottom:60px;
 }
 </style>

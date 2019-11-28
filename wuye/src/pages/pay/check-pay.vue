@@ -57,7 +57,7 @@
 			<div style="width:100%;height:0.92rem;"></div>
 			<div class="btn-fixed" id="st">
 	    		<!-- <div v-show="quan" class="fl select-btn" :class="{allSelected:queryAllselect }" @click="allSelect(queryBillInfo,'queryAllselect')">全选&nbsp;</div> -->
-	    		<button class="pay" @click="addRoom">添加房屋</button>
+	    		<button class="pay" @click="addRoom" style="cursor:pointer;">添加房屋</button>
 	    		<!-- <div class="pay" @click="addRoom">
 	    			添加房屋
 	    		</div> -->
@@ -239,7 +239,7 @@
 		//门牌选中
 		getCoupon(){
 			
-			this.getCellMng(this.query.sectID,this.query.build,this.query.unit,'01');
+			vm.getCellMng(vm.query.sectID,vm.query.build,vm.query.unit,'01');
 			
 		},
 		//室号选中

@@ -54,10 +54,10 @@ let receiveData = {
             })
             .then(function (res){
                 let a = JSON.parse(res.data)
-                vm[backdataname] = a
+                vm[backdataname] = a;
+                // dealWithAjaxData(null,a,function(){},function(){})
                 if (typeof (callback) == 'function') {//回调
                     callback()
-
                 }
             })
             .catch(function (err) {
@@ -82,10 +82,7 @@ let receiveData = {
 
                 let a = res.data;
                  vm[backdataname] = JSON.parse(a)
-                // xmlParser.parseString(a, function (err, result) {
-                // //将返回的结果赋值
-                //  vm[backdataname] = result.BaseResult
-                // });
+                // dealWithAjaxData(null,a,function(){},function(){})
                 if (typeof (callback) == 'function') {//回调
                         callback()
                 }
