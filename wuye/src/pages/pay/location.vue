@@ -18,7 +18,6 @@
 }
 .locity-t-t {
   width: 92%;
-  height: 1rem;
   font-size: 0.4rem;
   position: relative;
   padding: 0.24rem 0.34rem;
@@ -26,11 +25,10 @@
   top: 0.22rem;
 }
 .locity-t-b {
-  width: 1rem;
+  /* width: 1rem; */
   height: 0.48rem;
-  font-size: 0.3rem;
+  font-size: 0.37rem;
   color: #ff9800;
-  border: 1.5px solid #ff9800;
   text-indent:2px;
   line-height: 0.48rem;
   left: 1rem;
@@ -67,18 +65,18 @@
 .choose-ct {
   width: 33.3%;
   float: left;
-  height: 1rem;
+  margin-bottom:10px;
 }
 .choose-ct-1 {
   width: 1.3rem;
   height: 0.48rem;
   font-size: 0.3rem;
-  color: #686868;
-  border: 1.5px solid #c4c4c4;
+  /* color: #686868; */
   text-align: center;
   line-height: 0.48rem;
   position: relative;
   margin: 0 auto;
+  background-color:#F5F5F5;
 }
 </style>
 
@@ -96,8 +94,8 @@
       <div class="choosecity">
         <div class="choose-t">可选城市</div>
         <div class="choose-b">
-          <div class="choose-ct" v-for="item in citys">
-            <div class="choose-ct-1" @click="dj(item)">{{item.regionname}}</div>
+          <div class="choose-ct" v-for="item in citys" :key="item.id">
+            <div class="choose-ct-1" @click="dj(item)">{{item.regionName}}</div>
           </div>
         </div>
       </div>
@@ -111,7 +109,8 @@
       data() {
         return {
           value2:"",
-          citys: [],
+          citys: [
+          ],
         
           // latitude:'',//维度
           // longitude:'',//经度
@@ -131,7 +130,7 @@
 
           dj(item){
               
-              var citydata=item.regionname;
+              var citydata=item.regionName;
               vm.$router.push({path:'/Fontunit',query:{citydata1:citydata}})
           },
            city(){    //定义获取城市方法
@@ -170,19 +169,19 @@
 
                 })
               },
-              getRegionurl(longitude,latitude){
+          getRegionurl(longitude,latitude){
+          
+              vm.receiveData.getData(vm,'/getRegionUrl?coordinate='+longitude+','+latitude,'res',function(){
+                if(vm.res.success){
+                vm.value2=vm.res.result.address;
+                vm.citys=vm.res.result.regionUrl;
+                }else{
+                  alert("获取数据失败")
+                }
+              })
+          }
              
-             vm.receiveData.getData(vm,'/getRegionUrl?coordinate='+longitude+','+latitude,'res',function(){
-               if(vm.res.success){
-               vm.value2=vm.res.result.address;
-               vm.citys=vm.res.result.regionurl;
-               }else{
-                 alert("获取数据失败")
-               }
-             })
-              }
-             
-              }
+          }
 
 
 
