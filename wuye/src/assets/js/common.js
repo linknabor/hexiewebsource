@@ -9,7 +9,7 @@ var MasterConfig = function() {
         /uat/.test(location.origin)?'https://uat.e-shequ.com/hexie/weixin/':
         'https://www.e-shequ.cn/weixin/',
         
-        basePageUrlpay:/127|test/.test(location.origin)?'https://test.e-shequ.com/pay/':
+        basePageUrlpay:/127|test/.test(location.origin)?'https://test.e-shequ.com/weixin/pay/':
         /uat/.test(location.origin)?'https://uat.e-shequ.com/pay/':
         'https://www.e-shequ.cn/weixin/',
 
@@ -166,7 +166,7 @@ function isRegisted(){
 }
  //没注册 跳转注册页
 function toRegisterAndBack(){
-    var n = location.origin + common.removeParamFromUrl(["from", "bind", "code", "share_id", "isappinstalled", "state", "m", "c", "a"])+common.addParamHsah();
+    var n = location.origin + common.removeParamFromUrl(["from", "bind", "code", "share_id", "isappinstalled", "state", "m", "c", "a"]);
     let appurl='';
     if(getUrlParam('oriApp')){
         appurl='oriApp='+getUrlParam('oriApp');
@@ -175,6 +175,7 @@ function toRegisterAndBack(){
     }
     location.href=MasterConfig.C('basePageUrl')+"person/index.html?"+appurl+"#/register?comeFrom="+encodeURIComponent(n);
 }
+//判断当前是那个公众号
 function Getofficial() {
     var appid=getCookie('appId');
     if(appid=='undefined') {
@@ -204,7 +205,7 @@ window.common = {
                 dataType: "json",
                 beforeSend: t,
                 success: function(e) {
-                    // common.alert("success data: " + JSON.stringify(e));
+                    common.alert("success data: " + JSON.stringify(e));
                     dealWithAjaxData(o, e, i, r);
                 },
                 error: function(e) {
@@ -254,13 +255,19 @@ window.common = {
         }
         return imgUrl;
    },
+   getoriApp:function() {
+        var oriapp=getUrlParam('oriApps')?'oriApp='+getUrlParam('oriApps'):'';
+        return  oriapp;
+   },
+
      //授权
     login: function() {
+		var timestamp="";
 		var o = this._GET().code;
 		var oriApp = getUrlParam("oriApp");
 		var param = {"oriApp":oriApp};
         if (common.alert("code: " + o), void 0 === o) {
-			var n = location.origin + common.removeParamFromUrl(["from","bind", "code", "share_id", "isappinstalled", "state", "m", "c", "a"]),
+			var n = location.origin + common.removeParamFromUrl(["from","bind", "code", "share_id", "isappinstalled", "state", "m", "c", "a"])+common.addParamHsah(),
 			t = MasterConfig.C("oauthUrl"),
 		    end = MasterConfig.C("oauthUrlPostFix");
 			var url = t + "appid=" ;
@@ -281,8 +288,24 @@ window.common = {
         },
         function(x) {
             common.updateUserStatus(x.result);
-            AJAXFlag = !0,
-            location.href = location.origin +common.removeParamFromUrl(["code"])+common.addParamHsah();
+            AJAXFlag = !0;
+			
+		if(document.URL.indexOf('.html?t=') < 0) {
+			 timestamp= (new Date()).valueOf();
+		}
+		var url= location.origin +common.removeParamFromUrl(["code"]);
+		if(url.indexOf('?')<0){
+			url+='?';
+		}else {
+			url+='&';
+		}
+		if(timestamp!=""){
+			url+='t='+timestamp;
+		}else{
+			url=url.substring(0,url.length-1);
+		}
+		url+=common.addParamHsah();
+        location.href =url;
         })
     },
     /**变更才需要重设置*/
@@ -348,7 +371,6 @@ updateUserStatus(user) {
         return  location.hash 
     },
     removeParamFromUrl: function(e) {
-        // console.log(location.pathname);
         return location.pathname + common.buildUrlParamString(common.removeParamObject(e));
     },
     buildUrlParamString: function(e) {
@@ -360,7 +382,7 @@ updateUserStatus(user) {
     },
     wechatAuthorize: function() {
         var e = MasterConfig.C("appId");
-        var n = location.origin + common.removeParamFromUrl(["from", "code", "share_id", "isappinstalled", "state", "m", "c", "a"])+common.addParamHsah(),
+        var n = location.origin + common.removeParamFromUrl(["from", "code", "share_id", "isappinstalled", "state", "m", "c", "a"]),
         t = MasterConfig.C("oauthUrl");
         end = MasterConfig.C("oauthUrlPostFix");
         location.href = t + "appid=" + e + "&redirect_uri=" + encodeURIComponent(n) +end+ "#wechat_redirect";
@@ -398,7 +420,6 @@ updateUserStatus(user) {
     }
 
 };
-Getofficial()
+Getofficial();
 checkCodeAndLogin();
 export {common,MasterConfig,getUrlParam} 
-
