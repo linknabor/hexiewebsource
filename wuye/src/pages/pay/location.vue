@@ -1,4 +1,7 @@
-<style>
+<style >
+body {
+  background:#eee;
+}
 .location {
   width: 100%;
   height: 100vh;
@@ -6,7 +9,7 @@
 }
 .loccity {
   width: 94%;
-  height: 7rem;
+  /* height: 7rem; */
   background: white;
   margin: auto;
   top: 0.2rem;
@@ -23,6 +26,7 @@
   padding: 0.24rem 0.34rem;
   letter-spacing: 2px;
   top: 0.22rem;
+  color: #BCBCBC;
 }
 .locity-t-b {
   /* width: 1rem; */
@@ -45,8 +49,9 @@
 }
 .choosecity {
   width: 100%;
-  top: 0.5rem;
+  /* top: 0.5rem; */
   position: relative;
+  overflow: hidden;
 }
 .choose-t {
   width: 92%;
@@ -56,11 +61,14 @@
   letter-spacing: 2px;
   top: 0.22rem;
   margin: auto;
+  color: #BCBCBC;
 }
 .choose-b {
   width: 100%;
-  top: 0.32rem;
-  position: relative;
+  /* top: 0.32rem; */
+  /* position: relative; */
+  overflow: hidden;
+  padding: 0.4rem 0;
 }
 .choose-ct {
   width: 33.3%;
@@ -71,13 +79,14 @@
   width: 1.3rem;
   height: 0.48rem;
   font-size: 0.3rem;
-  /* color: #686868; */
   text-align: center;
   line-height: 0.48rem;
   position: relative;
   margin: 0 auto;
+  padding:0.1rem;
   background-color:#F5F5F5;
 }
+
 </style>
 
 <template>
@@ -85,9 +94,13 @@
     <!-- 定位城市 -->
     <div class="loccity">
       <div class="loccity-t">
-        <div class="locity-t-t">定位城市</div>
+        <div class="locity-t-t">
+          定位城市
+        </div>
         <!-- <input type="text" v-model="value2" class="locity-t-b" id="btnd1" /> -->
-        <div class="locity-t-b" id="btnd1">{{value2}}</div>
+        <div class="locity-t-b" id="btnd1">
+          {{value2}}
+        </div>
       </div>
       <div class="hx"></div>
       <!-- 可选城市 -->
