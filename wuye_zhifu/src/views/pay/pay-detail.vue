@@ -472,8 +472,8 @@
 		},
 		mounted(){
 		
-			// vm.common.checkRegisterStatus();
-			this.initSession4Test()
+			vm.common.checkRegisterStatus();
+			// this.initSession4Test()
 			this.getBillDetail();
 			this.Coupons();
 			// this.getMember(); 判断是否开通会员
@@ -586,7 +586,7 @@
 					//缴费四舍五入
 					let zcount=vm.count;
 					// vm.Carandpay(zcount,reduced_amt);
-					vm.Carandpay(zcount)
+					vm.Carandpay(zcount);//四舍五入
 	  			},
 	  			{
 	  				billId :vm.routeParams.billIds,

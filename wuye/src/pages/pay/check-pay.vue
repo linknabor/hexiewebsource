@@ -278,13 +278,13 @@
 				if ("03"==data_type) {
 					 vm.buildList = InfoList.build_info;
 					 // vm.buildList.unshift({id:'0',name:'请选择'})
-					vm.unitList = [];
-					vm.houseList = [];
+					// vm.unitList = [];
+					// vm.houseList = [];
 				}else if("02"==data_type){
 					vm.unitList= InfoList.unit_info;
 					// vm.unitList.unshift({id:'0',name:'请选择'})
 					// vm.unitList=[];
-					vm.houseList = [];
+					// vm.houseList = [];
 						if(vm.unitList.length==1) {
 							vm.getCellMng(vm.query.sectID,vm.query.build,vm.query.unit,'01');
 					}
