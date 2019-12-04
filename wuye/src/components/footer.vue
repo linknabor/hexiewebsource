@@ -123,9 +123,7 @@ export default{
        geturl() {
         var geturl=vm.getUrlParam('oriApp');
         if(geturl) {
-             vm.link=location.origin+location.pathname+'?oriApp='+geturl;
-        }else {
-          vm.link=location.origin+location.pathname;
+             vm.link=location.origin+location.pathname;
         }
        },
 

@@ -8,7 +8,7 @@ var MasterConfig = function() {
         basePageUrl:/127|test/.test(location.origin)?'https://test.e-shequ.com/weixin/':
         /uat/.test(location.origin)?'https://uat.e-shequ.com/hexie/weixin/':
         'https://www.e-shequ.cn/weixin/',
-        
+
         basePageUrlpay:/127|test/.test(location.origin)?'https://test.e-shequ.com/weixin/pay/':
         /uat/.test(location.origin)?'https://uat.e-shequ.com/pay/':
         'https://www.e-shequ.cn/weixin/',
@@ -205,7 +205,7 @@ window.common = {
                 dataType: "json",
                 beforeSend: t,
                 success: function(e) {
-                    common.alert("success data: " + JSON.stringify(e));
+                    // common.alert("success data: " + JSON.stringify(e));
                     dealWithAjaxData(o, e, i, r);
                 },
                 error: function(e) {
@@ -259,7 +259,6 @@ window.common = {
         var oriapp=getUrlParam('oriApps')?'oriApp='+getUrlParam('oriApps'):'';
         return  oriapp;
    },
-
      //授权
     login: function() {
 		var timestamp="";
@@ -420,6 +419,7 @@ updateUserStatus(user) {
     }
 
 };
-Getofficial();
+Getofficial()
 checkCodeAndLogin();
 export {common,MasterConfig,getUrlParam} 
+

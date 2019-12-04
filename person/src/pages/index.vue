@@ -13,11 +13,10 @@
 .footer .nav-controller i {display: block;font-size: 12px;margin-bottom: 0px; height:28px}
 .footer_logo{background-position: 50% 0;background-size: 22px;
     background-repeat: no-repeat;}
-
 /* 合协 */
 .footer_wuye_selected{background-image: url('../assets/images/common/icon_property.png');}
-.footer_person{background-image: url('../assets/images/common/icon_my_selected.png');}
-.footer_home{background-image: url('../assets/images/common/icon_daojia.png');} 
+ .footer_person{background-image: url('../assets/images/common/icon_my_selected.png');}
+ .footer_home{background-image: url('../assets/images/common/icon_daojia.png');} 
 .footer_group{background-image: url('../assets/images/common/icon_shopping.png');} 
 
 /* 大楼 */
