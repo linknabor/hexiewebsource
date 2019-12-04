@@ -18,7 +18,6 @@
 .footer_person{background-image: url('../assets/images/footer/icon_my.png');}
 .footer_home{background-image: url('../assets/images/footer/icon_daojia.png');}
 .footer_group{background-image: url('../assets/images/footer/icon_shopping_selected.png');}
-
 /* 大楼 */
 .footer_fuwu_baofang {background-image: url('../assets/images/icon/icon_property.png')}
 .footer_shequ_baofang {background-image: url('../assets/images/icon/icon_daojia.png')}
@@ -39,6 +38,11 @@
 .footer_shequ_youyi {background-image: url('../assets/images/icon/icon_daojia.png')}
 .footer_person_youyi {background-image: url('../assets/images/icon/icon_my.png')}
 .footer_group_youyi{background-image: url('../assets/images/footer/icon_shopping_selected.png');}
+/* 贵州 */
+.footer_fuwu_guizhou {background-image: url('../assets/images/icon/footer_shequ.png')}
+.footer_shequ_guizhou {background-image: url('../assets/images/icon/footer_zenzhi.png')}
+.footer_person_guizhou {background-image: url('../assets/images/icon/footer_wode.png')}
+.footer_group_guizhou{background-image: url('../assets/images/footer/icon_shopping_selected.png');}
 </style>
 
 <template>

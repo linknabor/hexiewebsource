@@ -28,6 +28,7 @@ import './assets/css/base.css'
 import './assets/css/normalize.css'
 import './assets/js/rem.js'
 import './assets/font-icon/font_a2awfrh3fuq/iconfont.css'
+import './assets/font-icon/font_954185_v0okajshs8/iconfont.css'
 
 import receiveData from './assets/js/receiveData'
 Vue.prototype.receiveData = receiveData;

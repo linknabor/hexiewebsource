@@ -30,11 +30,10 @@
         <mt-button class="subBtn" size="large" @click.native="submit">提交</mt-button>
         <div style="width:100%;height:0.92rem;"></div>
         <div id="word">
-          <Bill :bill-info="quickBillInfo" :version="version" @itemClick="itemClick"></Bill>
+          <Bill :bill-info="quickBillInfo" :version="versions" @itemClick="itemClick"></Bill>
         </div>
         <div style="width:100%;height:2.2rem;background:#eee;"></div>
         <div class="btn-fixed">
-          <!-- <img src="../../assets/images/house/paymoney.png" /> -->
           <div class="fl select-btn" v-show="quan1" :class="{allSelected:quickAllselect}"  @click="allSelect(quickBillInfo,'quickAllselect')">全选&nbsp;</div>
           <div class="pay" @click="pays('quickBillInfo','quickAllPrice','quickAllselect')">
             我要缴费
@@ -46,12 +45,10 @@
       <mt-tab-container-item id="b">
         <!-- 物业缴费开始 -->
         <div id="word">
-          <Bill :bill-info="billInfo" @itemClick="itemClick"  :version="version" ></Bill>
+          <Bill :bill-info="billInfo" @itemClick="itemClick"  :version="versions" ></Bill>
         </div>
-        <!-- <div style="width:100%;height:0.92rem;"></div> -->
         <div style="width:100%;height:2.2rem;background:#eee;"></div>
         <div class="btn-fixed">
-          <!-- <img src="../../assets/images/house/paymoney.png" /> -->
           <div
             class="fl select-btn"
             v-show="quan2"
@@ -86,21 +83,21 @@
             <label>楼宇：</label>
             <select class="virtual-input" v-model="query.build" @change="getCouponSelected">
               <!-- <option value="0">请选择</option> -->
-              <option v-for="item in buildList" :value="item.id">{{item.name}}</option>
+              <option v-for="item in buildList" :value="item.id" :key="item.id">{{item.name}}</option>
             </select>
           </div>
           <div class="input-row">
             <label>门牌：</label>
             <select class="virtual-input" v-model="query.unit" @change="getCoupon">
               <!-- <option value="0">请选择</option> -->
-              <option v-for="item in unitList" :value="item.id">{{item.name}}</option>
+              <option v-for="item in unitList" :value="item.id" :key="item.id">{{item.name}}</option>
             </select>
           </div>
           <div class="input-row">
             <label>室号：</label>
             <select class="virtual-input" v-model="query.house" @change="getCoupons">
               <!-- <option value="0">请选择</option> -->
-              <option v-for="item in houseList" :value="item.id">{{item.name}}</option>
+              <option v-for="item in houseList" :value="item.id" :key="item.id">{{item.name}}</option>
             </select>
           </div>
           <!-- 判断是否为无账单显示 -->
@@ -227,9 +224,10 @@ export default {
     return {
       isshow:false,
       version: "02",
+      versions: "02",
       zhuanpay: "zhuanye",
       getversion: "02",
-      regionname: "上海市",
+      regionname: "",
        regionname1: "",
       standard1: false,
       standard2: false,
@@ -238,7 +236,6 @@ export default {
       startData: "",
       verNumber: "",
       endData: "",
-      sectList: [], //小区列表
       buildList: [], //楼宇列表
       unitList: [], //门牌列表
       houseList: [], //室号列表
@@ -276,7 +273,6 @@ export default {
       quickBillpage: 1,
       pay_least_month: 1,
       reduceMode: 1, //减免金额的方式
-      shows: false,
       id: "",
       showi: false,
       showp: false,
@@ -284,10 +280,10 @@ export default {
       quan: false,
       quan1: false,
       quan2: false,
-      one: "one",
       permit_skip_pay: "1",
       is_null:'',
-      andios:''
+      andios:'',
+      mine:true,
     };
   },
   //时间戳转换成日期
@@ -297,16 +293,15 @@ export default {
   watch: {
     selected(newv,old){
       isloadPage=false;
-      // if(newv=="d"){
-      //   vm.getHousin();
-      // }
+      if(newv=="b"&&vm.mine){
+        vm.zong();
+      }
     }
   },
   created() {
     vm = this;
   },
   mounted() {
-     vm.city();
      vm.unitselect();
      vm.getHousin();
     // this.initSession4Test();
@@ -360,25 +355,24 @@ export default {
           // startData = vm.formatDate(startData,'yyyyMMdd');
           vm.wuzhangdan(startData,endData);
           vm.isshow=true;
+          vm.showp=true;
         }else{
           startData = vm.formatDate(vm.startData,'yyyyMMdd');
           endData=vm.formatDate(vm.endData,'yyyyMMdd');
           vm.wuzhangdan(startData,endData);
           vm.isshow=true;
+          vm.showp=true;
         }
-          
-        
     },
-    
-      
     
     //模仿线上用户信息
     //105/747/384
      //请求 停车缴费 和 物业缴费首屏数据
     zong(){
-      vm.receiveData.getData(vm,"/billList?regionname="+vm.regionname1,
+      vm.receiveData.getData(vm,"/billList",
       "data",
       function() {
+        vm.mine=false;
         vm.pay_least_month = vm.data.result.pay_least_month;
         vm.billInfo = vm.data.result.bill_info; //物业缴费
         vm.reduceMode = vm.data.result.reduce_mode; //减免方式
@@ -389,57 +383,6 @@ export default {
       
     );
     },
-     city() {
-        wx.ready(function() {
-        wx.checkJsApi({
-          jsApiList: ['getLocation'],
-          success: function(res) {
-            if (res.checkResult.getLocation == false) {
-              alert(
-                "你的微信版本太低，不支持微信JS接口，请升级到最新的微信版本！"
-              );
-              return;
-            }
-          }
-        });
-        wx.getLocation({
-
-          type: "wgs84",
-          success: function(res) {
-             
-            let latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
-            let longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
-            vm.getRegionurl(longitude, latitude);
-            return;
-            
-          },
-          cancel: function(res) {
-            console.log("用户取消");
-          }
-        });
-        wx.error(function(res) {
-          alert("获取位置失败");
-        });
-      });
-    },
-getRegionurl(longitude, latitude) {
-      vm.receiveData.getData(
-        vm,
-        "/getRegionUrl?coordinate=" + longitude + "," + latitude,
-        "res",
-        function() {
-          if (vm.res.success) {
-            vm.regionname1 = vm.res.result.address;
-            vm.zong();
-          } else {
-            alert("获取数据失败");
-          }
-        }
-      );
-    },
-
-
-
     initSession4Test() {
       let url = "/initSession4Test/105";
       vm.receiveData.getData(vm, url, "Data", function() {});
@@ -465,29 +408,22 @@ getRegionurl(longitude, latitude) {
         "&regionname=" +
         this.$route.query.City;
       vm.receiveData.getData(vm, url, "Datas", function() {
-        //判断是标准还是专业版
-        if (vm.Datas.result.sect_info[0].version == "01") {
-          vm.getversion = vm.Datas.result.sect_info[0].version;
-          // vm.standard1 = true;
-          vm.zhuanpay = "biaozhun";
-        } else {
-          vm.standard1 = false;
-        }
-
-        let link = null;
-        link = vm.Datas.result.sect_info;
-        if (link && link.length > 0) {
-          vm.sectList = vm.Datas.result.sect_info;
-          vm.add();
-
-          vm.shows = true;
-          vm.showi = true;
-        } else {
-          vm.shows = false;
-          vm.showi = true;
-          // alert('没有搜索到该小区');
-          // return false;
-        }
+            //判断是标准还是专业版
+            if (vm.Datas.result.sect_info[0].version == "01") {
+              vm.getversion = vm.Datas.result.sect_info[0].version;
+              vm.zhuanpay = "biaozhun";
+            } else {
+              vm.standard1 = false;
+            }
+            let link = null;
+            link = vm.Datas.result.sect_info;
+            if (link && link.length > 0) {
+              vm.add();
+              vm.showi = true;
+            } else {
+              vm.showi = false;
+            }
+        
       });
       
     },
@@ -497,16 +433,6 @@ getRegionurl(longitude, latitude) {
     },
     //叉叉
     clicki() {
-      if (vm.sectList.length <= 0) {
-        vm.query.sect = "";
-        vm.query.build = "";
-        vm.query.unit = "";
-        vm.query.house = "";
-        vm.startData = "";
-        vm.endData = "";
-        var add = document.getElementById("btnd");
-        add.value = "";
-      }
       vm.query.sect = "";
       vm.query.build = "";
       vm.query.unit = "";
@@ -517,19 +443,15 @@ getRegionurl(longitude, latitude) {
       vm.buildList = [];
       vm.unitList = [];
       vm.houseList = [];
-      vm.startData = "";
-      vm.endData = "";
       var add = document.getElementById("btnd");
       add.value = "";
 
-      vm.shows = false;
       vm.showi = false;
       vm.queryBillInfo = []; //清空查询账单列表
       vm.otherbillinfo = []; //清空无账单查询列表
       vm.standard1= false;
       vm.standard2= false;
       vm.standard3= false;
-      // vm.standard4= false;
       vm.quan = false;
     },
     add() {
@@ -538,75 +460,48 @@ getRegionurl(longitude, latitude) {
       vm.getCellMng(vm.query.sectID, vm.query.build, vm.query.unit, "01");
     },
 
-    // 失去焦点
-    shi() {
-      if (vm.query.sect != "" && vm.sectList.length >= 0) {
-      }
-      //
-      if (vm.one != "two" && vm.query.sect != "" && vm.sectList.length >= 0) {
-        vm.shows = false;
-        vm.showi = true;
-        var id = "";
-        for (var i = 0; i < vm.sectList.length; i++) {
-          if (vm.query.sect === vm.sectList[i].name) {
-            id = vm.sectList[i].id;
-          }
-        }
-        this.query.sectID = id;
-        vm.add();
-      }
-    },
-    // 获取焦点
-    huo() {
-      if (vm.query.sect != "" && vm.sectList.length > 0) {
-        vm.shows = true;
-        vm.showi = true;
-      }
-    },
-
     //楼宇选中
     getCouponSelected() {
-      // sectList:[],//小区列表
-      // buildList:[],//楼宇列表
-      // unitList:[],//门牌列表
-      // houseList:[],//室号列表
-
+      vm.unitList = [];
+      vm.houseList = [];
       vm.getCellMng(vm.query.sectID, vm.query.build, "", "02");
-     vm.standard1= false;
+      vm.standard1= false;
       vm.standard2= false;
       vm.standard3= false;
+
       // vm.standard4= false;
       vm.otherbillinfo = []; 
     },
     //门牌选中
     getCoupon() {
+      vm.houseList = [];
       this.getCellMng(
-        this.query.sectID,
-        this.query.build,
-        this.query.unit,
-        "01"
+      this.query.sectID,
+      this.query.build,
+      this.query.unit,
+      "01"
       );
       vm.standard1= false;
       vm.standard2= false;
       vm.standard3= false;
-      // vm.standard4= false;
       vm.otherbillinfo = []; 
     },
     //室号选中
     getCoupons() {
       //获取用户数据
-      //重置
-      // vm.startData= '';
-      // vm.endData= '';
-     
+     vm.standard1= false;
+      vm.standard2= false;
+      vm.standard3= false;
       vm.queryBillInfo = []; //清空查询账单列表
-       vm.otherbillinfo = []; 
+      vm.otherbillinfo = []; 
       vm.queryBillPage = 1; //页码重置
       isloadPage=false;//重置加载状态
       vm.queryisLastPage = false; //是否最后一页重置
       // 请求查询账单数据
       if (vm.getversion == "01") {
-        vm.getBillStartDate();
+        if(vm.query.house!="0"){
+           vm.getBillStartDate();
+        }
         vm.version = vm.getversion;
       } else {
         vm.version = "02";
@@ -633,9 +528,10 @@ getRegionurl(longitude, latitude) {
                   endData=vm.formatDate(vm.endData,'yyyyMMdd');
                   vm.wuzhangdan(startData,endData);
                   vm.isshow=true;
+                  vm.showp = true;
                   vm.standard3 =true;
                   vm.standard2=true;
-              }else{
+              }else if(vm.is_null=="1"){
                   vm.standard1=true;
                   vm.standard2=true;
                   vm.startData=vm.res.result.start_date;
@@ -646,8 +542,12 @@ getRegionurl(longitude, latitude) {
                   startData=vm.formatDate(vm.startData,'yyyyMMdd');
                   vm.wuzhangdan(startData,endData);
                   vm.isshow=true;
+                  vm.showp = true;
+            }else {
+                 return;
             }
-           
+          }else {
+            alert(vm.res.message);
           }
         }
       );
@@ -670,10 +570,17 @@ getRegionurl(longitude, latitude) {
         function() {
           if (vm.res.success) {
             if(vm.res.result==null){
+              alert("没有搜索到账单");
               vm.isshow=false;
+              vm.showp = false;
              }
             vm.otherbillinfo = vm.res.result.other_bill_info;
              vm.isshow=false;
+             vm.showp = false;
+          }else {
+            alert(vm.res.message);
+            vm.isshow = false;
+            vm.showp = false;
           }
          
         }
@@ -682,6 +589,7 @@ getRegionurl(longitude, latitude) {
     //请求 楼宇 门牌 室号 数据
     // 参数1： 小区id 参数2： 楼宇id 参数3： 室号id 参数4： 数据类型（03：楼宇；02：门牌；01：房屋）
     getCellMng(sect_id, build_id, unit_id, data_type) {
+      vm.isshow=true;
       vm.showp = true;
       let url = "/getHeXieCellById?regionname=" + this.$route.query.City;
       let params = {
@@ -696,20 +604,20 @@ getRegionurl(longitude, latitude) {
         "queryInfo",
         function() {
           let InfoList = vm.queryInfo.result;
-          if (Array.isArray(InfoList) && InfoList.length <= "0") {
-            vm.showp = false;
+          if (Array.isArray(InfoList) && InfoList.length <= 0) {
+          vm.showp = false;
+          vm.isshow=true;
           } else {
             vm.queryBillInfo = []; //清空查询账单列表
             if ("03" == data_type) {
               vm.buildList = InfoList.build_info;
               vm.buildList.unshift({ id: "0", name: "请选择" });
-              vm.unitList = [];
-              vm.houseList = [];
+              // vm.unitList = [];
+              // vm.houseList = [];
             } else if ("02" == data_type) {
               vm.unitList = InfoList.unit_info;
               vm.unitList.unshift({ id: "0", name: "请选择" });
-              // vm.unitList=[];
-              vm.houseList = [];
+              // vm.houseList = [];
               if (vm.unitList.length == 1) {
                 vm.getCellMng(
                   vm.query.sectID,
@@ -723,6 +631,7 @@ getRegionurl(longitude, latitude) {
               vm.houseList.unshift({ id: "0", name: "请选择" });
             }
             vm.showp = false;
+            vm.isshow=false;
           }
         },
         params
@@ -731,6 +640,7 @@ getRegionurl(longitude, latitude) {
     //请求查询缴费 账单列表
     queryBillList() {
       // vm.getBillStartDate();
+      vm.isshow=true;
       vm.showp = true;
       let url = "billList?regionname=" + this.$route.query.City;
       vm.params.house_id = vm.query.house;
@@ -766,6 +676,7 @@ getRegionurl(longitude, latitude) {
             vm.queryBillInfo = [];
           }
           vm.showp = false;
+          vm.isshow=false;
         },
         vm.params
       );
@@ -877,7 +788,7 @@ getRegionurl(longitude, latitude) {
       vm.receiveData.getData(
         vm,
         // vm.url,
-        "/billList?regionname="+vm.regionname1,
+        "/billList",
         "pageData",
         function() {
           vm.billPage += 1;
@@ -943,7 +854,7 @@ getRegionurl(longitude, latitude) {
             return false;
           }
         }
-        var oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
+        var oriapp=vm.common.getoriApp();
         window.location.href =vm.basePageUrl +"wuyepay.html?"+oriapp+"#/?billIds=" +bills + "&stmtId=" + vm.stmtId + "&payAddr=" + escape(pay_addr) +
         "&totalPrice=" +vm[allPrice] + "&reduceMode=" + vm.reduceMode + "&regionname=" +vm.regionname +"&getversion=" + "02";
     },
@@ -955,7 +866,7 @@ getRegionurl(longitude, latitude) {
           alert("请选择帐单后支付");
           return;
         }
-        var oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
+        var oriapp=vm.common.getoriApp();
         window.location.href =vm.basePageUrl +"wuyepay.html?"+oriapp+"#/?regionname=" +this.$route.query.City +"&totalPrice="+vm[queryallPrice1] +"&house_id=" +
           vm.query.house +"&sect_id=" +vm.query.sectID + "&start_date=" +startData + "&end_date=" + endData +"&getversion=" + '01';
       } else { // 专业版
@@ -1335,7 +1246,7 @@ a {
   line-height: 60px;
   margin-left: -30px;
   text-align: center;
-  background-color: #ccc;
+  background-color: black;
   -moz-opacity: 0.8;
   opacity: 0.8;
   filter: alpha(opacity=80);

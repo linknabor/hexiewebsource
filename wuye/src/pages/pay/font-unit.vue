@@ -21,15 +21,15 @@
   text-indent: 5px;
 }
 .sousuo-l {
-  width: 1rem;
+  width: 1.4rem;
   height: 100%;
 }
 .select {
   background: #fff;
   position: relative;
-  width: 0.96rem;
+  width: 1.4rem;
   height: 100%;
-  text-align: center;
+  /* text-align: center; */
   border: none;
   border-right: 1px solid #999;
   max-height: 70%;
@@ -40,16 +40,17 @@
 .sousuo-r {
   width: 84%;
   height: 100%;
-  left: 1rem;
+  left: 1.4rem;
   position: relative;
   top: -0.6rem;
 }
-input {
+.unitinput {
   position: relative;
-  width: 100%;
-  float: right;
+  width:93%;
+  float: left;
   height: 100%;
   border: none;
+  outline: none;
 }
 .font-body-t {
   width: 84%;
@@ -83,12 +84,20 @@ input {
   top: 0;
   position: absolute;
   text-align: right;
-  right: 0;
+  right: 14px;
 }
 .pic-sousuo img {
   width: 47%;
   height: 69%;
   margin: 0.1rem 0.2rem;
+}
+.iconspan {
+  font-size: 20px;
+  font-weight: 700;
+  vertical-align: middle;
+  position: relative;
+  left: 0.05rem;
+  bottom: 0.01rem;
 }
 </style>
 
@@ -99,8 +108,9 @@ input {
       <img src="../../assets/images/house/font-bg.png" />
       <div class="font-head-sousuo">
         <div class="sousuo-l" @click="location()">
-          <!-- <input type="text" class="select" v-model="regionname" id="city" /> -->
-          <div class="select" id="city">{{regionname}}</div>
+          <div class="select" id="city">
+            <span class="iconfont icon-dingwei iconspan"></span>
+            {{regionname}}</div>
         </div>
         <div class="sousuo-r">
           <!-- 查询小区 -->
@@ -108,12 +118,11 @@ input {
             id="btnd"
             type="text"
             placeholder="查询小区"
-            class="virtual-input classinput"
+            class="virtual-input classinput unitinput"
             value
             v-on:input="shousuo(query.sect)"
             v-model.trim="query.sect"
-            @blur="shi"
-            @focus="huo"
+            v-focus="true"
           />
 
           <!-- 搜索 -->
@@ -149,18 +158,14 @@ export default {
       sectList: [], //小区列表
       regionname: "上海市",
       shows: false,
-      id: "",
-      one: "one",
       query: {
         //查询缴费数据
         sect: "", //小区
-        sectID: "", //小区id
-        build: "", //楼宇id
-        unit: "", //门牌id
-        house: "", //室号id
-        sect1: ""
       }
     };
+  },
+  created() {
+    vm = this;
   },
   mounted() {
     // vm.locationcitys();
@@ -169,8 +174,14 @@ export default {
     vm.city();
     // vm.initSession4Test();
   },
-  created() {
-    vm = this;
+  directives:{
+      focus:{
+        inserted(el,{value}) {
+          if(value) {
+            el.focus();
+          }
+        }
+      }
   },
   methods: {
     initSession4Test() {
@@ -251,9 +262,10 @@ export default {
         clearTimeout(timer);
       }
       timer = setTimeout(() => {
-        this.getHousin(name);
-        if (name == "") {
-          this.shows = false;
+        if (name != "") {
+           this.getHousin(name); 
+        }else {
+          vm.shows=false;
         }
       }, 400);
     },
@@ -270,7 +282,6 @@ export default {
         if (link && link.length > 0) {
           vm.sectList = vm.Datas.result.sect_info;
           vm.shows = true;
-          // vm.shows=false;
         } else {
           vm.shows = false;
         }
@@ -283,9 +294,8 @@ export default {
         var add = document.getElementById("btnd");
         add.value = s.name;
         vm.query.sect = s.name;
-        vm.query.sectID = s.id;
-        // console.log(s.id);
         vm.shows = false;
+        
         var unitdata = s.name;
         var ID = s.id;
         var CityL = vm.regionname;
@@ -294,29 +304,6 @@ export default {
           query: { selected: "d", userunit: unitdata, queryID: ID, City: CityL }
         });
       });
-    },
-
-    shi() {
-      if (vm.query.sect != "" && vm.sectList.length >= 0) {
-      }
-      //
-      if (vm.one != "two" && vm.query.sect != "" && vm.sectList.length >= 0) {
-        vm.shows = true;
-        // vm.showi = true;
-        var id = "";
-        for (var i = 0; i < vm.sectList.length; i++) {
-          if (vm.query.sect === vm.sectList[i].name) {
-            id = vm.sectList[i].id;
-          }
-        }
-        this.query.sectID = id;
-      }
-    },
-    //获取焦点
-    huo() {
-      if (vm.query.sect != "" && vm.sectList.length > 0) {
-        vm.shows = true;
-      }
     },
 
     // 搜索

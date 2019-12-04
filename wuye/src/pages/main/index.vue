@@ -153,11 +153,11 @@ overflow: hidden; background-color: white;}
 <template>
 <div id="divwuye" @scroll="getscroll">
     <div class="wuye">
-        <swiper :options="swiperOption" ref="mySwiper">
-            <swiper-slide>
+        <swiper :options="swiperOption" ref="mySwiper" v-if="banners.length>0">
+            <swiper-slide v-for="item in banners" :key="item.id">
                 <div class="ban1">
-                    <a href="#" >
-                        <img src="http://img.e-shequ.cn/Fve-2SL7nQhr87csiSJmZ-pbv0dI" alt="tt">
+                    <a :href="item.bannerUrl" >
+                        <img :src="item.picture" alt="">
                     </a>                  
                 </div> 
             </swiper-slide>
@@ -265,6 +265,7 @@ export default {
             isloadPage:false,
             zixuns1:[],
             page : 0,
+            banners :[],
             cfgParam:{},
             sectId:0,
             messtype:'',
@@ -304,6 +305,7 @@ export default {
  
     },
     mounted(){
+        vm.bannerss();
         // this.initSession4Test();
         Bus.$on("sends",this.getMsgFromZha);
         
@@ -323,6 +325,13 @@ export default {
         initSession4Test(){
             let url = '/initSession4Test/1';
                 vm.receiveData.getData(vm,url,'Data',function(){
+            });
+        },
+        //轮播图
+        bannerss() {
+            let url = 'banner/3';
+             vm.receiveData.getData(vm,url,'Data',function(){
+                vm.banners = vm.Data.result;
             });
         },
          getMsgFromZha(result) {

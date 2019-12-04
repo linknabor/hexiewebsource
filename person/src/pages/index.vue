@@ -13,8 +13,6 @@
 .footer .nav-controller i {display: block;font-size: 12px;margin-bottom: 0px; height:28px}
 .footer_logo{background-position: 50% 0;background-size: 22px;
     background-repeat: no-repeat;}
-
-
 /* 合协 */
 .footer_wuye_selected{background-image: url('../assets/images/common/icon_property.png');}
  .footer_person{background-image: url('../assets/images/common/icon_my_selected.png');}
@@ -41,6 +39,11 @@
 .footer_shequ_youyi {background-image: url('../assets/images/icon/icon_daojia.png')}
 .footer_person_youyi {background-image: url('../assets/images/icon/icon_my_selected.png')}
 .footer_group_youyi{background-image: url('../assets/images/common/icon_shopping.png');} 
+/* 贵州 */
+.footer_fuwu_guizhou {background-image: url('../assets/images/icon/footer_shequ.png')}
+.footer_shequ_guizhou {background-image: url('../assets/images/icon/footer_zenzhi.png')}
+.footer_person_guizhou {background-image: url('../assets/images/icon/footer_wode_selected.png')}
+.footer_group_guizhou{background-image: url('../assets/images/common/icon_shopping.png');}
 </style>
 
 <template>
