@@ -1,0 +1,23 @@
+{
+  "id": "954185",
+  "name": "111",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "3582075",
+      "name": "√",
+      "font_class": "icon-test",
+      "unicode": "e602",
+      "unicode_decimal": 58882
+    },
+    {
+      "icon_id": "11494978",
+      "name": "定位",
+      "font_class": "dingwei",
+      "unicode": "e65f",
+      "unicode_decimal": 58975
+    }
+  ]
+}

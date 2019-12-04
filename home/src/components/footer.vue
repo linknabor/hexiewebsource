@@ -13,8 +13,6 @@
 .footer .nav-controller i {display: block;font-size: 12px;margin-bottom: 0px; height:28px}
 .footer_logo{background-position: 50% 0;background-size: 22px;
     background-repeat: no-repeat;}
-/* .footer_temai{background-image: url('../assets/images/common/icon_shopping.png');}*/
-/* .footer_home{background-image: url('../assets/images/icon_daojia_selected.png');}  */
 
 /* 合协 */
 .footer_wuye_selected{background-image: url('../assets/images/fonter/icon_property.png');}
@@ -45,6 +43,12 @@
 .footer_shequ_youyi {background-image: url('../assets/images/icon/icon_daojia_selected.png')}
 .footer_person_youyi {background-image: url('../assets/images/icon/icon_my.png')}
 .footer_group_youyi{background-image: url('../assets/images/fonter/icon_pindan.png');}
+
+/* 贵州 */
+.footer_wuye_selected {background-image: url('../assets/images/icon/footer_shequ.png')}
+.footer_home {background-image: url('../assets/images/icon/footer_zenzhi_selected.png')}
+.footer_person {background-image: url('../assets/images/icon/footer_wode.png')}
+.footer_group{background-image: url('../assets/images/fonter/icon_pindan.png');}
 </style>
 
 <template>

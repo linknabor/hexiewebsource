@@ -20,14 +20,14 @@
 			  		楼宇：
 			  		<select class="virtual-input" v-model="query.build"  @change="getCouponSelected">
 						<!-- <option value="0">请选择</option> -->
-			  			<option v-for="item in buildList" :value="item.id" >{{item.name}}</option>
+			  			<option v-for="item in buildList" :value="item.id" :key="item.id">{{item.name}}</option>
 			  		</select>
 			  	</div>
 			  	<div class="input-row">
 			  		门牌：
 			  		<select class="virtual-input" v-model="query.unit" @change="getCoupon">
 						<!-- <option value="0">请选择</option> -->
-			  			<option v-for="item in unitList" :value="item.id" >{{item.name}}</option>	
+			  			<option v-for="item in unitList" :value="item.id" :key="item.id">{{item.name}}</option>	
 			  		</select>
 			  	</div>
 			  	<div class="input-row">
@@ -90,7 +90,7 @@
 		  			area:'',//建筑面积id
 		  		},
 		  		stmtId:'',//快捷缴费 扫描出来的账单号
-		  		url : '/billList?regionname=上海市',
+		  		url : '/billList',
 		  		params : {
 		  			startDate:'',
 		  			endDate:'',
@@ -120,9 +120,20 @@
 		components:{Bill},
 		
 		methods:{
-		
 			sousuo(name){
-				let url = '/getVagueSectByName?sect_name='+name+'&regionname=上海市';
+				if (timer) {
+					clearTimeout(timer);
+				}
+				timer = setTimeout(() => {
+					if (name != "") {
+					this.getHousin(name); 
+					}else {
+					vm.shows=false;
+					}
+				}, 400);
+			},
+			getHousin(name){
+				let url = '/getVagueSectByName?sect_name='+name;
 				vm.receiveData.getData(vm,url,'res',function(){
 						let data=vm.res.result;
 						if(data!=null){
@@ -145,7 +156,6 @@
 						}
 				});
 			},
-
 			addRoom(){
            		if(vm.query.sect==''||vm.query.area==''||vm.query.house==''||vm.query.unit==''){
            			MessageBox.alert('请输入完整信息');
@@ -265,7 +275,7 @@
 			// 	$("#phoneAjax").removeClass("hidden");
 			// }
 			vm.showp=true;
-			let url='/getHeXieCellById?regionname=上海市'
+			let url='/getHeXieCellById'
 			let params = {
 				sect_id, 
 				build_id,

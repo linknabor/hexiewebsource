@@ -8,9 +8,9 @@ const path = require('path')
 module.exports = {
   build: {
     env: require('./prod.env'),
-    index: path.resolve(__dirname, '../dist/wuyepay1.html'),
+    index: path.resolve(__dirname, '../dist/wuyepay.html'),
     assetsRoot: path.resolve(__dirname, '../dist'),
-    assetsSubDirectory: 'wuyepay1', //放置静态文件的目录
+    assetsSubDirectory: 'wuyepay', //放置静态文件的目录
     assetsPublicPath: './', //放置静态文件的路径
     productionSourceMap: false,
     // Gzip off by default as many popular static hosts such as

@@ -890,8 +890,9 @@
 								vm.receiveData.postData(vm,reqUrl,{},'reqUrlData',function(){
 									vm.payInfo = vm.reqUrlData.result;
 									//支付成功跳转详情
-									var oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
-									  window.location.href = vm.basePageUrl+'wuye/index.html?'+oriapp+'#/paymentquery';
+									// var oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
+									var oriapp=vm.common.getoriApp();
+									window.location.href = vm.basePageUrl+'wuye/index.html?'+oriapp+'#/paymentquery';
 					  			})											
 			          	    },
 			          	    fail:function(res) {

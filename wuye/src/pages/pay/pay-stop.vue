@@ -65,20 +65,12 @@
 				carBillPage :1, //停车缴费页码
 				reduceMode:1,
 				quan:false,
-				permit_skip_pay:'1',
-				// park_discount_rule_conf:'',//停车减免优惠规则
-				// park_discount_rule:'',//停车减免方式
-				// before_condition:'',
-				regionname:'上海市'
 			}
 		},
 		created(){
 		  	vm = this;
 		},
 		mounted(){
-			   vm.city();
-			    let url2 = location.href.split("#")[0];
-    			vm.receiveData.wxconfig(vm, wx, ["getLocation"], url2);
 		  	//请求 停车缴费 和 物业缴费首屏数据
 		  	vm.receiveData.getData(vm, vm.url, 'data',function(){
 		  		vm.reduceMode = vm.data.result.reduce_mode;//减免方式
@@ -93,54 +85,6 @@
 		  	
 		},
 		methods:{
-			//定位城市
-
-    city() {
-		
-      wx.ready(function() {
-        wx.checkJsApi({
-          jsApiList: ["getLocation"],
-          success: function(res) {
-            if (res.checkResult.getLocation == false) {
-              alert(
-                "你的微信版本太低，不支持微信JS接口，请升级到最新的微信版本！"
-              );
-              return;
-            }
-          }
-        });
-        wx.getLocation({
-          type: "wgs84",
-          success: function(res) {
-            let latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
-            let longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
-			vm.getRegionurl(longitude, latitude);
-            return;
-          },
-          cancel: function(res) {
-            console.log("用户取消");
-          }
-        });
-        wx.error(function(res) {
-          alert("获取位置失败");
-        });
-      });
-    },
-    getRegionurl(longitude, latitude) {
-      vm.receiveData.getData(
-        vm,
-        "/getRegionUrl?coordinate=" + longitude + "," + latitude,
-        "res",
-        function() {
-          if (vm.res.success) {
-            vm.regionname = vm.res.result.address;
-            
-          } else {
-            alert("获取数据失败");
-          }
-        }
-      );
-    },
 		//分页 
 		getscroll(e) {
 				var st = e.srcElement.scrollTop;
@@ -229,8 +173,9 @@
 					}
 				}
 		  		//跳转支付
-				var oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
-				window.location.href=vm.basePageUrl+"wuyepay1.html?oriApp="+oriapp+"#/?billIds="+bills+"&stmtId="+vm.stmtId+"&payAddr="+escape(pay_addr)+"&totalPrice="+vm[allPrice]+"&reduceMode="+vm.reduceMode+"&getversion=03"+"&regionname="+vm.regionname;
+				// var oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
+				var oriapp=vm.common.getoriApp();
+				window.location.href=vm.basePageUrl+"wuyepay.html?oriApp="+oriapp+"#/?billIds="+bills+"&stmtId="+vm.stmtId+"&payAddr="+escape(pay_addr)+"&totalPrice="+vm[allPrice]+"&reduceMode="+vm.reduceMode+"&getversion=03"+"&regionname=";
 		  	},
 		  	//点击某个选中按钮 params1:被点击按钮的下标 params2:被点击按钮所属的数组
 			  itemClick:function(index, version, b){//3个页面对应不同的三个数组 
