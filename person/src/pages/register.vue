@@ -127,8 +127,8 @@ export default {
                             if(vm.comeFrom){
                                 forwardPage = vm.comeFrom;
                             } else {
-                                let oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
-                                forwardPage = vm.basePageUrl+'person/index.html?'+oriapp;
+                                // let oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
+                                forwardPage = vm.basePageUrl+'person/index.html?'+vm.common.getoriApp();
                             }
                             alert("注册成功。");
                             location.href = forwardPage;

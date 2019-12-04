@@ -157,7 +157,7 @@ export default {
              vm.productbanner = vm.res.result.product;
              vm.load=false;
            }else {
-               alert("获取banner异常");
+            //    alert("获取banner异常");
            } 
         });
     },
@@ -166,7 +166,7 @@ export default {
     },
     initShareSetting(){
             var title = "生鲜、水果、美食、零食、红酒、蛋糕...每周惊喜，尽在"+vm.common.newname+"社区集市！";
-            var link=vm.basePageUrl+"group/onsales.html?v=123#/?state=123";
+            var link=vm.basePageUrl+"group/onsales.html?"+vm.common.getoriApp()+"#/?state=123";
             var img=vm.basePageUrl+"group/static/share_logo2.png";
             var desc="原产地直供，订单采摘，享更多优惠，体验品质生活";
             vm.common.initShareConfig(title,link,img,desc,wx);

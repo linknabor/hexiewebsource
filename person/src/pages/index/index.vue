@@ -50,7 +50,7 @@
     <div class="info-wrap" style="overflow:hidden; clear: both; border-bottom:none ;">
       <!-- 链接地址要换 -->
       <a
-        :href="this.basePageUrlpay+'orderpay.html?start=123#/orders'"
+        :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/orders'"
         class="input-wrap menu-person-link lite-divider"
       >
         <span class="input-info lf30 fs16">全部订单</span>
@@ -61,19 +61,19 @@
     <div id="module-list">
       <div class="module-item-wrap">
         <!-- 链接地址要换 -->
-        <a :href="this.basePageUrlpay+'orderpay.html?start=123#/onsaleorders'" class="module-item">
+        <a :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/onsaleorders'" class="module-item">
           <div class="module-logo logo1"></div>
           <div class="module-title fs14">商品订单</div>
         </a>
       </div>
       <div class="module-item-wrap">
-        <a class="module-item" :href="this.basePageUrlpay+'orderpay.html?start=123#/grouporders'">
+        <a class="module-item" :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/grouporders'">
           <div class="module-logo logo2"></div>
           <div class="module-title fs14">团购订单</div>
         </a>
       </div>
       <div class="module-item-wrap">
-        <a class="module-item" :href="this.basePageUrlpay+'orderpay.html?start=123#/homeorders'">
+        <a class="module-item" :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/homeorders'">
           <div class="module-logo logo3"></div>
           <div class="module-title fs14">服务订单</div>
         </a>
@@ -281,7 +281,7 @@ export default {
     },
     //我是业主
     oriApp() {
-      vm.oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
+      vm.oriapp=vm.common.getoriApp();
     }
   },
   computed: {}

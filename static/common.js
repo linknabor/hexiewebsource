@@ -287,7 +287,9 @@ window.common = {
             AJAXFlag = !1
         },
         function(x) {
-            common.updateUserStatus(x.result);
+            if(x.result!=null){
+               common.updateUserStatus(x.result);
+            }
             AJAXFlag = !0;
 			
 		if(document.URL.indexOf('.html?t=') < 0) {
@@ -306,6 +308,9 @@ window.common = {
 		}
 		url+=common.addParamHsah();
         location.href =url;
+        },
+        function(e){
+            alert(e.message)
         })
     },
     /**变更才需要重设置*/
@@ -315,7 +320,8 @@ updateUserStatus(user) {
     setCookie("currentAddrId", user.currentAddrId, duration);
     setCookie("tel", user.tel, duration);
     setCookie("shareCode", user.shareCode, duration);
-	setCookie("appId", user.appId);
+    setCookie("appId", user.appId);
+    setCookie("shade",true)
 },
      //入口程序 检查状态
     checkRegisterStatus:function(){

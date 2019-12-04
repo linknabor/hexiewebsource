@@ -104,12 +104,6 @@ export default {
       vm.orderId = vm.getUrlParam("orderId");
     }
     let url = location.href.split("#")[0];
-    vm.receiveData.wxconfig(
-      vm,
-      wx,
-      ["onMenuShareTimeline", "onMenuShareAppMessage"],
-      url
-    );
     vm.orders();
   },
 
@@ -127,15 +121,6 @@ export default {
         if (vm.n.success) {
           vm.order = vm.n.result;
           vm.timeStr = vm.getTimeStr();
-          vm.common.initShareConfig(
-            "代扔垃圾服务报名，限时优惠中！",
-            vm.basePageUrlpay +
-              "hxrgroups.html?state=123#/rgroupdetail?ruleId=" +
-              vm.order.groupRuleId,
-            vm.order.productThumbPic,
-            "小区报名满50人开通",
-            wx
-          );
         } else {
           alert("获取订单信息失败");
           vm.$router.push({ path: "/orders" });
@@ -258,7 +243,7 @@ export default {
     gotoGroupDetail(order) {
       window.location.href =
         vm.basePageUrlpay+
-        "hxrgroups.html?#/rgroupinvite?ruleId=" +
+        "hxrgroups.html?"+vm.common.getoriApp()+"#/rgroupinvite?ruleId=" +
         order.groupRuleId +
         "&share=1";
      }

@@ -168,7 +168,7 @@ export default {
     },
     initShareSetting (product) {
         var title = vm.rule.name;
-		var link=vm.basePageUrlpay+"hxrgroups.html?state=123#/rgroupinvite?ruleId="+vm.ruleId;
+		var link=vm.basePageUrlpay+"hxrgroups.html?"+vm.common.getoriApp()+"#/rgroupinvite?ruleId="+vm.ruleId;
 		var img=product.smallPicture;
 		var desc="我在"+vm.common.newname+"参与了一个"+vm.rule.name+"的团购，大家一起来参与吧";
 		vm.common.initShareConfig(title,link,img,desc,wx)
@@ -201,7 +201,7 @@ export default {
         vm.$router.push({path:'/sgrouprule'})
     },
     golist() {
-       location.href=vm.basePageUrlpay+"hxrgroups.html?type="+vm.rule.productType;
+       location.href=vm.basePageUrlpay+"hxrgroups.html?"+vm.common.getoriApp()+"&type="+vm.rule.productType;
     },
     goGroupProduct() {
         vm.$router.push({path:'/rgroupdetail',query:{'ruleId':vm.ruleId}})
