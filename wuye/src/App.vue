@@ -1,31 +1,33 @@
 <template>
   <div id="app">
-    <router-view/>
-    <div id="login" v-show="login"></div>
+    <router-view/>   
+    <div id="login" v-show="login"></div>  
   </div>
 </template>
 
 <script>
 import cookie  from 'js-cookie';
+import Bus from './api/bus.js'
 export default {
   name: 'app',
   data() {
     return {
-      login:true
+       login:true,
     };
   },
   created() {
-    this.shaDe();
+    
   },
   mounted() {
-
+    Bus.$on("logins",this.getLogin);
+  },
+  beforeDestroy(){
+      Bus.$off();
   },
   methods:{
-    shaDe(){
-      if(cookie.get('shade')== 'true') {
-        this.login=false;
+      getLogin(e) {
+        this.login=e;
       }
-    }
   }
 }
 </script>

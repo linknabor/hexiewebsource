@@ -60,7 +60,7 @@
           </li>
         </ul>
       </nav>
-    </footer>     	
+    </footer>   
 	</div>
 </template>
 
@@ -99,6 +99,7 @@ export default{
                          return
                     }
                     if(n.result!=null) {
+                      Bus.$emit('logins',false)
                       vm.list=n.result.iconList;
                       Bus.$emit('sends',n.result)
                     }
@@ -110,7 +111,7 @@ export default{
                     }
                 },
                 r = function(res) { 
-                   
+                    vm.login=false;
                 };
             this.common.invokeApi(n, a, i, null, e, r);
 

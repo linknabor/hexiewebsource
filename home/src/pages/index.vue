@@ -133,6 +133,7 @@ export default {
          if (n.success && n.result == null) {
             reLogin();
          }
+          Bus.$emit('logins',false)
           Bus.$emit("sends", n.result.iconList);
          _this.initData(); 
          var duration = new Date().getTime()/1000 + 3600*24*30;

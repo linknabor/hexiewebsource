@@ -7,6 +7,7 @@
 
 <script>
 import cookie  from 'js-cookie';
+import Bus from './api/bus.js';
 export default {
   name: 'App',
   data() {
@@ -15,16 +16,17 @@ export default {
     };
   },
   created() {
-    this.shaDe();
+    
   },
   mounted() {
-
+      Bus.$on("logins",this.getLogin);
+  },
+  beforeDestroy(){
+      Bus.$off();
   },
   methods:{
-    shaDe(){
-      if(cookie.get('shade')== 'true') {
-        this.login=false;
-      }
+    getLogin(e) {
+      this.login=e;
     }
   },
 }

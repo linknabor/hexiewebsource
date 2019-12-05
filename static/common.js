@@ -99,7 +99,7 @@ function dealWithAjaxData(o, e, i, r) {
 function reLogin() {
 	setTimeout(function(){
 		console.log("waiting 1s for relogin.")
-	},1000)
+	},500)
     setCookie("UID", "", 0),
     common.login(!0)
 }
@@ -207,6 +207,7 @@ window.common = {
                 success: function(e) {
                     common.alert("success data: " + JSON.stringify(e));
                     dealWithAjaxData(o, e, i, r);
+
                 },
                 error: function(e) {
                     common.alert("error data: " + JSON.stringify(e));
@@ -321,7 +322,6 @@ updateUserStatus(user) {
     setCookie("tel", user.tel, duration);
     setCookie("shareCode", user.shareCode, duration);
     setCookie("appId", user.appId);
-    setCookie("shade",true)
 },
      //入口程序 检查状态
     checkRegisterStatus:function(){

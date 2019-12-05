@@ -315,7 +315,7 @@ updateUserStatus(user) {
     setCookie("currentAddrId", user.currentAddrId, duration);
     setCookie("tel", user.tel, duration);
     setCookie("shareCode", user.shareCode, duration);
-	setCookie("appId", user.appId);
+    setCookie("appId", user.appId);
 },
      //入口程序 检查状态
     checkRegisterStatus:function(){
@@ -417,7 +417,7 @@ updateUserStatus(user) {
                 imgUrl: img
             });
         });
-    }
+    },
 
 };
 Getofficial();

@@ -153,6 +153,7 @@
       >长按关注公众号，尊享更多服务和商品</div>
       <img style="width: 200px;" :src="qrCode" />
     </div>
+
   </div>
 </template>
 
@@ -235,6 +236,7 @@ export default {
           vm.user.name ="" != n.result.name ? n.result.name : vm.user_info.nickname;
            
           vm.qrCode=n.result.qrCode;
+          Bus.$emit('logins',false)
           Bus.$emit('sends',n.result.iconList)
           
           //保存图片

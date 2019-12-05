@@ -66,6 +66,7 @@
 
 <script>
   import cookie from 'js-cookie';
+  import Bus from '../api/bus.js';
   let vm;
 	export default{
     data() {
@@ -103,7 +104,7 @@
                             reLogin();
                     }
                     if(n.result!=null) {
-                        // Bus.$emit('sends',n.result.iconList)
+                        Bus.$emit('logins',false)
                         vm.list=n.result.iconList;
                     }
                    
