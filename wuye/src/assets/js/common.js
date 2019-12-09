@@ -8,7 +8,7 @@ var MasterConfig = function() {
         basePageUrl:/127|test/.test(location.origin)?'https://test.e-shequ.com/weixin/':
         /uat/.test(location.origin)?'https://uat.e-shequ.com/hexie/weixin/':
         'https://www.e-shequ.cn/weixin/',
-        
+
         basePageUrlpay:/127|test/.test(location.origin)?'https://test.e-shequ.com/weixin/pay/':
         /uat/.test(location.origin)?'https://uat.e-shequ.com/pay/':
         'https://www.e-shequ.cn/weixin/',
@@ -259,7 +259,6 @@ window.common = {
         var oriapp=getUrlParam('oriApps')?'oriApp='+getUrlParam('oriApps'):'';
         return  oriapp;
    },
-
      //授权
     login: function() {
 		var timestamp="";
