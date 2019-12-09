@@ -50,7 +50,7 @@
     <div class="info-wrap" style="overflow:hidden; clear: both; border-bottom:none ;">
       <!-- 链接地址要换 -->
       <a
-        :href="this.basePageUrlpay+'orderpay.html?start=123#/orders'"
+        :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/orders'"
         class="input-wrap menu-person-link lite-divider"
       >
         <span class="input-info lf30 fs16">全部订单</span>
@@ -61,19 +61,19 @@
     <div id="module-list">
       <div class="module-item-wrap">
         <!-- 链接地址要换 -->
-        <a :href="this.basePageUrlpay+'orderpay.html?start=123#/onsaleorders'" class="module-item">
+        <a :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/onsaleorders'" class="module-item">
           <div class="module-logo logo1"></div>
           <div class="module-title fs14">商品订单</div>
         </a>
       </div>
       <div class="module-item-wrap">
-        <a class="module-item" :href="this.basePageUrlpay+'orderpay.html?start=123#/grouporders'">
+        <a class="module-item" :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/grouporders'">
           <div class="module-logo logo2"></div>
           <div class="module-title fs14">团购订单</div>
         </a>
       </div>
       <div class="module-item-wrap">
-        <a class="module-item" :href="this.basePageUrlpay+'orderpay.html?start=123#/homeorders'">
+        <a class="module-item" :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/homeorders'">
           <div class="module-logo logo3"></div>
           <div class="module-title fs14">服务订单</div>
         </a>
@@ -153,6 +153,7 @@
       >长按关注公众号，尊享更多服务和商品</div>
       <img style="width: 200px;" :src="qrCode" />
     </div>
+    <div id="login" v-show="login"></div>
   </div>
 </template>
 
@@ -172,6 +173,7 @@ export default {
         lvdou: "0",
         couponCount: 0,
       },
+      login:true,
       oriapp:'', //我是业主
       qrCode:'',//二维码
       // 默认未开通会员
@@ -235,6 +237,7 @@ export default {
           vm.user.name ="" != n.result.name ? n.result.name : vm.user_info.nickname;
            
           vm.qrCode=n.result.qrCode;
+          vm.login=false;
           Bus.$emit('sends',n.result.iconList)
           
           //保存图片
@@ -245,6 +248,7 @@ export default {
           
         },
         r = function() {
+          vm.login=false;
           vm.user = {};
           (vm.user.headimgurl = vm.user_info.avatar),
             (vm.user.name = vm.user_info.nickname);
@@ -281,7 +285,7 @@ export default {
     },
     //我是业主
     oriApp() {
-      vm.oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
+      vm.oriapp=vm.common.getoriApp();
     }
   },
   computed: {}
@@ -289,6 +293,15 @@ export default {
 </script>
 
 <style  scoped>
+ #login {
+      background: rgba(0,0,0,0.5);
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      position: fixed; 
+      z-index:10000000;
+}
 .ind {
   background-color: #fffff8;
       overflow-x: hidden;

@@ -13,7 +13,15 @@
 .footer .nav-controller i {display: block;font-size: 12px;margin-bottom: 0px; height:28px}
 .footer_logo{background-position: 50% 0;background-size: 22px;
     background-repeat: no-repeat;}
-
+#login {
+    background: rgba(0,0,0,0.5);
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    position: fixed; 
+    z-index:10000000;
+}
 /* 合协 */
 .footer_wuye_selected{background-image: url('../assets/images/common/icon_property_selected.png');}
 .footer_person{background-image: url('../assets/images/common/icon_my.png');}
@@ -60,7 +68,8 @@
           </li>
         </ul>
       </nav>
-    </footer>     	
+    </footer>   
+    <div id="login" v-show="login"></div>  
 	</div>
 </template>
 
@@ -73,6 +82,7 @@ export default{
       return {
         list:[],
         link:'',
+        login:true,
       }
     },
     created() {
@@ -99,6 +109,7 @@ export default{
                          return
                     }
                     if(n.result!=null) {
+                      vm.login=false;
                       vm.list=n.result.iconList;
                       Bus.$emit('sends',n.result)
                     }
@@ -110,7 +121,7 @@ export default{
                     }
                 },
                 r = function(res) { 
-                   
+                   vm.login=false;
                 };
             this.common.invokeApi(n, a, i, null, e, r);
 
@@ -123,7 +134,9 @@ export default{
        geturl() {
         var geturl=vm.getUrlParam('oriApp');
         if(geturl) {
-             vm.link=location.origin+location.pathname;
+             vm.link=location.origin+location.pathname+'?oriApp='+geturl;
+        }else {
+          vm.link=location.origin+location.pathname;
         }
        },
 

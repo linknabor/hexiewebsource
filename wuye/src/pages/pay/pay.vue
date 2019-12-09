@@ -30,7 +30,7 @@
         <mt-button class="subBtn" size="large" @click.native="submit">提交</mt-button>
         <div style="width:100%;height:0.92rem;"></div>
         <div id="word">
-          <Bill :bill-info="quickBillInfo" :version="versions" @itemClick="itemClick"></Bill>
+          <Bill :bill-info="quickBillInfo" :version="version1" @itemClick="itemClick"></Bill>
         </div>
         <div style="width:100%;height:2.2rem;background:#eee;"></div>
         <div class="btn-fixed">
@@ -45,7 +45,7 @@
       <mt-tab-container-item id="b">
         <!-- 物业缴费开始 -->
         <div id="word">
-          <Bill :bill-info="billInfo" @itemClick="itemClick"  :version="versions" ></Bill>
+          <Bill :bill-info="billInfo" @itemClick="itemClick"  :version="version1" ></Bill>
         </div>
         <div style="width:100%;height:2.2rem;background:#eee;"></div>
         <div class="btn-fixed">
@@ -224,7 +224,7 @@ export default {
     return {
       isshow:false,
       version: "02",
-      versions: "02",
+      version1: "02",
       zhuanpay: "zhuanye",
       getversion: "02",
       regionname: "",
@@ -364,7 +364,6 @@ export default {
           vm.showp=true;
         }
     },
-    
     //模仿线上用户信息
     //105/747/384
      //请求 停车缴费 和 物业缴费首屏数据
@@ -455,9 +454,9 @@ export default {
       vm.quan = false;
     },
     add() {
-      vm.getCellMng(vm.query.sectID, "", "", "03");
-      vm.getCellMng(vm.query.sectID, vm.query.build, "", "02");
-      vm.getCellMng(vm.query.sectID, vm.query.build, vm.query.unit, "01");
+      vm.getCellMng(vm.query.sectID,"", "","03");
+      vm.getCellMng(vm.query.sectID,"0","","02");
+      vm.getCellMng(vm.query.sectID,"0","0","01");
     },
 
     //楼宇选中
@@ -465,6 +464,7 @@ export default {
       vm.unitList = [];
       vm.houseList = [];
       vm.getCellMng(vm.query.sectID, vm.query.build, "", "02");
+      vm.getCellMng(vm.query.sectID, vm.query.build, "0", "01");
       vm.standard1= false;
       vm.standard2= false;
       vm.standard3= false;
@@ -475,12 +475,10 @@ export default {
     //门牌选中
     getCoupon() {
       vm.houseList = [];
-      this.getCellMng(
-      this.query.sectID,
-      this.query.build,
-      this.query.unit,
-      "01"
-      );
+      if(this.query.build=="") {
+        this.query.build="0";
+      }
+      this.getCellMng(this.query.sectID,this.query.build,this.query.unit,"01");
       vm.standard1= false;
       vm.standard2= false;
       vm.standard3= false;
@@ -603,35 +601,42 @@ export default {
         url,
         "queryInfo",
         function() {
-          let InfoList = vm.queryInfo.result;
-          if (Array.isArray(InfoList) && InfoList.length <= 0) {
-          vm.showp = false;
-          vm.isshow=true;
-          } else {
-            vm.queryBillInfo = []; //清空查询账单列表
-            if ("03" == data_type) {
-              vm.buildList = InfoList.build_info;
-              vm.buildList.unshift({ id: "0", name: "请选择" });
-              // vm.unitList = [];
-              // vm.houseList = [];
-            } else if ("02" == data_type) {
-              vm.unitList = InfoList.unit_info;
-              vm.unitList.unshift({ id: "0", name: "请选择" });
-              // vm.houseList = [];
-              if (vm.unitList.length == 1) {
-                vm.getCellMng(
-                  vm.query.sectID,
-                  vm.query.build,
-                  vm.query.unit,
-                  "01"
-                );
+          if(vm.queryInfo.success) {
+              let InfoList = vm.queryInfo.result;
+              if (Array.isArray(InfoList) && InfoList.length <= 0) {
+              vm.showp = false;
+              vm.isshow=false;
+              } else {
+                vm.queryBillInfo = []; //清空查询账单列表
+                if ("03" == data_type) {
+                  vm.buildList = InfoList.build_info;
+                  vm.buildList.unshift({ id: "0", name: "请选择" });
+                  // vm.unitList = [];
+                  // vm.houseList = [];
+                } else if ("02" == data_type) {
+                  vm.unitList = InfoList.unit_info;
+                  vm.unitList.unshift({ id: "0", name: "请选择" });
+                  // vm.houseList = [];
+                } else if ("01" == data_type) {
+                  vm.houseList = InfoList.house_info;
+                  vm.houseList.unshift({ id: "0", name: "请选择" });
+                }
+                vm.showp = false;
+                vm.isshow=false;
               }
-            } else if ("01" == data_type) {
-              vm.houseList = InfoList.house_info;
-              vm.houseList.unshift({ id: "0", name: "请选择" });
-            }
+          }else {
+              if ("03" == data_type) {
+                vm.buildList =[];
+                vm.unitList = [];
+                vm.houseList = [];
+              } else if ("02" == data_type) {
+                vm.unitList = [];
+                vm.houseList = [];
+              } else if ("01" == data_type) {
+                vm.houseList = [];
+              }
             vm.showp = false;
-            vm.isshow=false;
+            vm.isshow=false;  
           }
         },
         params

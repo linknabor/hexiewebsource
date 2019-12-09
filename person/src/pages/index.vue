@@ -15,8 +15,8 @@
     background-repeat: no-repeat;}
 /* 合协 */
 .footer_wuye_selected{background-image: url('../assets/images/common/icon_property.png');}
- .footer_person{background-image: url('../assets/images/common/icon_my_selected.png');}
- .footer_home{background-image: url('../assets/images/common/icon_daojia.png');} 
+.footer_person{background-image: url('../assets/images/common/icon_my_selected.png');}
+.footer_home{background-image: url('../assets/images/common/icon_daojia.png');} 
 .footer_group{background-image: url('../assets/images/common/icon_shopping.png');} 
 
 /* 大楼 */

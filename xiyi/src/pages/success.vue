@@ -73,7 +73,7 @@ export default {
             })
        },
        gotoBack() {
-           location.href=vm.basePageUrl+'home/index.html';
+           location.href=vm.basePageUrl+'home/index.html?'+vm.common.getoriApp()+'#/';
        }
    },
 

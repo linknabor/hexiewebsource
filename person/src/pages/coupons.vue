@@ -130,7 +130,7 @@ export default {
                window.location=vm.coupon.suggestUrl;
            }else {
                //跳转集市
-               location.href=vm.basePageUrl+'group/onsales.html?v=20160229?type=3';
+               location.href=vm.basePageUrl+'group/onsales.html?'+vm.common.getoriApp()+'&type=3';
            }
        },
        //查看历史
