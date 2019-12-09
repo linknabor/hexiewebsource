@@ -81,7 +81,6 @@ export default {
        vm.flush();
    },
    mounted() {
-       console.log(this.$route)
     // vm.initSession4Test();     
     vm.getBannerType();
     vm.queryProducts();

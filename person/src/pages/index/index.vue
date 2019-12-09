@@ -153,7 +153,7 @@
       >长按关注公众号，尊享更多服务和商品</div>
       <img style="width: 200px;" :src="qrCode" />
     </div>
-
+    <div id="login" v-show="login"></div>
   </div>
 </template>
 
@@ -173,6 +173,7 @@ export default {
         lvdou: "0",
         couponCount: 0,
       },
+      login:true,
       oriapp:'', //我是业主
       qrCode:'',//二维码
       // 默认未开通会员
@@ -236,7 +237,7 @@ export default {
           vm.user.name ="" != n.result.name ? n.result.name : vm.user_info.nickname;
            
           vm.qrCode=n.result.qrCode;
-          Bus.$emit('logins',false)
+          vm.login=false;
           Bus.$emit('sends',n.result.iconList)
           
           //保存图片
@@ -247,6 +248,7 @@ export default {
           
         },
         r = function() {
+          vm.login=false;
           vm.user = {};
           (vm.user.headimgurl = vm.user_info.avatar),
             (vm.user.name = vm.user_info.nickname);
@@ -291,6 +293,15 @@ export default {
 </script>
 
 <style  scoped>
+ #login {
+      background: rgba(0,0,0,0.5);
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      position: fixed; 
+      z-index:10000000;
+}
 .ind {
   background-color: #fffff8;
       overflow-x: hidden;

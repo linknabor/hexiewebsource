@@ -13,6 +13,7 @@
 .footer .nav-controller i {display: block;font-size: 12px;margin-bottom: 0px; height:28px}
 .footer_logo{background-position: 50% 0;background-size: 22px;
     background-repeat: no-repeat;}
+
 /* 合协 */
 .footer_wuye_selected{background-image: url('../assets/images/footer/icon_property.png');}
 .footer_person{background-image: url('../assets/images/footer/icon_my.png');}
@@ -60,7 +61,7 @@
           </li>
         </ul>
       </nav>
-    </footer>     	
+    </footer>     
 	</div>
 </template>
 
@@ -110,6 +111,7 @@
                    
                 },
                 r = function() { 
+                  
                 };
             this.common.invokeApi(n, a, i, null, e, r);
       },
