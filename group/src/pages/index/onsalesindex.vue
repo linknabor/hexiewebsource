@@ -87,6 +87,7 @@
     </div>   
     <div style="height:60px;clear:both">&nbsp;</div>
     <Footer></Footer>
+    <div id="login" v-show="login"></div>	
   </div>
 </template>
 
@@ -94,7 +95,8 @@
 let vm;
 import {swiper,swiperSlide} from 'vue-awesome-swiper';
 import wx from 'weixin-js-sdk';
-import Footer from '../index.vue'
+import Footer from '../index.vue';
+import Bus from '../../api/bus.js';
 export default {
   data() {
     return {
@@ -117,16 +119,21 @@ export default {
         productbanner:[],
         brand_icon:[],
         banners:[],
-        activebanner:[]
+        activebanner:[],
+        login:true
     };
   },
   created(){
     vm=this;
    
   },
+  beforeDestroy(){
+      Bus.$off();
+  },
   mounted() {
-     let url = location.href.split('#')[0];
-      vm.receiveData.wxconfig(vm,wx,['onMenuShareTimeline','onMenuShareAppMessage'],url);
+    let url = location.href.split('#')[0];
+    vm.receiveData.wxconfig(vm,wx,['onMenuShareTimeline','onMenuShareAppMessage'],url);
+    Bus.$on("logins",this.getLogin);
     vm.getBannerType();
     
     vm.initShareSetting();
@@ -142,6 +149,9 @@ export default {
   },
 
   methods: {
+    getLogin(e) {
+      vm.login=e;
+    },
     //模仿线上用户信息/105/747/384/
     initSession4Test(){
         let url = '/initSession4Test/79187';
@@ -157,7 +167,7 @@ export default {
              vm.productbanner = vm.res.result.product;
              vm.load=false;
            }else {
-               alert("获取banner异常");
+            //    alert("获取banner异常");
            } 
         });
     },
@@ -166,7 +176,7 @@ export default {
     },
     initShareSetting(){
             var title = "生鲜、水果、美食、零食、红酒、蛋糕...每周惊喜，尽在"+vm.common.newname+"社区集市！";
-            var link=vm.basePageUrl+"group/onsales.html?v=123#/?state=123";
+            var link=vm.basePageUrl+"group/onsales.html?"+vm.common.getoriApp()+"#/?state=123";
             var img=vm.basePageUrl+"group/static/share_logo2.png";
             var desc="原产地直供，订单采摘，享更多优惠，体验品质生活";
             vm.common.initShareConfig(title,link,img,desc,wx);
@@ -179,6 +189,15 @@ export default {
 </script>
 
 <style  scoped>
+#login {
+  background: rgba(0,0,0,0.5);
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  position: fixed; 
+  z-index:10000000;
+}
 /* load */
 .load6 {
     margin: 100px auto 0;

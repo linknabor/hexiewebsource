@@ -77,12 +77,12 @@ export default {
            vm.read(notice);
              	if(notice.noticeType==1){
         		//订单
-                    location.href= vm.basePageUrlpay+"orderpay.html?start=123#/orderdetail?orderId="+notice.bizId;
+                    location.href= vm.basePageUrlpay+"orderpay.html?"+vm.common.getoriApp()+"#/orderdetail?orderId="+notice.bizId;
                 } else if(notice.noticeType==2){
                     //评论
                 } else if(notice.noticeType==3){
                     //团购
-                    location.href=vm.basePageUrlpay+"hxrgroups.html?state=123#/rgroupdetail?groupId="+notice.bizId;
+                    location.href=vm.basePageUrlpay+"hxrgroups.html?"+vm.common.getoriApp()+"#/rgroupdetail?groupId="+notice.bizId;
                 } else if(notice.noticeType==4){
                     //系统推送
                 } else if(notice.noticeType==5){

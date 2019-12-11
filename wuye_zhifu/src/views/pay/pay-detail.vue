@@ -1,3 +1,4 @@
+
 <style scoped>
 	.pay-detail{
 		padding:0.3rem;
@@ -40,7 +41,6 @@
 	.fee-list dd{
 		color: #7d7d7d;
 	}
-
 	.discount{
 		padding: 0;
 		background-color: #f6f7f1;
@@ -68,7 +68,6 @@
 	.coupon{
 		color: #ff8a05;
 	}
-
 	.payCount{
 		padding: 0 0.2rem;
 		height: 1rem;
@@ -82,7 +81,6 @@
 		font-size: 0.32rem;
 		-font-weight: bold;
 	}
-
 	/*优惠劵雷彪*/
 	.upton-list{
 		padding: 0.3rem 0.3rem;
@@ -146,7 +144,6 @@
 		width: 4.9rem;
 		font-size: .2rem;
 	}
-
 	.detail-right .upton-number{
 		font:0.466rem/0.8rem "";
 		color: #fff;
@@ -173,7 +170,6 @@
 		-left: 0.4rem;
 		margin: 0 auto;
 	}
-
 	.pay-btn{
 		background-color: #ff8a00;
 		position: fixed;
@@ -187,7 +183,6 @@
 		color: #fff;
 		line-height: 0.9rem;
 	}
-
 /*发票*/
 .invoice{
 	border:1px solid #cecdc9;
@@ -288,6 +283,16 @@
 					<p class="detail-price fr">{{item.fee_price}}</p>
 				</dd>
 			</dl>
+			 <dl v-for="item in feeList" class="fee-list" v-if="version=='03'">
+        <dt class="ov">
+          <p class="fee-name fl">{{item.service_fee_name}}</p>
+          <p class="fee-price fr">￥{{item.totalFee.toFixed(2)}}</p>
+        </dt>
+        <dd class="ov" v-for="i in item.fee_detail">
+          <p class="detail-date fl">{{i.service_fee_cycle}}</p>
+          <p class="detail-price fr">{{i.fee_price}}</p>
+        </dd>
+      </dl>
 			<!-- 优惠选项 -->
 			<ul class="discount">
 				<li class="ov" @click="uptonList" >
@@ -430,11 +435,15 @@
 				couponId:'',//优惠券id
 				mianBill:'0',//优惠的账单id
 				mianAmt:0.00,
+				fee_mianBill:'0',
+				fee_mianAmt:0.00,
 				show_invoice_flag:'0',
 				show_com_flag:'0',//是否允许开具公司发票
 				show_invoice:'',//是否显示发票
 				version:'',
 				bind_switch:"1",
+				 price: "",
+      			reduceMoney:"0"
 			}
 		},
 		filters:{
@@ -444,7 +453,6 @@
 			
 		},
 		created(){
-
 			vm = this;		
 			
 			this.directRightUrl();
@@ -452,25 +460,22 @@
 				vm.routeParams.stmtId = ""
 			}
 			//得到实际支付金额 和是否减免 和减免了多少钱
-			vm.calcReduceAmt()
+			// vm.calcReduceAmt()
 			//无账单缴费
-			    this.house_id = this.$route.query.house_id;
-                this.sect_id = this.$route.query.sect_id;
-                this.start_date=this.$route.query.start_date;
-                this.end_date=this.$route.query.end_date;
-                this.regionname=this.$route.query.regionname;
-                this.getversion=this.$route.query.getversion;
-                vm.version=this.$route.query.getversion;
+			    this.house_id = this.$route.query.house_id;
+                this.sect_id = this.$route.query.sect_id;
+                this.start_date=this.$route.query.start_date;
+                this.end_date=this.$route.query.end_date;
+                this.regionname=this.$route.query.regionname;
+                this.getversion=this.$route.query.getversion;
+                vm.version=this.$route.query.getversion;
 		},
-
 		mounted(){
 		
 			vm.common.checkRegisterStatus();
-
 			// this.initSession4Test()
 			this.getBillDetail();
 			this.Coupons();
-
 			// this.getMember(); 判断是否开通会员
 			
 		},
@@ -504,12 +509,11 @@
 			},
 			getBillDetail() {
 					if(vm.version=='01'){
-		       let url="getPayListStd?regionname="+this.regionname+"&house_id="+ this.house_id +
-		      "&sect_id="+this.sect_id +"&start_date="+this.start_date +"&end_date="+this.end_date; 
+		       let url="getPayListStd?regionname="+this.regionname+"&house_id="+ this.house_id +
+		      "&sect_id="+this.sect_id +"&start_date="+this.start_date +"&end_date="+this.end_date; 
              
-
-             vm.receiveData.getData(
-                vm,url,'data',function(){
+             vm.receiveData.getData(
+                vm,url,'data',function(){
 						  
 				    vm.show_com_flag=vm.data.result.other_bill_info[0].show_com_flag;
 					vm.show_invoice_flag = vm.data.result.other_bill_info[0].show_invoice_flag;
@@ -518,19 +522,19 @@
 						
 						
 					}
-                    let useDate = vm.data.result.other_bill_info[0];
-                    vm.verNumber = useDate.ver_no;
-                 			//地址
-                    vm.addr = useDate.cell_addr;
+                    let useDate = vm.data.result.other_bill_info[0];
+                    vm.verNumber = useDate.ver_no;
+                 			//地址
+                    vm.addr = useDate.cell_addr;
 	
-              				//面积
-                    vm.area = useDate.cnst_area;
-               				//费用列表
-                    vm.feeList = vm.data.result.other_bill_info;
-
-                }
-             )
-            }else{
+              				//面积
+                    vm.area = useDate.cnst_area;
+               				//费用列表
+                    vm.feeList = vm.data.result.other_bill_info;
+                }
+			 )
+			  vm.calcReduceAmt();
+            }else if(vm.version == "02"){
 			let url = "getBillDetail?regionname="+this.regionname;
 			vm.receiveData.getData(
 				vm,
@@ -550,14 +554,21 @@
 					}
 	  				let useDate = vm.data.result.fee_data[0];
 	  				let mianBill = vm.data.result.mianBill;
-	  				let mianAmt = vm.data.result.mianAmt;
+					let mianAmt = vm.data.result.mianAmt;
+					let fee_mianBill = vm.data.result.fee_mianBill;//物业费减免账单id
+            		let fee_mianAmt = vm.data.result.fee_mianAmt;//物业费减免金额
 	  				if ( mianBill) {
 						vm.mianBill = vm.data.result.mianBill;
 					}
 					if ( mianAmt) {
 						vm.mianAmt = vm.data.result.mianAmt;
 					}
-
+					if (fee_mianBill) {
+              			vm.fee_mianBill = vm.data.result.fee_mianBill;
+            		}
+					if (fee_mianAmt) {
+					    vm.fee_mianAmt = vm.data.result.fee_mianAmt;
+					}
 	  				//户号
 	  				vm.verNumber = useDate.ver_no;
 	  				//地址
@@ -566,16 +577,131 @@
 	  				//面积
 	  				vm.area = useDate.cnst_area;
 	  				//费用列表
-	  				vm.feeList = useDate.fee_name;
+					vm.feeList = useDate.fee_name;
+					vm.count = vm.routeParams.totalPrice;//传来的总价格
+					let reduced_amt=parseFloat(vm.fee_mianAmt)+parseFloat(vm.mianAmt);//减少的钱
+					vm.reduceAmt = parseFloat(reduced_amt).toFixed(2); //合计
+					vm.count =parseFloat(vm.routeParams.totalPrice) - parseFloat(vm.reduceAmt);//减免之后的金额
+					vm.count = vm.count.toFixed(2);
+					//缴费四舍五入
+					let zcount=vm.count;
+					// vm.Carandpay(zcount,reduced_amt);
+					vm.Carandpay(zcount);//四舍五入
 	  			},
-
 	  			{
 	  				billId :vm.routeParams.billIds,
 	  				stmtId :vm.routeParams.stmtId
 	  			}
 			  );
-}
+       }      //停车费减免ifbefore_condition为1，可以优惠，为0则不可优惠
+      else {
+        let url = "getBillDetail?regionname=" + this.regionname;
+        vm.receiveData.getData(
+          vm,
+          url,
+          "data",
+          function() {
+            vm.show_com_flag = vm.data.result.show_com_flag;
+            vm.show_invoice_flag = vm.data.result.show_invoice_flag;
+            vm.show_invoice = vm.data.result.show_invoice;
+            if (vm.show_invoice == "1") {
+              vm.invoice_title_type = "01";
+            }
+            if (vm.data.result.fee_data == null) {
+            }
+            let useDate = vm.data.result.fee_data[0];
+            let mianBill = vm.data.result.mianBill;//停车费减免账单id
+			let mianAmt = vm.data.result.mianAmt;//停车费减免金额
+			let fee_mianBill = vm.data.result.fee_mianBill;//物业费减免账单id
+            let fee_mianAmt = vm.data.result.fee_mianAmt;//物业费减免金额
+            if (mianBill) {
+              vm.mianBill = vm.data.result.mianBill;
+            }
+            if (mianAmt) {
+              vm.mianAmt = vm.data.result.mianAmt;
+			}
+			if (fee_mianBill) {
+              vm.fee_mianBill = vm.data.result.fee_mianBill;
+            }
+			if (fee_mianAmt) {
+			  vm.fee_mianAmt = vm.data.result.fee_mianAmt;
+			}
+
+            //户号
+            vm.verNumber = useDate.ver_no;
+            //地址
+            vm.addr = useDate.cell_addr;
+
+            //面积
+            vm.area = useDate.cnst_area;
+            //费用列表
+            vm.feeList = useDate.fee_name;
+            //字符串
+  
+              vm.count = vm.routeParams.totalPrice;
+              let reduced_amt=vm.mianAmt;
+              vm.reduceAmt =  parseFloat(reduced_amt).toFixed(2); //合计
+              vm.count =parseFloat(vm.routeParams.totalPrice) - parseFloat(vm.reduceAmt);
+              vm.count = vm.count.toFixed(2);
+               //缴费四舍五入
+              let zcount=vm.count;
+			  vm.Carandpay(zcount);
+          },
+          {
+            billId: vm.routeParams.billIds,
+            stmtId: vm.routeParams.stmtId
+            //停车减免传优惠账单的id
+          }
+        );
+      }
 			},
+			 Carandpay(zcount){
+			  vm.count=zcount;
+			  let reduced_amt=0;
+              let reduce_rate = 0; //减少到角还是分减少到角还是分
+              if ("0" == vm.routeParams.reduceMode) {
+              //不减免
+              return;
+              } else if ("1" == vm.routeParams.reduceMode) {
+                //四舍五入至元
+                reduce_rate = "1";
+                reduced_amt = Math.round(vm.count * reduce_rate) / reduce_rate;
+                vm.hasReduce = "1";
+              } else if ("2" == vm.routeParams.reduceMode) {
+                //表示四舍五入至角
+                reduce_rate = "10";
+                reduced_amt = Math.round(vm.count * reduce_rate) / reduce_rate;
+                vm.hasReduce = "1";
+              }
+              else if ("4" == vm.routeParams.reduceMode) {
+                //表示保留至角去分
+                reduce_rate = "10";
+                reduced_amt = Math.floor(vm.count * reduce_rate) / reduce_rate;
+                vm.hasReduce = "1";
+              }else if ("5" == vm.routeParams.reduceMode) {
+                //表示保留至角入分
+                reduce_rate = "10";
+                reduced_amt = Math.ceil(vm.count * reduce_rate) / reduce_rate;
+                vm.hasReduce = "1";
+                //保留至元去角
+              } else if("6" == vm.routeParams.reduceMode){
+                reduce_rate = "1";
+                reduced_amt = Math.floor(vm.count * reduce_rate) / reduce_rate;
+                vm.hasReduce = "1";
+              }else if("7" == vm.routeParams.reduceMode){
+                // 保留至元入角
+                reduce_rate = "1";
+                reduced_amt = Math.ceil(vm.count * reduce_rate) / reduce_rate;
+                vm.hasReduce = "1";
+              }else {
+                return;
+              }
+            vm.reduceMoney = parseFloat(vm.count) - parseFloat(reduced_amt.toFixed(2));//四舍五入的钱传给后端
+            vm.reduceMoney = vm.reduceMoney.toFixed(2); //减少的钱  
+            vm.count = reduced_amt.toFixed(2); //合计
+     
+         
+  },
 	  		//优惠券
 			Coupons(){
 				//请求优惠券数据 第一步 更新优惠券 第二步:获取优惠券
@@ -647,7 +773,6 @@
 					}
 				}
 			},
-
 			//根据合计金额和减免方式得到实际支付金额
 			calcReduceAmt(){
 				//实际支付的钱
@@ -723,10 +848,9 @@
 				$('.box-bg').css("display",'block');
 				let url;
 				if(vm.version=='01'){
-				 url = "getOtherPrePayInfo?houseId="+this.house_id+"&regionname="+this.regionname+"&start_date="+ this.start_date+"&end_date="+this.end_date+"&couponUnit="+vm.upronAmountNumber+"&couponNum=1&couponId="+vm.couponId+"&mianBill="+vm.mianBill+"&mianAmt="+vm.mianAmt+"&reduceAmt="+vm.reduceAmt+"&invoice_title_type="+this.invoice_title_type+"&credit_code="+this.credit_code+"&invoice_title="+this.invoice_title;
+				 url = "getOtherPrePayInfo?houseId="+this.house_id+"&regionname="+this.regionname+"&start_date="+ this.start_date+"&end_date="+this.end_date+"&couponUnit="+vm.upronAmountNumber+"&couponNum=1&couponId="+vm.couponId+"&mianBill="+vm.mianBill+"&mianAmt="+vm.mianAmt+"&reduceAmt="+vm.reduceAmt+"&invoice_title_type="+this.invoice_title_type+"&credit_code="+this.credit_code+"&invoice_title="+this.invoice_title;
 				}else{
-
-			    url = "getPrePayInfo?billId="+vm.routeParams.billIds+"&stmtId="+vm.routeParams.stmtId+"&regionname="+this.regionname+"&couponUnit="+vm.upronAmountNumber+"&couponNum=1&couponId="+vm.couponId+"&mianBill="+vm.mianBill+"&mianAmt="+vm.mianAmt+"&reduceAmt="+vm.reduceAmt+"&invoice_title_type="+this.invoice_title_type+"&credit_code="+this.credit_code+"&invoice_title="+this.invoice_title;
+			    url = "getPrePayInfo?billId="+vm.routeParams.billIds+"&stmtId="+vm.routeParams.stmtId+"&regionname="+this.regionname+"&couponUnit="+vm.upronAmountNumber+"&couponNum=1&couponId="+vm.couponId+"&mianBill="+vm.mianBill+"&mianAmt="+vm.mianAmt+"&fee_mianAmt="+vm.fee_mianAmt+"&fee_mianBill="+vm.fee_mianBill+"&reduceAmt="+vm.reduceMoney+"&invoice_title_type="+this.invoice_title_type+"&credit_code="+this.credit_code+"&invoice_title="+this.invoice_title;
 				}
 				this.axios.post(
 					url,
@@ -739,7 +863,6 @@
 							alert(wd.message);
 							$('.box-bg').css("display",'none');
 							return;
-
 						}
 						wx.config({
 		                    debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
@@ -764,16 +887,14 @@
 									// alert("走到这一步")
 									reqUrl += "&couponId="+vm.couponId;
 								}
-
 								vm.receiveData.postData(vm,reqUrl,{},'reqUrlData',function(){
 									vm.payInfo = vm.reqUrlData.result;
 									//支付成功跳转详情
-									var oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
-									  window.location.href = vm.basePageUrl+'wuye/index.html?'+oriapp+'#/paymentquery';
-
+									// var oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
+									var oriapp=vm.common.getoriApp();
+									window.location.href = vm.basePageUrl+'wuye/index.html?'+oriapp+'#/paymentquery';
 					  			})											
 			          	    },
-
 			          	    fail:function(res) {
 			          	    	console.log(JSON.stringify(res))
 			          	    },
@@ -790,11 +911,8 @@
 					}
 				)
 			},
-	
-
 
 		}
-
-
 	}
 </script>
+

@@ -174,7 +174,7 @@ export default {
                     if(vm.res.success) {
                         if(vm.res.result) {
                             vm.product = vm.res.result;   
-			                vm.common.initShareConfig(vm.rule.name,vm.basePageUrlpay+"hxrgroups.html?state=123#/rgroupdetail?ruleId="+vm.ruleId,vm.product.smallPicture,"快来参加"+vm.common.newname+"的优惠商品抢购吧",wx);
+			                vm.common.initShareConfig(vm.rule.name,vm.basePageUrlpay+"hxrgroups.html?"+vm.common.getoriApp()+"#/rgroupdetail?ruleId="+vm.ruleId,vm.product.smallPicture,"快来参加"+vm.common.newname+"的优惠商品抢购吧",wx);
                         }
                     }else {
                         alert(vm.res.message==null ?"获取产品信息失败！":vm.res.message);
@@ -283,7 +283,7 @@ export default {
         },
         //更多商品
         goclassify() {
-            location.href=vm.basePageUrlpay+"hxrgroups.html?type="+vm.rule.productType;
+            location.href=vm.basePageUrlpay+"hxrgroups.html?"+vm.common.getoriApp()+"&type="+vm.rule.productType;
         },
          //马上参团
         buy() {

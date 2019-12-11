@@ -13,7 +13,15 @@
 .footer .nav-controller i {display: block;font-size: 12px;margin-bottom: 0px; height:28px}
 .footer_logo{background-position: 50% 0;background-size: 22px;
     background-repeat: no-repeat;}
-
+#login {
+    background: rgba(0,0,0,0.5);
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    position: fixed; 
+    z-index:10000000;
+}
 /* 合协 */
 .footer_wuye_selected{background-image: url('../assets/images/common/icon_property_selected.png');}
 .footer_person{background-image: url('../assets/images/common/icon_my.png');}
@@ -40,7 +48,11 @@
 .footer_shequ_youyi {background-image: url('../assets/images/icon/icon_daojia.png')}
 .footer_person_youyi {background-image: url('../assets/images/icon/icon_my.png')}
 .footer_group_youyi{background-image: url('../assets/images/common/icon_pindan.png');}
-
+/* 贵州 */
+.footer_fuwu_guizhou {background-image: url('../assets/images/icon/footer_shequ_selected.png')}
+.footer_shequ_guizhou {background-image: url('../assets/images/icon/footer_zenzhi.png')}
+.footer_person_guizhou {background-image: url('../assets/images/icon/footer_wode.png')}
+.footer_group_guizhou{background-image: url('../assets/images/common/icon_pindan.png');}
 </style>
 
 <template>
@@ -56,7 +68,8 @@
           </li>
         </ul>
       </nav>
-    </footer>     	
+    </footer>   
+    <div id="login" v-show="login"></div>  
 	</div>
 </template>
 
@@ -69,6 +82,7 @@ export default{
       return {
         list:[],
         link:'',
+        login:true,
       }
     },
     created() {
@@ -90,20 +104,24 @@ export default{
                 a = "userInfo?oriApp="+vm.getUrlParam('oriApp'),
                 i = null,
                 e = function(n) {
-                   Bus.$emit('sends',n.result)
-                    if(n.result!=null) {
-                      vm.list=n.result.iconList;
-                    }
-                    var duration = new Date().getTime()/1000 + 3600*24*30;
-                      for(var j=0;j<n.result.bgImageList.length;j++){
-                          cookie.set(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl,duration)
-                    }
                     if(n.success&&n.result==null) {
                          reLogin();
+                         return
+                    }
+                    if(n.result!=null) {
+                      vm.login=false;
+                      vm.list=n.result.iconList;
+                      Bus.$emit('sends',n.result)
+                    }
+                    var duration = new Date().getTime()/1000 + 3600*24*30;
+                    if(n.result.bgImageList) {
+                      for(var j=0;j<n.result.bgImageList.length;j++){
+                          cookie.set(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl,duration)
+                      }
                     }
                 },
                 r = function(res) { 
-                   
+                   vm.login=false;
                 };
             this.common.invokeApi(n, a, i, null, e, r);
 
@@ -118,7 +136,7 @@ export default{
         if(geturl) {
              vm.link=location.origin+location.pathname+'?oriApp='+geturl;
         }else {
-             vm.link=location.origin+location.pathname;
+          vm.link=location.origin+location.pathname;
         }
        },
 

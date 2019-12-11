@@ -261,7 +261,7 @@ export default {
        vm.receiveData.postData(vm,url,{items:items},'res',function(){
            if(vm.res.success) {
                //跳转支付
-                 location.href=vm.basePageUrlpay+'hxgrouppay.html?state=123';
+                 location.href=vm.basePageUrlpay+'hxgrouppay.html?'+vm.common.getoriApp();
            }else {
                	alert(vm.res.message==null?"下单失败，请稍后重试！":vm.res.message);
            }

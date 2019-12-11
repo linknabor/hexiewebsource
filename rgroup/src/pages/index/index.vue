@@ -98,7 +98,7 @@ export default {
    methods: {
         initShareSetting(){
             var title = "社区服务";
-            var link=vm.basePageUrlpay+"hxrgroups.html?state=123";
+            var link=vm.basePageUrlpay+"hxrgroups.html?"+vm.common.getoriApp();
             var img=vm.basePageUrlpay+"rgroupspay/share_tuan.jpg";
             var desc="【"+vm.common.newname+"】为您提供更好的服务！";
             vm.common.initShareConfig(title,link,img,desc,wx);

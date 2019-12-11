@@ -61,6 +61,7 @@
         		number: this.$route.params.number
 			},
 			canAddhouse:false,
+			falg:''
 
 	  	}
 	  },
@@ -70,6 +71,7 @@
 	  	 let url = '/hexiehouse?stmtId='+ this.axiosParams.number;
   		this.receiveData.getData(vm,url,'response',function(){
 			  if(vm.response.success){
+				vm.falg="1";
 				if(vm.response.result== null) {
 					  vm.data={}
 					  alert('未查询到该房屋')
@@ -85,6 +87,10 @@
 	  },
 	  methods:{
 		  addHouse(){//添加房子 post 提交两个参数 
+		  		if(vm.falg!='1') {
+					return  
+				}
+				vm.falg="";	
 				let  wuye_myhouse={
 					url: /127|test/.test(location.origin)?'test.e-shequ.com':
 						/uat/.test(location.origin)?'uat.e-shequ.com':
@@ -93,8 +99,7 @@
 					let stmtId = this.axiosParams.number;
 					let url2 = '/addhexiehouse?stmtId='+stmtId+'&houseId='+this.data.mng_cell_id;
 					vm.receiveData.postData(vm,url2,{},'res',function(){
-					if(vm.res.success){ 
-						// vm.loadingShow = false;
+					if(vm.res.success){
 						if(vm.res.result !== null) {
 							MessageBox.alert('添加房子成功',wuye_myhouse.url).then( action =>{
 									vm.$router.push("/myhouse")
@@ -110,13 +115,9 @@
 							MessageBox.alert(vm.res.message).then( action =>{
 								vm.$router.push("/addHouse")
 								})
-						}
-
+					}
 					})
-
-			}
-		  
-	
+				}
 	  }
 	}
 </script>

@@ -88,13 +88,13 @@ export default {
                         MessageBox.confirm('获取订单信息失败').then(action => {
                                 if(action == 'confirm') {
                                     if(vm.type==4){
-                                        location.href=vm.basePageUrlpay+"hxrgroups.html?state=123";        		
+                                        location.href=vm.basePageUrlpay+"hxrgroups.html?"+vm.common.getoriApp();        		
                                     }else if(vm.type==3){   
-                                        location.href=vm.basePageUrl+'/group/onsales.html';
+                                        location.href=vm.basePageUrl+'/group/onsales.html?'+vm.common.getoriApp();
                                     }else if(vm.type==5){
-                                        location.href=vm.basePageUrl+"/home/index.html";
+                                        location.href=vm.basePageUrl+"/home/index.html?"+vm.common.getoriApp();
                                     }else{
-                                        location.href=vm.basePageUrlpay+'hxrgroups.html?state=123';     		
+                                        location.href=vm.basePageUrlpay+'hxrgroups.html?'+vm.common.getoriApp();     		
                                     } 
                                 }
                         }).catch(err => {
@@ -109,13 +109,13 @@ export default {
                         MessageBox.confirm('获取订单信息失败').then(action => {
                             if(action == 'confirm') {
                                  if(vm.type==4){
-                                        location.href=vm.basePageUrlpay+"hxrgroups.html?state=123";        		
+                                        location.href=vm.basePageUrlpay+"hxrgroups.html?"+vm.common.getoriApp();        		
                                     }else if(vm.type==3){
-                                        location.href=vm.basePageUrl+'/group/onsales.html';
+                                        location.href=vm.basePageUrl+'/group/onsales.html?'+vm.common.getoriApp();
                                     }else if(vm.type==5){
-                                        location.href=vm.basePageUrl+"/home/index.html";
+                                        location.href=vm.basePageUrl+"/home/index.html?"+vm.common.getoriApp();
                                     }else{
-                                        location.href=vm.basePageUrlpay+'hxrgroups.html?state=123';     		
+                                        location.href=vm.basePageUrlpay+'hxrgroups.html?'+vm.common.getoriApp();     		
                                     }     
                             }
                         }).catch(err => {
@@ -130,11 +130,11 @@ export default {
        initShareSetting(order) {
             var title = order.productName;;
            var link;
-           link=vm.basePageUrlpay+"hxrgroups.html?state=123#/rgroupdetail?ruleId="+order.groupRuleId;
+           link=vm.basePageUrlpay+"hxrgroups.html?"+vm.common.getoriApp()+"#/rgroupdetail?ruleId="+order.groupRuleId;
             var desc=order.productPic;
             var img=order.productPic;
             if(order.orderType==4){
-			    link=vm.basePageUrlpay+"hxrgroups.html?state=123#/rgroupdetail?ruleId="+order.groupRuleId;
+			    link=vm.basePageUrlpay+"hxrgroups.html?"+vm.common.getoriApp()+"#/rgroupdetail?ruleId="+order.groupRuleId;
             }else if(order.orderType==0&&order.groupId!=0){
                 // link=MasterConfig.C('basePageUrl')+"group.html?groupId="+order.groupId;
             }
@@ -159,13 +159,13 @@ export default {
        //更多商品
        goback() {
              if(vm.type==4){
-                    location.href=vm.basePageUrlpay+"hxrgroups.html?state=123";        		
+                    location.href=vm.basePageUrlpay+"hxrgroups.html?"+vm.common.getoriApp();        		
                 }else if(vm.type==3){
-                    location.href=vm.basePageUrl+'/group/onsales.html';
+                    location.href=vm.basePageUrl+'/group/onsales.html?'+vm.common.getoriApp();
                 }else if(vm.type==5){
-                    location.href=vm.basePageUrl+"/home/index.html";
+                    location.href=vm.basePageUrl+"/home/index.html?"+vm.common.getoriApp();
                 }else{
-                    location.href=vm.basePageUrlpay+'hxrgroups.html?state=123';     		
+                    location.href=vm.basePageUrlpay+'hxrgroups.html?'+vm.common.getoriApp();     		
                 }     
        }
    },
