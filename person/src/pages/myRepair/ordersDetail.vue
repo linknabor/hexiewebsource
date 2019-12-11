@@ -241,7 +241,7 @@ export default {
                             //确定跳转repairPay.html?oId="+o.item.id
                             //  vm.$router.push({path:'/repairPay',query:{ordersID:vm.item.id}})
                             //   location.href="https://www.e-shequ.com/shijiazhuang/weixin/orderpays.html?state=123#/repairPay?orderId="+vm.item.id+'&status=123'
-                            window.location.href=vm.basePageUrlpay+'orderpay.html?state=123#/repairPay?orderId='+vm.item.id
+                            window.location.href=vm.basePageUrlpay+'orderpay.html?'+vm.common.getoriApp()+'#/repairPay?orderId='+vm.item.id
                            }else {
                              alert("系统异常，请稍后重试！");
                            }  
@@ -277,7 +277,7 @@ export default {
             //跳转 comment.html?oId="+o.item.id
             // vm.$router.push({path:'/commentxiu',query:{orderId:vm.item.id}})
             //  location.href="https://www.e-shequ.com/shijiazhuang/weixin/orderpays.html?state=123#/commentxiu?ordersID="+vm.item.id
-            window.location.href=vm.basePageUrlpay+"orderpay.html?state=123#/commentxiu?ordersID="+vm.item.id
+            window.location.href=vm.basePageUrlpay+"orderpay.html?"+vm.common.getoriApp()+"#/commentxiu?ordersID="+vm.item.id
         },
         //返回
         back() {

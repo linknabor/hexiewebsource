@@ -27,7 +27,7 @@
 		<div id="foot">
 			<ul class="foot_bar">
 				<li>
-                    <a :href="this.basePageUrl+'/home/index.html'">
+                    <a :href="this.basePageUrl+'/home/index.html?'+href">
                     <span style="font-size:16px">首页</span>
                     </a>
                 </li>
@@ -72,8 +72,9 @@ export default {
             banners:[],
             washindex:[],
             maincity:{},
+            href:'',
             cities:[
-                // {id:1,name:'全国'},
+                {id:1,name:'全国'},
                 {id:19,name:"上海"},
                 {id:2,name:"北京"}
 		    ],
@@ -87,9 +88,13 @@ export default {
         vm.queryBanner();//获取轮播图
         vm.getMianCity();
         vm.getInfo();
+        vm.oriApp();
    },
 
    methods: {
+       oriApp(){
+           vm.href=vm.common.getoriApp();
+       },
         //模仿线上用户信息
             // 105/747/384
         initSession4Test(){

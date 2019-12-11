@@ -34,7 +34,6 @@
         </div>
         <div style="width:100%;height:2.2rem;background:#eee;"></div>
         <div class="btn-fixed">
-          <!-- <img src="../../assets/images/house/paymoney.png" /> -->
           <div class="fl select-btn" v-show="quan1" :class="{allSelected:quickAllselect}"  @click="allSelect(quickBillInfo,'quickAllselect')">全选&nbsp;</div>
           <div class="pay" @click="pays('quickBillInfo','quickAllPrice','quickAllselect')">
             我要缴费
@@ -48,10 +47,8 @@
         <div id="word">
           <Bill :bill-info="billInfo" @itemClick="itemClick"  :version="version1" ></Bill>
         </div>
-        <!-- <div style="width:100%;height:0.92rem;"></div> -->
         <div style="width:100%;height:2.2rem;background:#eee;"></div>
         <div class="btn-fixed">
-          <!-- <img src="../../assets/images/house/paymoney.png" /> -->
           <div
             class="fl select-btn"
             v-show="quan2"
@@ -366,8 +363,6 @@ export default {
           vm.isshow=true;
           vm.showp=true;
         }
-          
-        
     },
     //模仿线上用户信息
     //105/747/384
@@ -456,13 +451,12 @@ export default {
       vm.standard1= false;
       vm.standard2= false;
       vm.standard3= false;
-      // vm.standard4= false;
       vm.quan = false;
     },
     add() {
-      vm.getCellMng(vm.query.sectID, "", "", "03");
-      vm.getCellMng(vm.query.sectID, vm.query.build, "", "02");
-      vm.getCellMng(vm.query.sectID, vm.query.build, vm.query.unit, "01");
+      vm.getCellMng(vm.query.sectID,"", "","03");
+      vm.getCellMng(vm.query.sectID,"0","","02");
+      vm.getCellMng(vm.query.sectID,"0","0","01");
     },
 
     //楼宇选中
@@ -470,6 +464,7 @@ export default {
       vm.unitList = [];
       vm.houseList = [];
       vm.getCellMng(vm.query.sectID, vm.query.build, "", "02");
+      vm.getCellMng(vm.query.sectID, vm.query.build, "0", "01");
       vm.standard1= false;
       vm.standard2= false;
       vm.standard3= false;
@@ -480,16 +475,13 @@ export default {
     //门牌选中
     getCoupon() {
       vm.houseList = [];
-      this.getCellMng(
-      this.query.sectID,
-      this.query.build,
-      this.query.unit,
-      "01"
-      );
+      if(this.query.build=="") {
+        this.query.build="0";
+      }
+      this.getCellMng(this.query.sectID,this.query.build,this.query.unit,"01");
       vm.standard1= false;
       vm.standard2= false;
       vm.standard3= false;
-      // vm.standard4= false;
       vm.otherbillinfo = []; 
     },
     //室号选中
@@ -499,7 +491,7 @@ export default {
       vm.standard2= false;
       vm.standard3= false;
       vm.queryBillInfo = []; //清空查询账单列表
-       vm.otherbillinfo = []; 
+      vm.otherbillinfo = []; 
       vm.queryBillPage = 1; //页码重置
       isloadPage=false;//重置加载状态
       vm.queryisLastPage = false; //是否最后一页重置
@@ -609,35 +601,42 @@ export default {
         url,
         "queryInfo",
         function() {
-          let InfoList = vm.queryInfo.result;
-          if (Array.isArray(InfoList) && InfoList.length <= 0) {
-          vm.showp = false;
-          vm.isshow=true;
-          } else {
-            vm.queryBillInfo = []; //清空查询账单列表
-            if ("03" == data_type) {
-              vm.buildList = InfoList.build_info;
-              vm.buildList.unshift({ id: "0", name: "请选择" });
-              // vm.unitList = [];
-              // vm.houseList = [];
-            } else if ("02" == data_type) {
-              vm.unitList = InfoList.unit_info;
-              vm.unitList.unshift({ id: "0", name: "请选择" });
-              // vm.houseList = [];
-              if (vm.unitList.length == 1) {
-                vm.getCellMng(
-                  vm.query.sectID,
-                  vm.query.build,
-                  vm.query.unit,
-                  "01"
-                );
+          if(vm.queryInfo.success) {
+              let InfoList = vm.queryInfo.result;
+              if (Array.isArray(InfoList) && InfoList.length <= 0) {
+              vm.showp = false;
+              vm.isshow=false;
+              } else {
+                vm.queryBillInfo = []; //清空查询账单列表
+                if ("03" == data_type) {
+                  vm.buildList = InfoList.build_info;
+                  vm.buildList.unshift({ id: "0", name: "请选择" });
+                  // vm.unitList = [];
+                  // vm.houseList = [];
+                } else if ("02" == data_type) {
+                  vm.unitList = InfoList.unit_info;
+                  vm.unitList.unshift({ id: "0", name: "请选择" });
+                  // vm.houseList = [];
+                } else if ("01" == data_type) {
+                  vm.houseList = InfoList.house_info;
+                  vm.houseList.unshift({ id: "0", name: "请选择" });
+                }
+                vm.showp = false;
+                vm.isshow=false;
               }
-            } else if ("01" == data_type) {
-              vm.houseList = InfoList.house_info;
-              vm.houseList.unshift({ id: "0", name: "请选择" });
-            }
+          }else {
+              if ("03" == data_type) {
+                vm.buildList =[];
+                vm.unitList = [];
+                vm.houseList = [];
+              } else if ("02" == data_type) {
+                vm.unitList = [];
+                vm.houseList = [];
+              } else if ("01" == data_type) {
+                vm.houseList = [];
+              }
             vm.showp = false;
-            vm.isshow=false;
+            vm.isshow=false;  
           }
         },
         params
@@ -860,7 +859,6 @@ export default {
             return false;
           }
         }
-        // var oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
         var oriapp=vm.common.getoriApp();
         window.location.href =vm.basePageUrl +"wuyepay.html?"+oriapp+"#/?billIds=" +bills + "&stmtId=" + vm.stmtId + "&payAddr=" + escape(pay_addr) +
         "&totalPrice=" +vm[allPrice] + "&reduceMode=" + vm.reduceMode + "&regionname=" +vm.regionname +"&getversion=" + "02";
@@ -873,7 +871,6 @@ export default {
           alert("请选择帐单后支付");
           return;
         }
-        // var oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
         var oriapp=vm.common.getoriApp();
         window.location.href =vm.basePageUrl +"wuyepay.html?"+oriapp+"#/?regionname=" +this.$route.query.City +"&totalPrice="+vm[queryallPrice1] +"&house_id=" +
           vm.query.house +"&sect_id=" +vm.query.sectID + "&start_date=" +startData + "&end_date=" + endData +"&getversion=" + '01';

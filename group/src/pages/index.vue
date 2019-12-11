@@ -13,10 +13,11 @@
 .footer .nav-controller i {display: block;font-size: 12px;margin-bottom: 0px; height:28px}
 .footer_logo{background-position: 50% 0;background-size: 22px;
     background-repeat: no-repeat;}
+
 /* 合协 */
-.footer_wuye_selected {background-image: url('../assets/images/icon/footer_shequ.png')}
-.footer_home {background-image: url('../assets/images/icon/footer_zenzhi.png')}
-.footer_person {background-image: url('../assets/images/icon/footer_wode.png')}
+.footer_wuye_selected{background-image: url('../assets/images/footer/icon_property.png');}
+.footer_person{background-image: url('../assets/images/footer/icon_my.png');}
+.footer_home{background-image: url('../assets/images/footer/icon_daojia.png');} 
 .footer_group{background-image: url('../assets/images/footer/icon_shopping_selected.png');}
 /* 大楼 */
 .footer_fuwu_baofang {background-image: url('../assets/images/icon/icon_property.png')}
@@ -38,7 +39,6 @@
 .footer_shequ_youyi {background-image: url('../assets/images/icon/icon_daojia.png')}
 .footer_person_youyi {background-image: url('../assets/images/icon/icon_my.png')}
 .footer_group_youyi{background-image: url('../assets/images/footer/icon_shopping_selected.png');}
-
 /* 贵州 */
 .footer_fuwu_guizhou {background-image: url('../assets/images/icon/footer_shequ.png')}
 .footer_shequ_guizhou {background-image: url('../assets/images/icon/footer_zenzhi.png')}
@@ -60,12 +60,13 @@
           </li>
         </ul>
       </nav>
-    </footer>     	
+    </footer>     
 	</div>
 </template>
 
 <script>
   import cookie from 'js-cookie';
+  import Bus from '../api/bus.js';
   let vm;
 	export default{
     data() {
@@ -99,15 +100,17 @@
                 a = "userInfo?oriApp="+vm.getUrlParam('oriApp'),
                 i = null,
                 e = function(n) {
-                    if(n.result!=null) {
-                        // Bus.$emit('sends',n.result.iconList)
-                        vm.list=n.result.iconList;
-                    }
                     if(n.success&&n.result==null) {
                             reLogin();
                     }
+                    if(n.result!=null) {
+                        Bus.$emit('logins',false)
+                        vm.list=n.result.iconList;
+                    }
+                   
                 },
                 r = function() { 
+                  
                 };
             this.common.invokeApi(n, a, i, null, e, r);
       },

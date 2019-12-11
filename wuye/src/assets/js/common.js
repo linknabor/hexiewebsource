@@ -8,7 +8,7 @@ var MasterConfig = function() {
         basePageUrl:/127|test/.test(location.origin)?'https://test.e-shequ.com/weixin/':
         /uat/.test(location.origin)?'https://uat.e-shequ.com/hexie/weixin/':
         'https://www.e-shequ.cn/weixin/',
-        
+
         basePageUrlpay:/127|test/.test(location.origin)?'https://test.e-shequ.com/weixin/pay/':
         /uat/.test(location.origin)?'https://uat.e-shequ.com/pay/':
         'https://www.e-shequ.cn/weixin/',
@@ -259,7 +259,6 @@ window.common = {
         var oriapp=getUrlParam('oriApps')?'oriApp='+getUrlParam('oriApps'):'';
         return  oriapp;
    },
-
      //授权
     login: function() {
 		var timestamp="";
@@ -315,7 +314,7 @@ updateUserStatus(user) {
     setCookie("currentAddrId", user.currentAddrId, duration);
     setCookie("tel", user.tel, duration);
     setCookie("shareCode", user.shareCode, duration);
-	setCookie("appId", user.appId);
+    setCookie("appId", user.appId);
 },
      //入口程序 检查状态
     checkRegisterStatus:function(){
@@ -417,7 +416,7 @@ updateUserStatus(user) {
                 imgUrl: img
             });
         });
-    }
+    },
 
 };
 Getofficial();

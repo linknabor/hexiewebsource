@@ -8,7 +8,7 @@ var MasterConfig = function() {
         basePageUrl:/127|test/.test(location.origin)?'https://test.e-shequ.com/weixin/':
         /uat/.test(location.origin)?'https://uat.e-shequ.com/hexie/weixin/':
         'https://www.e-shequ.cn/weixin/',
-        
+
         basePageUrlpay:/127|test/.test(location.origin)?'https://test.e-shequ.com/weixin/pay/':
         /uat/.test(location.origin)?'https://uat.e-shequ.com/pay/':
         'https://www.e-shequ.cn/weixin/',
@@ -99,7 +99,7 @@ function dealWithAjaxData(o, e, i, r) {
 function reLogin() {
 	setTimeout(function(){
 		console.log("waiting 1s for relogin.")
-	},1000)
+	},500)
     setCookie("UID", "", 0),
     common.login(!0)
 }
@@ -207,6 +207,7 @@ window.common = {
                 success: function(e) {
                     common.alert("success data: " + JSON.stringify(e));
                     dealWithAjaxData(o, e, i, r);
+
                 },
                 error: function(e) {
                     common.alert("error data: " + JSON.stringify(e));
@@ -259,7 +260,6 @@ window.common = {
         var oriapp=getUrlParam('oriApp')?'oriApp='+getUrlParam('oriApp'):'state=123';
         return  oriapp;
    },
-
      //授权
     login: function() {
 		var timestamp="";
@@ -287,7 +287,9 @@ window.common = {
             AJAXFlag = !1
         },
         function(x) {
-            common.updateUserStatus(x.result);
+            if(x.result!=null){
+               common.updateUserStatus(x.result);
+            }
             AJAXFlag = !0;
 			
 		if(document.URL.indexOf('.html?t=') < 0) {
@@ -306,6 +308,9 @@ window.common = {
 		}
 		url+=common.addParamHsah();
         location.href =url;
+        },
+        function(e){
+            alert(e.message)
         })
     },
     /**变更才需要重设置*/
@@ -315,7 +320,7 @@ updateUserStatus(user) {
     setCookie("currentAddrId", user.currentAddrId, duration);
     setCookie("tel", user.tel, duration);
     setCookie("shareCode", user.shareCode, duration);
-	setCookie("appId", user.appId);
+    setCookie("appId", user.appId);
 },
      //入口程序 检查状态
     checkRegisterStatus:function(){

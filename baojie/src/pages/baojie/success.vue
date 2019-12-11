@@ -51,7 +51,7 @@ export default {
              })
        },
        btn() {
-           location.href=this.basePageUrl+'home/index.html?state=123#/'
+           location.href=this.basePageUrl+'home/index.html?'+vm.common.getoriApp()+'#/'
        }
    },
 

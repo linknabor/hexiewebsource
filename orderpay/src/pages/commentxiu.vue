@@ -203,8 +203,8 @@ export default {
             vm.receiveData.postData(vm,'/repair/comment',add,'res',function(){
                 if(vm.res.success) {
                     // vm.$router.push({path:'/ordersDetail',query:{orderId:vm.$route.query.ordersID}})
-                       var oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
-                       window.location.href=vm.basePageUrl+"person/index.html?"+oriapp+"#/ordersDetail?orderId="+vm.$route.query.ordersID 
+                    //    var oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
+                    window.location.href=vm.basePageUrl+"person/index.html?"+vm.common.getoriApp()+"#/ordersDetail?orderId="+vm.$route.query.ordersID 
                 }else {
                         alert("评论失败，请稍后重试！");
                 }
