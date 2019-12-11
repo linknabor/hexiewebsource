@@ -89,7 +89,7 @@ export default{
       vm=this;
     },
     mounted(){
-      // let url = '/initSession4Test/1';
+      // let url = '/initSession4Test/2';
       //           vm.receiveData.getData(vm,url,'Data',function(){
       //       });
       vm.initUserInfo();
