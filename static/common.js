@@ -8,7 +8,7 @@ var MasterConfig = function() {
         basePageUrl:/127|test/.test(location.origin)?'https://test.e-shequ.com/weixin/':
         /uat/.test(location.origin)?'https://uat.e-shequ.com/hexie/weixin/':
         'https://www.e-shequ.cn/weixin/',
-
+        
         basePageUrlpay:/127|test/.test(location.origin)?'https://test.e-shequ.com/weixin/pay/':
         /uat/.test(location.origin)?'https://uat.e-shequ.com/pay/':
         'https://www.e-shequ.cn/weixin/',
@@ -173,7 +173,7 @@ function toRegisterAndBack(){
     }else {
         appurl='';
     }
-    location.href=MasterConfig.C('basePageUrl')+"person/index.html?"+appurl+"#/register?comeFrom="+encodeURIComponent(n);
+    location.href=MasterConfig.C('basePageUrl')+"person/index.html?"+appurl+"#/register?comeFrom="+encodeURIComponent(n)+common.addParamHsah();
 }
 //判断当前是那个公众号
 function Getofficial() {
@@ -260,6 +260,7 @@ window.common = {
         var oriapp=getUrlParam('oriApp')?'oriApp='+getUrlParam('oriApp'):'state=123';
         return  oriapp;
    },
+
      //授权
     login: function() {
 		var timestamp="";
@@ -295,7 +296,7 @@ window.common = {
 		if(document.URL.indexOf('.html?t=') < 0) {
 			 timestamp= (new Date()).valueOf();
 		}
-		var url= location.origin +common.removeParamFromUrl(["code"]);
+		var url= location.origin +common.removeParamFromUrl(["code","appid","state"]);
 		if(url.indexOf('?')<0){
 			url+='?';
 		}else {
