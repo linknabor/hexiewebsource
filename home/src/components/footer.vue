@@ -43,7 +43,6 @@
 .footer_shequ_youyi {background-image: url('../assets/images/icon/icon_daojia_selected.png')}
 .footer_person_youyi {background-image: url('../assets/images/icon/icon_my.png')}
 .footer_group_youyi{background-image: url('../assets/images/fonter/icon_pindan.png');}
-
 /* 贵州 */
 .footer_fuwu_guizhou {background-image: url('../assets/images/icon/footer_shequ.png')}
 .footer_shequ_guizhou {background-image: url('../assets/images/icon/footer_zenzhi_selected.png')}
