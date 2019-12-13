@@ -9,7 +9,7 @@
 		  <mt-tab-container-item id="c">
 			<!-- 停车缴费开始 -->
 			<div id=word>
-			  	<Bill :bill-info="carBillInfo" @itemClick="itemClick"  ></Bill>
+			  	<Bill :bill-info="carBillInfo" @itemClick="itemClick" :version="version" ></Bill>
 			</div> 
 			  <div style="widtt:100%;height:0.92rem;"></div>
 			  	<div class="btn-fixed">
@@ -49,7 +49,7 @@
 		},
 		data(){
 			return {
-				// version:"02",
+				version:"02",
 				url : '/billList',
 				stmtId:'',//快捷缴费 扫描出来的账单号
 		  		params : {
@@ -65,21 +65,23 @@
 				carBillPage :1, //停车缴费页码
 				reduceMode:1,
 				quan:false,
-				permit_skip_pay:'1'
 			}
 		},
 		created(){
 		  	vm = this;
 		},
 		mounted(){
-		  	
 		  	//请求 停车缴费 和 物业缴费首屏数据
 		  	vm.receiveData.getData(vm, vm.url, 'data',function(){
 		  		vm.reduceMode = vm.data.result.reduce_mode;//减免方式
 		  		vm.carBillInfo = vm.data.result.car_bill_info;//停车缴费
 				vm.pay_least_month = vm.data.result.pay_least_month; //最少支付月数 
 				vm.permit_skip_pay=vm.data.result.permit_skip_pay;  
-		  	},vm.params) ;
+				vm.carBillPage+=1;
+
+                
+			  },vm.params) ;
+			 
 		  	
 		},
 		methods:{
@@ -106,12 +108,12 @@
 					vm.url,
 					'pageData2',
 					function(){
+						vm.carBillPage+=1;
 		  				tempArr = vm.pageData2.result.car_bill_info;//停车缴费
 		  				if(tempArr && tempArr.length > 0){
-		  					vm.carBillInfo =vm.carBillInfo.concat(tempArr) //停车缴费
-							vm.carAllselect = false;
-							vm.carBillPage+=1;
-							isloadPage=false;  
+							vm.carBillInfo =vm.carBillInfo.concat(tempArr) //停车缴费
+							  vm.carAllselect = false;
+							   isloadPage=false;  
 		  				}else{
 							  vm.quan=true;
 						}
@@ -120,7 +122,6 @@
 		  	},
 		  	//点击物业缴费按钮
 			  pay(list,allPrice,allselect){//第一个参数 账单数组，第二个参数 总价 第三个参数 是否全选,所有参数 string
-		  		
 		  		if( vm[allPrice] < 0.01){
 		  			alert('请选择账单后支付');
 		  			return
@@ -174,10 +175,11 @@
 		  		//跳转支付
 				// var oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
 				var oriapp=vm.common.getoriApp();
-				window.location.href=vm.basePageUrl+"wuyepay.html?oriApp="+oriapp+"#/?billIds="+bills+"&stmtId="+vm.stmtId+"&payAddr="+escape(pay_addr)+"&totalPrice="+vm[allPrice]+"&reduceMode="+vm.reduceMode;
+				window.location.href=vm.basePageUrl+"wuyepay.html?oriApp="+oriapp+"#/?billIds="+bills+"&stmtId="+vm.stmtId+"&payAddr="+escape(pay_addr)+"&totalPrice="+vm[allPrice]+"&reduceMode="+vm.reduceMode+"&getversion=03"+"&regionname=";
 		  	},
 		  	//点击某个选中按钮 params1:被点击按钮的下标 params2:被点击按钮所属的数组
-		  	itemClick:function(index,b){//3个页面对应不同的三个数组 
+			  itemClick:function(index, version, b){//3个页面对应不同的三个数组 
+			
 				  let len = b.length
 				//permit_skip_pay  0允许  1不允许
 			if(vm.permit_skip_pay == '1') {

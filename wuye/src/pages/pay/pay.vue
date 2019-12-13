@@ -34,7 +34,6 @@
         </div>
         <div style="width:100%;height:2.2rem;background:#eee;"></div>
         <div class="btn-fixed">
-          <!-- <img src="../../assets/images/house/paymoney.png" /> -->
           <div class="fl select-btn" v-show="quan1" :class="{allSelected:quickAllselect}"  @click="allSelect(quickBillInfo,'quickAllselect')">全选&nbsp;</div>
           <div class="pay" @click="pays('quickBillInfo','quickAllPrice','quickAllselect')">
             我要缴费
@@ -48,10 +47,8 @@
         <div id="word">
           <Bill :bill-info="billInfo" @itemClick="itemClick"  :version="version1" ></Bill>
         </div>
-        <!-- <div style="width:100%;height:0.92rem;"></div> -->
         <div style="width:100%;height:2.2rem;background:#eee;"></div>
         <div class="btn-fixed">
-          <!-- <img src="../../assets/images/house/paymoney.png" /> -->
           <div
             class="fl select-btn"
             v-show="quan2"
@@ -366,8 +363,6 @@ export default {
           vm.isshow=true;
           vm.showp=true;
         }
-          
-        
     },
     //模仿线上用户信息
     //105/747/384
@@ -456,7 +451,6 @@ export default {
       vm.standard1= false;
       vm.standard2= false;
       vm.standard3= false;
-      // vm.standard4= false;
       vm.quan = false;
     },
     add() {
@@ -488,7 +482,6 @@ export default {
       vm.standard1= false;
       vm.standard2= false;
       vm.standard3= false;
-      // vm.standard4= false;
       vm.otherbillinfo = []; 
     },
     //室号选中
@@ -498,7 +491,7 @@ export default {
       vm.standard2= false;
       vm.standard3= false;
       vm.queryBillInfo = []; //清空查询账单列表
-       vm.otherbillinfo = []; 
+      vm.otherbillinfo = []; 
       vm.queryBillPage = 1; //页码重置
       isloadPage=false;//重置加载状态
       vm.queryisLastPage = false; //是否最后一页重置

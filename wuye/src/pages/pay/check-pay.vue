@@ -20,14 +20,14 @@
 			  		楼宇：
 			  		<select class="virtual-input" v-model="query.build"  @change="getCouponSelected">
 						<!-- <option value="0">请选择</option> -->
-			  			<option v-for="item in buildList" :value="item.id" >{{item.name}}</option>
+			  			<option v-for="item in buildList" :value="item.id" :key="item.id">{{item.name}}</option>
 			  		</select>
 			  	</div>
 			  	<div class="input-row">
 			  		门牌：
 			  		<select class="virtual-input" v-model="query.unit" @change="getCoupon">
 						<!-- <option value="0">请选择</option> -->
-			  			<option v-for="item in unitList" :value="item.id" >{{item.name}}</option>	
+			  			<option v-for="item in unitList" :value="item.id" :key="item.id">{{item.name}}</option>	
 			  		</select>
 			  	</div>
 			  	<div class="input-row">
@@ -39,7 +39,7 @@
 			  	</div>	
 			  	<div class="input-row last">
 			  		建筑面积：
-			  		<input type="text" class="virtual-input classinput" value="" v-model="query.area">&nbsp;&nbsp;m²
+			  		<input type="text" class="virtual-input classinput" value="" @blur="fixScroll" v-model="query.area">&nbsp;&nbsp;m²
 			  		
 			  	</div>
 			  	<div class="input-row add">
@@ -57,7 +57,7 @@
 			<div style="width:100%;height:0.92rem;"></div>
 			<div class="btn-fixed" id="st">
 	    		<!-- <div v-show="quan" class="fl select-btn" :class="{allSelected:queryAllselect }" @click="allSelect(queryBillInfo,'queryAllselect')">全选&nbsp;</div> -->
-	    		<button class="pay" @click="addRoom">添加房屋</button>
+	    		<button class="pay" @click="addRoom" style="cursor:pointer;">添加房屋</button>
 	    		<!-- <div class="pay" @click="addRoom">
 	    			添加房屋
 	    		</div> -->
@@ -188,7 +188,15 @@
            		}
            		
            },
-
+	 
+	   //ios留白问题，点击事件无效
+		fixScroll() {
+        let u = navigator.userAgent;
+        let isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+        if (isiOS) {
+          window.scrollTo(0,0);
+        }
+      },
 			//替换搜索内容
 		alertFN(s) {
 			 vm.$nextTick(function(){
@@ -249,7 +257,7 @@
 		//门牌选中
 		getCoupon(){
 			
-			this.getCellMng(this.query.sectID,this.query.build,this.query.unit,'01');
+			vm.getCellMng(vm.query.sectID,vm.query.build,vm.query.unit,'01');
 			
 		},
 		//室号选中
@@ -288,13 +296,13 @@
 				if ("03"==data_type) {
 					 vm.buildList = InfoList.build_info;
 					 // vm.buildList.unshift({id:'0',name:'请选择'})
-					vm.unitList = [];
-					vm.houseList = [];
+					// vm.unitList = [];
+					// vm.houseList = [];
 				}else if("02"==data_type){
 					vm.unitList= InfoList.unit_info;
 					// vm.unitList.unshift({id:'0',name:'请选择'})
 					// vm.unitList=[];
-					vm.houseList = [];
+					// vm.houseList = [];
 						if(vm.unitList.length==1) {
 							vm.getCellMng(vm.query.sectID,vm.query.build,vm.query.unit,'01');
 					}
