@@ -138,7 +138,7 @@ export default {
          _this.initData(); 
          var duration = new Date().getTime()/1000 + 3600*24*30;
          for(var j=0;j<n.result.bgImageList.length;j++){
-              cookie.set(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl,duration)
+               _this.common.localSet(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl,duration)
           }
         },
         r = function() {};
