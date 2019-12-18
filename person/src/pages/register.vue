@@ -19,6 +19,7 @@
                         <input placeholder="输入验证码" class="fl fs14 hidden-input" style="padding-bottom: 15px;text-align: left;margin-bottom: 6px;" v-model="captcha"/>
                         <span class="fr btn-plain" style="margin-top: 10px;" :class="{useless:yzmstr!='获取验证码'&&yzmstr!='重新获取'}" @click="getCaptcha">{{yzmstr}}</span>
                    </div> 
+                   <div class="messages">{{message}}</div>
                     <div style="width:100%;height:90px;clear:both">
                             &nbsp;
                     </div>
@@ -31,6 +32,7 @@
 
 <script>
 let vm;
+let Token;
 import axios from 'axios';
 export default {
    data () {
@@ -42,14 +44,14 @@ export default {
             captcha: '',
             zzmb:false,
             isClick: false,
-            comeFrom:''
+            comeFrom:'',
+            message:""
        };
    },
    created() {
        vm=this;
    },
    mounted() {
-    
        vm.getUserInfo();
        vm.getComeFrom()
    },
@@ -59,6 +61,10 @@ export default {
             var n = "GET",
             a = "userInfo?oriApp="+vm.getUrlParam('oriApp'),
             i = null,
+            c = function(xhr,data) {
+                //获取请求头标识
+                Token=xhr.getResponseHeader('Access-Control-Allow-Token');
+            },
             e = function(n) {
                  if(n.success&&n.result==null) {
                        reLogin();
@@ -69,8 +75,9 @@ export default {
                 }
             },
             r = function() {};
-            vm.common.invokeApi(n, a, i, null, e, r)
+            vm.common.invokeApi(n, a, i, null, e, r,c)
         },
+        //获取验证码
         getCaptcha() {
             var reg = /^1[3-9][0-9]\d{8}$/;
             if(!reg.test(vm.user.tel)) {
@@ -83,24 +90,38 @@ export default {
 	       	}
         },
         yzmreq() {
-            vm.receiveData.postData(vm,'getyzm',{mobile:vm.user.tel},'res',function(){
-                if(vm.res.success) {
-                           vm.yzmtime=60;
-                        var tt=setInterval(function() {
-                            vm.yzmstr=vm.yzmtime+'秒后重新获取';
-                            vm.yzmtime--;
-                            if(vm.yzmtime<=0) {
-                                vm.yzmstr='重新获取'
-                            }
-                        },1000);
-                        var ss = setTimeout(function(){clearInterval(tt);}, 61*1000);
-                }else {
-                    alert("验证码已下发，请查收短信");
-                    vm.yzmtime = 60;
-                    vm.yzmstr="重新获取";
-                    
-                }
-                });
+            var n = "POST",
+            a = "getyzm",
+            i = {mobile:vm.user.tel},
+            b = function(xhr) {
+                //  setRequestHeader设置头部
+		    	xhr.setRequestHeader('Access-Control-Allow-Token',Token)
+            },
+            e = function(n) {
+                vm.yzmtime=60;
+                alert("验证码已下发，请查收短信");
+                var tt=setInterval(function() {
+                    vm.yzmstr=vm.yzmtime+'秒后重新获取';
+                    vm.yzmtime--;
+                    if(vm.yzmtime<=0) {
+                        vm.yzmstr='重新获取'
+                    }
+                },1000);
+                var ss = setTimeout(function(){clearInterval(tt);}, 61*1000);
+            },
+            r = function(n) {
+                vm.yzmtime = 60;
+                vm.message=n.message;
+                var tt=setInterval(function() {
+                    vm.yzmstr=vm.yzmtime+'秒后重新获取';
+                    vm.yzmtime--;
+                    if(vm.yzmtime<=0) {
+                        vm.yzmstr='重新获取'
+                    }
+                },1000);
+                var ss = setTimeout(function(){clearInterval(tt);}, 61*1000);
+            };
+            vm.common.invokeApi(n, a, i, b, e, r)
         },
         //保存
         save() {
@@ -146,7 +167,6 @@ export default {
         },
          getComeFrom(){
                 vm.comeFrom=vm.getUrlParam("comeFrom") || vm.$route.query.comeFrom;
-                console.log( vm.comeFrom)
             }
    },
 
@@ -191,7 +211,7 @@ export default {
 }
 .info-wrap {
     padding: 4px;
-    border-bottom: 5px solid #f9f9e9;
+    /* border-bottom: 5px solid #f9f9e9; */
     font-size: 12px;
     color: #3b3937;
 }
@@ -252,5 +272,9 @@ export default {
 .useless {
 	  background-color: #D7D5D4;
 }
-
+.messages {
+    padding:15px;
+    color:red;
+    font-size: 15px;
+}
 </style>

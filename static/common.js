@@ -192,7 +192,7 @@ window.common = {
         return MasterConfig.C("baseUrl") + (o ? ":" + o: "") + "/" + e;
     },
     //定义请求方法
-    invokeApi: function(e, o, n, t, i, r) {
+    invokeApi: function(e, o, n, t, i, r,c) {
         if (common.alert("url: " + o), AJAXFlag) { (null === t || void 0 === t) && (t = function() {}),
             (null === i || void 0 === i) && (i = function() {}),
             (null === r || void 0 === r) && (r = function() {});
@@ -204,6 +204,7 @@ window.common = {
                 },
                 dataType: "json",
                 beforeSend: t,
+                complete: c,
                 success: function(e) {
                     common.alert("success data: " + JSON.stringify(e));
                     dealWithAjaxData(o, e, i, r);
@@ -235,16 +236,21 @@ window.common = {
         };
         common.invokeApi(n, a, i, null, e, r);
     },
+    //存储到localstorage中
+    localSet:function (key, value) {
+        window.localStorage.setItem(key, value);
+    },
+    //获取localstoragge数据
     GetImages:function(type) {
-        let imgUrl=getCookie(type);
-        if(imgUrl == undefined ||imgUrl == ''){
+        let imgUrl=window.localStorage.getItem(type);
+        if(imgUrl == undefined ||imgUrl == '' ){
             let n = "GET",
             a = "userInfo?oriApp="+getUrlParam('oriApp'),
             i = null,
             e = function(n) {
                 var duration = new Date().getTime()/1000 + 3600*24*30;
                 for(var j=0;j<n.result.bgImageList.length;j++){
-                    setCookie(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl,duration)
+                    window.localStorage.setItem(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl,duration)
                 } 
                 location.reload();
             },
@@ -252,7 +258,7 @@ window.common = {
             };
             common.invokeApi(n, a, i, null, e, r);
         }else {
-            imgUrl=getCookie(type)
+            imgUrl=window.localStorage.getItem(type);
         }
         return imgUrl;
    },

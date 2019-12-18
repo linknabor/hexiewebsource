@@ -219,7 +219,7 @@ export default {
     //模仿线上用户信息
     // 105/747/384
     initSession4Test() {
-      let url = "/initSession4Test/79187";
+      let url = "/initSession4Test/41";
       vm.receiveData.getData(vm, url, "Data", function() {});
     },
     User() {
@@ -243,7 +243,7 @@ export default {
           //保存图片
           var duration = new Date().getTime()/1000 + 3600*24*30;
           for(var j=0;j<n.result.bgImageList.length;j++){
-              cookie.set(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl,duration)
+              vm.common.localSet(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl,duration)
           }
           
         },
