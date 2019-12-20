@@ -190,7 +190,13 @@ function Getofficial() {
         common.newname='社区'
     }
 }
-
+//判断当前是那个公众号
+function Getofficial() {
+    var appid=getCookie('appId');
+    if(appid=='undefined') {
+        common.newname='社区'
+    }
+}
 
 var AJAXFlag = !0;
 window.common = {
@@ -303,7 +309,6 @@ window.common = {
             AJAXFlag = !1
         },
         function(x) {
-
             if(x.result!=null){
                common.updateUserStatus(x.result);
             }
