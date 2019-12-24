@@ -89,7 +89,7 @@ export default{
       vm=this;
     },
     mounted(){
-      // let url = '/initSession4Test/1';
+      // let url = '/initSession4Test/41';
       //           vm.receiveData.getData(vm,url,'Data',function(){
       //       });
       vm.initUserInfo();
@@ -116,7 +116,7 @@ export default{
                     var duration = new Date().getTime()/1000 + 3600*24*30;
                     if(n.result.bgImageList) {
                       for(var j=0;j<n.result.bgImageList.length;j++){
-                          cookie.set(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl,duration)
+                          vm.common.localSet(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl,duration)
                       }
                     }
                 },

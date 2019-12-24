@@ -175,7 +175,9 @@
 		  		//跳转支付
 				// var oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
 				var oriapp=vm.common.getoriApp();
-				window.location.href=vm.basePageUrl+"wuyepay.html?oriApp="+oriapp+"#/?billIds="+bills+"&stmtId="+vm.stmtId+"&payAddr="+escape(pay_addr)+"&totalPrice="+vm[allPrice]+"&reduceMode="+vm.reduceMode;
+
+				window.location.href=vm.basePageUrl+"wuyepay.html?oriApp="+oriapp+"#/?billIds="+bills+"&stmtId="+vm.stmtId+"&payAddr="+escape(pay_addr)+"&totalPrice="+vm[allPrice]+"&reduceMode="+vm.reduceMode+"&getversion=03"+"&regionname=";
+
 		  	},
 		  	//点击某个选中按钮 params1:被点击按钮的下标 params2:被点击按钮所属的数组
 			  itemClick:function(index, version, b){//3个页面对应不同的三个数组 

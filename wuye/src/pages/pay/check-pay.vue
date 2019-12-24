@@ -39,7 +39,7 @@
 			  	</div>	
 			  	<div class="input-row last">
 			  		建筑面积：
-			  		<input type="text" class="virtual-input classinput" value="" v-model="query.area">&nbsp;&nbsp;m²
+			  		<input type="text" class="virtual-input classinput" value="" @blur="fixScroll" v-model="query.area">&nbsp;&nbsp;m²
 			  		
 			  	</div>
 			  	<div class="input-row add">
@@ -188,7 +188,15 @@
            		}
            		
            },
-
+	 
+	   //ios留白问题，点击事件无效
+		fixScroll() {
+        let u = navigator.userAgent;
+        let isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+        if (isiOS) {
+          window.scrollTo(0,0);
+        }
+      },
 			//替换搜索内容
 		alertFN(s) {
 			 vm.$nextTick(function(){
