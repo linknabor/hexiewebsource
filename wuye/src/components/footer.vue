@@ -111,13 +111,17 @@ export default{
                     if(n.result!=null) {
                       vm.login=false;
                       vm.list=n.result.iconList;
-                      Bus.$emit('sends',n.result)
+                      Bus.$emit('sends',n.result);
+                      Bus.$emit('sect',n.result.sectId);
                     }
                     var duration = new Date().getTime()/1000 + 3600*24*30;
                     if(n.result.bgImageList) {
                       for(var j=0;j<n.result.bgImageList.length;j++){
                           vm.common.localSet(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl,duration)
                       }
+                    }
+                    if(n.result.wuyeTabsList) {
+                          vm.common.localSet('wuyeTabsList',JSON.stringify(n.result.wuyeTabsList))
                     }
                 },
                 r = function(res) { 

@@ -94,7 +94,7 @@
 				if(vm.response.result== null) {
 					  alert('未查询到该房屋')
 				  }else {
-					 	vm.$router.push('/bindHouse/' + vm.number);
+					 	vm.$router.push({path:'/bindHouse/' + vm.number,query:{type:'2'}});
 				  }
 			  }else {
 				alert(vm.response.message==null?'未查询到该房屋':vm.response.message)

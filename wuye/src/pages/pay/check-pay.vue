@@ -12,10 +12,14 @@
 						  <option v-for="item in sectList" :value="item.id" >{{item.name}}</option>   v-tap="{fn:alertFN,name:item.name}""
 			  		</select> -->
 					<ul class="input-uis test" v-show="shows" >
-						<li :data-idd="item.id" v-for="item in sectList" :key="item.id"  v-tap="{fn:alertFN,name:item.name,id:item.id}">{{item.name}}</li>
+						<li :data-idd="item.id" v-for="item in sectList" :key="item.id"  v-tap="{fn:alertFN,name:item.name,id:item.id,params:item.params}">{{item.name}}</li>
 					</ul>
-					
 			  	</div>
+
+				<div class="input-row" v-show="verSion=='1'">  
+					户号： <input type="text" class="virtual-input" value=""  placeholder="请输入户号" @input="toTrim" v-model="huhao" >
+				</div>	
+				<div v-show="verSion=='0'">
 			  	<div class="input-row">
 			  		楼宇：
 			  		<select class="virtual-input" v-model="query.build"  @change="getCouponSelected">
@@ -46,21 +50,10 @@
 			  		建筑面积允许误差±1m²以内
 			  	</div>
 		  	</div>
-		  	<!--<mt-loadmore 
-			  	:bottomMethod="queryLoadBottom" 
-			  	:bottomAllLoaded = "queryisLastPage"
-			  	:auto-fill = "false"
-				ref="loadmore"
-			>
-			  	<Bill :bill-info="queryBillInfo" @itemClick="itemClick"></Bill>
-			</mt-loadmore>-->
+			</div>  
 			<div style="width:100%;height:0.92rem;"></div>
 			<div class="btn-fixed" id="st">
-	    		<!-- <div v-show="quan" class="fl select-btn" :class="{allSelected:queryAllselect }" @click="allSelect(queryBillInfo,'queryAllselect')">全选&nbsp;</div> -->
 	    		<button class="pay" @click="addRoom" style="cursor:pointer;">添加房屋</button>
-	    		<!-- <div class="pay" @click="addRoom">
-	    			添加房屋
-	    		</div> -->
        		</div>
        		</div>
        		</div>
@@ -108,7 +101,9 @@
 				queryBillInfo : [],//查询缴费数据
 				queryAllselect:false,//查询缴费全选
 				wuyeId:0,
-				choosehouse:0
+				choosehouse:0,
+				huhao:'',//户号
+				verSion:'',//判断绑定房子方式
 			}
 		},
 		created(){
@@ -130,7 +125,7 @@
 					}else {
 					vm.shows=false;
 					}
-				}, 400);
+				},500);
 			},
 			getHousin(name){
 				let url = '/getVagueSectByName?sect_name='+name;
@@ -149,15 +144,50 @@
 								vm.query.sectID=id;
 							}
 							vm.showi=true;
-							vm.add();
+							// if(vm.verSion=='1') {
+							// 	vm.add();
+							// }
 						}else{
 							vm.shows=false;
 							vm.showi=true;
 						}
 				});
 			},
+			//去掉空格
+			toTrim(){
+				vm.huhao=vm.huhao.replace(/\s/g, "")
+			},
+			//添加房子
 			addRoom(){
-           		if(vm.query.sect==''||vm.query.area==''||vm.query.house==''||vm.query.unit==''){
+				if(vm.verSion=='1') {
+					vm.Neea();
+				}else if(vm.verSion=='0') {
+					vm.house();
+				}
+		    },
+		   Neea(){
+			//判断是否为正确户号号
+			var reg = /^\d{12}$/
+			if(reg.test(vm.huhao)){//为数字即通过
+				let url='/hexiehouse/'+vm.huhao;
+				vm.receiveData.getData(vm,url,'response',function(){
+				if(vm.response.success) {
+						if(vm.response.result== null) {
+							alert('未查询到该房屋')
+						}else {
+	  	 					vm.$router.push({path:'/bindHouse/' + vm.huhao,query:{type:'1'}});
+						}
+				}else {
+					alert(vm.response.message==null?'未查询到该房屋':vm.response.message)
+				}
+				})
+			}else{
+				MessageBox.alert('请输入正确户号');
+			}   
+			
+		   },
+		   house(){
+			   	if(vm.query.sect==''||vm.query.area==''||vm.query.house==''||vm.query.unit==''){
            			MessageBox.alert('请输入完整信息');
            			return;
            		}else{
@@ -184,10 +214,8 @@
 							})
 					}
 				})	
-	
            		}
-           		
-           },
+		   },
 	 
 	   //ios留白问题，点击事件无效
 		fixScroll() {
@@ -204,10 +232,11 @@
 				add.value=s.name
 				vm.query.sect = s.name;
 				vm.query.sectID=s.id;
-				// console.log(s.id);
+				vm.verSion=s.params.WECHAT_HOUSE_SEL_MODE;
 					vm.shows=false;
-					vm.one='two'
-					vm.add();
+					if(vm.verSion=='0') {
+						vm.add();
+					}
 			  })
 		
 		},
@@ -223,6 +252,7 @@
 				var add=document.getElementById('btnd')
 				add.value=''
 			}
+			vm.huhao="";
 			vm.query.sect='';
 			vm.query.build='';
 			vm.query.unit='';
