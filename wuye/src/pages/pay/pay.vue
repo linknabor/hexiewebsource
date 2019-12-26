@@ -45,12 +45,13 @@
       </mt-tab-container-item>
       <mt-tab-container-item id="b" >
         <!-- 物业缴费开始 -->
-        <div class="btext" v-show="sectId==0 || sectId== null">
+        <!-- <div class="btext" v-show="sectId==0 || sectId== null">
           <div >业主未绑定房屋,请点击下方"我是业主"前往绑定</div>
           <div class="bhouse" @click="Myhouse">我是业主</div>
-        </div>
+        </div> -->
         <div id="word">
-          <Bill :bill-info="billInfo" @itemClick="itemClick"  :version="version1"  v-show="sectId!=0 && sectId!= null"></Bill>
+           <!-- v-show="sectId!=0 && sectId!= null" -->
+          <Bill :bill-info="billInfo" @itemClick="itemClick"  :version="version1" ></Bill>
         </div>
         <div style="width:100%;height:2.2rem;background:#eee;"></div>
         <div class="btn-fixed">
@@ -303,7 +304,7 @@ export default {
       mine:true,
       huhao:'',//户号
       wschat_house_sel_mode:'',//切换户号
-      sectId:'',//判断是否绑定房子
+      // sectId:'',//判断是否绑定房子
       wuyeTabsList:'',//选项卡
       selected: "", //选项卡 默认选中
     };
@@ -321,8 +322,9 @@ export default {
     vm = this;
   },
   mounted() {
-    Bus.$on("sect",this.getSectid);
+    // Bus.$on("sect",this.getSectid);
     vm.TabsList();
+     vm.zong();
     vm.unitselect();
     vm.getHousin();
     let url = location.href.split("#")[0];
@@ -331,16 +333,16 @@ export default {
     // 判断是否是专业版
   },
   updated(){
-    vm.zong();
+    // vm.zong();
   },
   methods: {
     TabsList() {//获取localstorage中的选项卡
       vm.wuyeTabsList=JSON.parse(window.localStorage.getItem("wuyeTabsList"));
       vm.selected=vm.wuyeTabsList[0].value;
     },
-    getSectid(id) {
-      vm.sectId=id;
-    },
+    // getSectid(id) {
+    //   vm.sectId=id;
+    // },
     //跳转绑定房子
     Myhouse() {
       vm.$router.push({path:'/Myhouse'});
@@ -402,8 +404,8 @@ export default {
     //105/747/384
      //请求 停车缴费 和 物业缴费首屏数据
     zong(){
-      if(vm.selected=="b"&&vm.mine){
-        if(vm.sectId!=0 && vm.sectId!= null) {
+      // if(vm.selected=="b"&&vm.mine){
+        // if(vm.sectId!=0 && vm.sectId!= null) {
             vm.receiveData.getData(vm,"/billList","data",function() {
               if(vm.data.success) {
                   if(vm.data.result!=null) {
@@ -422,8 +424,8 @@ export default {
                   alert(vm.data.message==null?"暂无需缴费账单":vm.data.message)
               }
             },vm.params);
-        }
-      }
+        // }
+      // }
     },
     //跳转到查询缴费
     unitselect() {

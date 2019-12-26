@@ -112,7 +112,7 @@ export default{
                       vm.login=false;
                       vm.list=n.result.iconList;
                       Bus.$emit('sends',n.result);
-                      Bus.$emit('sect',n.result.sectId);
+                      // Bus.$emit('sect',n.result.sectId);
                     }
                     var duration = new Date().getTime()/1000 + 3600*24*30;
                     if(n.result.bgImageList) {
