@@ -175,6 +175,7 @@ function toRegisterAndBack(){
     }
     location.href=MasterConfig.C('basePageUrl')+"person/index.html?"+appurl+"#/register?comeFrom="+encodeURIComponent(n)+common.addParamHsah();
 }
+
 //判断当前是那个公众号
 function Getofficial() {
     var appid=getCookie('appId');
@@ -303,7 +304,6 @@ window.common = {
             AJAXFlag = !1
         },
         function(x) {
-
             if(x.result!=null){
                common.updateUserStatus(x.result);
             }

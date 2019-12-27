@@ -305,7 +305,6 @@ export default {
  
     },
     mounted(){
-        vm.bannerss();
         // this.initSession4Test();
         Bus.$on("sends",this.getMsgFromZha);
         
@@ -338,6 +337,7 @@ export default {
              vm.query();   
              vm.cfgParam=result.cfgParam;
              vm.sectId=result.sectId;
+             vm.bannerss();
          },
         query() {
                 if(vm.cfgParam.ONLINE_MESSAGE==1) {
