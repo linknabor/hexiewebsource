@@ -416,7 +416,7 @@ export default {
                       if(vm.data.result.bill_info.length>0) {//不是空数组
                           vm.billInfo = vm.data.result.bill_info; //物业缴费
                       }else {
-                          alert("暂无需缴费账单")
+                          // alert("暂无需缴费账单")
                       }
                       vm.billPage += 1;
                   }
