@@ -184,14 +184,6 @@ function Getofficial() {
     }
 }
 
-//判断当前是那个公众号
-function Getofficial() {
-    var appid=getCookie('appId');
-    if(appid=='undefined') {
-        common.newname='社区'
-    }
-}
-
 
 var AJAXFlag = !0;
 window.common = {
