@@ -32,7 +32,7 @@
         <div id="word">
           <Bill :bill-info="quickBillInfo" :version="version1" @itemClick="itemClick"></Bill>
         </div>
-        <div style="width:100%;height:2.2rem;background:#eee;"></div>
+        <div style="width:100%;height:1.2rem;background:#eee;"></div>
         <div class="btn-fixed">
           <div class="fl select-btn" v-show="quan1" :class="{allSelected:quickAllselect}"  @click="allSelect(quickBillInfo,'quickAllselect')">全选&nbsp;</div>
           <div class="pay" @click="pays('quickBillInfo','quickAllPrice','quickAllselect')">
@@ -47,7 +47,7 @@
         <div id="word">
           <Bill :bill-info="billInfo" @itemClick="itemClick"  :version="version1" ></Bill>
         </div>
-        <div style="width:100%;height:2.2rem;background:#eee;"></div>
+        <div style="width:100%;height:1.2rem;background:#eee;"></div>
         <div class="btn-fixed">
           <div
             class="fl select-btn"
@@ -132,7 +132,7 @@
             @itemClick="itemClick"
           ></Bill>
         </div>
-        <div style="wdith:100%;height:2.2rem;background:#eee;"></div>
+        <div style="wdith:100%;height:1.2rem;background:#eee;"></div>
         <div class="btn-fixed" id="st" v-show="showt">
           <div
             v-show="quan"
@@ -151,7 +151,7 @@
         </div>
       </mt-tab-container-item>
     </mt-tab-container>
-    <Foot></Foot>
+    <!-- <Foot v-show="isShows"></Foot> -->
   </div>
     <div  v-show="isshow"
       style=" background: rgba(0,0,0,0.5);display: none;width: 100%;height: 100%;top: 0rem; position: absolute;"></div>
@@ -168,11 +168,11 @@ import axios from "axios";
 import { MessageBox } from "mint-ui";
 import Bill from "../../components/bill.vue";
 import { Indicator, Loadmore } from "mint-ui";
-import Foot from "../../components/footer.vue";
+// import Foot from "../../components/footer.vue";
 import moment from "../filter/datafromat";
 
 export default {
-  components: { Bill, Foot },
+  components: { Bill},
 
   computed: {
     //物业缴费总价
@@ -371,9 +371,32 @@ export default {
       vm.receiveData.getData(vm,"/billList",
       "data",
       function() {
+           let arr=vm.data.result.bill_info;
+
+	       for (let index = 0; index < arr.length; index++) {
+							const element = arr[index];
+							if(arr[index].service_fee_cycle.length==7){//2018年3月变成2018年03月
+								let str=arr[index].service_fee_cycle;
+								var splitArray=str.split("年");
+								let newStr=splitArray[0].concat("年0").concat(splitArray[1]);
+								arr[index].service_fee_cycle=newStr;
+           }
+					}
+						//根据时间进行排序
+						arr.sort(function (a, b) {
+								if (a.service_fee_cycle < b.service_fee_cycle) {
+										return -1;
+								} else if (a.service_fee_cycle == b.service_fee_cycle) {
+										return 0;
+								} else {
+										return 1;
+								}
+						});
+
+
         vm.mine=false;
         vm.pay_least_month = vm.data.result.pay_least_month;
-        vm.billInfo = vm.data.result.bill_info; //物业缴费
+        vm.billInfo = arr; //物业缴费
         vm.reduceMode = vm.data.result.reduce_mode; //减免方式
         vm.permit_skip_pay = vm.data.result.permit_skip_pay; //判断跳跃付款
         vm.billPage += 1;
@@ -573,6 +596,7 @@ export default {
               vm.showp = false;
              }
             vm.otherbillinfo = vm.res.result.other_bill_info;
+             vm.permit_skip_pay = vm.res.result.permit_skip_pay;
              vm.isshow=false;
              vm.showp = false;
           }else {
@@ -660,6 +684,29 @@ export default {
             if (vm.queryBillInfo.result == null) {
               vm.queryBillInfo = [];
             } else {
+              //租金和物业费通过时间进行排序
+              let arr=vm.queryBillInfo.result.bill_info;
+              for (let index = 0; index < arr.length; index++) {
+							const element = arr[index];
+							if(arr[index].service_fee_cycle.length==7){//2018年3月变成2018年03月
+								let str=arr[index].service_fee_cycle;
+								var splitArray=str.split("年");
+								let newStr=splitArray[0].concat("年0").concat(splitArray[1]);
+								arr[index].service_fee_cycle=newStr;
+
+							}
+							
+						}
+						//根据时间进行排序
+						arr.sort(function (a, b) {
+								if (a.service_fee_cycle < b.service_fee_cycle) {
+										return -1;
+								} else if (a.service_fee_cycle == b.service_fee_cycle) {
+										return 0;
+								} else {
+										return 1;
+								}
+						});
               vm.queryBillPage+=1;
               vm.permit_skip_pay = vm.queryBillInfo.result.permit_skip_pay;
               vm.pay_least_month = vm.queryBillInfo.result.pay_least_month; //3月份
@@ -745,8 +792,32 @@ export default {
         "pageData4",
         function() {
           tempArr = vm.pageData4.result.bill_info;
+         let arr=vm.queryBillInfo.concat(tempArr);//上页和当前页进行拼接
+
+	        for (let index = 0; index < arr.length; index++) {
+							const element = arr[index];
+							if(arr[index].service_fee_cycle.length==7){
+								let str=arr[index].service_fee_cycle;
+						var splitArray=str.split("年");
+						let newStr=splitArray[0].concat("年0").concat(splitArray[1]);
+						arr[index].service_fee_cycle=newStr;
+						}
+							
+						}
+						//根据时间进行排序
+						
+						arr.sort(function (a, b) {
+								if (a.service_fee_cycle < b.service_fee_cycle) {
+										return -1;
+								} else if (a.service_fee_cycle == b.service_fee_cycle) {
+										return 0;
+								} else {
+										return 1;
+								}
+						});
+
           if (tempArr && tempArr.length > 0) {
-            vm.queryBillInfo = vm.queryBillInfo.concat(tempArr); //快捷缴费
+            vm.queryBillInfo =arr; //快捷缴费
             vm.queryAllselect=false;
             vm.queryBillPage+=1;
             isloadPage=false;
@@ -773,8 +844,31 @@ export default {
       //请求接口数据
       vm.receiveData.getData(vm, url, "pageData3", function() {
         tempArr = vm.pageData3.result.bill_info;
+        let arr=vm.quickBillInfo.concat(tempArr);
+             for (let index = 0; index < arr.length; index++) {
+							const element = arr[index];
+							if(arr[index].service_fee_cycle.length==7){
+								let str=arr[index].service_fee_cycle;
+						var splitArray=str.split("年");
+						let newStr=splitArray[0].concat("年0").concat(splitArray[1]);
+						arr[index].service_fee_cycle=newStr;
+						}
+							
+						}
+						//根据时间进行排序
+						
+						arr.sort(function (a, b) {
+								if (a.service_fee_cycle < b.service_fee_cycle) {
+										return -1;
+								} else if (a.service_fee_cycle == b.service_fee_cycle) {
+										return 0;
+								} else {
+										return 1;
+                }
+            }
+            )
         if (tempArr && tempArr.length > 0) {
-          vm.quickBillInfo = vm.quickBillInfo.concat(tempArr); //快捷缴费
+          vm.quickBillInfo = arr; //快捷缴费
           vm.quickAllselect = false;
           vm.quickBillpage += 1;
           isloadPage=false;
@@ -796,10 +890,34 @@ export default {
         "/billList",
         "pageData",
         function() {
+            tempArr = vm.pageData.result.bill_info; //物业缴费
+            let arr=vm.billInfo.concat(tempArr);
+             for (let index = 0; index < arr.length; index++) {
+							const element = arr[index];
+							if(arr[index].service_fee_cycle.length==7){
+								let str=arr[index].service_fee_cycle;
+						var splitArray=str.split("年");
+						let newStr=splitArray[0].concat("年0").concat(splitArray[1]);
+						arr[index].service_fee_cycle=newStr;
+						}
+							
+						}
+						//根据时间进行排序
+						
+						arr.sort(function (a, b) {
+								if (a.service_fee_cycle < b.service_fee_cycle) {
+										return -1;
+								} else if (a.service_fee_cycle == b.service_fee_cycle) {
+										return 0;
+								} else {
+										return 1;
+                }
+            }
+            )
           vm.billPage += 1;
-          tempArr = vm.pageData.result.bill_info; //物业缴费
+         
           if (tempArr && tempArr.length > 0) {
-            vm.billInfo = vm.billInfo.concat(tempArr); //物业缴费
+            vm.billInfo = arr; //物业缴费
             vm.bAllSelect = false;
             isloadPage=false;
           } else {
@@ -888,11 +1006,43 @@ export default {
       //3个页面对应不同的三个数组
       //if 01标准版  else 02专业版
       if (version == "01") {
+       if (vm.permit_skip_pay == "1") {
         if (otherBillinfo[index].selected) {
-          vm.$set(otherBillinfo[index], "selected", false);
-        } else {
-          vm.$set(otherBillinfo[index], "selected", true);
+            //选中状态下
+            for (let i = index; i < otherBillinfo.length; i++) {
+              //后面的全部取消选中
+              vm.$set(otherBillinfo[i], "selected", false);
+            }
+            //某一个点击了取消后全选消失
+            vm.bAllSelect = false;
+            vm.queryAllselect = false;
+            vm.quickAllselect = false;
+            //    console.log(vm.bAllSelect)
+          } else {
+            //未选中状态下，前面全部选中
+            for (let j = index; j >= 0; j--) {
+              //
+              vm.$set(otherBillinfo[j], "selected", true);
+            }
+          }
+        } else if (vm.permit_skip_pay == "0") {
+          if (otherBillinfo[index].selected) {
+            //选中状态下
+            vm.$set(otherBillinfo[index], "selected", false);
+            //某一个点击了取消后全选消失
+            vm.bAllSelect = false;
+            vm.queryAllselect = false;
+            vm.quickAllselect = false;
+            //    console.log(vm.bAllSelect)
+          }
+        else {
+          //未选中状态下，前面全部选中
+            vm.$set(otherBillinfo[index], "selected", true);
+
         }
+      
+      
+      }
       } else {
         let len = b.length;
         if (b[index].pay_status != "02") {
@@ -1093,7 +1243,7 @@ a {
   color: #fff;
   left: 0;
   right: 0;
-  bottom: 1.25rem;
+  bottom: .3rem;
   height: 0.92rem;
   line-height: 0.92rem;
   text-align: center;
@@ -1115,7 +1265,9 @@ a {
   height: 0.75rem;
  line-height: 0.75rem;
  border-radius: 5px;
- margin-top: .05rem;
+ /* margin-top: .05rem; */
+ position:relative;
+ top:.1rem;
 }
 
 .allSelected {
@@ -1126,7 +1278,7 @@ a {
 }
 
 .pay {
- bottom: -0.05rem;
+ bottom: -0.1rem;
   text-align: center;
   position: relative;
   font-size: 0.3rem;

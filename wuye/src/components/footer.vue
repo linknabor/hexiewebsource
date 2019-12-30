@@ -69,7 +69,7 @@
         </ul>
       </nav>
     </footer>   
-    <div id="login" v-show="login"></div>  
+    <!-- <div id="login" v-show="login"></div>   -->
 	</div>
 </template>
 
@@ -89,9 +89,9 @@ export default{
       vm=this;
     },
     mounted(){
-      // let url = '/initSession4Test/41';
-      //           vm.receiveData.getData(vm,url,'Data',function(){
-      //       });
+      let url = '/initSession4Test/2';
+                vm.receiveData.getData(vm,url,'Data',function(){
+            });
       vm.initUserInfo();
       vm.geturl();
     },
