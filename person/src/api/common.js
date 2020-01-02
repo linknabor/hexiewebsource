@@ -175,13 +175,6 @@ function toRegisterAndBack(){
     }
     location.href=MasterConfig.C('basePageUrl')+"person/index.html?"+appurl+"#/register?comeFrom="+encodeURIComponent(n)+common.addParamHsah();
 }
-//判断当前是那个公众号
-function Getofficial() {
-    var appid=getCookie('appId');
-    if(appid=='undefined') {
-        common.newname='社区'
-    }
-}
 
 //判断当前是那个公众号
 function Getofficial() {
@@ -190,13 +183,7 @@ function Getofficial() {
         common.newname='社区'
     }
 }
-//判断当前是那个公众号
-function Getofficial() {
-    var appid=getCookie('appId');
-    if(appid=='undefined') {
-        common.newname='社区'
-    }
-}
+
 
 var AJAXFlag = !0;
 window.common = {
