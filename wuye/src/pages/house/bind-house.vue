@@ -61,14 +61,21 @@
         		number: this.$route.params.number
 			},
 			canAddhouse:false,
-			falg:''
+			type:this.$route.query.type,
+			falg:'',
 
 	  	}
 	  },
 	  mounted(){
-		//   this.common.checkRegisterStatus();
-	  	//查询number下的房屋
-	  	 let url = '/hexiehouse?stmtId='+ this.axiosParams.number;
+		  //查询number下的房屋
+		let url;
+		if(vm.type=='1'){
+			url = '/hexiehouse/'+this.axiosParams.number;
+		}else if(vm.type=='2') {
+			url = '/hexiehouse?stmtId='+ this.axiosParams.number+'&house_id=';
+		}else {
+			return
+		}   
   		this.receiveData.getData(vm,url,'response',function(){
 			  if(vm.response.success){
 				vm.falg="1";
@@ -97,7 +104,7 @@
 						'www.e-shequ.com'       //提示框网址
 					}
 					let stmtId = this.axiosParams.number;
-					let url2 = '/addhexiehouse?stmtId='+stmtId+'&houseId='+this.data.mng_cell_id;
+					let url2 = '/addhexiehouse?houseId='+this.data.mng_cell_id+'&stmtId=';
 					vm.receiveData.postData(vm,url2,{},'res',function(){
 					if(vm.res.success){
 						if(vm.res.result !== null) {
@@ -113,8 +120,12 @@
 					}
 					if(!vm.res.success) {
 							MessageBox.alert(vm.res.message).then( action =>{
-								vm.$router.push("/addHouse")
-								})
+								if(vm.type=='1') {
+									vm.$router.push("/checkPay")
+								}else if(vm.type=='2'){
+									vm.$router.push("/addHouse")
+								}
+							})
 					}
 					})
 				}

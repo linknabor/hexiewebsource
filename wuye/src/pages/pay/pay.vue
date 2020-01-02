@@ -11,9 +11,10 @@
       />
     </div>
     <mt-navbar id="navBar" v-model="selected">
-      <mt-tab-item id="d">查询缴费</mt-tab-item>
+      <!-- <mt-tab-item id="d">查询缴费</mt-tab-item>
       <mt-tab-item id="b">我的账单</mt-tab-item>
-      <mt-tab-item id="a">扫描账单</mt-tab-item>
+      <mt-tab-item id="a">扫描账单</mt-tab-item> -->
+      <mt-tab-item v-for="item in wuyeTabsList" :key="item.id" :id="item.value">{{item.name}}</mt-tab-item>
     </mt-navbar>
     <mt-tab-container v-model="selected">
       <mt-tab-container-item id="a">
@@ -42,10 +43,14 @@
         </div>
         <!-- 账单缴费结束 -->
       </mt-tab-container-item>
-      <mt-tab-container-item id="b">
+      <mt-tab-container-item id="b" >
         <!-- 物业缴费开始 -->
+        <!-- <div class="btext" v-show="sectId==0 || sectId== null">
+          <div >业主未绑定房屋,请点击下方"我是业主"前往绑定</div>
+          <div class="bhouse" @click="Myhouse">我是业主</div>
+        </div> -->
         <div id="word">
-          <Bill :bill-info="billInfo" @itemClick="itemClick"  :version="version1" ></Bill>
+          <Bill :bill-info="billInfo" @itemClick="itemClick"  :version="version1"></Bill>
         </div>
         <div style="width:100%;height:1.2rem;background:#eee;"></div>
         <div class="btn-fixed">
@@ -76,9 +81,22 @@
               v-model.trim="query.sect"
               @click="fond()"
             />
-
             <i class="iconfont icon-chacha classc" @click="clicki" v-show="showi"></i>
           </div>
+
+          <div class="input-row" v-show="wschat_house_sel_mode=='1'">
+              <label>户号：</label>
+              <input
+                type="text"
+                class="virtual-input classinput"
+                value
+                placeholder="请输入户号"
+                @input="toTrim"
+                v-model="huhao"
+                @change="huhaoserach()"
+              />
+          </div>
+          <div v-show="wschat_house_sel_mode=='0'">
           <div class="input-row">
             <label>楼宇：</label>
             <select class="virtual-input" v-model="query.build" @change="getCouponSelected">
@@ -100,11 +118,12 @@
               <option v-for="item in houseList" :value="item.id" :key="item.id">{{item.name}}</option>
             </select>
           </div>
+          </div>
+
           <!-- 判断是否为无账单显示 -->
           <div class="input-row" v-if="standard1">
             <label>起始日期：</label>
             <input class="virtual-input classinput1" type="date" value="" v-model="startData" >
-          
           </div>
           
           <div class="input-row" v-if="standard3">
@@ -122,9 +141,8 @@
             <input class="virtual-input classinput1" type="date" value="" v-model="endData" @blur="Blurname()"> 
           </div>
           
-          </div>
+        </div>
           <div id="word">
-          
           <Bill
             :bill-info="queryBillInfo"
             :version="version"
@@ -170,6 +188,7 @@ import Bill from "../../components/bill.vue";
 import { Indicator, Loadmore } from "mint-ui";
 // import Foot from "../../components/footer.vue";
 import moment from "../filter/datafromat";
+import Bus from '../../api/bus.js';
 
 export default {
   components: { Bill},
@@ -232,7 +251,7 @@ export default {
       standard1: false,
       standard2: false,
       standard3: false,
-      // standard4: false,
+      standard4: false,
       startData: "",
       verNumber: "",
       endData: "",
@@ -266,9 +285,7 @@ export default {
       queryBillInfo: [], //查询缴费数据
       quickBillInfo: [], //快捷查询数据
       otherbillinfo: [], //无账单缴费
-      selected: "d", //选项卡 默认选中
       billPage: 1, // 物业缴费页码
-      // carBillPage: 1, //停车缴费页码
       queryBillPage: 1, //查询缴费页码
       quickBillpage: 1,
       pay_least_month: 1,
@@ -282,8 +299,13 @@ export default {
       quan2: false,
       permit_skip_pay: "1",
       is_null:'',
-      andios:'',
+      andios:'',//判断系统类型
       mine:true,
+      huhao:'',//户号
+      wschat_house_sel_mode:'',//切换户号
+      // sectId:'',//判断是否绑定房子
+      wuyeTabsList:'',//选项卡
+      selected: "", //选项卡 默认选中
     };
   },
   //时间戳转换成日期
@@ -293,24 +315,37 @@ export default {
   watch: {
     selected(newv,old){
       isloadPage=false;
-      if(newv=="b"&&vm.mine){
-        vm.zong();
-      }
     }
   },
   created() {
     vm = this;
   },
   mounted() {
-     vm.unitselect();
-     vm.getHousin();
-    // this.initSession4Test();
+    // Bus.$on("sect",this.getSectid);
+    vm.TabsList();
+     vm.zong();
+    vm.unitselect();
+    vm.getHousin();
     let url = location.href.split("#")[0];
     vm.receiveData.wxconfig(vm, wx, ["scanQRCode","getLocation"], url);
     vm.Compatibility();
     // 判断是否是专业版
   },
+  updated(){
+    // vm.zong();
+  },
   methods: {
+    TabsList() {//获取localstorage中的选项卡
+      vm.wuyeTabsList=JSON.parse(window.localStorage.getItem("wuyeTabsList"));
+      vm.selected=vm.wuyeTabsList[0].value;
+    },
+    // getSectid(id) {
+    //   vm.sectId=id;
+    // },
+    //跳转绑定房子
+    Myhouse() {
+      vm.$router.push({path:'/Myhouse'});
+    },
     formatDate(date, fmt) {
             var currentDate = new Date(date);
             var o = {
@@ -368,46 +403,51 @@ export default {
     //105/747/384
      //请求 停车缴费 和 物业缴费首屏数据
     zong(){
-      vm.receiveData.getData(vm,"/billList",
-      "data",
-      function() {
-           let arr=vm.data.result.bill_info;
+      // if(vm.selected=="b"&&vm.mine){
+      //   if(vm.sectId!=0 && vm.sectId!= null) {
+            vm.receiveData.getData(vm,"/billList","data",function() {
+              if(vm.data.success) {
+                  if(vm.data.result!=null) {
+            //     let arr=vm.data.result.bill_info;
+            //   for (let index = 0; index < arr.length; index++) {
+						// 	const element = arr[index];
+						// 	if(arr[index].service_fee_cycle.length==7){//2018年3月变成2018年03月
+						// 		let str=arr[index].service_fee_cycle;
+						// 		var splitArray=str.split("年");
+						// 		let newStr=splitArray[0].concat("年0").concat(splitArray[1]);
+						// 		arr[index].service_fee_cycle=newStr;
 
-	       for (let index = 0; index < arr.length; index++) {
-							const element = arr[index];
-							if(arr[index].service_fee_cycle.length==7){//2018年3月变成2018年03月
-								let str=arr[index].service_fee_cycle;
-								var splitArray=str.split("年");
-								let newStr=splitArray[0].concat("年0").concat(splitArray[1]);
-								arr[index].service_fee_cycle=newStr;
-           }
-					}
-						//根据时间进行排序
-						arr.sort(function (a, b) {
-								if (a.service_fee_cycle < b.service_fee_cycle) {
-										return -1;
-								} else if (a.service_fee_cycle == b.service_fee_cycle) {
-										return 0;
-								} else {
-										return 1;
-								}
-						});
+						// 	}
+							
+						// }
+						// //根据时间进行排序
+						// arr.sort(function (a, b) {
+						// 		if (a.service_fee_cycle < b.service_fee_cycle) {
+						// 				return -1;
+						// 		} else if (a.service_fee_cycle == b.service_fee_cycle) {
+						// 				return 0;
+						// 		} else {
+						// 				return 1;
+						// 		}
+						// });
 
-
-        vm.mine=false;
-        vm.pay_least_month = vm.data.result.pay_least_month;
-        vm.billInfo = arr; //物业缴费
-        vm.reduceMode = vm.data.result.reduce_mode; //减免方式
-        vm.permit_skip_pay = vm.data.result.permit_skip_pay; //判断跳跃付款
-        vm.billPage += 1;
-      },
-      vm.params
-      
-    );
-    },
-    initSession4Test() {
-      let url = "/initSession4Test/105";
-      vm.receiveData.getData(vm, url, "Data", function() {});
+                      vm.mine=false;
+                      vm.pay_least_month = vm.data.result.pay_least_month;
+                      vm.reduceMode = vm.data.result.reduce_mode; //减免方式
+                      vm.permit_skip_pay = vm.data.result.permit_skip_pay; //判断跳跃付款
+                      if(vm.data.result.bill_info.length>0) {//不是空数组
+                          vm.billInfo = vm.data.result.bill_info; //物业缴费
+                      }else {
+                          // alert("暂无需缴费账单")
+                      }
+                      vm.billPage += 1;
+                  }
+              }else {
+                  alert(vm.data.message==null?"暂无需缴费账单":vm.data.message)
+              }
+            },vm.params);
+        // }
+      // }
     },
     //跳转到查询缴费
     unitselect() {
@@ -439,15 +479,16 @@ export default {
             }
             let link = null;
             link = vm.Datas.result.sect_info;
+            vm.wschat_house_sel_mode=link[0].params.WECHAT_HOUSE_SEL_MODE;
             if (link && link.length > 0) {
-              vm.add();
+              if(vm.wschat_house_sel_mode=='0'){
+                vm.add();
+              }
               vm.showi = true;
             } else {
               vm.showi = false;
             }
-        
       });
-      
     },
     // 查询小区
     fond() {
@@ -459,6 +500,7 @@ export default {
       vm.query.build = "";
       vm.query.unit = "";
       vm.query.house = "";
+      vm.huhao="";
       vm.startData = "";
       vm.endData = "";
 
@@ -666,6 +708,41 @@ export default {
         params
       );
     },
+     //去掉户号空格
+    toTrim() {
+      this.huhao = this.huhao.replace(/\s/g, "");
+    },
+    //户号查询交给
+    huhaoserach() {
+      //判断是否为正确户号号
+      var reg = /^\d{12}$/
+      if(reg.test(vm.huhao)) {
+        vm.receiveData.getData(vm, "/hexiehouse/" + vm.huhao, "res", function() {
+            if (vm.res.success) {
+              vm.query.sectID = vm.res.result.sect_id;
+              vm.query.house = vm.res.result.mng_cell_id;
+              vm.queryBillInfo = []; //清空查询账单列表
+              vm.otherbillinfo = [];
+              vm.queryBillPage = 1; //页码重置
+              isloadPage = false; //重置加载状态
+
+              if (vm.getversion == "01") {
+                vm.getBillStartDate();
+                vm.version = vm.getversion;
+                // vm.zhuanpay = "biaozhun";
+              } else {
+                vm.version = "02";
+                vm.queryBillList();
+              }
+            }else {
+              alert(vm.res.message)
+            }
+        })  
+      }else {
+          MessageBox.alert('请输入正确户号');
+      }
+      
+    },
     //请求查询缴费 账单列表
     queryBillList() {
       // vm.getBillStartDate();
@@ -685,28 +762,28 @@ export default {
               vm.queryBillInfo = [];
             } else {
               //租金和物业费通过时间进行排序
-              let arr=vm.queryBillInfo.result.bill_info;
-              for (let index = 0; index < arr.length; index++) {
-							const element = arr[index];
-							if(arr[index].service_fee_cycle.length==7){//2018年3月变成2018年03月
-								let str=arr[index].service_fee_cycle;
-								var splitArray=str.split("年");
-								let newStr=splitArray[0].concat("年0").concat(splitArray[1]);
-								arr[index].service_fee_cycle=newStr;
+            //   let arr=vm.queryBillInfo.result.bill_info;
+            //   for (let index = 0; index < arr.length; index++) {
+						// 	const element = arr[index];
+						// 	if(arr[index].service_fee_cycle.length==7){//2018年3月变成2018年03月
+						// 		let str=arr[index].service_fee_cycle;
+						// 		var splitArray=str.split("年");
+						// 		let newStr=splitArray[0].concat("年0").concat(splitArray[1]);
+						// 		arr[index].service_fee_cycle=newStr;
 
-							}
+						// 	}
 							
-						}
-						//根据时间进行排序
-						arr.sort(function (a, b) {
-								if (a.service_fee_cycle < b.service_fee_cycle) {
-										return -1;
-								} else if (a.service_fee_cycle == b.service_fee_cycle) {
-										return 0;
-								} else {
-										return 1;
-								}
-						});
+						// }
+						// //根据时间进行排序
+						// arr.sort(function (a, b) {
+						// 		if (a.service_fee_cycle < b.service_fee_cycle) {
+						// 				return -1;
+						// 		} else if (a.service_fee_cycle == b.service_fee_cycle) {
+						// 				return 0;
+						// 		} else {
+						// 				return 1;
+						// 		}
+						// });
               vm.queryBillPage+=1;
               vm.permit_skip_pay = vm.queryBillInfo.result.permit_skip_pay;
               vm.pay_least_month = vm.queryBillInfo.result.pay_least_month; //3月份
@@ -733,7 +810,7 @@ export default {
         vm.params
       );
     },
-
+   
     submit() {
       //请求扫码快速缴费数据
       if (vm.stmtId == "" || vm.stmtId.length != 18) {
@@ -751,6 +828,28 @@ export default {
         "/" +
         vm.params.totalCount;
       vm.receiveData.getData(vm, url, "quickData", function() {
+        //  let arr=vm.quickData.result.bill_info;
+        //       for (let index = 0; index < arr.length; index++) {
+				// 			const element = arr[index];
+				// 			if(arr[index].service_fee_cycle.length==7){//2018年3月变成2018年03月
+				// 				let str=arr[index].service_fee_cycle;
+				// 				var splitArray=str.split("年");
+				// 				let newStr=splitArray[0].concat("年0").concat(splitArray[1]);
+				// 				arr[index].service_fee_cycle=newStr;
+
+				// 			}
+							
+				// 		}
+				// 		//根据时间进行排序
+				// 		arr.sort(function (a, b) {
+				// 				if (a.service_fee_cycle < b.service_fee_cycle) {
+				// 						return -1;
+				// 				} else if (a.service_fee_cycle == b.service_fee_cycle) {
+				// 						return 0;
+				// 				} else {
+				// 						return 1;
+				// 				}
+				// 		});
         if (vm.quickData.result && vm.quickData.result.bill_info.length > 0) {
           vm.permit_skip_pay = vm.quickData.result.permit_skip_pay;
           vm.quickBillInfo = vm.quickData.result.bill_info;
@@ -792,32 +891,32 @@ export default {
         "pageData4",
         function() {
           tempArr = vm.pageData4.result.bill_info;
-         let arr=vm.queryBillInfo.concat(tempArr);//上页和当前页进行拼接
+        //  let arr=vm.queryBillInfo.concat(tempArr);//上页和当前页进行拼接
 
-	        for (let index = 0; index < arr.length; index++) {
-							const element = arr[index];
-							if(arr[index].service_fee_cycle.length==7){
-								let str=arr[index].service_fee_cycle;
-						var splitArray=str.split("年");
-						let newStr=splitArray[0].concat("年0").concat(splitArray[1]);
-						arr[index].service_fee_cycle=newStr;
-						}
+	      //   for (let index = 0; index < arr.length; index++) {
+				// 			const element = arr[index];
+				// 			if(arr[index].service_fee_cycle.length==7){
+				// 				let str=arr[index].service_fee_cycle;
+				// 		var splitArray=str.split("年");
+				// 		let newStr=splitArray[0].concat("年0").concat(splitArray[1]);
+				// 		arr[index].service_fee_cycle=newStr;
+				// 		}
 							
-						}
-						//根据时间进行排序
+				// 		}
+				// 		//根据时间进行排序
 						
-						arr.sort(function (a, b) {
-								if (a.service_fee_cycle < b.service_fee_cycle) {
-										return -1;
-								} else if (a.service_fee_cycle == b.service_fee_cycle) {
-										return 0;
-								} else {
-										return 1;
-								}
-						});
+				// 		arr.sort(function (a, b) {
+				// 				if (a.service_fee_cycle < b.service_fee_cycle) {
+				// 						return -1;
+				// 				} else if (a.service_fee_cycle == b.service_fee_cycle) {
+				// 						return 0;
+				// 				} else {
+				// 						return 1;
+				// 				}
+				// 		});
 
           if (tempArr && tempArr.length > 0) {
-            vm.queryBillInfo =arr; //快捷缴费
+            vm.queryBillInfo =vm.queryBillInfo.concat(tempArr); //快捷缴费
             vm.queryAllselect=false;
             vm.queryBillPage+=1;
             isloadPage=false;
@@ -844,31 +943,31 @@ export default {
       //请求接口数据
       vm.receiveData.getData(vm, url, "pageData3", function() {
         tempArr = vm.pageData3.result.bill_info;
-        let arr=vm.quickBillInfo.concat(tempArr);
-             for (let index = 0; index < arr.length; index++) {
-							const element = arr[index];
-							if(arr[index].service_fee_cycle.length==7){
-								let str=arr[index].service_fee_cycle;
-						var splitArray=str.split("年");
-						let newStr=splitArray[0].concat("年0").concat(splitArray[1]);
-						arr[index].service_fee_cycle=newStr;
-						}
+        // let arr=vm.quickBillInfo.concat(tempArr);
+        //      for (let index = 0; index < arr.length; index++) {
+				// 			const element = arr[index];
+				// 			if(arr[index].service_fee_cycle.length==7){
+				// 				let str=arr[index].service_fee_cycle;
+				// 		var splitArray=str.split("年");
+				// 		let newStr=splitArray[0].concat("年0").concat(splitArray[1]);
+				// 		arr[index].service_fee_cycle=newStr;
+				// 		}
 							
-						}
-						//根据时间进行排序
+				// 		}
+				// 		//根据时间进行排序
 						
-						arr.sort(function (a, b) {
-								if (a.service_fee_cycle < b.service_fee_cycle) {
-										return -1;
-								} else if (a.service_fee_cycle == b.service_fee_cycle) {
-										return 0;
-								} else {
-										return 1;
-                }
-            }
-            )
+				// 		arr.sort(function (a, b) {
+				// 				if (a.service_fee_cycle < b.service_fee_cycle) {
+				// 						return -1;
+				// 				} else if (a.service_fee_cycle == b.service_fee_cycle) {
+				// 						return 0;
+				// 				} else {
+				// 						return 1;
+        //         }
+        //     }
+        //     )
         if (tempArr && tempArr.length > 0) {
-          vm.quickBillInfo = arr; //快捷缴费
+          vm.quickBillInfo = vm.quickBillInfo.concat(tempArr); //快捷缴费
           vm.quickAllselect = false;
           vm.quickBillpage += 1;
           isloadPage=false;
@@ -891,33 +990,33 @@ export default {
         "pageData",
         function() {
             tempArr = vm.pageData.result.bill_info; //物业缴费
-            let arr=vm.billInfo.concat(tempArr);
-             for (let index = 0; index < arr.length; index++) {
-							const element = arr[index];
-							if(arr[index].service_fee_cycle.length==7){
-								let str=arr[index].service_fee_cycle;
-						var splitArray=str.split("年");
-						let newStr=splitArray[0].concat("年0").concat(splitArray[1]);
-						arr[index].service_fee_cycle=newStr;
-						}
+            // let arr=vm.billInfo.concat(tempArr);
+            //  for (let index = 0; index < arr.length; index++) {
+						// 	const element = arr[index];
+						// 	if(arr[index].service_fee_cycle.length==7){
+						// 		let str=arr[index].service_fee_cycle;
+						// var splitArray=str.split("年");
+						// let newStr=splitArray[0].concat("年0").concat(splitArray[1]);
+						// arr[index].service_fee_cycle=newStr;
+						// }
 							
-						}
-						//根据时间进行排序
+						// }
+						// //根据时间进行排序
 						
-						arr.sort(function (a, b) {
-								if (a.service_fee_cycle < b.service_fee_cycle) {
-										return -1;
-								} else if (a.service_fee_cycle == b.service_fee_cycle) {
-										return 0;
-								} else {
-										return 1;
-                }
-            }
-            )
+						// arr.sort(function (a, b) {
+						// 		if (a.service_fee_cycle < b.service_fee_cycle) {
+						// 				return -1;
+						// 		} else if (a.service_fee_cycle == b.service_fee_cycle) {
+						// 				return 0;
+						// 		} else {
+						// 				return 1;
+            //     }
+            // }
+            // )
           vm.billPage += 1;
          
           if (tempArr && tempArr.length > 0) {
-            vm.billInfo = arr; //物业缴费
+            vm.billInfo = vm.billInfo.concat(tempArr); //物业缴费
             vm.bAllSelect = false;
             isloadPage=false;
           } else {
@@ -1006,7 +1105,7 @@ export default {
       //3个页面对应不同的三个数组
       //if 01标准版  else 02专业版
       if (version == "01") {
-       if (vm.permit_skip_pay == "1") {
+       if (vm.permit_skip_pay == "0") {
         if (otherBillinfo[index].selected) {
             //选中状态下
             for (let i = index; i < otherBillinfo.length; i++) {
@@ -1025,7 +1124,7 @@ export default {
               vm.$set(otherBillinfo[j], "selected", true);
             }
           }
-        } else if (vm.permit_skip_pay == "0") {
+        } else if (vm.permit_skip_pay == "1") {
           if (otherBillinfo[index].selected) {
             //选中状态下
             vm.$set(otherBillinfo[index], "selected", false);
@@ -1309,7 +1408,21 @@ a {
   margin: auto;
   margin: 0.2rem;
 }
-
+.btext {
+    background-color: rgb(238, 238, 238);
+    text-align: center;
+    font-size: 0.3rem;
+    padding-top:0.2rem;
+}
+.bhouse {
+    display: inline-block;
+    margin-top: 0.2rem;
+    padding: 0.2rem;
+    color:#fff;
+    border-radius: 5px;
+    font-size:0.3rem;
+    background:url("../../assets/images/house/paymoney.png") no-repeat center;
+}
 /*footbtn end*/
 
 .main {
