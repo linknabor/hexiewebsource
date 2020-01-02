@@ -50,7 +50,8 @@
           <div class="bhouse" @click="Myhouse">我是业主</div>
         </div> -->
         <div id="word">
-          <Bill :bill-info="billInfo" @itemClick="itemClick"  :version="version1"></Bill>
+           <!-- v-show="sectId!=0 && sectId!= null" -->
+          <Bill :bill-info="billInfo" @itemClick="itemClick"  :version="version1" ></Bill>
         </div>
         <div style="width:100%;height:1.2rem;background:#eee;"></div>
         <div class="btn-fixed">
@@ -404,7 +405,7 @@ export default {
      //请求 停车缴费 和 物业缴费首屏数据
     zong(){
       // if(vm.selected=="b"&&vm.mine){
-      //   if(vm.sectId!=0 && vm.sectId!= null) {
+        // if(vm.sectId!=0 && vm.sectId!= null) {
             vm.receiveData.getData(vm,"/billList","data",function() {
               if(vm.data.success) {
                   if(vm.data.result!=null) {
