@@ -526,7 +526,14 @@
 						
 						
 					}
-                    let useDate = vm.data.result.other_bill_info[0];
+					let useDate = vm.data.result.other_bill_info[0];
+					let mian_amt = vm.data.result.other_bill_info[0].mian_amt;
+					if ( mian_amt) {
+						
+						vm.mian_amt = vm.data.result.other_bill_info[0].mian_amt;
+						
+						
+					}
                     vm.verNumber = useDate.ver_no;
                  			//地址
                     vm.addr = useDate.cell_addr;
@@ -536,6 +543,9 @@
                				//费用列表
 					vm.feeList = vm.data.result.other_bill_info;
 					vm.mian_amt=useDate.mian_amt;//标准版减免
+					if(vm.mian_amt==""){
+						vm.mian_amt=0;
+					}
 					vm.count = vm.routeParams.totalPrice;//传来的总价格
 					let reduced_amt=parseFloat(vm.mian_amt)//减少的钱
 					vm.reduceAmt = parseFloat(reduced_amt).toFixed(2); //合计
