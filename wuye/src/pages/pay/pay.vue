@@ -33,7 +33,7 @@
         <div id="word">
           <Bill :bill-info="quickBillInfo" :version="version1" @itemClick="itemClick"></Bill>
         </div>
-        <div style="width:100%;height:2.2rem;background:#eee;"></div>
+        <div style="width:100%;height:1.2rem;background:#eee;"></div>
         <div class="btn-fixed">
           <div class="fl select-btn" v-show="quan1" :class="{allSelected:quickAllselect}"  @click="allSelect(quickBillInfo,'quickAllselect')">全选&nbsp;</div>
           <div class="pay" @click="pays('quickBillInfo','quickAllPrice','quickAllselect')">
@@ -48,7 +48,7 @@
         <div class="btext" v-show="sectId==0 || sectId== null">
           <div >业主未绑定房屋,请点击下方"我是业主"前往绑定</div>
           <div class="bhouse" @click="Myhouse">我是业主</div>
-        </div>
+        </div> 
         <div id="word">
           <Bill v-show="sectId!=0 && sectId!= null" :bill-info="billInfo" @itemClick="itemClick"  :version="version1" ></Bill>
         </div>
@@ -437,6 +437,7 @@ export default {
         }
       }
       },200)
+
     },
     //跳转到查询缴费
     unitselect() {
@@ -835,7 +836,7 @@ export default {
         function() {
           tempArr = vm.pageData4.result.bill_info;
           if (tempArr && tempArr.length > 0) {
-            vm.queryBillInfo = vm.queryBillInfo.concat(tempArr); //快捷缴费
+            vm.queryBillInfo =vm.queryBillInfo.concat(tempArr); //快捷缴费
             vm.queryAllselect=false;
             vm.queryBillPage+=1;
             isloadPage=false;
@@ -885,8 +886,9 @@ export default {
         "/billList",
         "pageData",
         function() {
+            tempArr = vm.pageData.result.bill_info; //物业缴费
           vm.billPage += 1;
-          tempArr = vm.pageData.result.bill_info; //物业缴费
+         
           if (tempArr && tempArr.length > 0) {
             vm.billInfo = vm.billInfo.concat(tempArr); //物业缴费
             vm.bAllSelect = false;
@@ -978,9 +980,9 @@ export default {
       //if 01标准版  else 02专业版
       if (version == "01") {
         if (otherBillinfo[index].selected) {
-          vm.$set(otherBillinfo[index], "selected", false);
-        } else {
-          vm.$set(otherBillinfo[index], "selected", true);
+           vm.$set(otherBillinfo[index], "selected", false);
+        }else{
+           vm.$set(otherBillinfo[index], "selected", true);
         }
       } else {
         let len = b.length;
