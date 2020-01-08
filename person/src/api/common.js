@@ -184,6 +184,7 @@ function Getofficial() {
     }
 }
 
+
 var AJAXFlag = !0;
 window.common = {
     newname:"社区",

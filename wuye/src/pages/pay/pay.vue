@@ -45,13 +45,12 @@
       </mt-tab-container-item>
       <mt-tab-container-item id="b" >
         <!-- 物业缴费开始 -->
-        <!-- <div class="btext" v-show="sectId==0 || sectId== null">
+        <div class="btext" v-show="sectId==0 || sectId== null">
           <div >业主未绑定房屋,请点击下方"我是业主"前往绑定</div>
           <div class="bhouse" @click="Myhouse">我是业主</div>
-        </div> -->
+        </div> 
         <div id="word">
-           <!-- v-show="sectId!=0 && sectId!= null" -->
-          <Bill :bill-info="billInfo" @itemClick="itemClick"  :version="version1" ></Bill>
+          <Bill v-show="sectId!=0 && sectId!= null" :bill-info="billInfo" @itemClick="itemClick"  :version="version1" ></Bill>
         </div>
         <div style="width:100%;height:1.2rem;background:#eee;"></div>
         <div class="btn-fixed">
@@ -170,7 +169,7 @@
         </div>
       </mt-tab-container-item>
     </mt-tab-container>
-    <!-- <Foot v-show="isShows"></Foot> -->
+    <!-- <Foot></Foot> -->
   </div>
     <div  v-show="isshow"
       style=" background: rgba(0,0,0,0.5);display: none;width: 100%;height: 100%;top: 0rem; position: absolute;"></div>
@@ -304,7 +303,7 @@ export default {
       mine:true,
       huhao:'',//户号
       wschat_house_sel_mode:'',//切换户号
-      // sectId:'',//判断是否绑定房子
+      sectId:'',//判断是否绑定房子
       wuyeTabsList:'',//选项卡
       selected: "", //选项卡 默认选中
     };
@@ -316,15 +315,17 @@ export default {
   watch: {
     selected(newv,old){
       isloadPage=false;
+      if(newv=='b'){
+         vm.zong();
+      }
     }
   },
   created() {
     vm = this;
   },
   mounted() {
-    // Bus.$on("sect",this.getSectid);
+    vm.getSectid();
     vm.TabsList();
-     vm.zong();
     vm.unitselect();
     vm.getHousin();
     let url = location.href.split("#")[0];
@@ -332,17 +333,23 @@ export default {
     vm.Compatibility();
     // 判断是否是专业版
   },
-  updated(){
-    // vm.zong();
-  },
   methods: {
     TabsList() {//获取localstorage中的选项卡
       vm.wuyeTabsList=JSON.parse(window.localStorage.getItem("wuyeTabsList"));
       vm.selected=vm.wuyeTabsList[0].value;
     },
-    // getSectid(id) {
-    //   vm.sectId=id;
-    // },
+    getSectid() {
+        let n = "GET",
+            a = "userInfo?oriApp="+vm.getUrlParam('oriApp'),
+            i = null,
+            e = function(n) {
+                   vm.sectId=n.result.sectId;
+            },
+            r = function(n) { 
+              
+            };
+        this.common.invokeApi(n, a, i, null, e, r);
+    },
     //跳转绑定房子
     Myhouse() {
       vm.$router.push({path:'/Myhouse'});
@@ -404,34 +411,12 @@ export default {
     //105/747/384
      //请求 停车缴费 和 物业缴费首屏数据
     zong(){
-      // if(vm.selected=="b"&&vm.mine){
-        // if(vm.sectId!=0 && vm.sectId!= null) {
+      setTimeout(function(){
+      if(vm.selected=="b"&&vm.mine){
+        if(vm.sectId!=0 && vm.sectId!= null) {
             vm.receiveData.getData(vm,"/billList","data",function() {
               if(vm.data.success) {
                   if(vm.data.result!=null) {
-            //     let arr=vm.data.result.bill_info;
-            //   for (let index = 0; index < arr.length; index++) {
-						// 	const element = arr[index];
-						// 	if(arr[index].service_fee_cycle.length==7){//2018年3月变成2018年03月
-						// 		let str=arr[index].service_fee_cycle;
-						// 		var splitArray=str.split("年");
-						// 		let newStr=splitArray[0].concat("年0").concat(splitArray[1]);
-						// 		arr[index].service_fee_cycle=newStr;
-
-						// 	}
-							
-						// }
-						// //根据时间进行排序
-						// arr.sort(function (a, b) {
-						// 		if (a.service_fee_cycle < b.service_fee_cycle) {
-						// 				return -1;
-						// 		} else if (a.service_fee_cycle == b.service_fee_cycle) {
-						// 				return 0;
-						// 		} else {
-						// 				return 1;
-						// 		}
-						// });
-
                       vm.mine=false;
                       vm.pay_least_month = vm.data.result.pay_least_month;
                       vm.reduceMode = vm.data.result.reduce_mode; //减免方式
@@ -439,16 +424,20 @@ export default {
                       if(vm.data.result.bill_info.length>0) {//不是空数组
                           vm.billInfo = vm.data.result.bill_info; //物业缴费
                       }else {
-                          // alert("暂无需缴费账单")
+                          alert("暂无需缴费账单");
                       }
                       vm.billPage += 1;
+                  }else {
+                        alert("暂无需缴费账单");
                   }
               }else {
                   alert(vm.data.message==null?"暂无需缴费账单":vm.data.message)
               }
             },vm.params);
-        // }
-      // }
+        }
+      }
+      },200)
+
     },
     //跳转到查询缴费
     unitselect() {
@@ -639,7 +628,6 @@ export default {
               vm.showp = false;
              }
             vm.otherbillinfo = vm.res.result.other_bill_info;
-             vm.permit_skip_pay = vm.res.result.permit_skip_pay;
              vm.isshow=false;
              vm.showp = false;
           }else {
@@ -762,29 +750,6 @@ export default {
             if (vm.queryBillInfo.result == null) {
               vm.queryBillInfo = [];
             } else {
-              //租金和物业费通过时间进行排序
-            //   let arr=vm.queryBillInfo.result.bill_info;
-            //   for (let index = 0; index < arr.length; index++) {
-						// 	const element = arr[index];
-						// 	if(arr[index].service_fee_cycle.length==7){//2018年3月变成2018年03月
-						// 		let str=arr[index].service_fee_cycle;
-						// 		var splitArray=str.split("年");
-						// 		let newStr=splitArray[0].concat("年0").concat(splitArray[1]);
-						// 		arr[index].service_fee_cycle=newStr;
-
-						// 	}
-							
-						// }
-						// //根据时间进行排序
-						// arr.sort(function (a, b) {
-						// 		if (a.service_fee_cycle < b.service_fee_cycle) {
-						// 				return -1;
-						// 		} else if (a.service_fee_cycle == b.service_fee_cycle) {
-						// 				return 0;
-						// 		} else {
-						// 				return 1;
-						// 		}
-						// });
               vm.queryBillPage+=1;
               vm.permit_skip_pay = vm.queryBillInfo.result.permit_skip_pay;
               vm.pay_least_month = vm.queryBillInfo.result.pay_least_month; //3月份
@@ -829,28 +794,6 @@ export default {
         "/" +
         vm.params.totalCount;
       vm.receiveData.getData(vm, url, "quickData", function() {
-        //  let arr=vm.quickData.result.bill_info;
-        //       for (let index = 0; index < arr.length; index++) {
-				// 			const element = arr[index];
-				// 			if(arr[index].service_fee_cycle.length==7){//2018年3月变成2018年03月
-				// 				let str=arr[index].service_fee_cycle;
-				// 				var splitArray=str.split("年");
-				// 				let newStr=splitArray[0].concat("年0").concat(splitArray[1]);
-				// 				arr[index].service_fee_cycle=newStr;
-
-				// 			}
-							
-				// 		}
-				// 		//根据时间进行排序
-				// 		arr.sort(function (a, b) {
-				// 				if (a.service_fee_cycle < b.service_fee_cycle) {
-				// 						return -1;
-				// 				} else if (a.service_fee_cycle == b.service_fee_cycle) {
-				// 						return 0;
-				// 				} else {
-				// 						return 1;
-				// 				}
-				// 		});
         if (vm.quickData.result && vm.quickData.result.bill_info.length > 0) {
           vm.permit_skip_pay = vm.quickData.result.permit_skip_pay;
           vm.quickBillInfo = vm.quickData.result.bill_info;
@@ -892,30 +835,6 @@ export default {
         "pageData4",
         function() {
           tempArr = vm.pageData4.result.bill_info;
-        //  let arr=vm.queryBillInfo.concat(tempArr);//上页和当前页进行拼接
-
-	      //   for (let index = 0; index < arr.length; index++) {
-				// 			const element = arr[index];
-				// 			if(arr[index].service_fee_cycle.length==7){
-				// 				let str=arr[index].service_fee_cycle;
-				// 		var splitArray=str.split("年");
-				// 		let newStr=splitArray[0].concat("年0").concat(splitArray[1]);
-				// 		arr[index].service_fee_cycle=newStr;
-				// 		}
-							
-				// 		}
-				// 		//根据时间进行排序
-						
-				// 		arr.sort(function (a, b) {
-				// 				if (a.service_fee_cycle < b.service_fee_cycle) {
-				// 						return -1;
-				// 				} else if (a.service_fee_cycle == b.service_fee_cycle) {
-				// 						return 0;
-				// 				} else {
-				// 						return 1;
-				// 				}
-				// 		});
-
           if (tempArr && tempArr.length > 0) {
             vm.queryBillInfo =vm.queryBillInfo.concat(tempArr); //快捷缴费
             vm.queryAllselect=false;
@@ -944,29 +863,6 @@ export default {
       //请求接口数据
       vm.receiveData.getData(vm, url, "pageData3", function() {
         tempArr = vm.pageData3.result.bill_info;
-        // let arr=vm.quickBillInfo.concat(tempArr);
-        //      for (let index = 0; index < arr.length; index++) {
-				// 			const element = arr[index];
-				// 			if(arr[index].service_fee_cycle.length==7){
-				// 				let str=arr[index].service_fee_cycle;
-				// 		var splitArray=str.split("年");
-				// 		let newStr=splitArray[0].concat("年0").concat(splitArray[1]);
-				// 		arr[index].service_fee_cycle=newStr;
-				// 		}
-							
-				// 		}
-				// 		//根据时间进行排序
-						
-				// 		arr.sort(function (a, b) {
-				// 				if (a.service_fee_cycle < b.service_fee_cycle) {
-				// 						return -1;
-				// 				} else if (a.service_fee_cycle == b.service_fee_cycle) {
-				// 						return 0;
-				// 				} else {
-				// 						return 1;
-        //         }
-        //     }
-        //     )
         if (tempArr && tempArr.length > 0) {
           vm.quickBillInfo = vm.quickBillInfo.concat(tempArr); //快捷缴费
           vm.quickAllselect = false;
@@ -991,29 +887,6 @@ export default {
         "pageData",
         function() {
             tempArr = vm.pageData.result.bill_info; //物业缴费
-            // let arr=vm.billInfo.concat(tempArr);
-            //  for (let index = 0; index < arr.length; index++) {
-						// 	const element = arr[index];
-						// 	if(arr[index].service_fee_cycle.length==7){
-						// 		let str=arr[index].service_fee_cycle;
-						// var splitArray=str.split("年");
-						// let newStr=splitArray[0].concat("年0").concat(splitArray[1]);
-						// arr[index].service_fee_cycle=newStr;
-						// }
-							
-						// }
-						// //根据时间进行排序
-						
-						// arr.sort(function (a, b) {
-						// 		if (a.service_fee_cycle < b.service_fee_cycle) {
-						// 				return -1;
-						// 		} else if (a.service_fee_cycle == b.service_fee_cycle) {
-						// 				return 0;
-						// 		} else {
-						// 				return 1;
-            //     }
-            // }
-            // )
           vm.billPage += 1;
          
           if (tempArr && tempArr.length > 0) {
@@ -1106,43 +979,11 @@ export default {
       //3个页面对应不同的三个数组
       //if 01标准版  else 02专业版
       if (version == "01") {
-       if (vm.permit_skip_pay == "0") {
         if (otherBillinfo[index].selected) {
-            //选中状态下
-            for (let i = index; i < otherBillinfo.length; i++) {
-              //后面的全部取消选中
-              vm.$set(otherBillinfo[i], "selected", false);
-            }
-            //某一个点击了取消后全选消失
-            vm.bAllSelect = false;
-            vm.queryAllselect = false;
-            vm.quickAllselect = false;
-            //    console.log(vm.bAllSelect)
-          } else {
-            //未选中状态下，前面全部选中
-            for (let j = index; j >= 0; j--) {
-              //
-              vm.$set(otherBillinfo[j], "selected", true);
-            }
-          }
-        } else if (vm.permit_skip_pay == "1") {
-          if (otherBillinfo[index].selected) {
-            //选中状态下
-            vm.$set(otherBillinfo[index], "selected", false);
-            //某一个点击了取消后全选消失
-            vm.bAllSelect = false;
-            vm.queryAllselect = false;
-            vm.quickAllselect = false;
-            //    console.log(vm.bAllSelect)
-          }
-        else {
-          //未选中状态下，前面全部选中
-            vm.$set(otherBillinfo[index], "selected", true);
-
+           vm.$set(otherBillinfo[index], "selected", false);
+        }else{
+           vm.$set(otherBillinfo[index], "selected", true);
         }
-      
-      
-      }
       } else {
         let len = b.length;
         if (b[index].pay_status != "02") {
@@ -1365,7 +1206,6 @@ a {
   height: 0.75rem;
  line-height: 0.75rem;
  border-radius: 5px;
- /* margin-top: .05rem; */
  position:relative;
  top:.1rem;
 }
