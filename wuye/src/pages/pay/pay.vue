@@ -45,15 +45,14 @@
       </mt-tab-container-item>
       <mt-tab-container-item id="b" >
         <!-- 物业缴费开始 -->
-        <!-- <div class="btext" v-show="sectId==0 || sectId== null">
+        <div class="btext" v-show="sectId==0 || sectId== null">
           <div >业主未绑定房屋,请点击下方"我是业主"前往绑定</div>
           <div class="bhouse" @click="Myhouse">我是业主</div>
-        </div> -->
-        <div id="word">
-           <!-- v-show="sectId!=0 && sectId!= null" -->
-          <Bill :bill-info="billInfo" @itemClick="itemClick"  :version="version1" ></Bill>
         </div>
-        <div style="width:100%;height:2.2rem;background:#eee;"></div>
+        <div id="word">
+          <Bill v-show="sectId!=0 && sectId!= null" :bill-info="billInfo" @itemClick="itemClick"  :version="version1" ></Bill>
+        </div>
+        <div style="width:100%;height:1.2rem;background:#eee;"></div>
         <div class="btn-fixed">
           <div
             class="fl select-btn"
@@ -151,7 +150,7 @@
             @itemClick="itemClick"
           ></Bill>
         </div>
-        <div style="wdith:100%;height:2.2rem;background:#eee;"></div>
+        <div style="wdith:100%;height:1.2rem;background:#eee;"></div>
         <div class="btn-fixed" id="st" v-show="showt">
           <div
             v-show="quan"
@@ -170,7 +169,7 @@
         </div>
       </mt-tab-container-item>
     </mt-tab-container>
-    <Foot></Foot>
+    <!-- <Foot></Foot> -->
   </div>
     <div  v-show="isshow"
       style=" background: rgba(0,0,0,0.5);display: none;width: 100%;height: 100%;top: 0rem; position: absolute;"></div>
@@ -187,12 +186,12 @@ import axios from "axios";
 import { MessageBox } from "mint-ui";
 import Bill from "../../components/bill.vue";
 import { Indicator, Loadmore } from "mint-ui";
-import Foot from "../../components/footer.vue";
+// import Foot from "../../components/footer.vue";
 import moment from "../filter/datafromat";
 import Bus from '../../api/bus.js';
 
 export default {
-  components: { Bill, Foot },
+  components: { Bill},
 
   computed: {
     //物业缴费总价
@@ -304,7 +303,7 @@ export default {
       mine:true,
       huhao:'',//户号
       wschat_house_sel_mode:'',//切换户号
-      // sectId:'',//判断是否绑定房子
+      sectId:'',//判断是否绑定房子
       wuyeTabsList:'',//选项卡
       selected: "", //选项卡 默认选中
     };
@@ -316,15 +315,17 @@ export default {
   watch: {
     selected(newv,old){
       isloadPage=false;
+      if(newv=='b'){
+         vm.zong();
+      }
     }
   },
   created() {
     vm = this;
   },
   mounted() {
-    // Bus.$on("sect",this.getSectid);
+    vm.getSectid();
     vm.TabsList();
-     vm.zong();
     vm.unitselect();
     vm.getHousin();
     let url = location.href.split("#")[0];
@@ -332,17 +333,23 @@ export default {
     vm.Compatibility();
     // 判断是否是专业版
   },
-  updated(){
-    // vm.zong();
-  },
   methods: {
     TabsList() {//获取localstorage中的选项卡
       vm.wuyeTabsList=JSON.parse(window.localStorage.getItem("wuyeTabsList"));
       vm.selected=vm.wuyeTabsList[0].value;
     },
-    // getSectid(id) {
-    //   vm.sectId=id;
-    // },
+    getSectid() {
+        let n = "GET",
+            a = "userInfo?oriApp="+vm.getUrlParam('oriApp'),
+            i = null,
+            e = function(n) {
+                   vm.sectId=n.result.sectId;
+            },
+            r = function(n) { 
+              
+            };
+        this.common.invokeApi(n, a, i, null, e, r);
+    },
     //跳转绑定房子
     Myhouse() {
       vm.$router.push({path:'/Myhouse'});
@@ -404,8 +411,9 @@ export default {
     //105/747/384
      //请求 停车缴费 和 物业缴费首屏数据
     zong(){
-      // if(vm.selected=="b"&&vm.mine){
-        // if(vm.sectId!=0 && vm.sectId!= null) {
+      setTimeout(function(){
+      if(vm.selected=="b"&&vm.mine){
+        if(vm.sectId!=0 && vm.sectId!= null) {
             vm.receiveData.getData(vm,"/billList","data",function() {
               if(vm.data.success) {
                   if(vm.data.result!=null) {
@@ -416,16 +424,19 @@ export default {
                       if(vm.data.result.bill_info.length>0) {//不是空数组
                           vm.billInfo = vm.data.result.bill_info; //物业缴费
                       }else {
-                          // alert("暂无需缴费账单")
+                          alert("暂无需缴费账单");
                       }
                       vm.billPage += 1;
+                  }else {
+                        alert("暂无需缴费账单");
                   }
               }else {
                   alert(vm.data.message==null?"暂无需缴费账单":vm.data.message)
               }
             },vm.params);
-        // }
-      // }
+        }
+      }
+      },200)
     },
     //跳转到查询缴费
     unitselect() {
@@ -1171,7 +1182,7 @@ a {
   color: #fff;
   left: 0;
   right: 0;
-  bottom: 1.25rem;
+  bottom: .3rem;
   height: 0.92rem;
   line-height: 0.92rem;
   text-align: center;
@@ -1193,7 +1204,8 @@ a {
   height: 0.75rem;
  line-height: 0.75rem;
  border-radius: 5px;
- margin-top: .05rem;
+ position:relative;
+ top:.1rem;
 }
 
 .allSelected {
@@ -1204,7 +1216,7 @@ a {
 }
 
 .pay {
- bottom: -0.05rem;
+ bottom: -0.1rem;
   text-align: center;
   position: relative;
   font-size: 0.3rem;
