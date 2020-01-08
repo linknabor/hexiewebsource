@@ -69,7 +69,7 @@
         </ul>
       </nav>
     </footer>   
-    <!-- <div id="login" v-show="login"></div>   -->
+    <div id="login" v-show="login"></div>  
 	</div>
 </template>
 
