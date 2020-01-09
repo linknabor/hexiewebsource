@@ -16,8 +16,8 @@
           <div class="fs14">常住小区&nbsp;{{user.city}}&nbsp;{{user.xiaoquName}}</div>
         </span>
       </div>
-
-      <div id="point-list" style="border-bottom: none;" class="div_bottom">
+      <!--  -->
+      <div id="point-list" style="border-bottom: none;" class="div_bottom" v-show="cardService==false">
         <div class="point-item-wrap">
           <div class="point-item">
             <div class="point-info fs16">{{user.zhima}}</div>
@@ -45,6 +45,21 @@
           </a>
         </div>
       </div> -->
+
+      <div id="point-list" style="border-bottom: none;" class="div_bottom" v-show="cardService==true">
+        <div class="point-item-wrap item-wraps">
+          <div class="point-item">
+            <div class="point-info fs16">{{point}}</div>
+            <div class="point-title fs14">积分</div>
+          </div>
+        </div>
+        <div class="point-item-wrap item-wraps">
+          <div class="point-item" @click="coupons">
+            <div class="point-info fs16">{{user.couponCount}}</div>
+            <div class="point-title fs14">现金劵</div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="info-wrap" style="overflow:hidden; clear: both; border-bottom:none ;">
@@ -123,11 +138,6 @@
     </div>
 
     <div class="info-wrap" style="border-bottom: none;">
-      
-      <!-- <router-link :to="{path:'/abort'}" href="#" class="input-wrap menu-person-link lite-divider">
-        <span class="input-info lf30 fs16">关注我们</span>
-      </router-link> -->
-
       <a
         :href="'tel:'+user.officeTel"
         v-show="user.officeTel!=null && user.officeTel!=''"
@@ -175,7 +185,10 @@ export default {
       },
       login:true,
       oriapp:'', //我是业主
+      cardService:'',
       qrCode:'',//二维码
+      point:0,//积分
+      cardStatus:'',//是否领卡激活的标记
       // 默认未开通会员
       isMember: false,
 
@@ -196,7 +209,7 @@ export default {
   },
   mounted() {
     // this.initSession4Test();
-    this.User();
+    this.User(); 
     this.updateCouponStatus();
     // this.panduan(); //先判断
     vm.oriApp();//判断我是业主地址
@@ -219,7 +232,7 @@ export default {
     //模仿线上用户信息
     // 105/747/384
     initSession4Test() {
-      let url = "/initSession4Test/41";
+      let url = "/initSession4Test/46";
       vm.receiveData.getData(vm, url, "Data", function() {});
     },
     User() {
@@ -237,15 +250,22 @@ export default {
           vm.user.name ="" != n.result.name ? n.result.name : vm.user_info.nickname;
            
           vm.qrCode=n.result.qrCode;
+          vm.cardService=n.result.cardService;
+          if(vm.user.point<0){//小于0等于0
+            vm.point=0;
+          }else {
+            vm.point=vm.user.point;
+          }
           vm.login=false;
-          Bus.$emit('sends',n.result.iconList)
+          Bus.$emit('sends',n.result.iconList);
           
           //保存图片
           var duration = new Date().getTime()/1000 + 3600*24*30;
+          cookie.set('cardStatus',n.result.cardStatus,duration);
+
           for(var j=0;j<n.result.bgImageList.length;j++){
-              vm.common.localSet(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl,duration)
+              vm.common.localSet(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl)
           }
-          
         },
         r = function() {
           vm.login=false;
@@ -270,8 +290,34 @@ export default {
     },
     //点击头像
     gotoEdit() {
-        vm.$router.push({ path: "/bindphone" });
-     
+        if(vm.cardService){
+          //1新用户未领卡未激活 
+          if(!vm.user.tel && (vm.user.cardStatus=='1'||vm.user.cardStatus==null || vm.user.cardStatus=='0')){
+              vm.$router.push({ path: "/welfare" });
+          }else if(!vm.user.tel && vm.user.cardStatus=='2'){ //2新用户领卡未激活
+              vm.$router.push({ path: "/register" }); 
+          }else if(vm.user.tel && (vm.user.cardStatus=='3' || vm.user.cardStatus=='4')){ //3新用户或老用户领卡已激活
+              vm.receiveData.getData(vm,'/card/activateUrl','res',function(){
+                  if(vm.res.success) {                
+                          location.href=vm.res.result;
+                  }else {
+                        alert(vm.res.message);  
+                  }
+              });  
+          }else if(vm.user.tel && (vm.user.cardStatus=='1'||vm.user.cardStatus==null || vm.user.cardStatus=='0')){ //1老用户未领卡未激活
+              vm.$router.push({ path: "/welfare" });  
+          }else if(vm.user.tel && vm.user.cardStatus=='2') { //2 老用户领卡未激活
+              vm.receiveData.getData(vm,'/card/activateUrl','res',function(){
+                  if(vm.res.success) {                
+                          location.href=vm.res.result;
+                  }else {
+                        alert(vm.res.message);  
+                  }
+              });  
+          }
+        }else {
+            vm.$router.push({ path: "/bindphone" });
+        }      
     },
     //现金券
     coupons() {
@@ -294,13 +340,17 @@ export default {
 
 <style  scoped>
  #login {
-      background: rgba(0,0,0,0.5);
-      left: 0;
-      right: 0;
+      z-index: 100000;
+      position: fixed;
       top: 0;
-      bottom: 0;
-      position: fixed; 
-      z-index:10000000;
+      left: 0;
+      -moz-opacity: 0.65;
+      opacity: 0.65;
+      filter: alpha(opacity=65);
+      background: #000;
+      width: 100%;
+      height: 100%;
+      display: block;
 }
 .ind {
   background-color: #fffff8;
@@ -378,6 +428,9 @@ export default {
   width: 33%;
   float: left;
   position: relative;
+}
+#point-list .item-wraps {
+  width: 50%;
 }
 #point-list .point-item-wrap .point-item {
   border-radius: 2px;
