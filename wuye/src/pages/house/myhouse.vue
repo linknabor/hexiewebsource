@@ -55,6 +55,15 @@
 		height: 25px;
 		margin-top: 5px;
 	}
+	#login {
+		background: rgba(0,0,0,0.5);
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		position: fixed; 
+		z-index:10000000;
+	}	
 </style>
 
 <template>
@@ -83,7 +92,7 @@
 			</li>
 		</ul>
 		<div class="bottomBtn" @click="addHouse">添加房子</div>
-		<!-- <mt-button  size="large" class="bottomBtn" @click.native="addHouse" ></mt-button> -->
+		<div id="login" v-show="login"></div> 
 	</div>
 </template>
 <script>
@@ -93,6 +102,7 @@
 	  data(){
 	  	return {
 			dataArr:[],
+			login:true,
 			bgImage:this.common.GetImages('5'),
 	  	}
 	  },
@@ -112,7 +122,8 @@
 			  		vm.dataArr = vm.data.result		  			
 		  		}else{
 		  			vm.dataArr = []
-		  		}
+				  }
+				vm.login=false;  
 		  	})
 	  	},
 	  	addHouse(){

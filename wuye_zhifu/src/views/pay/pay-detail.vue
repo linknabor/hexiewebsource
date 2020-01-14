@@ -437,6 +437,7 @@
 				mianAmt:0.00,
 				fee_mianBill:'0',
 				fee_mianAmt:0.00,
+				mian_amt:0.00,//标准版减免
 				show_invoice_flag:'0',
 				show_com_flag:'0',//是否允许开具公司发票
 				show_invoice:'',//是否显示发票
@@ -503,12 +504,12 @@
 		methods:{
 			//创造用户
 			initSession4Test(){
-				let url = '/initSession4Test/1';
+				let url = '/initSession4Test/2';
 					vm.receiveData.getData(vm,url,'Data',function(){
 				});
 			},
 			getBillDetail() {
-					if(vm.version=='01'){
+			if(vm.version=='01'){
 		       let url="getPayListStd?regionname="+this.regionname+"&house_id="+ this.house_id +
 		      "&sect_id="+this.sect_id +"&start_date="+this.start_date +"&end_date="+this.end_date; 
              
@@ -518,6 +519,9 @@
 				    vm.show_com_flag=vm.data.result.other_bill_info[0].show_com_flag;
 					vm.show_invoice_flag = vm.data.result.other_bill_info[0].show_invoice_flag;
 					vm.show_invoice=vm.data.result.other_bill_info[0].show_invoice;
+					if(vm.show_invoice=='1') {
+								vm.invoice_title_type='01';
+							}
 					if(vm.data.result.fee_data  == null){
 						
 						
@@ -530,10 +534,20 @@
               				//面积
                     vm.area = useDate.cnst_area;
                				//费用列表
-                    vm.feeList = vm.data.result.other_bill_info;
+					vm.feeList = vm.data.result.other_bill_info;
+					vm.mian_amt=useDate.mian_amt;//标准版减免
+					vm.count = vm.routeParams.totalPrice;//传来的总价格
+					let reduced_amt=parseFloat(vm.mian_amt)//减少的钱
+					vm.reduceAmt = parseFloat(reduced_amt).toFixed(2); //合计
+					vm.count =parseFloat(vm.routeParams.totalPrice) - parseFloat(vm.reduceAmt);//减免之后的金额
+					vm.count = vm.count.toFixed(2);
+					//缴费四舍五入
+					let zcount=vm.count;
+					// vm.Carandpay(zcount,reduced_amt);
+					vm.Carandpay(zcount);//四舍五入
                 }
 			 )
-			  vm.calcReduceAmt();
+			//   vm.calcReduceAmt();
             }else if(vm.version == "02"){
 			let url = "getBillDetail?regionname="+this.regionname;
 			vm.receiveData.getData(
@@ -848,7 +862,7 @@
 				$('.box-bg').css("display",'block');
 				let url;
 				if(vm.version=='01'){
-				 url = "getOtherPrePayInfo?houseId="+this.house_id+"&regionname="+this.regionname+"&start_date="+ this.start_date+"&end_date="+this.end_date+"&couponUnit="+vm.upronAmountNumber+"&couponNum=1&couponId="+vm.couponId+"&mianBill="+vm.mianBill+"&mianAmt="+vm.mianAmt+"&reduceAmt="+vm.reduceAmt+"&invoice_title_type="+this.invoice_title_type+"&credit_code="+this.credit_code+"&invoice_title="+this.invoice_title;
+				 url = "getOtherPrePayInfo?houseId="+this.house_id+"&regionname="+this.regionname+"&start_date="+ this.start_date+"&end_date="+this.end_date+"&couponUnit="+vm.upronAmountNumber+"&couponNum=1&couponId="+vm.couponId+"&mianBill="+vm.mianBill+"&mianAmt="+vm.mianAmt+"&mian_amt="+vm.mian_amt+"&reduceAmt="+vm.reduceAmt+"&invoice_title_type="+this.invoice_title_type+"&credit_code="+this.credit_code+"&invoice_title="+this.invoice_title;
 				}else{
 			    url = "getPrePayInfo?billId="+vm.routeParams.billIds+"&stmtId="+vm.routeParams.stmtId+"&regionname="+this.regionname+"&couponUnit="+vm.upronAmountNumber+"&couponNum=1&couponId="+vm.couponId+"&mianBill="+vm.mianBill+"&mianAmt="+vm.mianAmt+"&fee_mianAmt="+vm.fee_mianAmt+"&fee_mianBill="+vm.fee_mianBill+"&reduceAmt="+vm.reduceMoney+"&invoice_title_type="+this.invoice_title_type+"&credit_code="+this.credit_code+"&invoice_title="+this.invoice_title;
 				}
