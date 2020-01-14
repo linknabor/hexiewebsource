@@ -6,9 +6,9 @@
     <!-- class="hidden" -->
     <div id="phoneAjax" v-show="showp">
       <img
-        src="../../assets/images/house/c3d7f369-4a5e-4c4a-9fb9-a4b9d274c7e1.gif"
-        style="width:40px;height:40px;vertical-align: middle;"
-      />
+        src="../../assets/images/house/7f1b3b58-c5b6-4022-b1ed-dc4188c43a3a.gif"
+        style="width:100%;vertical-align: middle;"
+      /> 
     </div>
     <mt-navbar id="navBar" v-model="selected">
       <!-- <mt-tab-item id="d">查询缴费</mt-tab-item>
@@ -1349,19 +1349,19 @@ a {
 
 #phoneAjax {
   position: fixed;
-  top: 20%;
+  top: 25%;
   left: 50%;
   width: 60px;
   height: 60px;
   line-height: 60px;
   margin-left: -30px;
   text-align: center;
-  background-color: black;
-  -moz-opacity: 0.8;
-  opacity: 0.8;
-  filter: alpha(opacity=80);
+  /* background-color: black; */
+  /* -moz-opacity: 0.8; */
+  /* opacity: 0.8; */
+  /* filter: alpha(opacity=80); */
   z-index: 1998;
-  overflow: auto;
+  /* overflow: auto; */
   -moz-border-radius: 15px;
   -webkit-border-radius: 15px;
 }
