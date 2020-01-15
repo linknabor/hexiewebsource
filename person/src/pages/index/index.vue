@@ -163,7 +163,15 @@
       >长按关注公众号，尊享更多服务和商品</div>
       <img style="width: 200px;" :src="qrCode" />
     </div>
-    <div id="login" v-show="login"></div>
+    <div  v-show="login"
+      style=" background: rgba(0,0,0,0.5);display: none;width: 100%;height: 100%;top: 0rem; position: fixed;z-index: 999;">
+    </div>
+    <div id="login" v-show="login"> 
+      <img
+        src="../../assets/images/img/7f1b3b58-c5b6-4022-b1ed-dc4188c43a3a.gif"
+        style="width:100%;vertical-align: middle;"
+      />
+    </div >
   </div>
 </template>
 
@@ -248,7 +256,7 @@ export default {
           vm.user = n.result;
           vm.user.headimgurl = "" != n.result.name || n.result? n.result.headimgurl: vm.user_info.avatar;  
           vm.user.name ="" != n.result.name ? n.result.name : vm.user_info.nickname;
-           
+          
           vm.qrCode=n.result.qrCode;
           vm.cardService=n.result.cardService;
           if(vm.user.point<0){//小于0等于0
@@ -262,6 +270,7 @@ export default {
           //保存图片
           var duration = new Date().getTime()/1000 + 3600*24*30;
           cookie.set('cardStatus',n.result.cardStatus,duration);
+          cookie.set('cardService',n.result.cardService,duration);
 
           for(var j=0;j<n.result.bgImageList.length;j++){
               vm.common.localSet(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl)
@@ -297,7 +306,7 @@ export default {
           }else if(!vm.user.tel && vm.user.cardStatus=='2'){ //2新用户领卡未激活
               vm.$router.push({ path: "/register" }); 
           }else if(vm.user.tel && (vm.user.cardStatus=='3' || vm.user.cardStatus=='4')){ //3新用户或老用户领卡已激活
-              vm.receiveData.getData(vm,'/card/activateUrl','res',function(){
+              vm.receiveData.getData(vm,"/card/activateUrlOnMenu?oriApp="+vm.getUrlParam('oriApp'),'res',function(){
                   if(vm.res.success) {                
                           location.href=vm.res.result;
                   }else {
@@ -307,7 +316,7 @@ export default {
           }else if(vm.user.tel && (vm.user.cardStatus=='1'||vm.user.cardStatus==null || vm.user.cardStatus=='0')){ //1老用户未领卡未激活
               vm.$router.push({ path: "/welfare" });  
           }else if(vm.user.tel && vm.user.cardStatus=='2') { //2 老用户领卡未激活
-              vm.receiveData.getData(vm,'/card/activateUrl','res',function(){
+              vm.receiveData.getData(vm,"/card/activateUrlOnMenu?oriApp="+vm.getUrlParam('oriApp'),'res',function(){
                   if(vm.res.success) {                
                           location.href=vm.res.result;
                   }else {
@@ -340,17 +349,17 @@ export default {
 
 <style  scoped>
  #login {
-      z-index: 100000;
-      position: fixed;
-      top: 0;
-      left: 0;
-      -moz-opacity: 0.65;
-      opacity: 0.65;
-      filter: alpha(opacity=65);
-      background: #000;
-      width: 100%;
-      height: 100%;
-      display: block;
+    position: fixed;
+    top: 35%;
+    left: 50%;
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    margin-left: -30px;
+    text-align: center;
+    z-index: 1998;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
 }
 .ind {
   background-color: #fffff8;

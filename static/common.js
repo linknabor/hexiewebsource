@@ -170,14 +170,18 @@ function toRegisterAndBack(){
     let appurl='';
     //1未领卡  //2领卡未激活
     var cardStatus=getCookie('cardStatus');
+    var cardService=getCookie('cardService');
     if(getUrlParam('oriApp')){
         appurl='oriApp='+getUrlParam('oriApp');
     }else {
         appurl='';
     };
-   
-    if(cardStatus == '1'||cardStatus==null || cardStatus=='0' ){
-        location.href=MasterConfig.C('basePageUrl')+"person/index.html?"+appurl+"#/welfare"
+    if(cardService=='true'){
+        if(cardStatus == '1'||cardStatus==null || cardStatus=='0' ){
+            location.href=MasterConfig.C('basePageUrl')+"person/index.html?"+appurl+"#/welfare"
+        }else {
+            location.href=MasterConfig.C('basePageUrl')+"person/index.html?"+appurl+"#/register?comeFrom="+encodeURIComponent(n)+common.addParamHsah();
+        }
     }else {
         location.href=MasterConfig.C('basePageUrl')+"person/index.html?"+appurl+"#/register?comeFrom="+encodeURIComponent(n)+common.addParamHsah();
     }

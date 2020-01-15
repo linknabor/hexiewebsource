@@ -48,7 +48,7 @@ export default {
 
   methods: {
     pays(){
-        vm.receiveData.getData(vm,'/card/activateUrl','res',function(){
+        vm.receiveData.getData(vm,"/card/activateUrlOnMenu?oriApp="+vm.getUrlParam('oriApp'),'res',function(){
             if(vm.res.success) {                
                     location.href=vm.res.result;
             }else {
