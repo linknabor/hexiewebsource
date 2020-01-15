@@ -256,7 +256,7 @@ export default {
           vm.user = n.result;
           vm.user.headimgurl = "" != n.result.name || n.result? n.result.headimgurl: vm.user_info.avatar;  
           vm.user.name ="" != n.result.name ? n.result.name : vm.user_info.nickname;
-           
+          
           vm.qrCode=n.result.qrCode;
           vm.cardService=n.result.cardService;
           if(vm.user.point<0){//小于0等于0
@@ -270,6 +270,7 @@ export default {
           //保存图片
           var duration = new Date().getTime()/1000 + 3600*24*30;
           cookie.set('cardStatus',n.result.cardStatus,duration);
+          cookie.set('cardService',n.result.cardService,duration);
 
           for(var j=0;j<n.result.bgImageList.length;j++){
               vm.common.localSet(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl)
