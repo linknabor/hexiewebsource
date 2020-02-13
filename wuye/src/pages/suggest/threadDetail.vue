@@ -380,6 +380,7 @@ export default {
        uploadToWechat (){
             var i = 0;
             var pics = $("[name='pics']");
+            vm.uploadPicId="";
             function upload(){
                 var img = pics.eq(i).find("img");
                 var id = img.attr("id");

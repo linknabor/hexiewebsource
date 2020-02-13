@@ -334,10 +334,10 @@ export default {
             });
         },
          getMsgFromZha(result) {
-             vm.query();   
              vm.cfgParam=result.cfgParam;
              vm.sectId=result.sectId;
              vm.bannerss();
+             vm.query();   
          },
         query() {
                 if(vm.cfgParam.ONLINE_MESSAGE==1) {
