@@ -277,8 +277,8 @@ export default {
             cfgParam:{},
             sectId:0,
             messtype:'',
-            coronaPy: false,//疫情防控
-            coronaPj: true,//业主意见
+            coronaPy: '',//疫情防控
+            coronaPj: '',//业主意见
             //swiper参数配置
             swiperOption:{
                 notNextTick:true,
@@ -349,11 +349,14 @@ export default {
             if(result.coronaPrevention){
                 if(vm.cfgParam){
                     if(vm.cfgParam.CORONA_PREVENTION_MODE){
-                        if(vm.cfgParam.CORONA_PREVENTION_MODE == 1){
-                            coronaPy = true;
+                        if(vm.cfgParam.CORONA_PREVENTION_MODE == "1"){
+                            vm.coronaPy = true
                         }
                     }
                 }         
+            }
+            if(!vm.coronaPy){
+                vm.coronaPj = true
             }
             vm.bannerss();
             vm.query();   
