@@ -198,7 +198,15 @@ overflow: hidden; background-color: white;}
                         <span class="jgg-span">我是业主</span>
                     </router-link>
                 </li>
-                <li class="jgg_li" >
+                <li class="jgg_li" v-show="coronaPy">
+                    <div class="link" @click="goepi()">
+                        <div class="jgg_img">
+                            <img src="../../assets/images/index/fangyi.png" alt="tt">
+                        </div>
+                        <span class="jgg-span">社区防疫</span>
+                    </div>
+                </li>
+                <li class="jgg_li" v-show="coronaPj">
                     <div class="link" @click="gotoThread()">
                         <div class="jgg_img">
                             <img src="../../assets/images/index/yzyj1.png" alt="tt">
@@ -269,6 +277,8 @@ export default {
             cfgParam:{},
             sectId:0,
             messtype:'',
+            coronaPy:"",//疫情防控
+            coronaPj:"",//业主意见
             //swiper参数配置
             swiperOption:{
                 notNextTick:true,
@@ -334,10 +344,22 @@ export default {
             });
         },
          getMsgFromZha(result) {
-             vm.query();   
              vm.cfgParam=result.cfgParam;
              vm.sectId=result.sectId;
+             if(result.coronaPrevention){
+                if(vm.cfgParam!=null && vm.cfgParam.CORONA_PREVENTION_MODE != undefined && vm.cfgParam.CORONA_PREVENTION_MODE==1 && vm.cfgParam.CORONA_PREVENTION_MODE!="") {
+                    vm.coronaPy=true;
+                }else if(vm.cfgParam!=null && vm.cfgParam.CORONA_PREVENTION_MODE != undefined && vm.cfgParam.CORONA_PREVENTION_MODE==0 && vm.cfgParam.CORONA_PREVENTION_MODE!=""){
+                    vm.coronaPj=true;
+                }else 
+                {
+                    vm.coronaPy=true;
+                }
+             }else {
+                 vm.coronaPj=true;
+             }
              vm.bannerss();
+             vm.query();   
          },
         query() {
                 if(vm.cfgParam.ONLINE_MESSAGE==1) {
@@ -438,8 +460,7 @@ export default {
                 alert("当前所在的小区未开启当前业务");
                 return  
             } else {
-             	vm.$router.push({path:'/mysteward'})
-           
+             	vm.$router.push({path:'/mysteward',query:{'n':'9'}})
             }
         },
         gotorepair() {
@@ -506,6 +527,10 @@ export default {
                      }
                  }
             });
+       },
+       //社区防疫
+       goepi(){
+               vm.$router.push({path:'/catalog'})
        }
 
     },
