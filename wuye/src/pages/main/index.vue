@@ -350,7 +350,11 @@ export default {
                 if(vm.cfgParam){
                     if(vm.cfgParam.CORONA_PREVENTION_MODE){
                         if(vm.cfgParam.CORONA_PREVENTION_MODE == 1){
-                            coronaPy = true;
+                            vm.coronaPy = true;
+                            vm.coronaPj = false;
+                        }else {
+                            vm.coronaPy = false;
+                            vm.coronaPj = true;
                         }
                     }
                 }         
