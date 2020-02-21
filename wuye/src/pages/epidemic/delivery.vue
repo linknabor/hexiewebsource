@@ -1,5 +1,8 @@
 <template>
    <div class="delivery">
+       <div v-show="content.length==0"> 
+           <img :src="bgImage" alt="" class="adimg">
+       </div>
        <div class="cent">
            <div class="hands" v-for="item in content" :key="item.id">
                <div class="top">
@@ -29,6 +32,7 @@ export default {
    data () {
        return {
            content:[],
+           bgImage:this.common.GetImages('6')
        };
    },
    created(){
@@ -65,7 +69,7 @@ export default {
     left: 0;
     right: 0;
     bottom: 0;
-    background: #F5F5F5;;
+    background: #FFFFFF;
     overflow:auto;
 }
 .cent {
@@ -105,4 +109,8 @@ export default {
     font-family: PingFangSC-Thin, sans-serif;
     color:#202020;
 }
+.adimg {
+        width: 100%;
+        height: auto;
+} 
 </style>

@@ -88,8 +88,7 @@ export default {
                     vm.$router.push({path:'/myhouse'});
                 })
             }else {
-                console.log(vm.sectId)
-                // location.href=url;
+                location.href=url;
             }
         }else {
                 location.href=url;
