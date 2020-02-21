@@ -359,6 +359,9 @@ export default {
                     }
                 }         
             }
+            if(!vm.coronaPy){
+                vm.coronaPj = true
+            }
             vm.bannerss();
             vm.query();   
          },
