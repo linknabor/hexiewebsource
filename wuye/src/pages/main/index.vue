@@ -277,8 +277,8 @@ export default {
             cfgParam:{},
             sectId:0,
             messtype:'',
-            coronaPy:"",//疫情防控
-            coronaPj:"",//业主意见
+            coronaPy: false,//疫情防控
+            coronaPj: true,//业主意见
             //swiper参数配置
             swiperOption:{
                 notNextTick:true,
@@ -343,23 +343,20 @@ export default {
                 vm.banners = vm.Data.result;
             });
         },
-         getMsgFromZha(result) {
-             vm.cfgParam=result.cfgParam;
-             vm.sectId=result.sectId;
-             if(result.coronaPrevention){
-                if(vm.cfgParam!=null && vm.cfgParam.CORONA_PREVENTION_MODE != undefined && vm.cfgParam.CORONA_PREVENTION_MODE==1 && vm.cfgParam.CORONA_PREVENTION_MODE!="") {
-                    vm.coronaPy=true;
-                }else if(vm.cfgParam!=null && vm.cfgParam.CORONA_PREVENTION_MODE != undefined && vm.cfgParam.CORONA_PREVENTION_MODE==0 && vm.cfgParam.CORONA_PREVENTION_MODE!=""){
-                    vm.coronaPj=true;
-                }else 
-                {
-                    vm.coronaPy=true;
-                }
-             }else {
-                 vm.coronaPj=true;
-             }
-             vm.bannerss();
-             vm.query();   
+        getMsgFromZha(result) {
+            vm.cfgParam=result.cfgParam;
+            vm.sectId=result.sectId;
+            if(result.coronaPrevention){
+                if(vm.cfgParam){
+                    if(vm.cfgParam.CORONA_PREVENTION_MODE){
+                        if(vm.cfgParam.CORONA_PREVENTION_MODE == 1){
+                            coronaPy = true;
+                        }
+                    }
+                }         
+            }
+            vm.bannerss();
+            vm.query();   
          },
         query() {
                 if(vm.cfgParam.ONLINE_MESSAGE==1) {
@@ -530,7 +527,8 @@ export default {
        },
        //社区防疫
        goepi(){
-               vm.$router.push({path:'/catalog'})
+
+            vm.$router.push({path:'/catalog'})
        }
 
     },
