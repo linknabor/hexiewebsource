@@ -136,7 +136,13 @@ let router= new Router({
       meta: {
         title:''
       }
-    }
+    },
+    {
+      path:'/customer',
+      name:'customers',
+      component:resolve=> require(['@/pages/myRepair/customer'],resolve),
+    
+    },
     
   ]
 })
