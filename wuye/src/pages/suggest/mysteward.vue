@@ -26,7 +26,7 @@
                     <div class="thread_user_name">{{thread.userName}}</div>
                     <div class="thread_user_addr">{{thread.userSectName}}</div>
                 </div>
-             <div class="ov pt15 pb15 fs13" style="color: #3b3937" @click="gotoDetail(thread.threadId)">{{thread.threadContent}}</div>   
+             <div class="ov pt15 pb15 fs13" style="color: #3b3937; word-wrap:break-word;overflow:hidden;" @click="gotoDetail(thread.threadId)">{{thread.threadContent}}</div>   
             <!-- 图片 -->
             <div class="preview_img_layer" >
                 <div v-for="(previewurl,index) in thread.previewLink">
@@ -47,7 +47,8 @@
 
         <div style="position: fixed; bottom:0.5px; width: 100%; color: white;" >
             <div class="submit-btn-black fs14 fl" @click="gotoindex" style="width: 25%">返回</div>
-            <div class="submit-btn-orange2 fs14 fl" @click="publicnew" style="width: 73%">我要发布</div>
+            <div class="submit-btn-orange2 fs14 fl" @click="publicnew" style="width: 73%" v-show="$route.query.n=='9'">我要发布</div>
+            <div class="submit-btn-orange2 fs14 fl" @click="publicnew" style="width: 73%" v-show="$route.query.n=='12'">服务预约</div>
 	    </div>
    </div>
 </div>   
@@ -86,13 +87,11 @@ export default {
        //初始数据
        getThreadList() {
            vm.page=0;
-           let  filter='y';
+           let  filter='n';
            let url="thread/getThreadList/"+filter+"/"+vm.page;;
-        // let url='thread/getMyPublish';
            vm.receiveData.postData( vm, url,
            {
-            //    'threadCategory' :vm.category,
-            //    'filter':filter
+            'threadCategory' :vm.$route.query.n,
            },
             'hehe',
             function(){
@@ -118,13 +117,12 @@ export default {
             }
        },
        loadNextPage() {
-           let filter='y';
+           let filter='n';
            let url="thread/getThreadList/"+filter+"/"+vm.page;
             // let url='thread/getMyPublish';
            vm.receiveData.postData( vm, url,
             {
-                // threadCategory :vm.category,
-			    // filter : filter
+                threadCategory :vm.$route.query.n,
             },
             'data',
             function(){
@@ -247,16 +245,28 @@ export default {
         },
         //点击跳转
         gotoDetail(threadId) {
-            this.$router.push({path:'/threadDetail',query:{'threadId':threadId}})
+            if(vm.$route.query.n=='9'){
+                 this.$router.push({path:'/threadDetail',query:{'threadId':threadId,'n':'9'}})
+            }else {
+                 this.$router.push({path:'/threadDetail',query:{'threadId':threadId,'n':'12'}})
+            }
         },
-        //点击返回
+        //'点击返回'
         gotoindex() {
-             this.$router.push({path:'/'})
+            if(this.$route.query.n=='9'){
+               this.$router.push({path:'/'})
+            }else {
+               this.$router.push({path:'/catalog'})
+            }
+             
         },
         //点击发布
         publicnew() {
-       
-               this.$router.push({path:'/maintain'})
+            if(this.$route.query.n=='9'){
+               this.$router.push({path:'/maintain',query:{'n':'9'}})
+            }else {
+               this.$router.push({path:'/maintain',query:{'n':'12'}})
+            }
         }
    },
 

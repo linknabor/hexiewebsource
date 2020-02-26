@@ -1,5 +1,6 @@
 <template>
-   <div style="margin-bottom:10px;">
+<!-- :class="{'content':falg}" -->
+   <div style="margin-bottom:10px;" ref="element" >
         <div id="zzmb" class="zzmb" style="display:none;position:fixed;" @click="hideImg"></div>
         <div id="divconf" class="divconf" style="display:block; position:fixed; z-index: 2147483647;" @click="hideImg"></div>
         <div style="padding-top: 15px" class="ov pl15 pb15 fs14">
@@ -17,7 +18,7 @@
         </div>
 
         </div>
-        <div class="ov pl15 pb15 fs13" style="color: #3b3937">{{thread.threadContent}}</div>
+        <div class="ov pl15 pb15 fs13" style="color: #3b3937; word-wrap:break-word;overflow:hidden;">{{thread.threadContent}}</div>
         <div class="ov pl15 pb15 fs13 fl" style="color: #a6937c; line-height: 23px">
             <img style="width: 13px; height: 13px;" src="../../assets/images/common/icon_time_gray.png"/>&nbsp;{{thread.formattedDateTime}}
         </div>
@@ -70,7 +71,7 @@
             </div>  
         </div>  
         <!-- 上传图片 -->
-        <div id="imgdis" style="overflow:hidden; margin-top:10px;">
+        <div id="imgdis" style="overflow:hidden; padding-top:10px;padding-bottom: 1.6rem;">
             <div id="pic" class="pic_frame">
                     <!-- <div name='pics' class="fl" style="margin-right:5px;">
                         <img src="../../assets/img/jf.png" style="height:100px;width:90px;"/>
@@ -80,7 +81,9 @@
                     <div id="add" v-on:click="addPic"   class="add-pic-bg fl pl5"></div>
             </div>
         </div>
-        
+         <!-- <div class="bottoms " @click="Getsolve()" v-show="isOriginHei" >
+            服务预约
+        </div> -->
    </div>
 </template>
 
@@ -97,6 +100,12 @@ export default {
             thumbnailurls: [],
             commentContent:'',
             localIdsid:'',
+            flay:true,
+            // isOriginHei: true,//底部按钮顶起问题
+            // screenHeight: document.documentElement.clientHeight,//当前屏幕高度        
+            // originHeight: document.documentElement.clientHeight,//当前屏幕高度 
+            // pageHeight:'',//当前页面高度
+            // falg:false
        };
    },
    created() {
@@ -105,11 +114,34 @@ export default {
         // vm.common.checkRegisterStatus();
    },
    mounted() {
-        
        this.wxdata() 
        this.getThread();
-      
+    //    window.onresize = function() {//底部按钮顶起问题
+    //         return (function(){
+    //             vm.screenHeight = document.documentElement.clientHeight;
+    //         })()
+    //    } 
    },
+//    updated(){
+//        vm.pageHeight=vm.$refs.element.offsetHeight;
+//    },
+//    watch:{
+//         screenHeight (val) {//底部按钮顶起问题
+//             if(this.originHeight > val + 100) {        //加100为了兼容华为的返回键
+//                 this.isOriginHei = false;
+//             }else{
+//                 this.isOriginHei = true;
+//             }
+//         },
+//         pageHeight(vaw,van){
+//             if(vm.pageHeight>vm.originHeight){
+//                 vm.pageHeight=vaw; 
+//                 vm.falg=true;
+//             }else {
+//                  vm.falg=false;
+//             }
+//         }
+//     },
    methods: {
        getThread() {
            let url= "thread/getThreadByThreadId";
@@ -262,17 +294,20 @@ export default {
             })
    },
    saveComment() {
-        if(vm.commentContent==""){
-				alert("回复内容不为空。");
-				return false;
-        }
-
+        if(vm.flay) {
+            vm.flay=false;
+            if(vm.commentContent==""){
+                    vm.flay=true;
+                    alert("回复内容不为空。");
+                    return false;
+            }
             var pic_length = $("[name='pics']").length;
             if(pic_length>0){// 有没有图片上传
                 this.uploadToWechat();
             }else{
-                 vm.addComment();
+                    vm.addComment();
             } 
+        }
    },
    //回复发送
     addComment() {
@@ -287,6 +322,7 @@ export default {
                 if(vm.data.success){
                     vm.comments.push(vm.data.result)
                     vm.commentContent="";
+                    vm.uploadPicId="";
                       var pic_length = $("[name='pics']").length;
                      if(pic_length>2){
                          $("#add").show();
@@ -295,9 +331,14 @@ export default {
 
                 }else{
                     alert(vm.data.message==null?"发布信息保存失败，请重试！":vm.data.message);
-                }              
+                } 
+                vm.flay=true;  
             })
     },
+     //预约服务
+    // Getsolve(){
+
+    // },
           //微信初始化
        wxdata() {
          let url1 = "getUrlJsSign";
@@ -411,6 +452,9 @@ export default {
 </script>
 
 <style  scoped>
+/* .content{
+    position:relative;
+} */
 #divconf img {
     width:100%;
     height: auto;
@@ -551,5 +595,23 @@ p15 {
 .preview_img{
     width: 100%;
     height: 94px;
+}
+.bottoms {
+    position: absolute;
+    bottom:0.3rem;
+    left:10%;
+    right: 10%;
+    width: 80%;
+    background-color: #ff8a00;
+    height: 50px;
+    line-height: 50px;
+    color: #ffffff;
+    border:1px solid #ff8a00;
+    border-radius: 10px;
+    margin:0 auto;
+    text-align: center;
+    font-size:31px;
+    font-family: PingFangSC-Regular, sans-serif;
+    z-index:999;
 }
 </style>

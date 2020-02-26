@@ -134,7 +134,46 @@ const router= new VueRouter({
         title:''
         }
       },
-  
+      {
+        path:'/catalog',
+        name:'catalogs',
+        component:resolve=> require(['@/pages/epidemic/catalog'],resolve),
+        meta:{
+        title:''
+        }
+      },
+      {
+        path:'/registration',
+        name:'registrations',
+        component:resolve=> require(['@/pages/epidemic/registration'],resolve),
+        meta:{
+        title:''
+        }
+      },
+      {
+        path:'/mask',
+        name:'masks',
+        component:resolve=> require(['@/pages/epidemic/mask'],resolve),
+        meta:{
+        title:'口罩登记预约'
+        },
+      },
+      {
+        path:'/delivery',
+        name:'deliverys',
+        component:resolve=> require(['@/pages/epidemic/delivery'],resolve),
+        meta:{
+        title:'到货通知'
+        }
+      },
+      {
+        path:'/notification',
+        name:'notificatios',
+        component:resolve=> require(['@/pages/epidemic/notification'],resolve),
+        meta:{
+        title:''
+        }
+      },
     ]
 });
 //路由的钩子函数，

@@ -136,8 +136,7 @@ let router= new Router({
       meta: {
         title:''
       }
-    }
-    
+    },
   ]
 })
 

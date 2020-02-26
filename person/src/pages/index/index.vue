@@ -240,7 +240,7 @@ export default {
     //模仿线上用户信息
     // 105/747/384
     initSession4Test() {
-      let url = "/initSession4Test/46";
+      let url = "/initSession4Test/62";
       vm.receiveData.getData(vm, url, "Data", function() {});
     },
     User() {

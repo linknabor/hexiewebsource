@@ -103,7 +103,7 @@ export default{
       vm=this;
     },
     mounted(){
-      // let url = '/initSession4Test/2';
+      // let url = '/initSession4Test/62';
       //           vm.receiveData.getData(vm,url,'Data',function(){
       //       });
       vm.initUserInfo();
@@ -125,6 +125,10 @@ export default{
                     if(n.result!=null) {
                       vm.login=false;
                       vm.list=n.result.iconList;
+                      cookie.set('userId',n.result.id)
+                      cookie.set('appid',n.result.appid)
+                      cookie.set('cspId',n.result.cspId)
+                      cookie.set('sectId',n.result.sectId)
                       Bus.$emit('sends',n.result);
                     }
                     var duration = new Date().getTime()/1000 + 3600*24*30;
