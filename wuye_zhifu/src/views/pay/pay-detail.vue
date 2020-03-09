@@ -526,7 +526,14 @@
 						
 						
 					}
-                    let useDate = vm.data.result.other_bill_info[0];
+					let useDate = vm.data.result.other_bill_info[0];
+					let mian_amt = vm.data.result.other_bill_info[0].mian_amt;
+					if ( mian_amt) {
+						
+						vm.mian_amt = vm.data.result.other_bill_info[0].mian_amt;
+						
+						
+					}
                     vm.verNumber = useDate.ver_no;
                  			//地址
                     vm.addr = useDate.cell_addr;
