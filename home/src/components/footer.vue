@@ -13,7 +13,19 @@
 .footer .nav-controller i {display: block;font-size: 12px;margin-bottom: 0px; height:28px}
 .footer_logo{background-position: 50% 0;background-size: 22px;
     background-repeat: no-repeat;}
-
+#login {
+    position: fixed;
+    top: 35%;
+    left: 50%;
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    margin-left: -30px;
+    text-align: center;
+    z-index: 1998;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+}
 /* 合协 */
 .footer_wuye_selected{background-image: url('../assets/images/fonter/icon_property.png');}
 .footer_person{background-image: url('../assets/images/fonter/icon_my.png');} 
@@ -63,7 +75,16 @@
           </li>
         </ul>
       </nav>
-    </footer>     	
+    </footer>     
+    <div  v-show="login"
+      style=" background: rgba(0,0,0,0.5);display: none;width: 100%;height: 100%;top: 0rem; position: fixed;z-index:999">
+    </div>
+    <div id="login" v-show="login"> 
+      <img
+        src="../assets/images/img/7f1b3b58-c5b6-4022-b1ed-dc4188c43a3a.gif"
+        style="width:100%;vertical-align: middle;"
+      />
+    </div >
 	</div>
 </template>
 
@@ -74,23 +95,52 @@ export default{
     data(){
       return {
         list:[],
-        link:''
+        link:'',
+        login:true
+
       }
     },
     created() {
       vm=this;
     },
     mounted(){
-      Bus.$on("sends",this.getMsgFromZha);
+      // this.initSession4Test();
+      this.initUserInfo(); 
       vm.geturl();
     },
     updated(){
       vm.getclass();
     },
     methods: {
-        getMsgFromZha(info) {
-          vm.list=info;
-       } ,
+          //模仿线上用户信息
+        //105/747/384
+        initSession4Test() {
+          let _this = this;
+          let url = "/initSession4Test/46";
+          _this.receiveData.getData(_this, url, "Data", function() {
+            
+          });
+        },
+        initUserInfo() {
+          let _this = this;
+          let n = "GET",
+            a = "userInfo?oriApp=" + _this.getUrlParam("oriApp"),
+            i = null,
+            e = function(n) {
+            if (n.success && n.result == null) {
+                reLogin();
+            }
+            _this.login=false;
+            _this.list=n.result.iconList;
+            Bus.$emit('sends',n.result);
+            var duration = new Date().getTime()/1000 + 3600*24*30;
+            for(var j=0;j<n.result.bgImageList.length;j++){
+                  _this.common.localSet(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl,duration)
+              }
+            },
+            r = function() {_this.login=false;};
+          _this.common.invokeApi(n, a, i, null, e, r);
+        },
        getclass(){
          for(var i=0;i<vm.$refs.listli.length;i++) {
             vm.$refs.listli[i].style.width=100/vm.$refs.listli.length+'%'
