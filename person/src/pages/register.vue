@@ -2,7 +2,7 @@
    <div class="reg">
        <div id="zzmb" class="zzmb" v-show="zzmb"></div>
        <div id="phoneAjax" class="hidden"  v-show="zzmb">
-		    <img src="../assets/images/img/c3d7f369-4a5e-4c4a-9fb9-a4b9d274c7e1.gif" style="width:40px;height40px;vertical-align: middle;">
+             <img src="../assets/images/img/7f1b3b58-c5b6-4022-b1ed-dc4188c43a3a.gif" style="vertical-align: middle;">
 	   </div>
 
        <div class="divider"></div>
@@ -183,29 +183,29 @@ export default {
     position: fixed;
     top: 0;
     left: 0;
-    -moz-opacity: 0.65;
-    opacity: 0.65;
-    filter: alpha(opacity=65);
-    background: #000;
+    /* -moz-opacity: 0.65; */
+    /* opacity: 0.65; */
+    /* filter: alpha(opacity=65); */
+    /* background: #000; */
     width: 100%;
     height: 100%;
     display: block;
 }
 #phoneAjax {
     position: fixed;
-    top: 20%;
+    top: 30%;
     left: 50%;
     width: 60px;
     height: 60px;
     line-height: 60px;
     margin-left: -30px;
     text-align: center;
-    background-color: black;
-    -moz-opacity: .8;
-    opacity: .80;
-    filter: alpha(opacity=80);
+    /* background-color: black; */
+    /* -moz-opacity: .8; */
+    /* opacity: .80; */
+    /* filter: alpha(opacity=80); */
     z-index: 1998;
-    overflow: auto;
+    /* overflow: auto; */
     -moz-border-radius: 15px;
     -webkit-border-radius: 15px;
 }

@@ -168,12 +168,23 @@ function isRegisted(){
 function toRegisterAndBack(){
     var n = location.origin + common.removeParamFromUrl(["from", "bind", "code", "share_id", "isappinstalled", "state", "m", "c", "a"]);
     let appurl='';
+    //1未领卡  //2领卡未激活
+    var cardStatus=getCookie('cardStatus');
+    var cardService=getCookie('cardService');
     if(getUrlParam('oriApp')){
         appurl='oriApp='+getUrlParam('oriApp');
     }else {
         appurl='';
+    };
+    if(cardService=='true'){
+        if(cardStatus == '1'||cardStatus==null || cardStatus=='0' ){
+            location.href=MasterConfig.C('basePageUrl')+"person/index.html?"+appurl+"#/welfare"
+        }else {
+            location.href=MasterConfig.C('basePageUrl')+"person/index.html?"+appurl+"#/register?comeFrom="+encodeURIComponent(n)+common.addParamHsah();
+        }
+    }else {
+        location.href=MasterConfig.C('basePageUrl')+"person/index.html?"+appurl+"#/register?comeFrom="+encodeURIComponent(n)+common.addParamHsah();
     }
-    location.href=MasterConfig.C('basePageUrl')+"person/index.html?"+appurl+"#/register?comeFrom="+encodeURIComponent(n)+common.addParamHsah();
 }
 //判断当前是那个公众号
 function Getofficial() {
@@ -337,8 +348,8 @@ updateUserStatus(user) {
             common.login();/**不应该出现*/
             return false;
         }
-        if(!isRegisted()){
-            alert("请先完成注册！");
+
+        if(!isRegisted()){              
             toRegisterAndBack();
             return false;
         }

@@ -112,14 +112,14 @@ export default {
   watch: {},
   mounted() {
     // this.initSession4Test();
-    this.initUserInfo();
+    this.initUserInfo(); 
   },
   methods: {
     //模仿线上用户信息
     //105/747/384
     initSession4Test() {
       let _this = this;
-      let url = "/initSession4Test/79187";
+      let url = "/initSession4Test/1";
       _this.receiveData.getData(_this, url, "Data", function() {
         
       });

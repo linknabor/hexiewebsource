@@ -15,7 +15,6 @@ import Router from 'vue-router'
 // import MyPublish from '@/pages/communities/myPublish'//我的发布
 // import ThreadDetail from '@/pages/communities/threadDetail'//发布回复
 // import Addresses from '@/pages/addresses'//常用地址
-// import Abort from '@/pages/abort'//关注我们
 
 Vue.use(Router)
 
@@ -112,14 +111,6 @@ let router= new Router({
       }
     },
     {
-      path:'/abort',
-      name:'abort',
-      component:resolve=> require(['@/pages/abort'],resolve),
-      meta:{
-        title:'关于我们'
-      }
-    },
-    {
       path:'/operatorOrders',
       name:'operatorOrders',
       component:resolve=> require(['@/pages/myRepair/operatorOrders'],resolve),
@@ -138,6 +129,21 @@ let router= new Router({
       name:'operatorRepairSuccess',
       component:resolve=> require(['@/pages/myRepair/operatorRepairSuccess'],resolve),
     },
+    {
+      path:'/welfare',
+      name:'welfare',
+      component:resolve=> require(['@/pages/welfare'],resolve),
+      meta: {
+        title:''
+      }
+    },
+    {
+      path:'/customer',
+      name:'customers',
+      component:resolve=> require(['@/pages/myRepair/customer'],resolve),
+    
+    },
+    
   ]
 })
 
@@ -147,7 +153,7 @@ let router= new Router({
 router.beforeEach((to, from, next) => {
   //动态改变title
   var flag;
-  if(to.matched[0].name != "index"&& to.matched[0].name!='register') {
+  if(to.matched[0].name != "index"&& to.matched[0].name!='register'&&to.matched[0].name!='welfare') {
      flag=common.checkRegisterStatus()
      if(!flag) {
        return

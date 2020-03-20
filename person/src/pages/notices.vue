@@ -11,9 +11,10 @@
                 </div>
 
                 <div id="phoneErro" v-show="phoneErro">没有更多</div>
-
+                
+                <div id="fades" class="black_overlay" v-show="hidden"></div>
                 <div id="phoneAjax" class="hidden" v-show="hidden">
-                    <img src="../assets/images/img/c3d7f369-4a5e-4c4a-9fb9-a4b9d274c7e1.gif" style="width:40px;height40px;vertical-align: middle;">
+                    <img src="../assets/images/img/7f1b3b58-c5b6-4022-b1ed-dc4188c43a3a.gif" style="vertical-align: middle;">
                 </div>
             <!-- load -->
             <div id="indexDiv"  @scroll="addScroll">
@@ -224,19 +225,19 @@ export default {
 }
 #phoneAjax {
     position: fixed;
-    top: 20%;
+    top: 30%;
     left: 50%;
     width: 60px;
     height: 60px;
     line-height: 60px;
     margin-left: -30px;
     text-align: center;
-    background-color: black;
-    -moz-opacity: .8;
-    opacity: .80;
-    filter: alpha(opacity=80);
+    /* background-color: black; */
+    /* -moz-opacity: .8; */
+    /* opacity: .80; */
+    /* filter: alpha(opacity=80); */
     z-index: 1998;
-    overflow: auto;
+    /* overflow: auto; */
     -moz-border-radius: 15px;
     -webkit-border-radius: 15px;
 }

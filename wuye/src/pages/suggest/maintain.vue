@@ -1,24 +1,5 @@
 <template>
     <div class="addt">
-        <!-- <div  class="category lite-divider" v-show="threadCategory>=2">
-             <div class="category_main">
-                 <div  class="category_sub_main fl">
-                    <router-link :to="{path:'/maintain',query:{category:'2'}}" class="categorya">
-                   <img class="category_img" src="../../assets/images/common/img_repair_60x60.png" v-show="threadCategory!=2"/>
-					<img class="category_img_hide" src="../../assets/images/common/03.png" v-show="threadCategory==2"/> 
-					<div class="category_txt">家庭维修</div>
-                    </router-link>
-                </div>
-
-                <div  class="category_sub_main fl">
-                    <router-link :to="{path:'/maintain',query:{category:'3'}}" class="categorya">
-                    <img class="category_img" src="../../assets/images/common/img_education_60x60.png" v-show="threadCategory!=3"/>
-					<img class="category_img_hide" src="../../assets/images/common/01.png" v-show="threadCategory==3"/>
-					<div class="category_txt">公共部位维修</div>
-                    </router-link>
-                </div>
-             </div>       
-         </div> -->
             <div class="content_main">
                     <div id="zzmb" class="zzmb" ></div>
                     <div class="inner-input-wrap content_info">
@@ -49,7 +30,6 @@ import wx from 'weixin-js-sdk';
 export default {
    data () {
        return {
-        //    threadCategory:this.$route.query.category,
            threadContent:'',
             threadTitle:"",
             uploadPicId:"",
@@ -59,13 +39,8 @@ export default {
    created() {
        vm=this;
 
-     // 请求接口获取 后台返回的 微信配置项
-        // vm.common.checkRegisterStatus();
    },
    watch:{
-    //   '$route' () {
-    //      this.threadCategory=this.$route.query.category
-	// }
    },
    mounted() {
        this.wxdata()
@@ -182,14 +157,24 @@ export default {
             upload();
         },
         saveThread:function(){
-                  MessageBox.confirm('您的意见将会被提交到所在物业，确定要提交吗？').then(action => {
+                 let text;
+                 if(vm.$route.query.n==9) {
+                     text="您的意见将会被提交到所在物业，确定要提交吗？";
+                 }else {
+                     text="确定要提交吗？"
+                 }
+                  MessageBox.confirm(text).then(action => {
                   if(action == 'confirm') {
-                       let url2 = "thread/addThread";
+                      let url2;
+                      if(vm.$route.query.n=='9'){
+                          url2 = "thread/addThread";
+                      }else {
+                          url2 = "/health/serviceResv";
+                      }
                         vm.receiveData.postData(
                             vm,
                             url2,
                             {
-                                // threadCategory:vm.threadCategory,
                                 threadTitle:vm.threadTitle,
                                 threadContent:vm.threadContent,
                                 uploadPicId:vm.uploadPicId
@@ -197,8 +182,14 @@ export default {
                             'postData',
                             function(){
                                 if(vm.postData.success) {
-                                    alert("发布成功");
-                                    vm.$router.push({path:'/mysteward'});
+                                    if(vm.$route.query.n=='9'){
+                                        alert("发布成功");
+                                        vm.$router.push({path:'/mysteward',query:{n:9}});
+                                    }else {
+                                        alert("预约成功");
+                                         vm.$router.push({path:'/mysteward',query:{n:12}});
+                                    }
+                                    
                                 }else {
                                     alert(vm.postData.message);
                                 }
@@ -210,7 +201,6 @@ export default {
 
                   }
               })
-                
         },
          //提交
        addThread() {

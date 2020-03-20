@@ -298,10 +298,7 @@
 		  		vm.queryBillInfo= [];//清空查询账单列表
     			vm.queryBillPage = 1;//页码重置
     			vm.queryisLastPage=false;//是否最后一页重置
-    			
     			vm.choosehouse=event.target.value;
-    			// 请求查询账单数据
-//  			vm.queryBillList();
     			
 		},
 		
@@ -309,9 +306,6 @@
 	  	//请求 楼宇 门牌 室号 数据
 	  	// 参数1： 小区id 参数2： 楼宇id 参数3： 室号id 参数4： 数据类型（03：楼宇；02：门牌；01：房屋）
 	  	getCellMng(sect_id,build_id,unit_id,data_type){
-	  		// if ($("#phoneAjax") != null) {
-			// 	$("#phoneAjax").removeClass("hidden");
-			// }
 			vm.showp=true;
 			let url='/getHeXieCellById'
 			let params = {
@@ -432,24 +426,6 @@
         text-align: center;
 	}
 	
-	.select-btn{
-		padding-left: 36px;
-        background: url('../../assets/images/pay/icon_unselect_white.png') no-repeat;
-        background-color: rgba(0,0,0,0.6);
-        background-size: 16px;
-        background-position: 15px center;
-        height: 0.92rem;
-        line-height: 0.92rem;
-	}
-
-	.allSelected{
-		background: url('../../assets/images/pay/icon_selected_white.png') no-repeat;
-		 background-color: rgba(0,0,0,0.6);
-        background-size: 16px;
-        background-position: 15px center;
-
-	}
-
 	.pay{
 		font-size: 0.35rem;         
 		position: fixed; 
