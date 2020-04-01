@@ -25,7 +25,6 @@ export default {
            messageId:this.$route.query.messageId,
            falg:false,
            bgImage:this.common.GetImages('7')
-
        };
    },
    created(){
@@ -75,7 +74,6 @@ export default {
     background: #ffffff;;
     overflow:auto;
 }
-
 .ov {
     overflow: hidden;
     padding: 1px;
@@ -96,7 +94,6 @@ export default {
 .fl {
     float: left;
 }
-
 .fs13 {
     font-size: 0.41rem;
 }

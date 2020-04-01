@@ -98,7 +98,6 @@ export default {
             localIdsid:'',
             flay:true,
             showmain:false
-        
        };
    },
    created() {
@@ -108,6 +107,26 @@ export default {
        this.wxdata() 
        this.getThread();
    },
+//    updated(){
+//        vm.pageHeight=vm.$refs.element.offsetHeight;
+//    },
+//    watch:{
+//         screenHeight (val) {//底部按钮顶起问题
+//             if(this.originHeight > val + 100) {        //加100为了兼容华为的返回键
+//                 this.isOriginHei = false;
+//             }else{
+//                 this.isOriginHei = true;
+//             }
+//         },
+//         pageHeight(vaw,van){
+//             if(vm.pageHeight>vm.originHeight){
+//                 vm.pageHeight=vaw; 
+//                 vm.falg=true;
+//             }else {
+//                  vm.falg=false;
+//             }
+//         }
+//     },
    methods: {
        getThread() {
            let url= "thread/getThreadByThreadId";

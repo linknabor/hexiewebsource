@@ -34,5 +34,4 @@ body {
   background:#f2f2f2;
   -webkit-tap-highlight-color: transparent;
 }
-
 </style>
