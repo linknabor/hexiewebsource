@@ -137,13 +137,6 @@ let router= new Router({
         title:''
       }
     },
-    {
-      path:'/customer',
-      name:'customers',
-      component:resolve=> require(['@/pages/myRepair/customer'],resolve),
-    
-    },
-    
   ]
 })
 
