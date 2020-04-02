@@ -1,26 +1,27 @@
 <template>
     <div class="addt">
-        <!-- <div  class="category lite-divider" v-show="threadCategory>=2">
-             <div class="category_main">
-                 <div  class="category_sub_main fl">
-                    <router-link :to="{path:'/maintain',query:{category:'2'}}" class="categorya">
-                   <img class="category_img" src="../../assets/images/common/img_repair_60x60.png" v-show="threadCategory!=2"/>
-					<img class="category_img_hide" src="../../assets/images/common/03.png" v-show="threadCategory==2"/> 
-					<div class="category_txt">家庭维修</div>
-                    </router-link>
-                </div>
+        <div v-show="showmain" style=" background: rgba(0,0,0,0.5);width: 100%;height: 100%;position: fixed;z-index: 9999;"></div>
+        <div  class="category lite-divider" v-show="category=='2'||category=='3'|| category=='0'||category=='1'">
+          <div class="category_main">
+              <div  class="category_sub_main fl">
+                <router-link :to="{path:'/maintain',query:{n:'2'}}" class="categorya">
+                <img class="category_img" src="../../assets/images/butler/img_repair_60x60.png" v-show="category!=2"/>
+                <img class="category_img_hide" src="../../assets/images/butler/img_repair_60x60_selected.png" v-show="category==2"/> 
+                <div class="category_txt">家庭维修</div>
+                </router-link>
+              </div>
 
-                <div  class="category_sub_main fl">
-                    <router-link :to="{path:'/maintain',query:{category:'3'}}" class="categorya">
-                    <img class="category_img" src="../../assets/images/common/img_education_60x60.png" v-show="threadCategory!=3"/>
-					<img class="category_img_hide" src="../../assets/images/common/01.png" v-show="threadCategory==3"/>
-					<div class="category_txt">公共部位维修</div>
-                    </router-link>
-                </div>
-             </div>       
-         </div> -->
+              <div  class="category_sub_main fl">
+                  <router-link :to="{path:'/maintain',query:{n:'3'}}" class="categorya">
+                  <img class="category_img" src="../../assets/images/butler/img_education_60x60.png" v-show="category!=3"/>
+                  <img class="category_img_hide" src="../../assets/images/butler/img_education_60x60_selected.png" v-show="category==3"/>
+                  <div class="category_txt">公共部位维修</div>
+                  </router-link>
+              </div>
+          </div>       
+       </div>
+        <div>
             <div class="content_main">
-                    <div id="zzmb" class="zzmb" ></div>
                     <div class="inner-input-wrap content_info">
                         <textarea class="inner-input content_input" placeholder="填写发布信息..." v-model="threadContent"></textarea>
                     </div>
@@ -35,10 +36,10 @@
             <div class="pl15 pr15">
                 <div id="add" v-on:click="addPic"  class="add-pic-bg fl pl5"></div>
             </div>
-            <div class="btn-fabu" v-on:click="addThread">
-            <h2>提交</h2>
-         </div>  
-
+            <div class="btn-fabu" v-show="isOriginHei" v-on:click="addThread">
+                 <h2>提交</h2>
+            </div>  
+        </div>
     </div>
 </template>
 
@@ -49,26 +50,41 @@ import wx from 'weixin-js-sdk';
 export default {
    data () {
        return {
-        //    threadCategory:this.$route.query.category,
-           threadContent:'',
+            threadContent:'',
             threadTitle:"",
             uploadPicId:"",
             localIdsid:'',
+            category:this.$route.query.n,
+            showmain:false,
+            isOriginHei: true,//底部按钮顶起问题
+            screenHeight: document.documentElement.clientHeight,//当前屏幕高度      
+            originHeight: document.documentElement.clientHeight,//当前屏幕高度 
        };
    },
    created() {
        vm=this;
 
-     // 请求接口获取 后台返回的 微信配置项
-        // vm.common.checkRegisterStatus();
    },
    watch:{
-    //   '$route' () {
-    //      this.threadCategory=this.$route.query.category
-	// }
+        '$route' () {
+         this.category=this.$route.query.n
+        },
+        screenHeight (val) {//底部按钮顶起问题
+            if(this.originHeight > val + 100) {        //加100为了兼容华为的返回键
+                this.isOriginHei = false;
+            }else{
+                this.isOriginHei = true;
+            }
+        }
    },
    mounted() {
-       this.wxdata()
+        this.wxdata();
+        let self = this;
+        window.onresize = function() {//底部按钮顶起问题
+            return (function(){
+                self.screenHeight = document.documentElement.clientHeight;
+            })()
+        }
    },
 
    components: {},
@@ -182,14 +198,26 @@ export default {
             upload();
         },
         saveThread:function(){
-                  MessageBox.confirm('您的意见将会被提交到所在物业，确定要提交吗？').then(action => {
+                 let text;
+                 if(vm.category==12) {
+                     text="确定要提交吗？"
+                 }else {
+                     text="您的意见将会被提交到所在物业，确定要提交吗？";
+                 }
+                  MessageBox.confirm(text).then(action => {
                   if(action == 'confirm') {
-                       let url2 = "thread/addThread";
+                      let url2;
+                      if(vm.category=='12'){
+                          url2 = "/health/serviceResv";
+                      }else {
+                          url2 = "thread/addThread";
+                      }
+                      vm.showmain=true;
                         vm.receiveData.postData(
                             vm,
                             url2,
                             {
-                                // threadCategory:vm.threadCategory,
+                                threadCategory:vm.category,    
                                 threadTitle:vm.threadTitle,
                                 threadContent:vm.threadContent,
                                 uploadPicId:vm.uploadPicId
@@ -197,8 +225,14 @@ export default {
                             'postData',
                             function(){
                                 if(vm.postData.success) {
-                                    alert("发布成功");
-                                    vm.$router.push({path:'/mysteward'});
+                                    if(vm.category=='12'){
+                                         alert("预约成功");
+                                         vm.$router.push({path:'/mysteward',query:{n:12}});
+                                    }else {
+                                        alert("发布成功");
+                                        vm.$router.push({path:'/mysteward',query:{n:vm.category}});
+                                    }
+                                    
                                 }else {
                                     alert(vm.postData.message);
                                 }
@@ -207,10 +241,8 @@ export default {
                   }
               }).catch(err => {
                   if(err == 'cancel') {
-
                   }
               })
-                
         },
          //提交
        addThread() {
@@ -223,7 +255,6 @@ export default {
                 return false;
             }
             var pic_length = $("[name='pics']").length;
-            // $("#zzmb").show();
             if(pic_length>0){
                 vm.uploadToWechat();
             }else{
@@ -240,7 +271,6 @@ export default {
 <style  scoped>
 .addt {
     background-color: #fffff8;
-    padding-bottom: 1px;
     height:100%;
     width: 100%;
     position: absolute;
@@ -281,26 +311,13 @@ export default {
 			width: 94%;
 			margin: 5% 0% 5% 6%;
 		}
-.zzmb {
-    z-index: 100000;
-    position: fixed;
-    top: 0;
-    left: 0;
-    -moz-opacity: 0.65;
-    opacity: 0.65;
-    filter: alpha(opacity=65);
-    background: #000;
-    width: 100%;
-    height: 100%;
-    display:none;
-}
+
 .content_info {
     width: 98%;
     margin: 30px 0% 0px 0%;
 }
 
 .inner-input-wrap {
-    position: relative;
     padding: 6px 0;
 }
 
@@ -334,7 +351,7 @@ export default {
     width: 95px;
 }
 .btn-fabu{
-    position: fixed;
+    position: absolute;
     width: 90%;
     height: 50px;
     bottom: 0;

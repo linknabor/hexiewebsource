@@ -16,8 +16,8 @@
           <div class="fs14">常住小区&nbsp;{{user.city}}&nbsp;{{user.xiaoquName}}</div>
         </span>
       </div>
-
-      <div id="point-list" style="border-bottom: none;" class="div_bottom">
+      <!--  -->
+      <div id="point-list" style="border-bottom: none;" class="div_bottom" v-show="cardService==false">
         <div class="point-item-wrap">
           <div class="point-item">
             <div class="point-info fs16">{{user.zhima}}</div>
@@ -45,6 +45,21 @@
           </a>
         </div>
       </div> -->
+
+      <div id="point-list" style="border-bottom: none;" class="div_bottom" v-show="cardService==true">
+        <div class="point-item-wrap item-wraps">
+          <div class="point-item">
+            <div class="point-info fs16">{{point}}</div>
+            <div class="point-title fs14">积分</div>
+          </div>
+        </div>
+        <div class="point-item-wrap item-wraps">
+          <div class="point-item" @click="coupons">
+            <div class="point-info fs16">{{user.couponCount}}</div>
+            <div class="point-title fs14">现金劵</div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="info-wrap" style="overflow:hidden; clear: both; border-bottom:none ;">
@@ -59,75 +74,105 @@
     </div>
 
     <div id="module-list">
-      <div class="module-item-wrap">
+      <div class="module-item-wrap" v-if="!donghu">
         <!-- 链接地址要换 -->
         <a :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/onsaleorders'" class="module-item">
           <div class="module-logo logo1"></div>
           <div class="module-title fs14">商品订单</div>
         </a>
       </div>
-      <div class="module-item-wrap">
-        <a class="module-item" :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/grouporders'">
+      <div class="module-item-wrap" :class="{'moduledh':donghu}">
+        <a v-if="donghu" class="module-itemdh" :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/grouporders'">
+            <div class="module-logodh logo4" >
+                <div class="module-titledh fs14">团购订单</div>
+            </div>
+            <div></div>
+         </a>
+        <a v-else class="module-item" :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/grouporders'">
           <div class="module-logo logo2"></div>
           <div class="module-title fs14">团购订单</div>
         </a>
+        
       </div>
-      <div class="module-item-wrap">
-        <a class="module-item" :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/homeorders'">
+      <div class="module-item-wrap" :class="{'moduledh':donghu}">
+        <a v-if="donghu" class="module-itemdh" :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/homeorders'">
+            <div class="module-logodh logo5" >
+                <div class="module-titledh fs14">服务订单</div>
+            </div>
+        </a> 
+        <a v-else class="module-item" :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/homeorders'">
           <div class="module-logo logo3"></div>
           <div class="module-title fs14">服务订单</div>
+        </a>
+
+      </div>
+    </div>
+
+    <div class="info-wrap" v-if="donghu">
+        <a :href="this.basePageUrl+'wuye/index.html?'+this.common.getoriApp()+'#/mysteward?n=2'" class="input-wrap menu-person-link lite-divider">
+          <span class="input-info lf30 fs16">报修</span>
+          <span class="fr fs14 left_color">
+            <span id="mypublic"></span>查看消息&nbsp;&nbsp;&nbsp;&nbsp;
+          </span>
+        </a>
+        <a :href="this.basePageUrl+'wuye/index.html?'+this.common.getoriApp()+'#/mysteward?n=0'" class="input-wrap menu-person-link lite-divider">
+          <span class="input-info lf30 fs16">服务需求</span>
+          <span class="fr fs14 left_color">
+            <span id="mypublic"></span>查看消息&nbsp;&nbsp;&nbsp;&nbsp;
+          </span>
+        </a>
+        <a :href="this.basePageUrl+'wuye/index.html?'+this.common.getoriApp()+'#/mysteward?n=1'" class="input-wrap menu-person-link lite-divider">
+          <span class="input-info lf30 fs16">意见建议</span>
+          <span class="fr fs14 left_color">
+            <span id="mypublic"></span>查看消息&nbsp;&nbsp;&nbsp;&nbsp;
+          </span>
+        </a>
+    </div>
+    <div v-else>
+      <div class="info-wrap" style="overflow:hidden; clear: both;">
+        <router-link :to="{path:'/myrepair'}" class="input-wrap menu-person-link lite-divider">
+          <span class="input-info lf30 fs16">我的维修单</span>
+          <span class="fr fs14 left_color">查看维修单&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        </router-link>
+        <!-- 我是维修工目前不隐藏 v-show="user.repairOperator" -->
+        <router-link
+          :to="{path:'/operatorOrders'}"
+          class="input-wrap menu-person-link lite-divider"
+          v-show="user.repairOperator"
+        >
+          <span class="input-info lf30 fs16">我是维修工</span>
+          <span class="fr fs14 left_color">查看维修单&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        </router-link>
+
+        <div class="input-wrap menu-person-link lite-divider" @click="Notice">
+          <span class="input-info lf30 fs16">我的消息</span>
+          <span class="fr fs14 left_color">查看消息&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        </div>
+
+        <router-link :to="{path:'/myPublish'}" class="input-wrap menu-person-link lite-divider">
+          <span class="input-info lf30 fs16">我的发布</span>
+          <span class="fr fs14 left_color">
+            <span id="mypublic"></span>查看发布&nbsp;&nbsp;&nbsp;&nbsp;
+          </span>
+        </router-link>
+      </div>
+
+      <div class="info-wrap">
+        <a
+          :href="this.basePageUrl+'wuye/index.html?'+oriapp+'#/Myhouse'"
+          class="input-wrap menu-person-link lite-divider"
+        >
+          <span class="input-info lf30 fs16">我是业主</span>
+          <span class="fr fs14 left_color">绑定房屋&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        </a>
+        <a @click="gotoAddress" class="input-wrap menu-person-link lite-divider">
+          <span class="input-info lf30 fs16">常用地址</span>
+          <span class="fr fs14 left_color">收货地址&nbsp;&nbsp;&nbsp;&nbsp;</span>
         </a>
       </div>
     </div>
 
-    <div class="info-wrap" style="overflow:hidden; clear: both;">
-      <router-link :to="{path:'/myrepair'}" class="input-wrap menu-person-link lite-divider">
-        <span class="input-info lf30 fs16">我的维修单</span>
-        <span class="fr fs14 left_color">查看维修单&nbsp;&nbsp;&nbsp;&nbsp;</span>
-      </router-link>
-      <!-- 我是维修工目前不隐藏 v-show="user.repairOperator" -->
-      <router-link
-        :to="{path:'/operatorOrders'}"
-        class="input-wrap menu-person-link lite-divider"
-        v-show="user.repairOperator"
-      >
-        <span class="input-info lf30 fs16">我是维修工</span>
-        <span class="fr fs14 left_color">查看维修单&nbsp;&nbsp;&nbsp;&nbsp;</span>
-      </router-link>
-
-      <div class="input-wrap menu-person-link lite-divider" @click="Notice">
-        <span class="input-info lf30 fs16">我的消息</span>
-        <span class="fr fs14 left_color">查看消息&nbsp;&nbsp;&nbsp;&nbsp;</span>
-      </div>
-
-      <router-link :to="{path:'/myPublish'}" class="input-wrap menu-person-link lite-divider">
-        <span class="input-info lf30 fs16">我的发布</span>
-        <span class="fr fs14 left_color">
-          <span id="mypublic"></span>查看发布&nbsp;&nbsp;&nbsp;&nbsp;
-        </span>
-      </router-link>
-    </div>
-
-    <div class="info-wrap">
-      <a
-        :href="this.basePageUrl+'wuye/index.html?'+oriapp+'#/Myhouse'"
-        class="input-wrap menu-person-link lite-divider"
-      >
-        <span class="input-info lf30 fs16">我是业主</span>
-        <span class="fr fs14 left_color">绑定房屋&nbsp;&nbsp;&nbsp;&nbsp;</span>
-      </a>
-      <a @click="gotoAddress" class="input-wrap menu-person-link lite-divider">
-        <span class="input-info lf30 fs16">常用地址</span>
-        <span class="fr fs14 left_color">收货地址&nbsp;&nbsp;&nbsp;&nbsp;</span>
-      </a>
-    </div>
-
     <div class="info-wrap" style="border-bottom: none;">
-      
-      <!-- <router-link :to="{path:'/abort'}" href="#" class="input-wrap menu-person-link lite-divider">
-        <span class="input-info lf30 fs16">关注我们</span>
-      </router-link> -->
-
       <a
         :href="'tel:'+user.officeTel"
         v-show="user.officeTel!=null && user.officeTel!=''"
@@ -153,7 +198,15 @@
       >长按关注公众号，尊享更多服务和商品</div>
       <img style="width: 200px;" :src="qrCode" />
     </div>
-    <div id="login" v-show="login"></div>
+    <div  v-show="login"
+      style=" background: rgba(0,0,0,0.5);display: none;width: 100%;height: 100%;top: 0rem; position: fixed;z-index: 999;">
+    </div>
+    <div id="login" v-show="login"> 
+      <img
+        src="../../assets/images/img/7f1b3b58-c5b6-4022-b1ed-dc4188c43a3a.gif"
+        style="width:100%;vertical-align: middle;"
+      />
+    </div >
   </div>
 </template>
 
@@ -175,10 +228,13 @@ export default {
       },
       login:true,
       oriapp:'', //我是业主
+      cardService:'',
       qrCode:'',//二维码
+      point:0,//积分
+      cardStatus:'',//是否领卡激活的标记
       // 默认未开通会员
-      isMember: false,
-
+      // isMember: false,
+      donghu:false,//标识判断是不是东湖
       user_info: {
         avatar: img,
         nickname: "游客",
@@ -196,7 +252,7 @@ export default {
   },
   mounted() {
     // this.initSession4Test();
-    this.User();
+    this.User(); 
     this.updateCouponStatus();
     // this.panduan(); //先判断
     vm.oriApp();//判断我是业主地址
@@ -204,22 +260,22 @@ export default {
   components: {},
   methods: {
     //先判断是否为会员
-    panduan() {
-      vm.receiveData.getData(vm, "/getMember", "res", function(res) {
-        if (vm.res[0].status == "0") {
-          // 已开通会员
-          // console.log(vm.res[0].enddate)
-          vm.isMember = true;
-          vm.enddate = vm.res[0].enddate;
-        }
-      });
+    // panduan() {
+    //   vm.receiveData.getData(vm, "/getMember", "res", function(res) {
+    //     if (vm.res[0].status == "0") {
+    //       // 已开通会员
+    //       // console.log(vm.res[0].enddate)
+    //       vm.isMember = true;
+    //       vm.enddate = vm.res[0].enddate;
+    //     }
+    //   });
 
      
-    },
+    // },
     //模仿线上用户信息
     // 105/747/384
     initSession4Test() {
-      let url = "/initSession4Test/41";
+      let url = "/initSession4Test/62";
       vm.receiveData.getData(vm, url, "Data", function() {});
     },
     User() {
@@ -232,20 +288,29 @@ export default {
            if(n.success&&n.result==null) {
                  reLogin();
            }
+          vm.donghu=n.result.donghu;//东湖标识
           vm.user = n.result;
           vm.user.headimgurl = "" != n.result.name || n.result? n.result.headimgurl: vm.user_info.avatar;  
           vm.user.name ="" != n.result.name ? n.result.name : vm.user_info.nickname;
-           
+          
           vm.qrCode=n.result.qrCode;
+          vm.cardService=n.result.cardService;
+          if(vm.user.point<0){//小于0等于0
+            vm.point=0;
+          }else {
+            vm.point=vm.user.point;
+          }
           vm.login=false;
-          Bus.$emit('sends',n.result.iconList)
+          Bus.$emit('sends',n.result.iconList);
           
           //保存图片
           var duration = new Date().getTime()/1000 + 3600*24*30;
+          cookie.set('cardStatus',n.result.cardStatus,duration);
+          cookie.set('cardService',n.result.cardService,duration);
+
           for(var j=0;j<n.result.bgImageList.length;j++){
-              vm.common.localSet(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl,duration)
+              vm.common.localSet(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl)
           }
-          
         },
         r = function() {
           vm.login=false;
@@ -270,8 +335,34 @@ export default {
     },
     //点击头像
     gotoEdit() {
-        vm.$router.push({ path: "/bindphone" });
-     
+        if(vm.cardService){
+          //1新用户未领卡未激活 
+          if(!vm.user.tel && (vm.user.cardStatus=='1'||vm.user.cardStatus==null || vm.user.cardStatus=='0')){
+              vm.$router.push({ path: "/welfare" });
+          }else if(!vm.user.tel && vm.user.cardStatus=='2'){ //2新用户领卡未激活
+              vm.$router.push({ path: "/register" }); 
+          }else if(vm.user.tel && (vm.user.cardStatus=='3' || vm.user.cardStatus=='4')){ //3新用户或老用户领卡已激活
+              vm.receiveData.getData(vm,"/card/activateUrlOnMenu?oriApp="+vm.getUrlParam('oriApp'),'res',function(){
+                  if(vm.res.success) {                
+                          location.href=vm.res.result;
+                  }else {
+                        alert(vm.res.message);  
+                  }
+              });  
+          }else if(vm.user.tel && (vm.user.cardStatus=='1'||vm.user.cardStatus==null || vm.user.cardStatus=='0')){ //1老用户未领卡未激活
+              vm.$router.push({ path: "/welfare" });  
+          }else if(vm.user.tel && vm.user.cardStatus=='2') { //2 老用户领卡未激活
+              vm.receiveData.getData(vm,"/card/activateUrlOnMenu?oriApp="+vm.getUrlParam('oriApp'),'res',function(){
+                  if(vm.res.success) {                
+                          location.href=vm.res.result;
+                  }else {
+                        alert(vm.res.message);  
+                  }
+              });  
+          }
+        }else {
+            vm.$router.push({ path: "/bindphone" });
+        }      
     },
     //现金券
     coupons() {
@@ -294,13 +385,17 @@ export default {
 
 <style  scoped>
  #login {
-      background: rgba(0,0,0,0.5);
-      left: 0;
-      right: 0;
-      top: 0;
-      bottom: 0;
-      position: fixed; 
-      z-index:10000000;
+    position: fixed;
+    top: 35%;
+    left: 50%;
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    margin-left: -30px;
+    text-align: center;
+    z-index: 1998;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
 }
 .ind {
   background-color: #fffff8;
@@ -378,6 +473,9 @@ export default {
   width: 33%;
   float: left;
   position: relative;
+}
+#point-list .item-wraps {
+  width: 50%;
 }
 #point-list .point-item-wrap .point-item {
   border-radius: 2px;
@@ -468,6 +566,7 @@ export default {
   background-size: 0.6rem;
   background-repeat: no-repeat;
 }
+
 .module-title {
   text-align: center;
   /* margin-top: 10px; */
@@ -482,7 +581,12 @@ export default {
 .logo3 {
   background-image: url("../../assets/images/person/icon_person_yuyue.png");
 }
-
+.logo4 {
+  background-image: url("../../assets/images/person/icon_person_tuangoudh.png");
+}
+.logo5 {
+  background-image: url("../../assets/images/person/icon_person_yuyuedh.png");
+}
 .bottom-info {
   padding: 20px 15px 5px 15px;
 }
@@ -521,5 +625,34 @@ export default {
   border-radius: 5px;
   margin-top: 10px;
   margin-right: 10px;
+}
+#module-list .moduledh {
+  width: 50%;
+}
+.module-itemdh {
+    margin-top: 10px;
+    display: block;
+    width: 100%;
+    background-position: 50% 0;
+    background-size: 42px;
+    background-repeat: no-repeat;
+    font-size: 16px;
+    color: #3b3937;
+    -webkit-border-radius: 2px;
+}
+.module-logodh{
+    margin-top: -5px;
+    display: block;
+    height: 1.2rem;
+    background-position: 25% 0;
+    background-size: .7rem;
+    background-repeat: no-repeat;
+}
+.module-titledh {
+    text-align: center;
+    margin-top: 10px;
+    margin-left: 27%;
+    padding-top: 7%;
+    color: #3b3937;
 }
 </style>

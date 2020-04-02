@@ -8,6 +8,10 @@ var MasterConfig = function() {
         basePageUrl:/127|test/.test(location.origin)?'https://test.e-shequ.com/weixin/':
         /uat/.test(location.origin)?'https://uat.e-shequ.com/hexie/weixin/':
         'https://www.e-shequ.cn/weixin/',
+        
+        basedhzj3Url:/127|test/.test(location.origin)?'https://test.e-shequ.com/weixin/':
+        /uat/.test(location.origin)?'https://uat.e-shequ.com/hexie/weixin/':
+        'https://www.e-shequ.cn/dhzj3/weixin/',
 
         basePageUrlpay:/127|test/.test(location.origin)?'https://test.e-shequ.com/weixin/pay/':
         /uat/.test(location.origin)?'https://uat.e-shequ.com/pay/':
@@ -168,12 +172,23 @@ function isRegisted(){
 function toRegisterAndBack(){
     var n = location.origin + common.removeParamFromUrl(["from", "bind", "code", "share_id", "isappinstalled", "state", "m", "c", "a"]);
     let appurl='';
+    //1未领卡  //2领卡未激活
+    var cardStatus=getCookie('cardStatus');
+    var cardService=getCookie('cardService');
     if(getUrlParam('oriApp')){
         appurl='oriApp='+getUrlParam('oriApp');
     }else {
         appurl='';
+    };
+    if(cardService=='true'){
+        if(cardStatus == '1'||cardStatus==null || cardStatus=='0' ){
+            location.href=MasterConfig.C('basePageUrl')+"person/index.html?"+appurl+"#/welfare"
+        }else {
+            location.href=MasterConfig.C('basePageUrl')+"person/index.html?"+appurl+"#/register?comeFrom="+encodeURIComponent(n)+common.addParamHsah();
+        }
+    }else {
+        location.href=MasterConfig.C('basePageUrl')+"person/index.html?"+appurl+"#/register?comeFrom="+encodeURIComponent(n)+common.addParamHsah();
     }
-    location.href=MasterConfig.C('basePageUrl')+"person/index.html?"+appurl+"#/register?comeFrom="+encodeURIComponent(n)+common.addParamHsah();
 }
 //判断当前是那个公众号
 function Getofficial() {
@@ -252,7 +267,7 @@ window.common = {
                 for(var j=0;j<n.result.bgImageList.length;j++){
                     window.localStorage.setItem(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl,duration)
                 } 
-                location.reload();
+                imgUrl=window.localStorage.getItem(type)
             },
             r = function() { 
             };
@@ -337,8 +352,8 @@ updateUserStatus(user) {
             common.login();/**不应该出现*/
             return false;
         }
-        if(!isRegisted()){
-            alert("请先完成注册！");
+
+        if(!isRegisted()){              
             toRegisterAndBack();
             return false;
         }

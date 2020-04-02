@@ -13,7 +13,35 @@
 	    <!-- load -->
         <div id="zzmb" class="zzmb" style="display:none;position:fixed;" @click="hideImg"></div>
         <div id="divconf" class="divconf" style="display:block; position:fixed; z-index: 2147483647;" @click="hideImg"></div>
+        <!-- ------- -->
+          <div class="category lite-divider" v-show="category<=2||category==3">
+            <div class="category_main">
+                <div class="category_sub_main fl">
+                    <router-link :to="{path:'/mysteward',query:{n:'2'}}" class="categorya">
+                        <img class="category_img" src="../../assets/images/butler/img_repair_60x60.png" v-show="category!=2"/>
+                        <img class="category_img_hide" src="../../assets/images/butler/img_repair_60x60_selected.png" v-show="category==2"/>
+                        <div class="category_txt">报修</div>
+                    </router-link>
+                </div>
 
+                <div class="category_sub_main fl">
+                    <router-link :to="{path:'/mysteward',query:{n:'0'}}" class="categorya">
+                        <img class="category_img" src="../../assets/images/butler/img_education_60x60.png" v-show="category!=0"/>
+                        <img class="category_img_hide" src="../../assets/images/butler/img_education_60x60_selected.png" v-show="category==0"/>
+                        <div class="category_txt">服务需求</div>
+                    </router-link>
+                </div>
+
+                <div class="category_sub_main fl">
+                    <router-link :to="{path:'/mysteward',query:{n:'1'}}" class="categorya">
+                        <img class="category_img" src="../../assets/images/butler/img_chat_60x60.png" v-show="category!=1"/>
+                        <img class="category_img_hide" src="../../assets/images/butler/img_chat_60x60_selected.png" v-show="category==1"/>
+                        <div class="category_txt">意见建议</div>
+                    </router-link>
+                </div>
+            </div>
+        </div>
+        <!-- ------- -->
         <div v-show="threads_count==0">
 		    <!-- <img class="adimg" src="../../assets/images/common/bg_publish.jpg"/> -->
             <img :src="bgImage" alt="" class="adimg">
@@ -26,7 +54,7 @@
                     <div class="thread_user_name">{{thread.userName}}</div>
                     <div class="thread_user_addr">{{thread.userSectName}}</div>
                 </div>
-             <div class="ov pt15 pb15 fs13" style="color: #3b3937" @click="gotoDetail(thread.threadId)">{{thread.threadContent}}</div>   
+             <div class="ov pt15 pb15 fs13" style="color: #3b3937; word-wrap:break-word;overflow:hidden;" @click="gotoDetail(thread.threadId)">{{thread.threadContent}}</div>   
             <!-- 图片 -->
             <div class="preview_img_layer" >
                 <div v-for="(previewurl,index) in thread.previewLink">
@@ -47,7 +75,8 @@
 
         <div style="position: fixed; bottom:0.5px; width: 100%; color: white;" >
             <div class="submit-btn-black fs14 fl" @click="gotoindex" style="width: 25%">返回</div>
-            <div class="submit-btn-orange2 fs14 fl" @click="publicnew" style="width: 73%">我要发布</div>
+            <div class="submit-btn-orange2 fs14 fl" @click="publicnew" style="width: 73%" v-if="category=='12'">服务预约</div>
+            <div class="submit-btn-orange2 fs14 fl" @click="publicnew" style="width: 73%" v-else>我要发布</div>
 	    </div>
    </div>
 </div>   
@@ -59,6 +88,7 @@ let isloadPage=false;
 export default {
    data () {
        return {
+           category:this.$route.query.n,
            threads_count:0,
            threads:[],//评论数据
            userSectId:0,
@@ -74,11 +104,13 @@ export default {
    mounted() {
         // 请求接口获取 后台返回的 微信配置项
         // vm.common.checkRegisterStatus();
-
        vm.getThreadList();
    },
    watch:{
-        
+        '$route' () {
+            this.category=this.$route.query.n
+            vm.getThreadList();
+        }
     },
 
    methods: {
@@ -86,13 +118,11 @@ export default {
        //初始数据
        getThreadList() {
            vm.page=0;
-           let  filter='y';
+           let  filter='n';
            let url="thread/getThreadList/"+filter+"/"+vm.page;;
-        // let url='thread/getMyPublish';
            vm.receiveData.postData( vm, url,
            {
-            //    'threadCategory' :vm.category,
-            //    'filter':filter
+            'threadCategory' :vm.category,
            },
             'hehe',
             function(){
@@ -118,13 +148,12 @@ export default {
             }
        },
        loadNextPage() {
-           let filter='y';
+           let filter='n';
            let url="thread/getThreadList/"+filter+"/"+vm.page;
             // let url='thread/getMyPublish';
            vm.receiveData.postData( vm, url,
             {
-                // threadCategory :vm.category,
-			    // filter : filter
+                threadCategory :vm.category,
             },
             'data',
             function(){
@@ -247,16 +276,24 @@ export default {
         },
         //点击跳转
         gotoDetail(threadId) {
-            this.$router.push({path:'/threadDetail',query:{'threadId':threadId}})
+                 this.$router.push({path:'/threadDetail',query:{'threadId':threadId,'n':vm.category}})
         },
-        //点击返回
+        //'点击返回'
         gotoindex() {
-             this.$router.push({path:'/'})
+            if(vm.category=='12'){
+               this.$router.push({path:'/catalog'})
+            }else {
+               this.$router.push({path:'/'})
+            }
+             
         },
         //点击发布
         publicnew() {
-       
-               this.$router.push({path:'/maintain'})
+            if(vm.category=='12'){
+               this.$router.push({path:'/maintain',query:{'n':'12'}})
+            }else {
+               this.$router.push({path:'/maintain',query:{'n':vm.category}})
+            }
         }
    },
 

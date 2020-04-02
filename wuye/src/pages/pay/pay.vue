@@ -6,9 +6,9 @@
     <!-- class="hidden" -->
     <div id="phoneAjax" v-show="showp">
       <img
-        src="../../assets/images/house/c3d7f369-4a5e-4c4a-9fb9-a4b9d274c7e1.gif"
-        style="width:40px;height:40px;vertical-align: middle;"
-      />
+        src="../../assets/images/house/7f1b3b58-c5b6-4022-b1ed-dc4188c43a3a.gif"
+        style="width:100%;vertical-align: middle;"
+      /> 
     </div>
     <mt-navbar id="navBar" v-model="selected">
       <!-- <mt-tab-item id="d">查询缴费</mt-tab-item>
@@ -950,8 +950,14 @@ export default {
           }
         }
         var oriapp=vm.common.getoriApp();
-        window.location.href =vm.basePageUrl +"wuyepay.html?"+oriapp+"#/?billIds=" +bills + "&stmtId=" + vm.stmtId + "&payAddr=" + escape(pay_addr) +
-        "&totalPrice=" +vm[allPrice] + "&reduceMode=" + vm.reduceMode + "&regionname=" +vm.regionname +"&getversion=" + "02";
+        var oriap = vm.getUrlParam('oriApp');
+        if(oriap == 'wxe8dea53aad1a93b9') {
+          window.location.href =vm.basedhzj3Url +"wuyepay.html?"+oriapp+"#/?billIds=" +bills + "&stmtId=" + vm.stmtId + "&payAddr=" + escape(pay_addr) +
+         "&totalPrice=" +vm[allPrice] + "&reduceMode=" + vm.reduceMode + "&regionname=" +vm.regionname +"&getversion=" + "02";
+        }else {
+         window.location.href =vm.basePageUrl +"wuyepay.html?"+oriapp+"#/?billIds=" +bills + "&stmtId=" + vm.stmtId + "&payAddr=" + escape(pay_addr) +
+         "&totalPrice=" +vm[allPrice] + "&reduceMode=" + vm.reduceMode + "&regionname=" +vm.regionname +"&getversion=" + "02";
+        }
     },
     //点击物业缴费按钮
     pay(list, allPrice, allselect, otherbillinfo, queryallPrice1) {
@@ -961,9 +967,16 @@ export default {
           alert("请选择帐单后支付");
           return;
         }
+
         var oriapp=vm.common.getoriApp();
-        window.location.href =vm.basePageUrl +"wuyepay.html?"+oriapp+"#/?regionname=" +this.$route.query.City +"&totalPrice="+vm[queryallPrice1] +"&house_id=" +
+        var oriap = vm.getUrlParam('oriApp');
+        if(oriap == 'wxe8dea53aad1a93b9') {
+          window.location.href =vm.basedhzj3Url +"wuyepay.html?"+oriapp+"#/?regionname=" +this.$route.query.City +"&totalPrice="+vm[queryallPrice1] +"&house_id=" +
           vm.query.house +"&sect_id=" +vm.query.sectID + "&start_date=" +startData + "&end_date=" + endData +"&getversion=" + '01';
+        }else {
+          window.location.href =vm.basePageUrl +"wuyepay.html?"+oriapp+"#/?regionname=" +this.$route.query.City +"&totalPrice="+vm[queryallPrice1] +"&house_id=" +
+          vm.query.house +"&sect_id=" +vm.query.sectID + "&start_date=" +startData + "&end_date=" + endData +"&getversion=" + '01';
+        }
       } else { // 专业版
          vm.pays(list, allPrice, allselect)
       }   
@@ -1349,19 +1362,19 @@ a {
 
 #phoneAjax {
   position: fixed;
-  top: 20%;
+  top: 25%;
   left: 50%;
   width: 60px;
   height: 60px;
   line-height: 60px;
   margin-left: -30px;
   text-align: center;
-  background-color: black;
-  -moz-opacity: 0.8;
-  opacity: 0.8;
-  filter: alpha(opacity=80);
+  /* background-color: black; */
+  /* -moz-opacity: 0.8; */
+  /* opacity: 0.8; */
+  /* filter: alpha(opacity=80); */
   z-index: 1998;
-  overflow: auto;
+  /* overflow: auto; */
   -moz-border-radius: 15px;
   -webkit-border-radius: 15px;
 }

@@ -5,7 +5,7 @@
   height: 100%;
   font-size: 14px;
   text-align: center;
-  padding-bottom: 60px;
+  margin-bottom: 60px;
   overflow: hidden;
 }
 .swiper {
@@ -40,8 +40,20 @@
   width: 33%;
   float: left;
 }
+.w40{box-sizing: border-box; -webkit-box-sizing: border-box; 
+    -moz-box-sizing: border-box;}
+.w60{width: 55%;box-sizing: border-box; -webkit-box-sizing: border-box; 
+    -moz-box-sizing: border-box;}
+.week_sugg_img{width: 42%;padding-bottom: 39%;border-right: #eeeeee 1px solid;
+ 	background-size: 100%;background-repeat: none;margin: 0 0 0 3%;
+ 	background-image: url('../assets/images/index/grid.png');}
+.week_sugg_img2{width: 94%;padding-bottom: 35.2%;background-size: 100%;
+ 	background-repeat: none;margin: 0 6% 0 0;} 
+.week_sugg_img3{width: 94%;border-top: #eeeeee 1px solid;padding-bottom: 35.2%;
+ 	background-size: 100%;background-repeat: none;margin: 0 6% 0 0;}        
 </style>
 <template>
+<div>
   <div class="home">
     <swiper :options="swiperOption">
       <swiper-slide v-for="(item,index) in swiperData" :key="index">
@@ -54,7 +66,29 @@
       <div class="swiper-pagination" slot="pagination"></div>
     </swiper>
     <div class="line">&nbsp;</div>
-    <div style="margin:5px;">
+    <div v-if="donghu">
+      <div style="overflow: hidden;">
+        <div class=" fl w40 week_sugg_img" @click="gotoPaged(data1.url)"
+        v-bind:style="{backgroundImage:'url(' + data1.img + ')'}"
+        ></div>	
+        <div class="fl w60">
+          <div class="week_sugg_img2 fr" @click="gotoPaged(data2.url)"
+          v-bind:style="{backgroundImage:'url(' + data2.img + ')'}">
+          </div>
+          <div class="week_sugg_img3 fr" @click="gotoPaged(data3.url)" 
+          v-bind:style="{backgroundImage:'url(' + data3.img + ')'}">
+          </div>
+        </div>
+      </div>
+      <div class="line">&nbsp;</div>
+      <div class="contain_weixiu">
+        <img @click="gotoProject(1)" src="../assets/images/index/finance.png" class="icon_weixiu"/>
+        <img @click="gotoProject(2)" src="../assets/images/index/hotel.png" class="icon_weixiu"/>
+        <img @click="gotoProject(3)" src="../assets/images/index/travel.png" class="icon_weixiu"/>
+      </div>
+    </div>
+
+    <div v-else style="margin:5px;overflow: hidden;" >
       <div
         @click="gotoPage(item.url)"
         v-for="(item,index) in jingxuans"
@@ -65,16 +99,19 @@
       </div>
     </div>
   </div>
+  <Footer></Footer>
+</div>
 </template>
 <script>
-import Bus from "../api/bus.js";
 import { swiper, swiperSlide } from "vue-awesome-swiper";
 import "../assets/css/swiper.min.css";
-import cookie from 'js-cookie';
+import Footer from '../components/footer.vue';
+import Bus from '../api/bus.js'
 export default {
   components: {
     swiper,
-    swiperSlide
+    swiperSlide,
+    Footer
   },
   data() {
     return {
@@ -93,16 +130,11 @@ export default {
         loop: true
       },
       swiperData: [],
-      jingxuans:[
-      	// {
-      	// 	image:'http://img.e-shequ.com/FsOWvRxK9mycwl86xYkETif2X346',
-      	// 	url:''
-      	// },
-      	// {
-      	// 	image:'http://img.e-shequ.com/Ftq1wei9rTCcnsnvgkGf0NIEWvp-',
-      	// 	url:''
-      	// }
-      ]
+      jingxuans:[],
+      data1:'',
+			data2:'',
+      data3:'',
+      donghu:false,
     };
   },
   beforeCreate() {
@@ -111,39 +143,13 @@ export default {
   created() {},
   watch: {},
   mounted() {
-    // this.initSession4Test();
-    this.initUserInfo();
+       Bus.$on("sends",this.getMsgFromZha);
+       this.initData();
   },
+  beforeDestroy() {
+            Bus.$off();
+　},
   methods: {
-    //模仿线上用户信息
-    //105/747/384
-    initSession4Test() {
-      let _this = this;
-      let url = "/initSession4Test/79187";
-      _this.receiveData.getData(_this, url, "Data", function() {
-        
-      });
-    },
-    initUserInfo() {
-      let _this = this;
-      let n = "GET",
-        a = "userInfo?oriApp=" + _this.getUrlParam("oriApp"),
-        i = null,
-        e = function(n) {
-         if (n.success && n.result == null) {
-            reLogin();
-         }
-          Bus.$emit('logins',false)
-          Bus.$emit("sends", n.result.iconList);
-         _this.initData(); 
-         var duration = new Date().getTime()/1000 + 3600*24*30;
-         for(var j=0;j<n.result.bgImageList.length;j++){
-               _this.common.localSet(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl,duration)
-          }
-        },
-        r = function() {};
-      _this.common.invokeApi(n, a, i, null, e, r);
-    },
     initData() {
       let _this = this;
       let url ="/pageconfig/shequ";
@@ -152,6 +158,9 @@ export default {
         if (res.success) {
           _this.swiperData = res.result.banners;
           _this.jingxuans = res.result.modules;
+          _this.data1 = res.result.jingxuan1;
+					_this.data2 = res.result.jingxuan2;
+					_this.data3 = res.result.jingxuan3;
         } else {
           if (res.message !== null) {
             alert(res.message);
@@ -161,9 +170,30 @@ export default {
         }
       });
     },
+    getMsgFromZha(result) {
+      this.donghu=result.donghu;
+    },
     gotoPage(ele) {
       location.href = ele;
-    }
+    },
+    gotoPaged(ele){
+      if(ele == ''){
+        this.$router.push({path:'/build'})
+      }else{
+        location.href = ele;
+      }
+    },
+    gotoProject(type){
+				if(type=="2"){
+	        		this.$router.push({path:'hotel'})
+          }else if(type=="3"){
+            location.href=this.basePageUrl+'wuye/index.html?'+this.common.getoriApp()+'#/message';
+            // console.log(this.basePageUrl+'wuye/index.html?'+this.common.getoriApp()+'#/message')
+          }else{
+            this.$router.push({path:'/build'})
+          }
+		}
   }
+  
 };
 </script>
