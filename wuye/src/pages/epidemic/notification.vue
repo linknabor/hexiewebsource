@@ -1,7 +1,7 @@
 <template>
 <div class="not">
     <div>
-        <div>
+        <div v-if="falg">
             <div style="padding:0.3rem 0 0; overflow: hidden;">
                 <div class="ov pl15 pb15 fs13 adds">{{thread.content}}</div>
                 <div class="ov pl17 pb15 fs13 fl" style="color: #a6937c;">
@@ -9,6 +9,9 @@
                 </div>
             </div>
         </div>
+         <div v-else> 
+           <img :src="bgImage" alt="" class="adimg">
+       </div>
     </div>
 </div>
 </template>
@@ -19,8 +22,9 @@ export default {
    data () {
        return {
            thread :{},
-           messageId:this.$route.query.messageId
-
+           messageId:this.$route.query.messageId,
+           falg:false,
+           bgImage:this.common.GetImages('7')
        };
    },
    created(){
@@ -42,7 +46,10 @@ export default {
             'data',
             function(){
                 if(vm.data.success) {
-                    vm.thread = vm.data.result;
+                    if(vm.data.result){
+                         vm.thread = vm.data.result;
+                         vm.falg=true;
+                    } 
                 }else {
                        alert(vm.data.message==null?"获取信息失败，请重试！":vm.data.message);
                 }
@@ -67,7 +74,6 @@ export default {
     background: #ffffff;;
     overflow:auto;
 }
-
 .ov {
     overflow: hidden;
     padding: 1px;
@@ -88,7 +94,6 @@ export default {
 .fl {
     float: left;
 }
-
 .fs13 {
     font-size: 0.41rem;
 }
@@ -105,4 +110,8 @@ export default {
     text-indent: 2em;
     letter-spacing: 0.03rem;
 }
+.adimg {
+        width: 100%;
+        height: auto;
+} 
 </style>

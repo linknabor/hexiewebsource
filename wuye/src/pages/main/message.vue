@@ -32,7 +32,6 @@ export default {
    },
    mounted() {
        vm.query();
-
    },
    methods: {
       query() {
@@ -43,14 +42,13 @@ export default {
            }
        },
        queryMessage() {
-           let url="/getmessages";
+           let url="/messages/3";
             vm.receiveData.getData(vm,url,'data',function(){
                 if(vm.data.result !=null) {
                     vm.message=vm.data.result
                 }else {
                     alert('信息未发布');
-                    // location.href="https://test.e-shequ.com/guangming/weixin/home/date/index.html"
-                    vm.$router.push({path:'/'})
+                    location.href=vm.basePageUrl+"/home/index.html?"+vm.common.getoriApp();
                 }
                 if(!vm.data.success) {
                     alert("页面获取信息错误，请稍后重试！");
@@ -113,9 +111,10 @@ export default {
 	background: url("../../assets/images/common/icon_time_gray.png") no-repeat;
 }
 .msg_content{
-    margin-left:5%;
-    width: 90%;
+    /* margin-left:5%; */
+    width: 100%;
     clear: both;
     font-size: 14px;
+    overflow: auto;
 }
 </style>

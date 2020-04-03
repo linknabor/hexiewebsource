@@ -67,7 +67,9 @@ overflow: hidden; background-color: white;}
      transition: all 1s;
      -webkit-transition: all 1s;
  }
-   
+ .dhwidth {
+     width:33.3%;
+ }  
 .tab::-webkit-scrollbar {
         display: none;
     }
@@ -175,12 +177,12 @@ overflow: hidden; background-color: white;}
                     </router-link>
                 </li>
                 <li class="jgg_li" >    
-                    <router-link to="/paystop" class="link">
+                    <div  class="link" @click="Paystop">
                         <div class="jgg_img">
                             <img src="../../assets/images/index/tcjf1.png" alt="tt">
                         </div>
                         <span class="jgg-span">停车缴费</span>
-                    </router-link>
+                    </div>
                 </li>
                 <li class="jgg_li" >
                     <router-link to="/paymentquery" class="link">
@@ -232,7 +234,7 @@ overflow: hidden; background-color: white;}
         <div class="tabmain">
             <div class="tab" ref="tabs" >
                 <div ref="tabcon" class="tabscon">
-                    <div  ref="tabtitle" class="notice-tab-title" v-for="(tab,index) in tabs"  :key="index" :class="{active:tab.active,tabadd:tab.ali}" @click="changeTab(index,tab.type)">{{tab.name}}</div>
+                    <div  ref="tabtitle" class="notice-tab-title" v-for="(tab,index) in tabs"  :key="index" :class="{active:tab.active,tabadd:tab.ali,dhwidth:tab.dhwidth}" @click="changeTab(index,tab.type)">{{tab.name}}</div>
                 </div>
             </div>
         </div>
@@ -279,6 +281,7 @@ export default {
             messtype:'',
             coronaPy: false,//疫情防控
             coronaPj: true,//业主意见
+            donghu:false,//东湖标记
             //swiper参数配置
             swiperOption:{
                 notNextTick:true,
@@ -293,11 +296,11 @@ export default {
                 loop: false,
             },
              tabs: [
-                  {
-                    name: '社区生活',
-                    type: 9,
-                    active:true  
-                }
+                //   {
+                //     name: '社区生活',
+                //     type: 9,
+                //     active:true  
+                // }
              ],
         };
     },
@@ -315,9 +318,7 @@ export default {
  
     },
     mounted(){
-        // this.initSession4Test();
         Bus.$on("sends",this.getMsgFromZha);
-        
     },
     updated() {
         vm.$nextTick(()=> {
@@ -346,6 +347,7 @@ export default {
         getMsgFromZha(result) {
             vm.cfgParam=result.cfgParam;
             vm.sectId=result.sectId;
+            vm.donghu=result.donghu;//东湖标识
             if(result.coronaPrevention){
                 if(vm.cfgParam){
                     if(vm.cfgParam.CORONA_PREVENTION_MODE){
@@ -366,30 +368,61 @@ export default {
             vm.query();   
          },
         query() {
-                if(vm.cfgParam.ONLINE_MESSAGE==1) {
+                if(vm.donghu){
+                    vm.tabs=[ 
+                        {
+                            name: '物业公告',
+                            type: 0,
+                            active:true,
+                            dhwidth:true,
+                        },
+                        {
+                            name: '业委会公告',
+                            type: 1,
+                            active:false,
+                            dhwidth:true, 
+                        },
+                        {
+                            name: '居委会公告',
+                            type: 2,
+                            active:false,
+                            dhwidth:true,
+                        },
+                    ]
+                }else {
+                    if(vm.cfgParam.ONLINE_MESSAGE==1) {
+                            vm.tabs=[ 
+                                {
+                                    name: '社区生活',
+                                    type: 9,
+                                    active:true  
+                                },
+                                {
+                                    name: '物业公告',
+                                    type: 0 ,
+                                    active:false
+                                },
+                                {
+                                    name: '业委会公告',
+                                    type: 1,
+                                    active:false 
+                                },
+                                {
+                                    name: '居委会公告',
+                                    type: 2,
+                                    active:false,
+                                    ali:true
+                                },
+                            ]
+                    }else {
                         vm.tabs=[ 
-                            {
+                                {
                                 name: '社区生活',
                                 type: 9,
                                 active:true  
-                            },
-                            {
-                                name: '物业公告',
-                                type: 0 ,
-                                active:false
-                            },
-                            {
-                                name: '业委会公告',
-                                type: 1,
-                                active:false 
-                            },
-                            {
-                                name: '居委会公告',
-                                type: 2,
-                                active:false,
-                                ali:true
-                            },
-                        ]
+                            }
+                        ]    
+                    }
                 }
             vm.message(vm.tabs[0].type) 
 
@@ -455,6 +488,13 @@ export default {
     		   vm.$router.push({path:'/message',query:{'messageId':mid}})
     	   }
         },
+        Paystop(){//停车
+            if(vm.donghu){
+                alert("内容正在丰富中,敬请期待。")
+            }else {
+                vm.$router.push({path:'/paystop'});
+            }
+        },
         gotoThread() {
             if(vm.sectId==0 || vm.sectId== null)
         	{
@@ -464,25 +504,38 @@ export default {
                 alert("当前所在的小区未开启当前业务");
                 return  
             } else {
-             	vm.$router.push({path:'/mysteward',query:{'n':'9'}})
+                if(vm.donghu) {
+                    vm.$router.push({path:'/mysteward',query:{'n':'2'}})
+                }else {
+                    vm.$router.push({path:'/mysteward',query:{'n':'9'}})
+                }
+             	
             }
         },
         gotorepair() {
-            if(vm.sectId==0|| vm.sectId== null)
-            {
-                alert("您暂未绑定房屋，请前往“我是业主”\r\n进行操作，感谢！");
-                return;
-            }else  if(vm.cfgParam==null || vm.cfgParam.ONLINE_REPAIR == undefined||vm.cfgParam.ONLINE_REPAIR==0) {
-                alert("当前所在的小区未开启当前业务");
-                return   
-            }else {
-             	vm.$router.push({path:'/repair',query:{'projectId':'1'}})
-            }
+                if(vm.sectId==0|| vm.sectId== null)
+                {
+                    alert("您暂未绑定房屋，请前往“我是业主”\r\n进行操作，感谢！");
+                    return;
+                }else  if(vm.cfgParam==null || vm.cfgParam.ONLINE_REPAIR == undefined||vm.cfgParam.ONLINE_REPAIR==0) {
+                    alert("当前所在的小区未开启当前业务");
+                    return   
+                }else {
+                    if(vm.donghu) {
+                         vm.$router.push({path:'/maintain',query:{'n':'2'}})
+                    }else {
+                         vm.$router.push({path:'/repair',query:{'projectId':'1'}})
+                    }
+                }
+
         },
         //左右滑动
        personScroll() {
-                if(vm.tabs.length>1) {
+                if(vm.tabs.length>3) {
                     vm.$refs.tabcon.style.width= 33 *vm.tabs.length+'%';
+                }
+                if(vm.tabs.length==3){
+                    vm.$refs.tabcon.style.width= '100%';
                 }
                 vm.$nextTick(() => {
                     if (!vm.scroll) {
@@ -534,7 +587,6 @@ export default {
        },
        //社区防疫
        goepi(){
-
             vm.$router.push({path:'/catalog'})
        }
 

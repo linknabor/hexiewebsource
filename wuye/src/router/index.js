@@ -14,6 +14,11 @@ const router= new VueRouter({
             component:resolve=> require(['@/pages/main/message'],resolve)
         },
         {
+          path:'/section',
+          name:'section',
+          component:resolve=> require(['@/pages/main/section'],resolve)
+        },
+        {
             path:'/Myhouse',
             name:'Myhouse',
             component: resolve=> require(['@/pages/house/myhouse'],resolve),

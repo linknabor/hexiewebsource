@@ -3,8 +3,8 @@ import Router from 'vue-router'
 
 
 import index from '@/pages/index' //物业首页
- 
-
+import Build from '@/pages/notOpen' //物业首页
+import Hotel from '@/pages/hotel' //物业首页
 Vue.use(Router)
 
 const router= new Router({
@@ -16,7 +16,23 @@ const router= new Router({
       meta:{
         title:'社区生活'
       },
-    },  
+    }, 
+    {
+      path:'/build',
+      name:'build',
+      component:Build,
+      meta:{
+        title:'生活服务'
+      }
+    },
+    {
+      path: '/hotel',
+      name: 'hotel',
+      component: Hotel,
+      meta:{
+        title:'生活服务'
+      }
+    } 
   ]
 });
 //路由的钩子函数，

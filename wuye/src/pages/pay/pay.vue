@@ -189,7 +189,7 @@ import { Indicator, Loadmore } from "mint-ui";
 // import Foot from "../../components/footer.vue";
 import moment from "../filter/datafromat";
 import Bus from '../../api/bus.js';
-
+import cookie  from 'js-cookie';
 export default {
   components: { Bill},
 
@@ -324,7 +324,6 @@ export default {
     vm = this;
   },
   mounted() {
-    vm.getSectid();
     vm.TabsList();
     vm.unitselect();
     vm.getHousin();
@@ -335,20 +334,36 @@ export default {
   },
   methods: {
     TabsList() {//获取localstorage中的选项卡
-      vm.wuyeTabsList=JSON.parse(window.localStorage.getItem("wuyeTabsList"));
-      vm.selected=vm.wuyeTabsList[0].value;
-    },
-    getSectid() {
-        let n = "GET",
-            a = "userInfo?oriApp="+vm.getUrlParam('oriApp'),
-            i = null,
-            e = function(n) {
-                   vm.sectId=n.result.sectId;
-            },
-            r = function(n) { 
-              
-            };
+      let wuyeTabs = window.localStorage.getItem("wuyeTabsList");
+      vm.sectId = cookie.get('sectId');//获取sectId
+      if(wuyeTabs && (wuyeTabs != 'null' && wuyeTabs != 'undefined')) {//不等于空获取
+         vm.wuyeTabsList = JSON.parse(window.localStorage.getItem("wuyeTabsList"));
+         vm.selected = vm.wuyeTabsList[0].value;
+      }
+      if(!wuyeTabs || wuyeTabs == 'null' || wuyeTabs == 'undefined' || !vm.sectId){
+          let n = "GET",
+          a = "userInfo?oriApp="+vm.getUrlParam('oriApp'),
+          i = null,
+          e = function(n) {
+            cookie.set('userId',n.result.id);
+            cookie.set('cspId',n.result.cspId);
+            cookie.set('sectId',n.result.sectId);
+            if(n.result.wuyeTabsList) { //判断是否有值重新填入
+              vm.common.localSet('wuyeTabsList',JSON.stringify(n.result.wuyeTabsList))
+              //填入后在获取赋值
+              vm.wuyeTabsList = JSON.parse(window.localStorage.getItem("wuyeTabsList"));
+              vm.selected = vm.wuyeTabsList[0].value;
+            }else {
+              alert('没有配置选项卡');//没有配置选项卡提示
+            }
+            cookie.set('sectId',n.result.sectId)
+            vm.sectId=cookie.get('sectId'); //获取sectid
+          },
+          r = function(n) { 
+            
+          };
         this.common.invokeApi(n, a, i, null, e, r);
+      }
     },
     //跳转绑定房子
     Myhouse() {
@@ -411,9 +426,10 @@ export default {
     //105/747/384
      //请求 停车缴费 和 物业缴费首屏数据
     zong(){
-      setTimeout(function(){
       if(vm.selected=="b"&&vm.mine){
         if(vm.sectId!=0 && vm.sectId!= null) {
+            vm.isshow=true;
+            vm.showp = true;
             vm.receiveData.getData(vm,"/billList","data",function() {
               if(vm.data.success) {
                   if(vm.data.result!=null) {
@@ -433,10 +449,11 @@ export default {
               }else {
                   alert(vm.data.message==null?"暂无需缴费账单":vm.data.message)
               }
+              vm.isshow=false;
+              vm.showp = false;
             },vm.params);
         }
       }
-      },200)
     },
     //跳转到查询缴费
     unitselect() {
@@ -950,8 +967,14 @@ export default {
           }
         }
         var oriapp=vm.common.getoriApp();
-        window.location.href =vm.basePageUrl +"wuyepay.html?"+oriapp+"#/?billIds=" +bills + "&stmtId=" + vm.stmtId + "&payAddr=" + escape(pay_addr) +
-        "&totalPrice=" +vm[allPrice] + "&reduceMode=" + vm.reduceMode + "&regionname=" +vm.regionname +"&getversion=" + "02";
+        var oriap = vm.getUrlParam('oriApp');
+        if(oriap == 'wxe8dea53aad1a93b9') {
+          window.location.href =vm.basedhzj3Url +"wuyepay.html?"+oriapp+"#/?billIds=" +bills + "&stmtId=" + vm.stmtId + "&payAddr=" + escape(pay_addr) +
+         "&totalPrice=" +vm[allPrice] + "&reduceMode=" + vm.reduceMode + "&regionname=" +vm.regionname +"&getversion=" + "02";
+        }else {
+         window.location.href =vm.basePageUrl +"wuyepay.html?"+oriapp+"#/?billIds=" +bills + "&stmtId=" + vm.stmtId + "&payAddr=" + escape(pay_addr) +
+         "&totalPrice=" +vm[allPrice] + "&reduceMode=" + vm.reduceMode + "&regionname=" +vm.regionname +"&getversion=" + "02";
+        }
     },
     //点击物业缴费按钮
     pay(list, allPrice, allselect, otherbillinfo, queryallPrice1) {
@@ -961,9 +984,16 @@ export default {
           alert("请选择帐单后支付");
           return;
         }
+
         var oriapp=vm.common.getoriApp();
-        window.location.href =vm.basePageUrl +"wuyepay.html?"+oriapp+"#/?regionname=" +this.$route.query.City +"&totalPrice="+vm[queryallPrice1] +"&house_id=" +
+        var oriap = vm.getUrlParam('oriApp');
+        if(oriap == 'wxe8dea53aad1a93b9') {
+          window.location.href =vm.basedhzj3Url +"wuyepay.html?"+oriapp+"#/?regionname=" +this.$route.query.City +"&totalPrice="+vm[queryallPrice1] +"&house_id=" +
           vm.query.house +"&sect_id=" +vm.query.sectID + "&start_date=" +startData + "&end_date=" + endData +"&getversion=" + '01';
+        }else {
+          window.location.href =vm.basePageUrl +"wuyepay.html?"+oriapp+"#/?regionname=" +this.$route.query.City +"&totalPrice="+vm[queryallPrice1] +"&house_id=" +
+          vm.query.house +"&sect_id=" +vm.query.sectID + "&start_date=" +startData + "&end_date=" + endData +"&getversion=" + '01';
+        }
       } else { // 专业版
          vm.pays(list, allPrice, allselect)
       }   
