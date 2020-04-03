@@ -903,7 +903,7 @@
 							
 			          	    success: function (res) {
 			          	    	// alert("起步走起");
-								let reqUrl = "noticePayed?billId="+vm.routeParams.billIds+"&stmtId="+vm.routeParams.stmtId+"&tradeWaterId="+wd.result.trade_water_id+"&packageId="+wd.result.packageId+"&feePrice="+vm.routeParams.totalPrice+"&bind_switch="+vm.bind_switch;
+								let reqUrl = "noticePayed?billId="+vm.routeParams.billIds+"&tradeWaterId="+wd.result.trade_water_id+"&feePrice="+vm.routeParams.totalPrice+"&bind_switch="+vm.bind_switch;
 								if(vm.uptonAmount != "未使用"){
 									// alert("走到这一步")
 									reqUrl += "&couponId="+vm.couponId;

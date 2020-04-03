@@ -138,7 +138,7 @@ export default{
                       }
                     }
                     if(n.result.wuyeTabsList) {
-                          vm.common.localSet('wuyeTabsList',JSON.stringify(n.result.wuyeTabsList))
+                          vm.common.localSet('wuyeTabsList',JSON.stringify(n.result.wuyeTabsList));
                     }
                 },
                 r = function(res) { 
