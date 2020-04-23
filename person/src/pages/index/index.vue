@@ -253,7 +253,6 @@ export default {
   mounted() {
     // this.initSession4Test();
     this.User(); 
-    this.updateCouponStatus();
     // this.panduan(); //先判断
     vm.oriApp();//判断我是业主地址
   },
@@ -321,17 +320,6 @@ export default {
       this.common.invokeApi(n, a, i, d, e, r);
 
       // vm.receiveData.getData(vm, 'userInfo', "n", function() { vm.user = vm.n.result;});
-    },
-    //更新红包状态
-    updateCouponStatus() {
-      var n = "GET",
-        a = "updateCouponStatus",
-        i = null,
-        e = function(n) {
-          console.log(JSON.stringify(n));
-        },
-        r = function() {};
-      vm.common.invokeApi(n, a, i, null, e, r);
     },
     //点击头像
     gotoEdit() {
