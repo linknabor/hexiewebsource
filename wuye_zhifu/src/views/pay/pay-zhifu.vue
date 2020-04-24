@@ -437,9 +437,11 @@ export default {
             let payurl = wd.result.PAYURL;
             let pay_result = wd.result.pay_result;
             if(pay_result == 'SUCCESS'){
-               var oriapp=vm.common.getoriApp();
-                 window.location.href = vm.basePageUrl+'wuye/index.html?'+oriapp+'#/paymentquery'; 
-            }else {
+                vm.$router.push({path:'/blank',query:{'tradeWaterId':wd.result.trade_water_id+'?'}})
+            //    var oriapp=vm.common.getoriApp();
+            //    window.location.href = vm.basePageUrl+'wuye/index.html?'+oriapp+'#/paymentquery'; 
+            }
+            if(payurl) {
                  window.location.href=payurl;
             }
             $('.box-bg').css("display",'none');

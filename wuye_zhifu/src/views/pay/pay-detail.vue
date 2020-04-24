@@ -386,7 +386,7 @@
 			</div>
 
 			<!-- 贵州银行卡支付 -->
-			<div class="Manner">
+			<div class="Manner" v-show="cardPayService == 'true'">
 				<div class="Manner-title">选择支付方式</div>
 				<div class="Manner-hand ov">
 					<div class="Manner-img fl">
@@ -528,6 +528,7 @@
 				bind_switch:'1',
 				reduceMoney:'0',
 				
+				cardPayService:this.$route.query.cardPayService, //控制是否可以 绑卡支付
 				payType:'',//支付方式
 				customerName:'',//持卡人姓名
 				acctNo:'',//卡号
@@ -577,6 +578,7 @@
 		mounted(){
 			vm.common.checkRegisterStatus();
 			// this.initSession4Test();
+			this.cardpaySer();
 			this.getBillDetail();
 			this.Getremember();
 			// this.getMember(); 判断是否开通会员
@@ -632,6 +634,12 @@
 
 		},
 		methods:{
+			//判断支付方式
+			cardpaySer() {
+				if(vm.cardPayService == 'false') {
+					vm.payType = '0';
+				}
+			},
 			//记住卡号获取姓名 卡号
 			Getremember() {
 				let url = '/bankCard';

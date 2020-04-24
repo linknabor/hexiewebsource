@@ -53,15 +53,15 @@ export default {
             if(vm.time  == 0){
                   if (vm.flay == 1) {
                     //   alert("交易成功");
-                    vm.hrefp();
+                    // vm.hrefp();
                   }
                   if (vm.flay == 2) {
                     alert("交易失败");
-                    vm.hrefind();
+                    // vm.hrefind();
                   }
                   if (vm.flay == 0) {
                     alert("交易处理中");
-                    vm.hrefind();
+                    // vm.hrefind();
                   }
                 return;
             }
@@ -113,9 +113,9 @@ export default {
 }
 .alert-circle {
   position: absolute;
-  top: 30%;
+  top: 50%;
   left: 50%;
-  transform: translate(-50%, -30%);
+  transform: translate(-50%, -50%);
 }
 .alert-sec-circle {
   stroke-dashoffset: 0;
@@ -124,9 +124,9 @@ export default {
 }
 .alert-sec-text {
   position: absolute;
-  top: 37%;
+  top: 50%;
   left: 50%;
-  transform: translate(-50%, -37%);
+  transform: translate(-50%, -50%);
   text-align: center;
   width: 76px;
   color: #000;
