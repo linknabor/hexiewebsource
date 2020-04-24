@@ -626,6 +626,7 @@
 					vm.certType = '',//证件类型
 					vm.certId = '',//证件号
 					vm.phoneNo = ''//手机号
+					
 				}
 			}
 
@@ -941,6 +942,7 @@
 					urlc.certId = vm.certId,//证件号
 					urlc.phoneNo = vm.phoneNo//手机号
 					urlc.remember = vm.remerbernumm//记住卡号
+					vm.acctNNo = vm.acctNo;
 				}
 
 				if(vm.version=='01'){ //标准版

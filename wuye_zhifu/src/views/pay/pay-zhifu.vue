@@ -32,8 +32,8 @@
            </div>
            <span class="fr padding-r" :class="{Color:uptonAmount!='未使用'}">{{uptonAmount}} &gt;</span>
        </div>
-       <div class="pay-div Color">
-           <span class="fl">物业优惠金额</span>
+       <div class="pay-div">
+           <span class="fl">物业优惠</span>
            <span class="fr padding-r">-¥{{reduceAmt}}</span>
        </div>
        <div class="pay-div Color">
@@ -251,8 +251,14 @@ export default {
         },
         //优惠券
         Coupons(){
+            let payType;
+            if(vm.ulist.payType  >= 1){
+                payType = 1;
+            }else {
+                payType = vm.ulist.payType
+            }
             //更新后 获取优惠劵
-            let url3 = 'getCouponsPayWuYe';
+            let url3 = 'getCouponsPayWuYe?payType=' + payType;
             vm.receiveData.getData(vm,url3,'uptonDatas',function(){
                 vm.uptonData = vm.uptonDatas.result;
                 vm.allCoupons=vm.uptonDatas.result;

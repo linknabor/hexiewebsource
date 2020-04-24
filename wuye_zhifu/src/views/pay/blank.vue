@@ -1,6 +1,6 @@
 <template>
   <div class="blank">
-    {{tiem}}秒后页面跳转
+    {{time}}秒后页面跳转
   </div>
 </template>
 
@@ -9,8 +9,9 @@ let vm;
 export default {
   data() {
     return {
-      tiem: 5,
-      flay: 0
+      time: 5,
+      flay: 0,
+      tradeWaterId:this.$route.query.tradeWaterId,
     };
   },
   created() {
@@ -20,9 +21,9 @@ export default {
     vm.countDown();
   },
   watch: {
-    tiem(na, nw) {
+    time(na, nw) {
       if (na == 0 && vm.flay == 1) {
-        //   alert("交易成功");
+          // alert("交易成功");
         vm.hrefp();
       }
       if (na == 0 && vm.flay == 2) {
@@ -39,16 +40,22 @@ export default {
 
   methods: {
     countDown() {
-      var tt = setInterval(() => {
-        vm.tiem--;
-      }, 1000);
       vm.query();
-      var ss = setTimeout(() => {
-        clearInterval(tt);
-      }, 5000);
+      var tt = setInterval(function(){
+        if(vm.time == 0){
+            return;
+        }
+        vm.time--;
+      }, 1000);
     },
     query() {
-      let url = "/getCouponsPayWuYe";
+      if(!vm.tradeWaterId){
+        return;
+      }
+      let tw = decodeURI(vm.tradeWaterId);
+      let ind = tw.indexOf('?');
+      let twid = tw.substring(0,ind);
+      let url = "/queryOrder/"+twid;
       vm.receiveData.getData(vm, url, "res", function() {
         if (vm.res.success) {
           vm.flay = 1;
