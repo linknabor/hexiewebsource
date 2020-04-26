@@ -31,7 +31,7 @@ const router= new Router({
       meta:{
         title:''
       },
-    },
+    }
   ]
 });
 //路由的钩子函数，

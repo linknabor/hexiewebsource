@@ -364,3 +364,6 @@
 [0414/104422.695:ERROR:process_memory_win.cc(73)] ReadMemory at 0x7fff21a86a08 of 48 bytes failed: 仅完成部分的 ReadProcessMemory 或 WriteProcessMemory 请求。 (0x12B)
 [0414/104422.695:ERROR:process_memory_win.cc(73)] ReadMemory at 0x7fff21a8c360 of 64 bytes failed: 仅完成部分的 ReadProcessMemory 或 WriteProcessMemory 请求。 (0x12B)
 [0414/104422.921:ERROR:scoped_process_suspend.cc(40)] NtResumeProcess: 已尝试访问正在退出的过程。 (0xc000010a)
+[0426/140216.526:ERROR:scoped_process_suspend.cc(31)] NtSuspendProcess: 已尝试访问正在退出的过程。 (0xc000010a)
+[0426/140216.996:ERROR:process_info.cc(118)] ReadProcessMemory bool __cdecl crashpad::(anonymous namespace)::ReadStruct(HANDLE, crashpad::WinVMAddress, T *) [T = crashpad::process_types::PEB<crashpad::process_types::internal::Traits64>]: 仅完成部分的 ReadProcessMemory 或 WriteProcessMemory 请求。 (0x12B)
+[0426/140216.996:ERROR:process_info.cc(545)] ReadProcessData failed

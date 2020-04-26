@@ -399,16 +399,26 @@
 					</div>
 				</div>
 				<div v-for="(item,i) in bankCards" :key="item.id" >
-					<div class="Manner-handm ov">
-						<div class="Manner-img fl Mt15">
+					<div class="Manner-handm ov   " style= "height: 0.61rem;line-height: 0.61rem;    font-size: 0.36rem;">
+						<!-- <div class="Manner-img fl Mt15">
 							<img src="../../assets/image/zhifu.png" alt="">
 						</div>
-						<span class="Mt1 fs3">银行卡 ({{item.acctNo.substring(item.acctNo.length-4)}})</span>
+						<span class="Mt1 fs3">银行卡 ({{item.acctNo.substring(item.acctNo.length-4)}})</span> -->
 						<!-- <span class="Mt1 fs3" v-show="item.cardType==1">贵州银行借记卡 ({{item.acctNo.substring(item.acctNo.length-4)}})</span> -->
 						<!-- <span class="Mt1 fs3" v-show="item.cardType==2">贵州银行贷记卡 ({{item.acctNo.substring(item.acctNo.length-4)}})</span> -->
-						<br>
-						<span class="Mtext Mtextl">贵州银行缴费，享减免折扣</span>
-						<div class="fr Manner-bottom">
+						<!-- <br>
+						<span class="Mtext Mtextl">贵州银行缴费，享减免折扣</span> -->
+						<!-- <div class="fr Manner-bottom">
+							<label class="chendadm " :class="{addsem:payType == i+2}" :for="'checkbox_a'+(i+7)" @click="btncard(item)"></label>
+							<input type="radio" :id="'checkbox_a'+(i+7)" :value="i+2" v-model="payType" class="chk_1"  />
+						</div> -->
+
+						<div class="Manner-img fl">
+							<img src="../../assets/image/zhifu.png" alt="">
+						</div>
+						<span>银行卡 ({{item.acctNo.substring(item.acctNo.length-4)}})</span>
+
+						<div class="fr Manner-bottom" style="bottom:0">
 							<label class="chendadm " :class="{addsem:payType == i+2}" :for="'checkbox_a'+(i+7)" @click="btncard(item)"></label>
 							<input type="radio" :id="'checkbox_a'+(i+7)" :value="i+2" v-model="payType" class="chk_1"  />
 						</div>

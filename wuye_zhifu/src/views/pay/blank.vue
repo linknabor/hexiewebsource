@@ -1,22 +1,22 @@
 <template>
   <div class="addbk">
-    <div id="js-alert-box">
-      <svg class="alert-circle" width="234" height="234">
-        <circle cx="117" cy="117" r="108" fill="#FFF" stroke="#43AEFA" stroke-width="17"></circle>
+    <div id="js-alert-box" class="box-t">
+      <svg class="alert-circle" width="214" height="214">
+        <circle cx="108" cy="108" r="88" fill="#FFF" stroke="#43AEFA" stroke-width="17"></circle>
         <circle
           id="js-sec-circle"
           class="alert-sec-circle"
-          cx="117"
-          cy="117"
-          r="108"
+          cx="108"
+          cy="108"
+          r="88"
           fill="transparent"
           stroke="#F4F1F1"
           stroke-width="18"
-          transform="rotate(-90 117 117)"
+          transform="rotate(-90 108 108)"
         ></circle>
-        <!-- <text class="alert-sec-unit " x="82" y="172" fill="#BDBDBD">secs</text> -->
       </svg>
       <div id="js-sec-text" class="alert-sec-text">{{time}}</div>
+      <div class="js-bott-text">交易处理中，请等待</div>
     </div>
   </div>
 </template>
@@ -28,7 +28,8 @@ export default {
     return {
       time: 5,
       flay: 0,
-      tradeWaterId: this.$route.query.tradeWaterId
+      tradeWaterId: this.$route.query.tradeWaterId,
+      message:'',
     };
   },
   created() {
@@ -52,11 +53,11 @@ export default {
        var tt= setInterval(function() {
             if(vm.time  == 0){
                   if (vm.flay == 1) {
-                    //   alert("交易成功");
+                      // alert("交易成功");
                     vm.hrefp();
                   }
                   if (vm.flay == 2) {
-                    alert("交易失败");
+                    alert(vm.message)
                     vm.hrefind();
                   }
                   if (vm.flay == 0) {
@@ -81,9 +82,12 @@ export default {
       let url = "/queryOrder/" + twid;
       vm.receiveData.getData(vm, url, "res", function() {
         if (vm.res.success) {
-          vm.flay = 1;
+            if(vm.res.result == "SUCCESS"){
+                vm.flay = 1;
+            }
         } else {
-          vm.flay = 2;
+                vm.message = vm.res.message == null?"交易失败":vm.res.message;
+                vm.flay = 2;
         }
       });
     },
@@ -104,6 +108,14 @@ export default {
 </script>
 
 <style  scoped>
+.box-t {
+  width: 214px;
+  height: 214px;
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -30%);
+}
 .addbk {
   position: absolute;
   width: 100%;
@@ -124,9 +136,9 @@ export default {
 }
 .alert-sec-text {
   position: absolute;
-  top: 37%;
+  top: 50%;
   left: 50%;
-  transform: translate(-50%, -37%);
+  transform: translate(-50%, -50%);
   text-align: center;
   width: 76px;
   color: #000;
@@ -134,5 +146,14 @@ export default {
 }
 .alert-sec-unit {
   font-size: 34px;
+}
+.js-bott-text {
+  position: absolute;
+  width: 100%;
+  bottom: -20%;
+  transform: translateY(-70%);
+  text-align: center;
+  font-size: 0.36rem;
+  color: #ff8a05;
 }
 </style>

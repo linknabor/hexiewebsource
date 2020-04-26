@@ -45,8 +45,8 @@
            <span class="fr padding-r">¥{{count}}</span>
        </div>
        <div class="pay-div" v-show="showyan">
-           <input  class="fl payinp" type="text" placeholder="请输入验证码" v-model="captcha">
-           <span class="fr btn-plain" :class="{useless:yzmstr!='获取验证码'&&yzmstr!='重新获取'}"  @click="getCaptcha">{{yzmstr}}</span>
+           <input  class="fl payinp" type="text" placeholder="请输入验证码" v-model="captcha" @blur="fixScroll">
+           <span class="fr btn-plain" :class="{useless:yzmstr!='获取验证码'&&yzmstr!='重新获取'}"   @click="getCaptcha">{{yzmstr}}</span>
        </div>
        <div style="height:1.5rem;"></div>
 	   <div class="pay-btn"  @click="btnPay">立即支付</div>
@@ -103,7 +103,7 @@ export default {
            captcha:'',
            yzmtime : 60,
            yzmstr:"获取验证码", 
-           showyan:true,
+           showyan:false,
            ulist:{},
            uptonAmount:'未使用',
            upronAmountNumber:0,////优惠券金额 数量
@@ -166,6 +166,7 @@ export default {
             allCoupons:[],
             couponId:'',//优惠券id
             selectUpton:true,//显示的是缴费详情页面还是选择优惠劵页面
+            sUptop:'No',//是否锁定优惠券
        };
    },
    created(){
@@ -280,7 +281,9 @@ export default {
             if(vm.uptonData.length == 0){//无优惠券
                 return
             }else{
-                vm.selectUpton = false;	
+                if(vm.sUptop == 'No'){
+                    vm.selectUpton = false;	
+                }
             }
             
         },
@@ -327,8 +330,20 @@ export default {
             vm.selectUpton = true;
         };
         },
+        //ios中留白问题
+        fixScroll() {
+            let u = navigator.userAgent;
+            let isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+            if (isiOS) {
+            setTimeout(() => {
+                const  scrollheight = document.documentElement.scrollTop || document.body.scrollTop || 0;
+                window.scrollTo(0,Math.max(scrollheight, 0))
+            }, 200);
+            }
+        },
         //获取验证码
         getCaptcha() {
+            vm.sUptop = 'Locking'; // 锁定优惠券
             if(vm.yzmstr=="获取验证码"||vm.yzmstr=="重新获取"){
 	       		vm.yzmstr="获取中";
 	       		vm.yzmreq();
@@ -343,8 +358,8 @@ export default {
                     vm.yzmtime=60;
                     alert("验证码已下发，请查收短信");
                     var tt=setInterval(function() {
-                        vm.yzmtime--;
                         vm.yzmstr=vm.yzmtime+'秒后重新获取';
+                        vm.yzmtime--;
                         if(vm.yzmtime<=0) {
                             vm.yzmstr='重新获取'
                         }
@@ -373,11 +388,13 @@ export default {
             alert("请输入验证码");
             return;
         }
+        if(vm.showyan) {
+            list.veriCode = vm.captcha;//验证码
+            list.orderNo = vm.orderNo;
+            list.cardId = vm.cardId;
+        }
         if(list.payType > 1) {
             list.payType = '1';
-            list.cardId = vm.cardId;
-            list.orderNo = vm.orderNo;
-            list.veriCode = vm.captcha;//验证码
         }
         $('.box-bg').css("display",'block');
         vm.axios.post(
@@ -411,7 +428,7 @@ export default {
                 
                 success: function (res) {
                     // alert("起步走起");
-                    let reqUrl = "noticePayed?billId="+list.billIds+"&feePrice="+vm.totalPrice+"&bind_switch="+vm.bind_switch;
+                    let reqUrl = "noticePayed?tradeWaterId="+wd.result.trade_water_id+"&feePrice="+vm.totalPrice+"&bind_switch="+vm.bind_switch;
                     if(vm.uptonAmount != "未使用"){
                         // alert("走到这一步")
                         reqUrl += "&couponId="+vm.couponId;
@@ -438,11 +455,9 @@ export default {
             let pay_result = wd.result.pay_result;
             if(pay_result == 'SUCCESS'){
                 vm.$router.push({path:'/blank',query:{'tradeWaterId':wd.result.trade_water_id+'?'}})
-            //    var oriapp=vm.common.getoriApp();
-            //    window.location.href = vm.basePageUrl+'wuye/index.html?'+oriapp+'#/paymentquery'; 
             }
             if(payurl) {
-                 window.location.href=payurl;
+                window.location.href=payurl;
             }
             $('.box-bg').css("display",'none');
         }    
