@@ -980,6 +980,7 @@
 				}
 				window.localStorage.setItem('paylist',JSON.stringify(urlc));
 				vm.$router.push({path:'/payzhifu',query:{totalPrice:vm.count,totalPrices:vm.routeParams.totalPrice,reduceAmt:vm.reduceAmt,bind_switch:vm.bind_switch,version:vm.version,reduceMode:vm.routeParams.reduceMode,acctNNo:vm.acctNNo,cardId:vm.cardId}})
+
 			},
 
 		}
