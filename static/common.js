@@ -8,6 +8,10 @@ var MasterConfig = function() {
         basePageUrl:/127|test/.test(location.origin)?'https://test.e-shequ.com/weixin/':
         /uat/.test(location.origin)?'https://uat.e-shequ.com/hexie/weixin/':
         'https://www.e-shequ.cn/weixin/',
+        
+        basedhzj3Url:/127|test/.test(location.origin)?'https://test.e-shequ.com/weixin/':
+        /uat/.test(location.origin)?'https://uat.e-shequ.com/hexie/weixin/':
+        'https://www.e-shequ.cn/dhzj3/weixin/',
 
         basePageUrlpay:/127|test/.test(location.origin)?'https://test.e-shequ.com/weixin/pay/':
         /uat/.test(location.origin)?'https://uat.e-shequ.com/pay/':
@@ -263,7 +267,7 @@ window.common = {
                 for(var j=0;j<n.result.bgImageList.length;j++){
                     window.localStorage.setItem(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl,duration)
                 } 
-                location.reload();
+                imgUrl=window.localStorage.getItem(type)
             },
             r = function() { 
             };

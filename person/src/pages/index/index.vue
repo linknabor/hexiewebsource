@@ -74,67 +74,102 @@
     </div>
 
     <div id="module-list">
-      <div class="module-item-wrap">
+      <div class="module-item-wrap" v-if="!donghu">
         <!-- 链接地址要换 -->
         <a :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/onsaleorders'" class="module-item">
           <div class="module-logo logo1"></div>
           <div class="module-title fs14">商品订单</div>
         </a>
       </div>
-      <div class="module-item-wrap">
-        <a class="module-item" :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/grouporders'">
+      <div class="module-item-wrap" :class="{'moduledh':donghu}">
+        <a v-if="donghu" class="module-itemdh" :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/grouporders'">
+            <div class="module-logodh logo4" >
+                <div class="module-titledh fs14">团购订单</div>
+            </div>
+            <div></div>
+         </a>
+        <a v-else class="module-item" :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/grouporders'">
           <div class="module-logo logo2"></div>
           <div class="module-title fs14">团购订单</div>
         </a>
+        
       </div>
-      <div class="module-item-wrap">
-        <a class="module-item" :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/homeorders'">
+      <div class="module-item-wrap" :class="{'moduledh':donghu}">
+        <a v-if="donghu" class="module-itemdh" :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/homeorders'">
+            <div class="module-logodh logo5" >
+                <div class="module-titledh fs14">服务订单</div>
+            </div>
+        </a> 
+        <a v-else class="module-item" :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/homeorders'">
           <div class="module-logo logo3"></div>
           <div class="module-title fs14">服务订单</div>
         </a>
+
       </div>
     </div>
 
-    <div class="info-wrap" style="overflow:hidden; clear: both;">
-      <router-link :to="{path:'/myrepair'}" class="input-wrap menu-person-link lite-divider">
-        <span class="input-info lf30 fs16">我的维修单</span>
-        <span class="fr fs14 left_color">查看维修单&nbsp;&nbsp;&nbsp;&nbsp;</span>
-      </router-link>
-      <!-- 我是维修工目前不隐藏 v-show="user.repairOperator" -->
-      <router-link
-        :to="{path:'/operatorOrders'}"
-        class="input-wrap menu-person-link lite-divider"
-        v-show="user.repairOperator"
-      >
-        <span class="input-info lf30 fs16">我是维修工</span>
-        <span class="fr fs14 left_color">查看维修单&nbsp;&nbsp;&nbsp;&nbsp;</span>
-      </router-link>
+    <div class="info-wrap" v-if="donghu">
+        <a :href="this.basePageUrl+'wuye/index.html?'+this.common.getoriApp()+'#/mysteward?n=2'" class="input-wrap menu-person-link lite-divider">
+          <span class="input-info lf30 fs16">报修</span>
+          <span class="fr fs14 left_color">
+            <span id="mypublic"></span>查看消息&nbsp;&nbsp;&nbsp;&nbsp;
+          </span>
+        </a>
+        <a :href="this.basePageUrl+'wuye/index.html?'+this.common.getoriApp()+'#/mysteward?n=0'" class="input-wrap menu-person-link lite-divider">
+          <span class="input-info lf30 fs16">服务需求</span>
+          <span class="fr fs14 left_color">
+            <span id="mypublic"></span>查看消息&nbsp;&nbsp;&nbsp;&nbsp;
+          </span>
+        </a>
+        <a :href="this.basePageUrl+'wuye/index.html?'+this.common.getoriApp()+'#/mysteward?n=1'" class="input-wrap menu-person-link lite-divider">
+          <span class="input-info lf30 fs16">意见建议</span>
+          <span class="fr fs14 left_color">
+            <span id="mypublic"></span>查看消息&nbsp;&nbsp;&nbsp;&nbsp;
+          </span>
+        </a>
+    </div>
+    <div v-else>
+      <div class="info-wrap" style="overflow:hidden; clear: both;">
+        <router-link :to="{path:'/myrepair'}" class="input-wrap menu-person-link lite-divider">
+          <span class="input-info lf30 fs16">我的维修单</span>
+          <span class="fr fs14 left_color">查看维修单&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        </router-link>
+        <!-- 我是维修工目前不隐藏 v-show="user.repairOperator" -->
+        <router-link
+          :to="{path:'/operatorOrders'}"
+          class="input-wrap menu-person-link lite-divider"
+          v-show="user.repairOperator"
+        >
+          <span class="input-info lf30 fs16">我是维修工</span>
+          <span class="fr fs14 left_color">查看维修单&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        </router-link>
 
-      <div class="input-wrap menu-person-link lite-divider" @click="Notice">
-        <span class="input-info lf30 fs16">我的消息</span>
-        <span class="fr fs14 left_color">查看消息&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <div class="input-wrap menu-person-link lite-divider" @click="Notice">
+          <span class="input-info lf30 fs16">我的消息</span>
+          <span class="fr fs14 left_color">查看消息&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        </div>
+
+        <router-link :to="{path:'/myPublish'}" class="input-wrap menu-person-link lite-divider">
+          <span class="input-info lf30 fs16">我的发布</span>
+          <span class="fr fs14 left_color">
+            <span id="mypublic"></span>查看发布&nbsp;&nbsp;&nbsp;&nbsp;
+          </span>
+        </router-link>
       </div>
 
-      <router-link :to="{path:'/myPublish'}" class="input-wrap menu-person-link lite-divider">
-        <span class="input-info lf30 fs16">我的发布</span>
-        <span class="fr fs14 left_color">
-          <span id="mypublic"></span>查看发布&nbsp;&nbsp;&nbsp;&nbsp;
-        </span>
-      </router-link>
-    </div>
-
-    <div class="info-wrap">
-      <a
-        :href="this.basePageUrl+'wuye/index.html?'+oriapp+'#/Myhouse'"
-        class="input-wrap menu-person-link lite-divider"
-      >
-        <span class="input-info lf30 fs16">我是业主</span>
-        <span class="fr fs14 left_color">绑定房屋&nbsp;&nbsp;&nbsp;&nbsp;</span>
-      </a>
-      <a @click="gotoAddress" class="input-wrap menu-person-link lite-divider">
-        <span class="input-info lf30 fs16">常用地址</span>
-        <span class="fr fs14 left_color">收货地址&nbsp;&nbsp;&nbsp;&nbsp;</span>
-      </a>
+      <div class="info-wrap">
+        <a
+          :href="this.basePageUrl+'wuye/index.html?'+oriapp+'#/Myhouse'"
+          class="input-wrap menu-person-link lite-divider"
+        >
+          <span class="input-info lf30 fs16">我是业主</span>
+          <span class="fr fs14 left_color">绑定房屋&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        </a>
+        <a @click="gotoAddress" class="input-wrap menu-person-link lite-divider">
+          <span class="input-info lf30 fs16">常用地址</span>
+          <span class="fr fs14 left_color">收货地址&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        </a>
+      </div>
     </div>
 
     <div class="info-wrap" style="border-bottom: none;">
@@ -198,8 +233,8 @@ export default {
       point:0,//积分
       cardStatus:'',//是否领卡激活的标记
       // 默认未开通会员
-      isMember: false,
-
+      // isMember: false,
+      donghu:false,//标识判断是不是东湖
       user_info: {
         avatar: img,
         nickname: "游客",
@@ -225,18 +260,18 @@ export default {
   components: {},
   methods: {
     //先判断是否为会员
-    panduan() {
-      vm.receiveData.getData(vm, "/getMember", "res", function(res) {
-        if (vm.res[0].status == "0") {
-          // 已开通会员
-          // console.log(vm.res[0].enddate)
-          vm.isMember = true;
-          vm.enddate = vm.res[0].enddate;
-        }
-      });
+    // panduan() {
+    //   vm.receiveData.getData(vm, "/getMember", "res", function(res) {
+    //     if (vm.res[0].status == "0") {
+    //       // 已开通会员
+    //       // console.log(vm.res[0].enddate)
+    //       vm.isMember = true;
+    //       vm.enddate = vm.res[0].enddate;
+    //     }
+    //   });
 
      
-    },
+    // },
     //模仿线上用户信息
     // 105/747/384
     initSession4Test() {
@@ -253,6 +288,7 @@ export default {
            if(n.success&&n.result==null) {
                  reLogin();
            }
+          vm.donghu=n.result.donghu;//东湖标识
           vm.user = n.result;
           vm.user.headimgurl = "" != n.result.name || n.result? n.result.headimgurl: vm.user_info.avatar;  
           vm.user.name ="" != n.result.name ? n.result.name : vm.user_info.nickname;
@@ -530,6 +566,7 @@ export default {
   background-size: 0.6rem;
   background-repeat: no-repeat;
 }
+
 .module-title {
   text-align: center;
   /* margin-top: 10px; */
@@ -544,7 +581,12 @@ export default {
 .logo3 {
   background-image: url("../../assets/images/person/icon_person_yuyue.png");
 }
-
+.logo4 {
+  background-image: url("../../assets/images/person/icon_person_tuangoudh.png");
+}
+.logo5 {
+  background-image: url("../../assets/images/person/icon_person_yuyuedh.png");
+}
 .bottom-info {
   padding: 20px 15px 5px 15px;
 }
@@ -583,5 +625,34 @@ export default {
   border-radius: 5px;
   margin-top: 10px;
   margin-right: 10px;
+}
+#module-list .moduledh {
+  width: 50%;
+}
+.module-itemdh {
+    margin-top: 10px;
+    display: block;
+    width: 100%;
+    background-position: 50% 0;
+    background-size: 42px;
+    background-repeat: no-repeat;
+    font-size: 16px;
+    color: #3b3937;
+    -webkit-border-radius: 2px;
+}
+.module-logodh{
+    margin-top: -5px;
+    display: block;
+    height: 1.2rem;
+    background-position: 25% 0;
+    background-size: .7rem;
+    background-repeat: no-repeat;
+}
+.module-titledh {
+    text-align: center;
+    margin-top: 10px;
+    margin-left: 27%;
+    padding-top: 7%;
+    color: #3b3937;
 }
 </style>

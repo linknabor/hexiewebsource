@@ -1,7 +1,7 @@
 //开发环境
 var MasterConfig = function() {
     var t = {
-        baseUrl: /127|test/.test(location.origin)?'https://test.e-shequ.com/wechat/hexie/wechat/':
+        baseUrl: /127|test|localhost/.test(location.origin)?'https://test.e-shequ.com/wechat/hexie/wechat/':
         /uat/.test(location.origin)?'https://uat.e-shequ.com/wechat/hexie/wechat/':
         'https://www.e-shequ.cn/wechat/hexie/wechat/',
         
@@ -261,7 +261,7 @@ window.common = {
         return imgUrl;
    },
    getoriApp:function() {
-        var oriapp=getUrlParam('oriApps')?'oriApp='+getUrlParam('oriApps'):'';
+        var oriapp=getUrlParam('oriApp')?'oriApp='+getUrlParam('oriApp'):'';
         return  oriapp;
    },
      //授权

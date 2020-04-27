@@ -1,22 +1,17 @@
 <template>
 <div class="not">
-    <div >
-        <div >
-            <div style="padding-top: 15px" class="ov pl15 pb15 fs14">
-            <div class="fl">
-                <img class="fl comment-post-picture" :src="thread.userHead" />
+    <div>
+        <div v-if="falg">
+            <div style="padding:0.3rem 0 0; overflow: hidden;">
+                <div class="ov pl15 pb15 fs13 adds">{{thread.content}}</div>
+                <div class="ov pl17 pb15 fs13 fl" style="color: #a6937c;">
+                    <img style="width: 0.35rem; height: 0.35rem; position: relative;top: 0.02rem;" src="../../assets/images/common/icon_time_gray.png"/>&nbsp;{{thread.date_time}}
+                </div>
             </div>
-            <div class="thread_user_head">{{thread.userName}}</div>
-            </div>
-            <div class="ov pl15 pb15 fs13" style="color: #3b3937; word-wrap:break-word;overflow:hidden;">{{thread.threadContent}}</div>
-            <div class="ov pl15 pb15 fs13 fl" style="color: #a6937c; line-height: 23px">
-                <img style="width: 13px; height: 13px;" src="../../assets/images/common/icon_time_gray.png"/>&nbsp;{{thread.formattedDateTime}}
-            </div>
-            <div class="avatar-wrap rel ov fr" v-show="thread.isThreadOwner == 'true'">
-                <div class="fs13 pr15" style="color: #a6937c; text-align: right; line-height: 23px" @click="delThread">删除</div>
-            </div>
-            <div class="pt15 divider">&nbsp;</div>
         </div>
+         <div v-else> 
+           <img :src="bgImage" alt="" class="adimg">
+       </div>
     </div>
 </div>
 </template>
@@ -26,8 +21,10 @@ let vm;
 export default {
    data () {
        return {
-           threadId:"581",
-           thread : {},
+           thread :{},
+           messageId:this.$route.query.messageId,
+           falg:false,
+           bgImage:this.common.GetImages('7')
        };
    },
    created(){
@@ -41,15 +38,18 @@ export default {
 
    methods: {
         getThread() {
-           let url= "thread/getThreadByThreadId";
+           let url= "servplat/hexiemessage/get?messageId="+vm.messageId;
            vm.receiveData.postData( vm, url,
             {
-                threadId:vm.threadId,
+                messageId:vm.messageId,
             },
             'data',
             function(){
                 if(vm.data.success) {
-                    vm.thread = vm.data.result;
+                    if(vm.data.result){
+                         vm.thread = vm.data.result;
+                         vm.falg=true;
+                    } 
                 }else {
                        alert(vm.data.message==null?"获取信息失败，请重试！":vm.data.message);
                 }
@@ -79,41 +79,39 @@ export default {
     padding: 1px;
 }
 .pb15 {
-    padding-bottom: 15px;
+    padding-bottom: 0.17rem;
 }
 .pl15 {
-    padding-left: 15px;
+    padding-left: 0.24rem;
+}
+.pl17 {
+    padding-left: 0.31rem;
 }
 .fs14 {
-    font-size: 14px;
+    font-size: 0.22rem;
 }
 
 .fl {
     float: left;
 }
-.comment-post-picture {
-    width: 42px;
-    height: 42px;
-    margin-right: 15px;
-    border: 1px solid #d4cfc8;
-    border-radius: 42px;
-}
-.thread_user_head {
-    float: left;
-    margin-top: 10.5px;
-    font-size: 14px;
-    color: #393b37;
-}
 .fs13 {
-    font-size: 13px;
-}
-.divider {
-    border-bottom: 5px solid #f9f9e9;
+    font-size: 0.41rem;
 }
 .pt15 {
-    padding-top: 15px;
+    padding-top: 0.24rem;
 }
 .pr15 {
-    padding-right: 25px;
+    padding-right: 0.4rem;
 }
+.adds {
+    color: #3b3937;
+    word-wrap:break-word;
+    overflow:hidden;
+    text-indent: 2em;
+    letter-spacing: 0.03rem;
+}
+.adimg {
+        width: 100%;
+        height: auto;
+} 
 </style>
