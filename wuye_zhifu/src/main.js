@@ -15,7 +15,6 @@ import VueAxios from 'vue-axios';
 import './assets/css/normalize.css'
 import './assets/css/base.css'
 import './assets/js/rem.js'
-
 import cookie from 'js-cookie'
 
 //本地用
