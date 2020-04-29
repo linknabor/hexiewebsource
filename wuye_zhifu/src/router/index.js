@@ -16,7 +16,22 @@ const router= new Router({
         title:'缴费详情'
       },
     },  
-    
+    {
+      path:'/payzhifu',
+      name:'payzhifu',
+      component:resolve=> require(['@/views/pay/pay-zhifu'],resolve),
+      meta:{
+        title:''
+      },
+    },
+    {
+      path:'/blank',
+      name:'blank',
+      component:resolve=> require(['@/views/pay/blank'],resolve),
+      meta:{
+        title:''
+      },
+    }
   ]
 });
 //路由的钩子函数，
