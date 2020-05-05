@@ -293,7 +293,7 @@
 </style>
 <template>
 	<div>
-		<div  class="pay-detail">
+		<div  class="pay-detail" v-show="feeList.length > 0">
 		<!-- 用户信息 -->
 			<div class="user-info">
 				<div class="number">户号&nbsp;{{verNumber}}</div>
@@ -518,6 +518,7 @@
 					stmtId:this.$route.query.stmtId,//扫码数据
 					totalPrice:this.$route.query.totalPrice,//合计金额
 					reduceMode:this.$route.query.reduceMode,//减免方式
+					payFeeType:this.$route.query.reduceMode,//01管理费，02停车费
 				},
 				count:0,//实际支付金额
 				hasReduce:'0',//是否有减免
@@ -586,11 +587,12 @@
                 vm.version=this.$route.query.getversion;
 		},
 		mounted(){
-			vm.common.checkRegisterStatus();
-			// this.initSession4Test();
+			// vm.common.checkRegisterStatus();
+			this.initSession4Test();
 			this.cardpaySer();
 			this.getBillDetail();
 			this.Getremember();
+
 			// this.getMember(); 判断是否开通会员
 			
 		},
@@ -710,15 +712,12 @@
                     vm.area = useDate.cnst_area;
                				//费用列表
 					vm.feeList = vm.data.result.other_bill_info;
-					vm.mian_amt=useDate.mian_amt;//标准版减免
+					// vm.mian_amt=useDate.mian_amt;//标准版减免
 					vm.count = vm.routeParams.totalPrice;//传来的总价格
 					let reduced_amt=parseFloat(vm.mian_amt)//减少的钱
 					vm.reduceAmt = parseFloat(reduced_amt).toFixed(2); //合计
 					vm.count =parseFloat(vm.routeParams.totalPrice) - parseFloat(vm.reduceAmt);//减免之后的金额
 					vm.count = vm.count.toFixed(2);
-					//缴费四舍五入
-					// let zcount=vm.count;
-					// vm.Carandpay(zcount);//四舍五入
                 }
 			 )
             }else if(vm.version == "02"){
@@ -739,22 +738,22 @@
 						// location.href = herf1;
 					}
 	  				let useDate = vm.data.result.fee_data[0];
-	  				let mianBill = vm.data.result.mianBill;
-					let mianAmt = vm.data.result.mianAmt;
-					let fee_mianBill = vm.data.result.fee_mianBill;//物业费减免账单id
-            		let fee_mianAmt = vm.data.result.fee_mianAmt;//物业费减免金额
-	  				if ( mianBill) {
-						vm.mianBill = vm.data.result.mianBill;
-					}
-					if ( mianAmt) {
-						vm.mianAmt = vm.data.result.mianAmt;
-					}
-					if (fee_mianBill) {
-              			vm.fee_mianBill = vm.data.result.fee_mianBill;
-            		}
-					if (fee_mianAmt) {
-					    vm.fee_mianAmt = vm.data.result.fee_mianAmt;
-					}
+	  				// let mianBill = vm.data.result.mianBill;
+					// let mianAmt = vm.data.result.mianAmt;
+					// let fee_mianBill = vm.data.result.fee_mianBill;//物业费减免账单id
+            		// let fee_mianAmt = vm.data.result.fee_mianAmt;//物业费减免金额
+	  				// if ( mianBill) {
+					// 	vm.mianBill = vm.data.result.mianBill;
+					// }
+					// if ( mianAmt) {
+					// 	vm.mianAmt = vm.data.result.mianAmt;
+					// }
+					// if (fee_mianBill) {
+              		// 	vm.fee_mianBill = vm.data.result.fee_mianBill;
+            		// }
+					// if (fee_mianAmt) {
+					//     vm.fee_mianAmt = vm.data.result.fee_mianAmt;
+					// }
 	  				//户号
 	  				vm.verNumber = useDate.ver_no;
 	  				//地址
@@ -764,13 +763,10 @@
 	  				//费用列表
 					vm.feeList = useDate.fee_name;
 					vm.count = vm.routeParams.totalPrice;//传来的总价格
-					let reduced_amt=parseFloat(vm.fee_mianAmt)+parseFloat(vm.mianAmt);//减少的钱
-					vm.reduceAmt = parseFloat(reduced_amt).toFixed(2); //合计
-					vm.count =parseFloat(vm.routeParams.totalPrice) - parseFloat(vm.reduceAmt);//减免之后的金额
-					vm.count = vm.count.toFixed(2);
-					//缴费四舍五入
-					// let zcount=vm.count;
-					// vm.Carandpay(zcount);//四舍五入
+					// let reduced_amt=parseFloat(vm.fee_mianAmt)+parseFloat(vm.mianAmt);//减少的钱
+					// vm.reduceAmt = parseFloat(reduced_amt).toFixed(2); //合计
+					// vm.count =parseFloat(vm.routeParams.totalPrice) - parseFloat(vm.reduceAmt);//减免之后的金额
+					// vm.count = vm.count.toFixed(2);
 	  			},
 	  			{
 	  				billId :vm.routeParams.billIds,
@@ -794,22 +790,22 @@
             if (vm.data.result.fee_data == null) {
             }
             let useDate = vm.data.result.fee_data[0];
-            let mianBill = vm.data.result.mianBill;//停车费减免账单id
-			let mianAmt = vm.data.result.mianAmt;//停车费减免金额
-			let fee_mianBill = vm.data.result.fee_mianBill;//物业费减免账单id
-            let fee_mianAmt = vm.data.result.fee_mianAmt;//物业费减免金额
-            if (mianBill) {
-              vm.mianBill = vm.data.result.mianBill;
-            }
-            if (mianAmt) {
-              vm.mianAmt = vm.data.result.mianAmt;
-			}
-			if (fee_mianBill) {
-              vm.fee_mianBill = vm.data.result.fee_mianBill;
-            }
-			if (fee_mianAmt) {
-			  vm.fee_mianAmt = vm.data.result.fee_mianAmt;
-			}
+            // let mianBill = vm.data.result.mianBill;//停车费减免账单id
+			// let mianAmt = vm.data.result.mianAmt;//停车费减免金额
+			// let fee_mianBill = vm.data.result.fee_mianBill;//物业费减免账单id
+            // let fee_mianAmt = vm.data.result.fee_mianAmt;//物业费减免金额
+            // if (mianBill) {
+            //   vm.mianBill = vm.data.result.mianBill;
+            // }
+            // if (mianAmt) {
+            //   vm.mianAmt = vm.data.result.mianAmt;
+			// }
+			// if (fee_mianBill) {
+            //   vm.fee_mianBill = vm.data.result.fee_mianBill;
+            // }
+			// if (fee_mianAmt) {
+			//   vm.fee_mianAmt = vm.data.result.fee_mianAmt;
+			// }
 
             //户号
             vm.verNumber = useDate.ver_no;
@@ -822,13 +818,10 @@
             vm.feeList = useDate.fee_name;
             //字符串
               vm.count = vm.routeParams.totalPrice;
-              let reduced_amt=vm.mianAmt;
-              vm.reduceAmt =  parseFloat(reduced_amt).toFixed(2); //合计
-              vm.count =parseFloat(vm.routeParams.totalPrice) - parseFloat(vm.reduceAmt);
-              vm.count = vm.count.toFixed(2);
-               //缴费四舍五入
-            //   let zcount=vm.count;
-			//   vm.Carandpay(zcount);
+            //   let reduced_amt=vm.mianAmt;
+            //   vm.reduceAmt =  parseFloat(reduced_amt).toFixed(2); //合计
+            //   vm.count =parseFloat(vm.routeParams.totalPrice) - parseFloat(vm.reduceAmt);
+            //   vm.count = vm.count.toFixed(2);
           },
           {
             billId: vm.routeParams.billIds,
@@ -838,51 +831,6 @@
         );
       }
 	},
-		Carandpay(zcount){
-			vm.count=zcount;
-			let reduced_amt=0;
-			let reduce_rate = 0; //减少到角还是分减少到角还是分
-			if ("0" == vm.routeParams.reduceMode) {
-			//不减免
-			return;
-			} else if ("1" == vm.routeParams.reduceMode) {
-			//四舍五入至元
-			reduce_rate = "1";
-			reduced_amt = Math.round(vm.count * reduce_rate) / reduce_rate;
-			vm.hasReduce = "1";
-			} else if ("2" == vm.routeParams.reduceMode) {
-			//表示四舍五入至角
-			reduce_rate = "10";
-			reduced_amt = Math.round(vm.count * reduce_rate) / reduce_rate;
-			vm.hasReduce = "1";
-			}
-			else if ("4" == vm.routeParams.reduceMode) {
-			//表示保留至角去分
-			reduce_rate = "10";
-			reduced_amt = Math.floor(vm.count * reduce_rate) / reduce_rate;
-			vm.hasReduce = "1";
-			}else if ("5" == vm.routeParams.reduceMode) {
-			//表示保留至角入分
-			reduce_rate = "10";
-			reduced_amt = Math.ceil(vm.count * reduce_rate) / reduce_rate;
-			vm.hasReduce = "1";
-			//保留至元去角
-			} else if("6" == vm.routeParams.reduceMode){
-			reduce_rate = "1";
-			reduced_amt = Math.floor(vm.count * reduce_rate) / reduce_rate;
-			vm.hasReduce = "1";
-			}else if("7" == vm.routeParams.reduceMode){
-			// 保留至元入角
-			reduce_rate = "1";
-			reduced_amt = Math.ceil(vm.count * reduce_rate) / reduce_rate;
-			vm.hasReduce = "1";
-			}else {
-			return;
-			}
-			vm.reduceMoney = parseFloat(vm.count) - parseFloat(reduced_amt.toFixed(2));//四舍五入的钱传给后端
-			vm.reduceMoney = vm.reduceMoney.toFixed(2); //减少的钱  
-			vm.count = reduced_amt.toFixed(2); //合计
-  		},
 			// 重定向到正确的url
 			directRightUrl () {
 			  let paths = window.location.href.split('#')
@@ -964,22 +912,19 @@
 				}
 
 				if(vm.version=='01'){ //标准版
-				//  url = "getOtherPrePayInfo?houseId="+this.house_id+"&regionname="+this.regionname+"&start_date="+ this.start_date+"&end_date="+this.end_date+"&couponUnit="+vm.upronAmountNumber+"&couponNum=1&couponId="+vm.couponId+"&mianBill="+vm.mianBill+"&mianAmt="+vm.mianAmt+"&mian_amt="+vm.mian_amt+"&reduceAmt="+vm.reduceAmt+"&invoice_title_type="+this.invoice_title_type+"&credit_code="+this.credit_code+"&invoice_title="+this.invoice_title;
-					urlc.houseId = this.house_id;
-					urlc.start_date = this.start_date;
-					urlc.end_date = this.end_date;
-					urlc.mian_amt = vm.mian_amt;
-					urlc.reduceAmt = vm.reduceAmt;
+					urlc.billId = vm.routeParams.billIds;//怎么拿到？
+					// urlc.houseId = this.house_id;
+					// urlc.start_date = this.start_date;
+					// urlc.end_date = this.end_date;
+					// urlc.mian_amt = vm.mian_amt;
 				}else{ //02 专业版
-				// url = "getPrePayInfo?billId="+vm.routeParams.billIds+"&stmtId="+vm.routeParams.stmtId+"&regionname="+this.regionname+"&couponUnit="+vm.upronAmountNumber+"&couponNum=1&couponId="+vm.couponId+"&mianBill="+vm.mianBill+"&mianAmt="+vm.mianAmt+"&fee_mianAmt="+vm.fee_mianAmt+"&fee_mianBill="+vm.fee_mianBill+"&reduceAmt="+vm.reduceMoney+"&invoice_title_type="+this.invoice_title_type+"&credit_code="+this.credit_code+"&invoice_title="+this.invoice_title;
 					urlc.billId = vm.routeParams.billIds;
 					urlc.stmtId = vm.routeParams.stmtId;
-					urlc.fee_mianAmt = vm.fee_mianAmt;
-					urlc.fee_mianBill = vm.fee_mianBill;
-					// urlc.reduceAmt = vm.reduceMoney;
+					// urlc.fee_mianAmt = vm.fee_mianAmt;
+					// urlc.fee_mianBill = vm.fee_mianBill;
 				}
 				window.localStorage.setItem('paylist',JSON.stringify(urlc));
-				vm.$router.push({path:'/payzhifu',query:{totalPrice:vm.count,totalPrices:vm.routeParams.totalPrice,reduceAmt:vm.reduceAmt,bind_switch:vm.bind_switch,version:vm.version,reduceMode:vm.routeParams.reduceMode,acctNNo:vm.acctNNo,cardId:vm.cardId}})
+				vm.$router.push({path:'/payzhifu',query:{totalPrice:vm.count,totalPrices:vm.routeParams.totalPrice,reduceAmt:vm.reduceAmt,bind_switch:vm.bind_switch,version:vm.version,reduceMode:vm.routeParams.reduceMode,acctNNo:vm.acctNNo,cardId:vm.cardId,payFeeType:vm.routeParams.payFeeType}})
 			},
 
 		}

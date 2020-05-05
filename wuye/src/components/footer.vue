@@ -105,7 +105,7 @@ export default{
     mounted(){
       // let url = '/initSession4Test/62';
       //           vm.receiveData.getData(vm,url,'Data',function(){
-      //       });
+      // });
       vm.initUserInfo();
       vm.geturl();
     },

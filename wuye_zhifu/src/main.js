@@ -2,11 +2,9 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 
-/*自己添加的开始  引入mint-ui 和 axios*/
+/*自己添加的axios*/
 
-import MintUI from 'mint-ui'
-import 'mint-ui/lib/style.css'
-import $ from 'jquery'
+import $$ from 'jquery'
 
 import axios from 'axios';
 //axios.defaults.withCredentials=true; //存储cookie？
@@ -18,7 +16,7 @@ import './assets/js/rem.js'
 import cookie from 'js-cookie'
 
 //本地用
-// import {common,MasterConfig,getUrlParam} from './assets/js/common';
+import {common,MasterConfig,getUrlParam} from './assets/js/common';
 
 Vue.prototype.common = common;
 Vue.prototype.getUrlParam = getUrlParam;
@@ -26,13 +24,9 @@ Vue.prototype.baseUrl = MasterConfig.C('baseUrl');
 Vue.prototype.basePageUrl = MasterConfig.C('basePageUrl');
 Vue.prototype.basePageUrlpay = MasterConfig.C('basePageUrlpay');
 
-
 import receiveData from './assets/js/receiveData'
 Vue.prototype.receiveData = receiveData;
 
-
-
-Vue.use(MintUI)
 //创建axios 实例
 
 var axiosInstance = axios.create({
@@ -45,7 +39,6 @@ var axiosInstance = axios.create({
         'Accept': 'application/json',
     },
     baseURL:Vue.prototype.baseUrl,
-    // baseURL: 'https://test.e-shequ.com/wechat/hexie/wechat',
     withCredentials:true,
     transformResponse: [function (data) {//数据转换
       return data;

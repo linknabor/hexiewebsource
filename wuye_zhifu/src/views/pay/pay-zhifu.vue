@@ -10,22 +10,18 @@
            <span class="fl">账单金额</span>
            <span class="fr padding-r">¥{{totalPrices}}</span>
        </div>
-       <!-- <div>
+       <div>
            <div class="pay-div margin-b">
-            <span class="fl">{{discounts}}</span>
-            <span class="fr Color padding-r">{{property}}</span>
+                <span class="fl">{{disname}}</span>
+                <span class="fr Color padding-r">{{disamount}}</span>
            </div>
-            <div class="pd4">
-                <div class="ov mb2">
-                    <span class="fl wcolor">历年优惠</span>
-                    <span class="fr Color">123</span>
-                </div>
-                <div class="ov">
-                    <span class="fl wcolor">当年优惠</span>
-                    <span class="fr Color">456</span>
-                </div>
-            </div>
-       </div> -->
+            <ul class="pd4">
+                <li class="ov mb2"  v-for="item in discounts">
+                    <span class="fl wcolor">{{item.reduction_msg}}</span>
+                    <span class="fr Color">{{item.reduction_amt}}</span>
+                </li>
+            </ul>
+       </div>
        <div class="pay-div"  @click="uptonList">
            <div class="fl">现金券
                 <span class="can-use">&nbsp;<strong>{{uptonData.length}}</strong>&nbsp;张可用&nbsp;</span>
@@ -86,9 +82,24 @@ export default {
    data () {
        return {
            typename:'微信支付',//支付方式
-        //    bamount:'¥1000',//账单金额
-        //    discounts:'物业费优惠',//如物业优惠
-           totalPrice:this.$route.query.totalPrice,
+           disname:'物业费优惠',//如物业优惠
+           disamount:'¥1000',//账单金额
+           discounts:[//如物业优惠
+            {
+                "rule_type":"1",
+                "reduction_msg":"历年优惠",
+                "reduction_amt":"2.00"
+            },
+            {
+                "rule_type":"2",
+                "reduction_msg":"当年优惠",
+                "reduction_amt":"5.00"
+            }
+           ],
+           ruleType:'', //减免规则类型
+           reductionAmt:'',//减免金额
+           payFeeType:this.$route.query.payFeeType,//管理费01 停车费02
+           totalPrice:this.$route.query.totalPrice,//内减之后的金额
            totalPrices:this.$route.query.totalPrices,//账单金额
            bind_switch:this.$route.query.bind_switch,//绑定房子
            reduceAmt:this.$route.query.reduceAmt,//物业减免合计
@@ -97,9 +108,10 @@ export default {
            cardId:this.$route.query.cardId,//记录银行卡卡id
            orderNo:'',//订单流水号
            acctNNo:this.$route.query.acctNNo,//卡号
-           tdiscount:this.$route.query.reduceAmt,//优惠总金额 
+           tdiscount:0.00,//优惠总金额 
            reduceMoney:0,//四舍五入减免钱
            count:0,//支付金额
+           countmong:'',//记录金钱
            captcha:'',
            yzmtime : 60,
            yzmstr:"获取验证码", 
@@ -107,63 +119,49 @@ export default {
            ulist:{},
            uptonAmount:'未使用',
            upronAmountNumber:0,////优惠券金额 数量
-           uptonData:[
-                // {
-                    // 	id:1,
-                    // 	selected:false,
-                    // 	title:'滴滴滴',
-                    // 	leftDayDes:'11',
-                    // 	useStartDateStr:'22',
-                    // 	useEndDateStr:'33',
-                    // 	amount:1,
-                    // },
-                    // {
-                    // 	id:2,
-                    // 	selected:false,
-                    // 	title:'滴滴滴',
-                    // 	leftDayDes:'11',
-                    // 	useStartDateStr:'22',
-                    // 	useEndDateStr:'33',
-                    // 	amount:0.01,
-                    // },
-                    // {
-                    // 	id:6,
-                    // 	selected:false,
-                    // 	title:'滴滴滴',
-                    // 	leftDayDes:'11',
-                    // 	useStartDateStr:'22',
-                    // 	useEndDateStr:'33',
-                    // 	amount:0.02,
-                    // },
-                    // {
-                    // 	id:7,
-                    // 	selected:false,
-                    // 	title:'滴滴滴',
-                    // 	leftDayDes:'11',
-                    // 	useStartDateStr:'22',
-                    // 	useEndDateStr:'33',
-                    // 	amount:0.23,
-                    // },
-                    // {
-                    // 	id:3,
-                    // 	selected:false,
-                    // 	title:'滴滴滴',
-                    // 	leftDayDes:'11',
-                    // 	useStartDateStr:'22',
-                    // 	useEndDateStr:'33',
-                    // 	amount:2,
-                    // },
-                    // {
-                    // 	id:4,
-                    // 	selected:false,
-                    // 	title:'滴滴滴',
-                    // 	leftDayDes:'11',
-                    // 	useStartDateStr:'22',
-                    // 	useEndDateStr:'33',
-                    // 	amount:3,
-                // },
+           uptonData:[],
+            allCoupons:[
+                //   {
+                //     	id:1,
+                //     	selected:false,
+                //     	title:'滴滴滴',
+                //     	leftDayDes:'11',
+                //     	useStartDateStr:'22',
+                //     	useEndDateStr:'33',
+                //         amount:1,
+                //         usageCondition:0,
+                //     },
+                //     {
+                //     	id:2,
+                //     	selected:false,
+                //     	title:'滴滴滴',
+                //     	leftDayDes:'11',
+                //     	useStartDateStr:'22',
+                //     	useEndDateStr:'33',
+                //         amount:0.01,
+                //         usageCondition:0,
+                //     },
+                //     {
+                //     	id:6,
+                //     	selected:false,
+                //     	title:'滴滴滴',
+                //     	leftDayDes:'11',
+                //     	useStartDateStr:'22',
+                //     	useEndDateStr:'33',
+                //         amount:0.02,
+                //         usageCondition:0,
+                //     },
+                //     {
+                //     	id:7,
+                //     	selected:false,
+                //     	title:'滴滴滴',
+                //     	leftDayDes:'11',
+                //     	useStartDateStr:'22',
+                //     	useEndDateStr:'33',
+                //         amount:100,
+                //         usageCondition:100,
+                //     },
             ],
-            allCoupons:[],
             couponId:'',//优惠券id
             selectUpton:true,//显示的是缴费详情页面还是选择优惠劵页面
             sUptop:'No',//是否锁定优惠券
@@ -176,6 +174,7 @@ export default {
        vm.Carandpay(this.totalPrice)
        vm.geturl();//获取参数
        vm.Coupons();//优惠券
+       vm.getDiscount();
    },
 
    components: {
@@ -207,7 +206,7 @@ export default {
 			} else if ("1" == vm.reduceM) {
 			//四舍五入至元
 			reduce_rate = "1";
-			reduced_amt = Math.round(vm.count * reduce_rate) / reduce_rate;
+            reduced_amt = Math.round(vm.count * reduce_rate) / reduce_rate;
 			vm.hasReduce = "1";
 			} else if ("2" == vm.reduceM) {
 			//表示四舍五入至角
@@ -240,15 +239,44 @@ export default {
             }
 			vm.reduceMoney = parseFloat(vm.count) - parseFloat(reduced_amt.toFixed(2));//四舍五入的钱传给后端
             vm.reduceMoney = vm.reduceMoney.toFixed(2); //减少的钱 
-            vm.tdiscount =  (parseFloat(vm.tdiscount) + parseFloat(vm.reduceMoney)).toFixed(2);//优惠总金额加上四舍五入
+            vm.tdiscount =  (parseFloat(vm.reduceAmt) + parseFloat(vm.reduceMoney)).toFixed(2);//优惠总金额加上四舍五入
             vm.count = reduced_amt.toFixed(2); //合计
+            vm.countmong = vm.count;//记录
   		},
         //物业优惠
         getDiscount(){
-            let url = "getDiscountDetail";
-            vm.receiveData.getData(vm,url,'res',function(){
-              
-            })
+            let url = "/getDiscounts";
+            let pType;
+            if(vm.ulist.payType  >= 1){
+                pType = 1;
+            }else {
+                pType = vm.ulist.payType
+            }
+            let data = {
+                billId:vm.ulist.billId,
+                stmtId:vm.ulist.stmtId,
+                payType:pType,  //0微信,1卡
+                payFeeType:vm.payFeeType, //01管理费，02停车费
+                regionName:vm.ulist.regionname, //定位地区
+            }
+            vm.axios.post(
+            url,
+            data,
+            ).then(function(res) {
+
+            } )
+
+            // vm.axios({
+            //     url: url,
+            //     method:'post',
+            //     params: JSON.stringify(data),
+            //     headers: {}
+            // }).
+            // then( function(res){
+           
+            // }).catch(function (err) {
+            //     console.log(err);
+            // })
         },
         //优惠券
         Coupons(){
@@ -292,15 +320,13 @@ export default {
             if(vm.uptonData[index].selected){
                 vm.$set(vm.uptonData[index],'selected',false);
                 vm.tdiscount =  (parseFloat(vm.tdiscount) - parseFloat(vm.uptonData[index].amount)).toFixed(2);//优惠总金额
-                // console.log(vm.tdiscount,parseFloat(vm.tdiscount),parseFloat(vm.uptonData[index].amount))
             }else{
                 vm.$set(vm.uptonData[index],'selected',true);
-                 vm.tdiscount =  (parseFloat(vm.tdiscount) + parseFloat(vm.uptonData[index].amount)).toFixed(2);//优惠总金额
-                //  console.log(vm.tdiscount,parseFloat(vm.tdiscount),parseFloat(vm.uptonData[index].amount))
+                vm.tdiscount =  (parseFloat(vm.tdiscount) + parseFloat(vm.uptonData[index].amount)).toFixed(2);//优惠总金额
                 for(let i in vm.uptonData){
                     if(i != index && vm.uptonData[i].selected == true){
                         vm.$set(vm.uptonData[i],'selected',false);
-                         vm.tdiscount =  (parseFloat(vm.tdiscount) - parseFloat(vm.uptonData[i].amount)).toFixed(2);//优惠总金额
+                        vm.tdiscount =  (parseFloat(vm.tdiscount) - parseFloat(vm.uptonData[i].amount)).toFixed(2);//优惠总金额
                         break;							
                     }
                 }
@@ -313,14 +339,18 @@ export default {
                     flag = true;
                     vm.couponId = vm.uptonData[i].id;//优惠券id
                     vm.uptonAmount = '-￥' + vm.uptonData[i].amount+'元';//优惠券额度
-                    vm.upronAmountNumber = vm.uptonData[i].amount;
-                    vm.count = vm.totalPrice;//传过来的合计金额
-                    vm.count -= vm.uptonData[i].amount
+                    vm.upronAmountNumber = vm.uptonData[i].amount;   
+                    // //记录小于0之前的钱
+                    if(vm.count == 0.01 || vm.count == 0) {
+                        vm.count = vm.countmong;
+                    }
+                    vm.count -= vm.uptonData[i].amount;
                     vm.count = vm.count.toFixed(2);//金额
                     if(vm.count < 0 ){
                         vm.count = 0.01;
                     }
                 }
+            };
             if(!flag){
                 vm.uptonAmount = "未使用";
                 vm.upronAmountNumber = 0,
@@ -328,7 +358,6 @@ export default {
                 vm.Carandpay(vm.totalPrice)
             }
             vm.selectUpton = true;
-        };
         },
         //ios中留白问题
         fixScroll() {
@@ -381,9 +410,7 @@ export default {
         list = vm.ulist;
         list.couponUnit = vm.upronAmountNumber;
         list.couponId = vm.couponId;
-        if(vm.version != '01') {
-            list.reduceAmt = vm.reduceMoney
-        }
+        list.reduceAmt = vm.reduceMoney;
         if(list.payType > 1 && vm.captcha == '') {
             alert("请输入验证码");
             return;
@@ -513,6 +540,9 @@ export default {
 }
 .mb2 {
     margin-bottom: 0.2rem;
+}
+ul li:last-of-type {
+    margin-bottom: 0;
 }
 /* .. */
 .pay-div .can-use{
