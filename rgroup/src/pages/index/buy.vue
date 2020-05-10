@@ -125,15 +125,15 @@
     <!-- 主页面 -->
    <div class="zhi" v-show="shouyin">
        <div >
-            <div  @click="gotosgrouprulr" v-show="type==4" style="width:100%;">
+            <div  @click="gotosgrouprulr" :class="{rule_intro:searchBarFixed}" v-show="type==4" style="width:100%;" id="searchBar">
                 <img alt="" src="../../assets/images/index/img_tuangou_zhifu.png" style="100%">
             </div>
        </div>
-       <div >
+       <!-- <div >
             <div class="rule_intro" @click="gotosgrouprulr" v-show="type==4" style="width:100%;">
                 <img alt="" src="../../assets/images/index/img_tuangou_zhifu.png" style="100%">
             </div>
-       </div>
+       </div> -->
        <div style="background: white;height: 15px;width:100%;">&nbsp;</div>
     <!-- 新增地址 -->
     <div class="addr_area" @click="showAddress">
@@ -237,6 +237,7 @@ import wx from 'weixin-js-sdk';
 export default {
    data () {
        return {
+           searchBarFixed:false,
            currentPage:'xinzen',
            zzshow:false,
             shouyin:true,
@@ -350,6 +351,7 @@ export default {
        vm.roady();
        this.dataAddress();
         // this.initSession4Test();
+         window.addEventListener('scroll', this.handleScroll)
    },
    components: {
        
@@ -357,7 +359,15 @@ export default {
 
    methods: {
         //滚动固定顶部
-       
+        handleScroll () {
+            var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+            var offsetTop = document.querySelector('#searchBar').offsetTop
+            if (scrollTop > offsetTop) {
+                vm.searchBarFixed = true
+            } else {
+                vm.searchBarFixed = false
+            }
+        },
         roady() {
            if(vm.ruleId&&vm.type){
                 vm.queryBuyInfo();
@@ -765,6 +775,7 @@ export default {
               
         },  
       requestPay() {
+          vm.zzshow=true;
           vm.receiveData.getData(vm, "/requestPay/"+vm.order.id,'n',function(){
             if(vm.n.success) {
                 wx.config({
@@ -776,19 +787,26 @@ export default {
                     jsApiList: ['chooseWXPay'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
                 });
                  wx.chooseWXPay({
+                    "appId":vm.n.result.appId,
                     "timestamp":vm.n.result.timestamp,
                     "nonceStr":vm.n.result.nonceStr,
                     "package":vm.n.result.pkgStr,
                     "signType":vm.n.result.signType,
                     "paySign":vm.n.result.signature,
-                    success: function (res) {
-                            // 支付成功后的回调函数
+                    success: function (res) {// 支付成功后的回调函数
                         alert("下单成功！");
                         //   location.href="https://test.e-shequ.com/weixin/group/success.html?orderId="+vm.order.id + "&type="+vm.type;
                         vm.$router.push({path:'/success',query:{'orderId':vm.order.id,'type':vm.type}})
+                    },
+                    fail:function(res) {
+                        console.log(JSON.stringify(res))
+                    },
+                    cancel:function(res){
+                       vm.zzshow=false;
                     }
                   });
             }else {
+                    vm.zzshow=false;
                     vm.paying=false;
             }
             
