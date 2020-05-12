@@ -578,8 +578,8 @@
                 vm.version=this.$route.query.getversion;
 		},
 		mounted(){
-			// vm.common.checkRegisterStatus();
-			this.initSession4Test();
+			vm.common.checkRegisterStatus();
+			// this.initSession4Test();
 			this.cardpaySer();
 			this.getBillDetail();
 			this.Getremember();
@@ -737,9 +737,11 @@
 			     paths[1] = paths[1].substr(1)
 			  }
 			  let url = `${paths[0]}#${paths[1]}`
+			  console.log(url);
+			  console.log(window.location.href);
 			  if (window.location.href !== url) {
-			  	console.log(url);
-			    window.location.href = url
+				  console.log(123,window.location.href);
+			    // window.location.href = url
 			  }
 			},
 			//微信支付 post请求接口，在post成功的回调函数里调用微信支付接口

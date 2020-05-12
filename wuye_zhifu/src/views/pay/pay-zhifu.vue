@@ -17,12 +17,12 @@
            <div class="pay-div margin-b" :class="{'margin-bb' : discounts.length == 1}">
                 <span class="fl" v-show="payFeeType == '01'">{{disname}}</span>
                 <span class="fl" v-show="payFeeType == '02'">{{distname}}</span>
-                <span class="fr Color padding-r" v-show="discounts.length == 1">¥{{reduceAmt}}</span>
+                <span class="fr Color padding-r" v-show="discounts.length == 1">-¥{{reduceAmt}}</span>
            </div>
             <ul class="pd4" v-show="!(discounts.length == 1)">
-                <li class="ov mb2"  v-for="item in discounts">
+                <li class="ov mb2"  v-for="(item,index) in discounts" :key="index">
                     <span class="fl wcolor">{{item.reduction_msg}}</span>
-                    <span class="fr Color">{{item.reduction_amt}}</span>
+                    <span class="fr Color"><em v-show="item.reduction_amt > 0">-¥</em>{{item.reduction_amt}}</span>
                 </li>
             </ul>
        </div>
@@ -45,8 +45,8 @@
            <input  class="fl payinp" type="text" placeholder="请输入验证码" v-model="captcha" @blur="fixScroll">
            <span class="fr btn-plain" :class="{useless:yzmstr!='获取验证码'&&yzmstr!='重新获取'}"   @click="getCaptcha">{{yzmstr}}</span>
        </div>
-       <div v-show="reduceM == '1' || reduceM == '2' || reduceM == '4' || reduceM == '5' || reduceM == '6' || reduceM =='7'" style="padding: 0 0.3rem;letter-spacing: 1px;">本次支付四舍五入{{Math.abs(reduceMoney)}}元</div>
-       <div v-show="is_integral == '1'" style="padding: 0 0.3rem;letter-spacing: 1px;">本次支付您将获得{{integral}}积分</div>
+       <div class="Color" v-show="reduceM == '1' || reduceM == '2' || reduceM == '4' || reduceM == '5' || reduceM == '6' || reduceM =='7'" style="padding: 0 0.3rem;letter-spacing: 1px;">本次支付四舍五入{{Math.abs(reduceMoney)}}元</div>
+       <div class="Color" v-show="is_integral == '1'" style="padding: 0 0.3rem;letter-spacing: 1px;">本次支付您将获得{{integral}}积分</div>
        <div style="height:1.5rem;"></div>
 	   <div class="pay-btn"  @click="btnPay">立即支付</div>
     </div>
@@ -89,15 +89,15 @@ export default {
            distname:'停车费优惠',//停车优惠
            discounts:[
             //    {
-            //     reduction_amt: "0.22",
+            //     reduction_amt: "0.01",
             //     reduction_msg: "综合优惠",
             //     rule_type: "1",
             //    },
             //    {
-            //     reduction_amt: "0.52",
+            //     reduction_amt: "0.32",
             //     reduction_msg: "综合优惠1",
             //     rule_type: "2",
-            //    }
+            //    },
            ],//如物业优惠
            ruleType:'', //减免规则类型
            reductionAmt:'',//减免金额
@@ -244,12 +244,10 @@ export default {
 			}else {
 			return;
             }
-            // console.log(vm.count,parseFloat(reduced_amt.toFixed(2)),parseFloat(vm.reduceAmt))
             vm.reduceMoney = parseFloat(vm.count) - parseFloat(reduced_amt.toFixed(2));//四舍五入的钱传给后端
             vm.reduceMoney = vm.reduceMoney.toFixed(2); //减少的钱 
             // vm.tdiscount =  (parseFloat(vm.reduceAmt) + parseFloat(vm.reduceMoney)).toFixed(2);//优惠总金额加上四舍五入
             vm.count = reduced_amt.toFixed(2); //合计
-            // console.log(vm.reduceMoney,vm.tdiscount,vm.count)
             vm.countmong = vm.count;//记录
   		},
         //物业优惠
@@ -278,7 +276,6 @@ export default {
                     vm.totalPrice = res.result.total_fee_price//账单金额
                     vm.is_integral = res.result.is_enable_integral;//是否开通积分兑换减免 0不开通 1开通
                     vm.integral = res.result.integral;//积分
-                    // console.log(vm.totalPrice,vm.is_integral,vm.integral)
                     if(vm.is_integral == '0'){
                         vm.cullDiscount();//优惠减免
                     }else {
@@ -310,10 +307,8 @@ export default {
                     vm.reduceAmt = parseFloat(vm.reductionAmt);//物业，停车优惠
                 }
             };
-            // console.log(vm.reduceAmt)
-            vm.tdiscount = vm.reduceAmt;//没有四舍五入直接赋值
+            vm.tdiscount = (vm.reduceAmt).toFixed(2);//没有四舍五入直接赋值
             vm.count = (parseFloat(vm.totalPrice) - parseFloat(vm.reduceAmt)).toFixed(2);//减去优惠的值
-            // console.log(vm.count)
             vm.countmong = vm.count;//记录金额
             vm.counttoll = vm.count;//记录金额
             vm.Carandpay(vm.count)//四舍五入
@@ -360,16 +355,13 @@ export default {
             if(vm.uptonData[index].selected){
                 vm.$set(vm.uptonData[index],'selected',false);
                 vm.tdiscount =  (parseFloat(vm.tdiscount) - parseFloat(vm.uptonData[index].amount)).toFixed(2);//优惠总金额
-                // console.log(456,vm.tdiscount,parseFloat(vm.uptonData[index].amount))
             }else{
                 vm.$set(vm.uptonData[index],'selected',true);
                 vm.tdiscount =  (parseFloat(vm.tdiscount) + parseFloat(vm.uptonData[index].amount)).toFixed(2);//优惠总金额
-                // console.log(123,vm.tdiscount,parseFloat(vm.uptonData[index].amount))
                 for(let i in vm.uptonData){
                     if(i != index && vm.uptonData[i].selected == true){
                         vm.$set(vm.uptonData[i],'selected',false);
                         vm.tdiscount =  (parseFloat(vm.tdiscount) - parseFloat(vm.uptonData[i].amount)).toFixed(2);//优惠总金额
-                        // console.log(789,vm.tdiscount,parseFloat(vm.uptonData[i].amount))
                         break;							
                     }
                 }

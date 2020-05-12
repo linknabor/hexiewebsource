@@ -481,15 +481,26 @@ export default {
         this.$route.query.City;
       vm.receiveData.getData(vm, url, "Datas", function() {
             //判断是标准还是专业版
-            if (vm.Datas.result.sect_info[0].version == "01") {
-              vm.getversion = vm.Datas.result.sect_info[0].version;
-              vm.zhuanpay = "biaozhun";
-            } else {
-              vm.standard1 = false;
-            }
-            let link = null;
+            // if (vm.Datas.result.sect_info[0].version == "01") {
+            //   vm.getversion = vm.Datas.result.sect_info[0].version;
+            //   vm.zhuanpay = "biaozhun";
+            // } else {
+            //   vm.standard1 = false;
+            // }
+            let link = [];
             link = vm.Datas.result.sect_info;
-            vm.wschat_house_sel_mode=link[0].params.WECHAT_HOUSE_SEL_MODE;
+            for(var i =0;i<link.length;i++) {
+                if(vm.$route.query.queryID == link[i].id) { //判断是哪个小区
+                  //判断是标准还是专业版
+                  if (link[i].version == "01") {
+                    vm.getversion = link[i].version;
+                    vm.zhuanpay = "biaozhun";
+                  } else {
+                    vm.standard1 = false;
+                  }
+                  vm.wschat_house_sel_mode = link[i].params.WECHAT_HOUSE_SEL_MODE;
+                }
+            }
             if (link && link.length > 0) {
               if(vm.wschat_house_sel_mode=='0'){
                 vm.add();
