@@ -278,7 +278,8 @@ window.common = {
         return imgUrl;
    },
    getoriApp:function() {
-        var oriapp=getUrlParam('oriApp')?'oriApp='+getUrlParam('oriApp'):'state=123';
+		var mainAppId = MasterConfig.C("appId");
+		var oriapp=getUrlParam('oriApp')?'oriApp='+getUrlParam('oriApp'):'oriApp='+mainAppId;
         return  oriapp;
    },
 
@@ -287,14 +288,18 @@ window.common = {
 		var timestamp="";
 		var o = this._GET().code;
 		var oriApp = getUrlParam("oriApp");
+		var mainAppId = MasterConfig.C("appId");
+		if(!oriApp){
+			oriApp = mainAppId;
+		}
 		var param = {"oriApp":oriApp};
         if (common.alert("code: " + o), void 0 === o) {
 			var n = location.origin + common.removeParamFromUrl(["from","bind", "code", "share_id", "isappinstalled", "state", "m", "c", "a"])+common.addParamHsah(),
 			t = MasterConfig.C("oauthUrl"),
 		    end = MasterConfig.C("oauthUrlPostFix");
 			var url = t + "appid=" ;
-			var mainAppId = MasterConfig.C("appId") ;
-			if(oriApp && oriApp!=mainAppId){
+			
+			if(oriApp){
 				url +=  oriApp + "&component_appid=" + MasterConfig.C("componentAppId"); 
 			}else{
 				url +=  mainAppId;

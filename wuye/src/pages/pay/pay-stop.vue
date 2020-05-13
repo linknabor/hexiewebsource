@@ -159,8 +159,6 @@
 		  			}
 		  		}
 		  		let bills="";
-		  		let pay_addr = selectedArr[0].pay_addr;
-		  		//let pay_addr = sel_bill_arr[0].pay_addr;
 		  		for(let i in selectedArr){
 		  			if(selectedArr.length - 1 == i){
 		  				bills+=selectedArr[i].bill_id;
@@ -177,7 +175,7 @@
 		  		//跳转支付
 				// var oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
 				var oriapp=vm.common.getoriApp();
-				window.location.href=vm.basePageUrl+"wuyepay.html?oriApp="+oriapp+"#/?billIds="+bills+"&stmtId="+vm.stmtId+"&payAddr="+escape(pay_addr)+"&totalPrice="+vm[allPrice]+"&reduceMode="+vm.reduceMode+"&getversion=03"+"&regionname="+"&cardPayService="+vm.cardPayService + "&payFeeType=02";
+				window.location.href=vm.basePageUrl+"wuyepay.html?oriApp="+oriapp+"?#/?billIds="+bills+"&stmtId="+vm.stmtId+"&totalPrice="+vm[allPrice]+"&reduceMode="+vm.reduceMode+"&getversion=03"+"&regionname="+"&cardPayService="+vm.cardPayService + "&payFeeType=02";
 		  	},
 		  	//点击某个选中按钮 params1:被点击按钮的下标 params2:被点击按钮所属的数组
 			  itemClick:function(index, version, b){//3个页面对应不同的三个数组 

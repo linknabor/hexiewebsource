@@ -967,7 +967,6 @@ export default {
           }
         }
         let bills = ""; //id
-        let pay_addr = selectedArr[0].pay_addr;
         for (let i in selectedArr) {
           if (selectedArr.length - 1 == i) {
             bills += selectedArr[i].bill_id;
@@ -984,10 +983,10 @@ export default {
         var oriapp=vm.common.getoriApp();
         var oriap = vm.getUrlParam('oriApp');
         if(oriap == 'wxe8dea53aad1a93b9') {
-          window.location.href =vm.basedhzj3Url +"wuyepay.html?"+oriapp+"#/?billIds=" +bills + "&stmtId=" + vm.stmtId + "&payAddr=" + escape(pay_addr) +
+          window.location.href =vm.basedhzj3Url +"wuyepay.html?"+oriapp+"?#/?billIds=" +bills + "&stmtId=" + vm.stmtId + 
          "&totalPrice=" +vm[allPrice] + "&reduceMode=" + vm.reduceMode + "&regionname=" +vm.regionname +"&getversion=" + "02"+"&cardPayService="+vm.cardPayService + "&payFeeType=01";
         }else {
-         window.location.href =vm.basePageUrl +"wuyepay.html?"+oriapp+"#/?billIds=" +bills + "&stmtId=" + vm.stmtId + "&payAddr=" + escape(pay_addr) +
+         window.location.href =vm.basePageUrl +"wuyepay.html?"+oriapp+"?#/?billIds=" +bills + "&stmtId=" + vm.stmtId + 
          "&totalPrice=" +vm[allPrice] + "&reduceMode=" + vm.reduceMode + "&regionname=" +vm.regionname +"&getversion=" + "02"+"&cardPayService="+vm.cardPayService + "&payFeeType=01";
         }
     },

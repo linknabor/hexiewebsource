@@ -564,7 +564,6 @@
 		},
 		created(){
 			vm = this;		
-			this.directRightUrl();
 			if(vm.routeParams.stmtId == " "){
 				vm.routeParams.stmtId = ""
 			}
@@ -725,25 +724,6 @@
 			  );
        }     
 	},
-			// 重定向到正确的url
-			directRightUrl () {
-			  let paths = window.location.href.split('#')
-			  paths[1] = paths[1] || '/'
-			  // 老式的#!分隔跳转
-			  if (paths[0].charAt(paths[0].length - 1) !== '?') {
-			    paths[0] = `${paths[0]}?`
-			  }
-			  if (paths[1].charAt(0) === '!') {
-			     paths[1] = paths[1].substr(1)
-			  }
-			  let url = `${paths[0]}#${paths[1]}`
-			  console.log(url);
-			  console.log(window.location.href);
-			  if (window.location.href !== url) {
-				  console.log(123,window.location.href);
-			    // window.location.href = url
-			  }
-			},
 			//微信支付 post请求接口，在post成功的回调函数里调用微信支付接口
 			btnPay (){
 				if(this.invoice_title_type=="02"){
