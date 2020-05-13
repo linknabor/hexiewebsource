@@ -571,7 +571,6 @@ export default {
     border-bottom: 1px solid #E3E3E3;
     font-weight: 600;
     border-top: 0.06rem solid #E3E3E3;
-
 }
 .ov {
     overflow: hidden;
