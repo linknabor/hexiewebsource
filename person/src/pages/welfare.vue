@@ -2,7 +2,7 @@
   <div>
     <div class="top">
       <div >
-        <img src="../assets/images/qie/android/drawable-xhdpi/组3.png" alt>
+        <img src="../assets/images/qie/hui.png" alt>
       </div>
        <div class="mint">
           <span>会员特权</span>
