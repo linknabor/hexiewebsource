@@ -78,13 +78,9 @@
 		  		vm.reduceMode = vm.data.result.reduce_mode;//减免方式
 		  		vm.carBillInfo = vm.data.result.car_bill_info;//停车缴费
 				vm.pay_least_month = vm.data.result.pay_least_month; //最少支付月数 
-				vm.permit_skip_pay=vm.data.result.permit_skip_pay;  
+				vm.permit_skip_pay=vm.data.result.permit_skip_car_pay;  //是否允许跳账
 				vm.carBillPage+=1;
-
-                
 			  },vm.params) ;
-			 
-		  	
 		},
 		methods:{
 		//分页 
@@ -132,12 +128,6 @@
 		  		var sel_bill_arr = new Array();
 		  		if(vm[allselect] == true){
 		  			//全部选中
-		  			//sel_bill_arr = vm[list];
-		  			// var ret = jQuery.inArray(vm[list][i].service_fee_cycle,sel_bill_arr);
-		  			// if(-1 == ret){
-		  			// 	sel_bill_arr.push(vm[list][i].service_fee_cycle);
-		  			// }
-		  			// selectedArr.push(vm[list][i])
 		  			for(let i in vm[list]){
 		  				var ret = jQuery.inArray(vm[list][i].service_fee_cycle,sel_bill_arr);
 			  			if(-1 == ret){
@@ -157,7 +147,7 @@
 		  					selectedArr.push(vm[list][i])
 		  				}
 		  			}
-		  		}
+				  }
 		  		let bills="";
 		  		for(let i in selectedArr){
 		  			if(selectedArr.length - 1 == i){
