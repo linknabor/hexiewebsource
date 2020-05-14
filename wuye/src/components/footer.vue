@@ -105,7 +105,7 @@ export default{
     mounted(){
       // let url = '/initSession4Test/62';
       //           vm.receiveData.getData(vm,url,'Data',function(){
-      //       });
+      // });
       vm.initUserInfo();
       vm.geturl();
     },
@@ -125,10 +125,11 @@ export default{
                     if(n.result!=null) {
                       vm.login=false;
                       vm.list=n.result.iconList;
-                      cookie.set('userId',n.result.id)
-                      cookie.set('appid',n.result.appid)
-                      cookie.set('cspId',n.result.cspId)
-                      cookie.set('sectId',n.result.sectId)
+                      cookie.set('userId',n.result.id);
+                      cookie.set('appid',n.result.appid);
+                      cookie.set('cspId',n.result.cspId);
+                      cookie.set('sectId',n.result.sectId);
+                      cookie.set('cardPayService',n.result.cardPayService);
                       Bus.$emit('sends',n.result);
                     }
                     var duration = new Date().getTime()/1000 + 3600*24*30;
@@ -138,7 +139,7 @@ export default{
                       }
                     }
                     if(n.result.wuyeTabsList) {
-                          vm.common.localSet('wuyeTabsList',JSON.stringify(n.result.wuyeTabsList))
+                          vm.common.localSet('wuyeTabsList',JSON.stringify(n.result.wuyeTabsList));
                     }
                 },
                 r = function(res) { 

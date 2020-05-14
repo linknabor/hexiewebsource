@@ -2,18 +2,13 @@
   <div>
     <div class="top">
       <div >
-        <img src="../assets/images/qie/android/drawable-xhdpi/组3.png" alt>
+        <img src="../assets/images/qie/hui.png" alt>
       </div>
        <div class="mint">
           <span>会员特权</span>
        </div>
        <div >
            <ul>
-               <li style="margin-bottom:0.15rem;">业主缴费送积分，在线支付物业费1元
-                   <i class="mint-i1 mint-i"></i>
-               </li>
-               <li>即可获得1积分
-               </li>
                <li>积分获取仅支持公众号内缴费
                    <i class="mint-i"></i>
                </li>

@@ -189,7 +189,7 @@ import { Indicator, Loadmore } from "mint-ui";
 // import Foot from "../../components/footer.vue";
 import moment from "../filter/datafromat";
 import Bus from '../../api/bus.js';
-
+import cookie  from 'js-cookie';
 export default {
   components: { Bill},
 
@@ -266,6 +266,7 @@ export default {
         unit: "", //门牌id
         house: "" //室号id
       },
+      bills:'',
       openunit: false, //搜索小区
 
       stmtId: "", //快捷缴费 扫描出来的账单号
@@ -306,6 +307,7 @@ export default {
       sectId:'',//判断是否绑定房子
       wuyeTabsList:'',//选项卡
       selected: "", //选项卡 默认选中
+      cardPayService:'', //控制是否可以 绑卡支付
     };
   },
   //时间戳转换成日期
@@ -324,7 +326,6 @@ export default {
     vm = this;
   },
   mounted() {
-    vm.getSectid();
     vm.TabsList();
     vm.unitselect();
     vm.getHousin();
@@ -335,20 +336,38 @@ export default {
   },
   methods: {
     TabsList() {//获取localstorage中的选项卡
-      vm.wuyeTabsList=JSON.parse(window.localStorage.getItem("wuyeTabsList"));
-      vm.selected=vm.wuyeTabsList[0].value;
-    },
-    getSectid() {
-        let n = "GET",
-            a = "userInfo?oriApp="+vm.getUrlParam('oriApp'),
-            i = null,
-            e = function(n) {
-                   vm.sectId=n.result.sectId;
-            },
-            r = function(n) { 
-              
-            };
+      let wuyeTabs = window.localStorage.getItem("wuyeTabsList");
+      vm.sectId = cookie.get('sectId');//
+      vm.cardPayService = cookie.get('cardPayService');//获取sectId
+      if(wuyeTabs && (wuyeTabs != 'null' && wuyeTabs != 'undefined')) {//不等于空获取
+         vm.wuyeTabsList = JSON.parse(window.localStorage.getItem("wuyeTabsList"));
+         vm.selected = vm.wuyeTabsList[0].value;
+      }
+      if(!wuyeTabs || wuyeTabs == 'null' || wuyeTabs == 'undefined' || !vm.sectId || (vm.cardPayService =='' || vm.cardPayService  == undefined)){
+          let n = "GET",
+          a = "userInfo?oriApp="+vm.getUrlParam('oriApp'),
+          i = null,
+          e = function(n) {
+            cookie.set('userId',n.result.id);
+            cookie.set('cspId',n.result.cspId);
+            cookie.set('sectId',n.result.sectId);
+            cookie.set('cardPayService',n.result.cardPayService);
+            if(n.result.wuyeTabsList) { //判断是否有值重新填入
+              vm.common.localSet('wuyeTabsList',JSON.stringify(n.result.wuyeTabsList))
+              //填入后在获取赋值
+              vm.wuyeTabsList = JSON.parse(window.localStorage.getItem("wuyeTabsList"));
+              vm.selected = vm.wuyeTabsList[0].value;
+            }else {
+              alert('没有配置选项卡');//没有配置选项卡提示
+            }
+            vm.sectId=cookie.get('sectId'); //获取sectid
+            vm.cardPayService =cookie.get('cardPayService');
+          },
+          r = function(n) { 
+            
+          };
         this.common.invokeApi(n, a, i, null, e, r);
+      }
     },
     //跳转绑定房子
     Myhouse() {
@@ -411,9 +430,10 @@ export default {
     //105/747/384
      //请求 停车缴费 和 物业缴费首屏数据
     zong(){
-      setTimeout(function(){
       if(vm.selected=="b"&&vm.mine){
         if(vm.sectId!=0 && vm.sectId!= null) {
+            vm.isshow=true;
+            vm.showp = true;
             vm.receiveData.getData(vm,"/billList","data",function() {
               if(vm.data.success) {
                   if(vm.data.result!=null) {
@@ -433,10 +453,11 @@ export default {
               }else {
                   alert(vm.data.message==null?"暂无需缴费账单":vm.data.message)
               }
+              vm.isshow=false;
+              vm.showp = false;
             },vm.params);
         }
       }
-      },200)
     },
     //跳转到查询缴费
     unitselect() {
@@ -460,15 +481,26 @@ export default {
         this.$route.query.City;
       vm.receiveData.getData(vm, url, "Datas", function() {
             //判断是标准还是专业版
-            if (vm.Datas.result.sect_info[0].version == "01") {
-              vm.getversion = vm.Datas.result.sect_info[0].version;
-              vm.zhuanpay = "biaozhun";
-            } else {
-              vm.standard1 = false;
-            }
-            let link = null;
+            // if (vm.Datas.result.sect_info[0].version == "01") {
+            //   vm.getversion = vm.Datas.result.sect_info[0].version;
+            //   vm.zhuanpay = "biaozhun";
+            // } else {
+            //   vm.standard1 = false;
+            // }
+            let link = [];
             link = vm.Datas.result.sect_info;
-            vm.wschat_house_sel_mode=link[0].params.WECHAT_HOUSE_SEL_MODE;
+            for(var i =0;i<link.length;i++) {
+                if(vm.$route.query.queryID == link[i].id) { //判断是哪个小区
+                  //判断是标准还是专业版
+                  if (link[i].version == "01") {
+                    vm.getversion = link[i].version;
+                    vm.zhuanpay = "biaozhun";
+                  } else {
+                    vm.standard1 = false;
+                  }
+                  vm.wschat_house_sel_mode = link[i].params.WECHAT_HOUSE_SEL_MODE;
+                }
+            }
             if (link && link.length > 0) {
               if(vm.wschat_house_sel_mode=='0'){
                 vm.add();
@@ -612,8 +644,6 @@ export default {
           this.$route.query.City +
           "&house_id=" +
           vm.query.house +
-          "&sect_id=" +
-          vm.query.sectID +
           "&start_date=" +
           startData +
           "&end_date=" +
@@ -627,8 +657,10 @@ export default {
               vm.showp = false;
              }
             vm.otherbillinfo = vm.res.result.other_bill_info;
-             vm.isshow=false;
-             vm.showp = false;
+            vm.reduceMode = vm.res.result.reduce_mode;
+            vm.bills = vm.res.result.other_bill_info[0].bills;
+            vm.isshow=false;
+            vm.showp = false;
           }else {
             alert(vm.res.message);
             vm.isshow = false;
@@ -935,7 +967,6 @@ export default {
           }
         }
         let bills = ""; //id
-        let pay_addr = selectedArr[0].pay_addr;
         for (let i in selectedArr) {
           if (selectedArr.length - 1 == i) {
             bills += selectedArr[i].bill_id;
@@ -952,11 +983,11 @@ export default {
         var oriapp=vm.common.getoriApp();
         var oriap = vm.getUrlParam('oriApp');
         if(oriap == 'wxe8dea53aad1a93b9') {
-          window.location.href =vm.basedhzj3Url +"wuyepay.html?"+oriapp+"#/?billIds=" +bills + "&stmtId=" + vm.stmtId + "&payAddr=" + escape(pay_addr) +
-         "&totalPrice=" +vm[allPrice] + "&reduceMode=" + vm.reduceMode + "&regionname=" +vm.regionname +"&getversion=" + "02";
+          window.location.href =vm.basedhzj3Url +"wuyepay.html?"+oriapp+"?#/?billIds=" +bills + "&stmtId=" + vm.stmtId + 
+         "&totalPrice=" +vm[allPrice] + "&reduceMode=" + vm.reduceMode + "&regionname=" +vm.regionname +"&getversion=" + "02"+"&cardPayService="+vm.cardPayService + "&payFeeType=01";
         }else {
-         window.location.href =vm.basePageUrl +"wuyepay.html?"+oriapp+"#/?billIds=" +bills + "&stmtId=" + vm.stmtId + "&payAddr=" + escape(pay_addr) +
-         "&totalPrice=" +vm[allPrice] + "&reduceMode=" + vm.reduceMode + "&regionname=" +vm.regionname +"&getversion=" + "02";
+         window.location.href =vm.basePageUrl +"wuyepay.html?"+oriapp+"?#/?billIds=" +bills + "&stmtId=" + vm.stmtId + 
+         "&totalPrice=" +vm[allPrice] + "&reduceMode=" + vm.reduceMode + "&regionname=" +vm.regionname +"&getversion=" + "02"+"&cardPayService="+vm.cardPayService + "&payFeeType=01";
         }
     },
     //点击物业缴费按钮
@@ -967,15 +998,14 @@ export default {
           alert("请选择帐单后支付");
           return;
         }
-
         var oriapp=vm.common.getoriApp();
         var oriap = vm.getUrlParam('oriApp');
         if(oriap == 'wxe8dea53aad1a93b9') {
-          window.location.href =vm.basedhzj3Url +"wuyepay.html?"+oriapp+"#/?regionname=" +this.$route.query.City +"&totalPrice="+vm[queryallPrice1] +"&house_id=" +
-          vm.query.house +"&sect_id=" +vm.query.sectID + "&start_date=" +startData + "&end_date=" + endData +"&getversion=" + '01';
+          window.location.href =vm.basedhzj3Url +"wuyepay.html?"+oriapp+"#/?billIds=" +vm.bills + "&regionname=" +this.$route.query.City +"&totalPrice="+vm[queryallPrice1] +"&house_id=" +
+          vm.query.house +"&sect_id=" +vm.query.sectID + "&start_date=" +startData + "&end_date=" + endData +"&getversion=" + '01' + "&reduceMode=" + vm.reduceMode + "&cardPayService="+vm.cardPayService + "&payFeeType=01";
         }else {
-          window.location.href =vm.basePageUrl +"wuyepay.html?"+oriapp+"#/?regionname=" +this.$route.query.City +"&totalPrice="+vm[queryallPrice1] +"&house_id=" +
-          vm.query.house +"&sect_id=" +vm.query.sectID + "&start_date=" +startData + "&end_date=" + endData +"&getversion=" + '01';
+          window.location.href =vm.basePageUrl +"wuyepay.html?"+oriapp+"#/?billIds=" +vm.bills + "&regionname=" +this.$route.query.City +"&totalPrice="+vm[queryallPrice1] +"&house_id=" +
+          vm.query.house +"&sect_id=" +vm.query.sectID + "&start_date=" +startData + "&end_date=" + endData +"&getversion=" + '01' + "&reduceMode=" + vm.reduceMode + "&cardPayService="+vm.cardPayService + "&payFeeType=01";
         }
       } else { // 专业版
          vm.pays(list, allPrice, allselect)

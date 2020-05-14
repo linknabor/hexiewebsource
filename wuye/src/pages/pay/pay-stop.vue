@@ -33,6 +33,7 @@
 	let isloadPage=false;
 	import wx from 'weixin-js-sdk';
 	import Bill from '../../components/bill.vue';
+	import cookie  from 'js-cookie';
 	export default {
 		components:{Bill},
 		computed:{
@@ -63,6 +64,7 @@
 				carBillInfo:[],//停车缴费数据
 				selected:'c', //选项卡 默认选中
 				carBillPage :1, //停车缴费页码
+				cardPayService:cookie.get('cardPayService'), //控制是否可以 绑卡支付
 				reduceMode:1,
 				quan:false,
 			}
@@ -76,13 +78,9 @@
 		  		vm.reduceMode = vm.data.result.reduce_mode;//减免方式
 		  		vm.carBillInfo = vm.data.result.car_bill_info;//停车缴费
 				vm.pay_least_month = vm.data.result.pay_least_month; //最少支付月数 
-				vm.permit_skip_pay=vm.data.result.permit_skip_pay;  
+				vm.permit_skip_pay=vm.data.result.permit_skip_car_pay;  //是否允许跳账
 				vm.carBillPage+=1;
-
-                
 			  },vm.params) ;
-			 
-		  	
 		},
 		methods:{
 		//分页 
@@ -130,12 +128,6 @@
 		  		var sel_bill_arr = new Array();
 		  		if(vm[allselect] == true){
 		  			//全部选中
-		  			//sel_bill_arr = vm[list];
-		  			// var ret = jQuery.inArray(vm[list][i].service_fee_cycle,sel_bill_arr);
-		  			// if(-1 == ret){
-		  			// 	sel_bill_arr.push(vm[list][i].service_fee_cycle);
-		  			// }
-		  			// selectedArr.push(vm[list][i])
 		  			for(let i in vm[list]){
 		  				var ret = jQuery.inArray(vm[list][i].service_fee_cycle,sel_bill_arr);
 			  			if(-1 == ret){
@@ -155,10 +147,8 @@
 		  					selectedArr.push(vm[list][i])
 		  				}
 		  			}
-		  		}
+				  }
 		  		let bills="";
-		  		let pay_addr = selectedArr[0].pay_addr;
-		  		//let pay_addr = sel_bill_arr[0].pay_addr;
 		  		for(let i in selectedArr){
 		  			if(selectedArr.length - 1 == i){
 		  				bills+=selectedArr[i].bill_id;
@@ -175,7 +165,7 @@
 		  		//跳转支付
 				// var oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
 				var oriapp=vm.common.getoriApp();
-				window.location.href=vm.basePageUrl+"wuyepay.html?oriApp="+oriapp+"#/?billIds="+bills+"&stmtId="+vm.stmtId+"&payAddr="+escape(pay_addr)+"&totalPrice="+vm[allPrice]+"&reduceMode="+vm.reduceMode+"&getversion=03"+"&regionname=";
+				window.location.href=vm.basePageUrl+"wuyepay.html?oriApp="+oriapp+"?#/?billIds="+bills+"&stmtId="+vm.stmtId+"&totalPrice="+vm[allPrice]+"&reduceMode="+vm.reduceMode+"&getversion=03"+"&regionname="+"&cardPayService="+vm.cardPayService + "&payFeeType=02";
 		  	},
 		  	//点击某个选中按钮 params1:被点击按钮的下标 params2:被点击按钮所属的数组
 			  itemClick:function(index, version, b){//3个页面对应不同的三个数组 

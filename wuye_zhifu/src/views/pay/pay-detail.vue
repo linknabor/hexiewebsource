@@ -2,12 +2,13 @@
 <style scoped>
 	.pay-detail{
 		padding:0.3rem;
+		padding-bottom: 0;
 	}
 	.user-info{
 		padding:0.2rem;
 		border:1px solid #cecdc9;
-		border-radius: 5px;
-		height: 1.7rem;
+		/* border-radius: 5px; */
+		/* height: 1.7rem; */
 		font-size: 14px;
 		line-height: 32px;
 	}
@@ -17,12 +18,15 @@
 	}
 	.user-info .addr{
 		font:0.26rem/0.6rem "";
-		color: #5b5b5b;
+		color: #000;
+	}
+	.name-color {
+		color: #000;
 	}
 	.fee-list{
 		border:1px solid #cecdc9;
 		border-bottom: none;
-		border-radius: 5px;
+		/* border-radius: 5px; */
 		margin-top: 0.3rem;
 	}
 	.fee-list dt,.fee-list dd{
@@ -36,153 +40,45 @@
 		margin:0;
 	}
 	.fee-list dt .fee-price{
-		color: #ff7200;
+		/* color: #ff7200; */
 	}
 	.fee-list dd{
 		color: #7d7d7d;
-	}
-	.discount{
-		padding: 0;
-		background-color: #f6f7f1;
-		border:1px solid #cecdc9;
-		border-bottom: none;
-		list-style: none;
-		margin-top: 0.3rem;
-	}
-	.discount li{
-		padding: 0 0.2rem;
-		height: 1rem;
-		line-height: 1rem;
-		border-bottom:1px solid #cecdc9;
-	}
-	.discount .can-use{
-		/*display: inline-block;*/
-		width: 1.35rem;
-		height: 0.45rem;
-		border:1px solid #ff8a05;
-		color:#ff8a05;
-		font:0.22rem/0.45rem "";
-		text-align: center;
-		letter-spacing: 2px;
 	}
 	.coupon{
 		color: #ff8a05;
 	}
 	.payCount{
 		padding: 0 0.2rem;
-		height: 1rem;
-		line-height: 1rem;
-		background-color: #f6f7f1;
+		height: 1.2rem;
+		line-height: 1.2rem;
+		/* background-color: #f6f7f1; */
 		color: #ff8a05;
 		border:1px solid #cecdc9;
 		margin-top: 0.3rem;
 	}
 	.bigfont{
 		font-size: 0.32rem;
-		-font-weight: bold;
+		font-weight: bold;
 	}
-	/*优惠劵雷彪*/
-	.upton-list{
-		padding: 0.3rem 0.3rem;
-	}
-	.upton-list .can-use{
-		/* font:0.26rem/1rem ""; */
-		font-size: 0.3rem;
-		height: 0.6rem;
-		border-bottom: 1px solid #878787;
-		padding: 10px 10px;
-	}
-	.uptonDetail{
-		position: relative;
-		background:url("../../assets/image/bg_courtesy_card.png") no-repeat;
-		background-size: 100% 2.15rem;
-		margin:0.3rem 0;
-		height: 2.15rem;
-		padding:0 0.3rem 0 0.4rem;
-	}
-	.icon{
-		background:url('../../assets/image/icon_select.png');
-		background-size: cover;
-		position:absolute;
-		width: 0.4rem;
-		height: 0.4rem;
-		top: 50%;
-		margin-top: -0.2rem;
-		margin-left: -0.6rem;
-	}
-	.iconShow{
-		background:url('../../assets/image/icon_selectted.png');
-		background-size: cover;
-		z-index: 5;
-	}
-	.detail-left{
-		padding-top: 0.35rem;
-	}
-	.detail-right{
-		padding-top: 0.6rem;
-		text-align: center;
-	}	
-	.detail-left .upton-name{
-		/*font:0.34rem/0.78rem "";*/
-		color: #ff8a00;
-		font-size: 0.4rem;
-		font-weight: 600;
-		letter-spacing: 0.08rem;
-	}
-	.detail-left .validity{
-		width: 1.7rem;
-		height: 0.4rem;
-		line-height: 0.4rem;
-		text-align: center;
-		border:1px solid #8e5209;
-		border-radius: 10px;
-		color: #8e5209;
-		margin-top: .1rem;
-		margin-bottom: 0.2rem;
-	}
-	.detail-left .text{
-		width: 4.9rem;
-		font-size: .2rem;
-	}
-	.detail-right .upton-number{
-		font:0.466rem/0.8rem "";
-		color: #fff;
-		font-size: .5rem;
-	}
-	
-	.detail-right .upton-type{
-		font: 0.3rem/0.6rem "";
-		color: #fff;
-		font-size: 0.28rem;
-		letter-spacing: 0.04rem;
-		margin-top: .1rem;
-	}
-	.btn{
-		background-color:#ff8a00; 
-		color:#fff;
-		width: 6.7rem;
-		height: 0.75rem;
-		line-height: 0.75rem;
-		text-align: center;
-		border-radius: 10px;
-		position: fixed;
-		bottom: 0.5rem;
-		-left: 0.4rem;
-		margin: 0 auto;
-	}
+
 	.pay-btn{
-		background-color: #ff8a00;
 		position: fixed;
-		left: 0;
-		bottom: 0;
+		left: 4%;
+		right: 4%;
 		bottom: 0;
 		z-index: 3;
-		width: 100%;
+		width: 92%;
 		height: 0.9rem;
 		text-align: center;
 		color: #fff;
 		line-height: 0.9rem;
+		background-color:#ccc;
 	}
+	.paycolor {
+		background-color: #F69C05;
+	}
+
 /*发票*/
 .invoice{
 	border:1px solid #cecdc9;
@@ -202,37 +98,34 @@
 	border:none;
 }
 .qufapiao{color: red;margin-bottom: .2rem;}
-.box-bg {width: 100%;opacity: .5;height: 100%;position: fixed;
-	    background-color: #666;top: 0;left: 0;z-index: 100;display: none}
 /* 绑定房子 */
 .card {
-	margin-bottom: 15px;
+	margin-bottom: 0.3rem;
 	border: 1px solid #d4cfc8;
-	border-radius: 3px;
-	color: #666;
-	margin-top: 20px;
-}
-.fs15{
-	font-size: 15px;
+	color: #000;
+	margin-top:  0.3rem;
+	padding:0 0.2rem;
 }
 .item {
-	padding:20px 10px;
-	border-top: 1px solid #d4cfc8;
+	height: 1.2rem;
+    line-height: 1.2rem;
 }
-.fs13  {
-	font-size:13px;
-}
+
 .addse:after {
 	content: '\2713';
-	position: absolute;
-	top: 0px;
-	left: 0px;
-	color: #758794;
-	width: 100%;
-	text-align: center;
-	font-size: 1.4em;
-	padding: 1px 0 0 0;
-	vertical-align: text-top;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 19px;
+    line-height: 19px;
+    color: #fff;
+    width: 100%;
+    text-align: center;
+    font-size: 0.4rem;
+    border-radius: 5px;
+    background-color: #ff8a05;
+    padding: 1px 0 0 0;
+    vertical-align: text-top;
 }
 .chendad{
 	background-color: #FFF;
@@ -245,14 +138,162 @@
 	margin-right: 2px;
 	top: 5px;
 }
+.ml {
+	margin-left: 0.25rem;
+}
+.mr {
+	margin-right: 0.25rem
+}
 .chk_1 {
 	display: none;
-}		
+}	
+.Manner {
+	border: 1px solid #cecdc9;
+	margin-bottom:0.3rem;
+}	
+.Manner-title {
+	text-align: left;
+	padding: 0.2rem;
+	font-size: 0.28rem;
+}
+.Manner-hand {
+	padding: 0.3rem 0.2rem;
+    border-top: 1px solid #cecdc9;
+    text-align: center;
+    height: 0.61rem;
+    line-height: 0.61rem;
+	font-size: 0.36rem;
+}
+.Manner-img {
+	width: 0.7rem;
+    height: 0.61rem;
+}
+.Manner-img img {
+	width: 100%;
+	vertical-align: middle;
+}
+.chendadm{
+	background-color: #FFF;
+	border: 1px solid #C1CACA;
+	width: 0.554rem;
+    height: 0.554rem;
+    border-radius: 0.277rem;
+	display: inline-block;
+	position: relative;
+	margin-right: 2px;
+	margin-right: 0.036rem;
+}
+
+.Manner-bottom {
+	position: relative;
+	bottom:8px;
+}
+.addsem:after {
+	content: '\2713';
+    position: absolute;
+    top: 0px;
+    left: 0px;
+	height: 0.531rem;
+    line-height: 0.531rem;
+	border-radius: 0.265rem; 
+    color: #fff;
+    width: 100%;
+    text-align: center;
+    font-size:0.4rem;
+    background-color: #ff8a05;
+    padding: 1px 0 0 0;
+    vertical-align: text-top;
+}
+.Manner-handm {
+	padding: 0.3rem 0.2rem;
+    border-top: 1px solid #cecdc9;
+    text-align: center;
+}
+.Mt15 {
+	position: relative;
+    top: 0.26rem;
+}
+.Mt1{
+	position: relative;
+    top: 0.1rem;
+	right: 0.291rem;
+}
+.fs3 {
+	font-size: 0.36rem;	
+}
+.Mtext {
+	position: relative;
+    top: 0.155rem;
+	color:red;
+	left: 0.1rem;
+}
+.Manner-handm .Mtextl {
+	left:0;
+}
+.Manner-bd {
+	border-bottom: 1px solid #cecdc9;
+}
+.Manner-name {
+	padding:0.3rem 0.2rem;
+	font-size: 0.36rem;
+	height: 0.5rem;
+    line-height: 0.5rem;
+}
+.Mannerwl {
+	width: 25%;
+}
+.Mannerwr {
+	width: 75%;
+}
+.Mannerwr input {
+	width: 100%;
+	border:0;
+	text-align: center;
+	outline: none;
+}
+.remember {
+	font-size: 0.28rem;
+	height: 0.6rem;
+    line-height: 0.6rem;
+}
+.remember .rept {
+	top: 4px;
+	width: 15px;
+	height: 15px;
+}
+.addseb:after {
+	width: 15px;
+	height: 14px;
+	line-height: 14px;
+	font-size: 0.3rem;
+}
+.Manner-dev {
+	text-align: center;
+	position: relative;
+	color: #747474;
+}
+.Manner-st {
+	position: absolute;
+	left: 0px;
+  	top: 0px;
+	width:100%;
+	height: 100%;
+	border: none;
+	outline: none;
+	opacity: 0;
+	appearance:none; 
+	-moz-appearance:none;
+	-ms-appearance:none;
+	-o-appearance:none;
+	-webkit-appearance:none;
+}
+.Mannercolor {
+	color:#000;
+}
 </style>
 <template>
 	<div>
-		<div  class="pay-detail" v-if="selectUpton">
-			<div class="box-bg"></div>
+		<div  class="pay-detail" v-show="feeList.length > 0">
 		<!-- 用户信息 -->
 			<div class="user-info">
 				<div class="number">户号&nbsp;{{verNumber}}</div>
@@ -264,8 +305,8 @@
 			
 		<!-- 费用列表 -->
 			<dl v-for="item in feeList" class="fee-list" v-if="version=='02'">
-				<dt class="ov">
-					<p class="fee-name fl" >{{item.service_fee_name}}</p>
+				<dt class="ov name-color">
+					<p class="fee-name  fl" >{{item.service_fee_name}}</p>
 					<p class="fee-price fr" >￥{{item.totalFee.toFixed(2)}}</p>
 				</dt>
 				<dd class="ov" v-for="i in item.fee_detail">
@@ -274,7 +315,7 @@
 				</dd>
 			</dl>
 			<dl v-for="item in feeList" class="fee-list" v-if="version=='01'">
-				<dt class="ov">
+				<dt class="ov name-color">
 					<p class="fee-name fl" >{{item.fee_type_show_name}}</p>
 					<p class="fee-price fr" >￥{{item.fee_price}}</p>
 				</dt>
@@ -284,38 +325,23 @@
 				</dd>
 			</dl>
 			 <dl v-for="item in feeList" class="fee-list" v-if="version=='03'">
-        <dt class="ov">
-          <p class="fee-name fl">{{item.service_fee_name}}</p>
-          <p class="fee-price fr">￥{{item.totalFee.toFixed(2)}}</p>
-        </dt>
-        <dd class="ov" v-for="i in item.fee_detail">
-          <p class="detail-date fl">{{i.service_fee_cycle}}</p>
-          <p class="detail-price fr">{{i.fee_price}}</p>
-        </dd>
-      </dl>
-			<!-- 优惠选项 -->
-			<ul class="discount">
-				<li class="ov" @click="uptonList" >
-					<div class="fl">现金券 <span class="can-use">&nbsp;<strong>{{uptonData.length}}</strong>&nbsp;张可用&nbsp;</span></div>
-					<div class="fr">{{uptonAmount}} &gt;</div> 
-				</li>
-				<li class="ov coupon">
-					<span class="fl" >物业优惠</span>
-					<span class="fr bigfont">￥{{reduceAmt}} </span>
-				</li>
-				<!-- <li class="ov coupon"  v-show="Member" @click="mebaerherf()">
-					<span class="fl" >支付立减50</span>
-					<span class="fr bigfont ">立刻开通VIP></span>
-				</li> -->
-			</ul>
+				<dt class="ov name-color">
+					<p class="fee-name fl">{{item.service_fee_name}}</p>
+					<p class="fee-price fr">￥{{item.totalFee.toFixed(2)}}</p>
+				</dt>
+				<dd class="ov" v-for="i in item.fee_detail">
+					<p class="detail-date fl">{{i.service_fee_cycle}}</p>
+					<p class="detail-price fr">{{i.fee_price}}</p>
+				</dd>
+			</dl>
 			
 			<!-- 支付金额 -->
 			<div class="payCount">
-				<p class="fl">支付金额</p>
-				<p class="fr bigfont">￥{{count}}</p>
+				<p class="fl">账单金额</p>
+				<p class="fr bigfont">￥{{routeParams.totalPrice}}</p>
 			</div>
 
-			<!-- 发票 v-show="yins"-->
+			<!-- 发票 -->
 			<form class="invoice" v-show="show_invoice=='1'">
 				<div class="form-row">
 					是否需要发票:&nbsp;&nbsp;
@@ -344,49 +370,132 @@
 				<h4 class="qufapiao" v-show="show_invoice_flag==1">申请的电子发票预计在3个工作日内通过短信发送至您手机上,请注意查收</h4>
 			</form>
 			<!-- 支付按钮 -->
-			<div class="card fs15 item" >
-				<div class="ov fs13 " >
-					<span  style="padding:9px 5px 5px 5px; float:left;">是否自动绑定为该房屋的业主：</span>
-					<div class="ov" style="padding:0px 5px 5px 0px;">
+			<div class="card " >
+				<div class="ov item" >
+					<span  class="fl">是否自动绑定为该房屋的业主：</span>
+					<div class="ov fl  ml">
 						<label class="chendad " :class="{addse:bind_switch=='1'}" for="checkbox_a1"></label>
-						<span>是&nbsp;&nbsp;</span>
+						<span class="mr">是</span>
 						<input type="radio" id="checkbox_a1" name="flag" value="1" v-model="bind_switch" class="chk_1"  />
 
 						<label for="checkbox_a2" class="chendad" :class="{addse:bind_switch=='0'}" ></label>
 						<span>否</span>	
 						<input type="radio" id="checkbox_a2" name="flag" value="0"  v-model="bind_switch" class="chk_1"  />
-						</div>		
+					</div>		
 				</div>	
 			</div>
 
-			<div style="height:1rem;"></div>
-			<div class="pay-btn" @click="wechatPay">立即微信支付</div>
-			<!-- <div class="pay-btn" @click="add">价格</div> -->
-		</div>
-
-
-		<!-- 优惠券列表 -->
-		<div class="upton-list" v-else>
-			<!-- 可用券的数量 -->
-			<div class="can-use">
-				<p class="fl">可用现金券</p>
-				<p class="fr">共{{uptonData.length}}个</p>
-			</div>
-			<!-- 详情 -->
-			<div class="uptonDetail" v-for="(item,index) in uptonData" @click="showIcon(index)">
-				<i class="icon" :class="{iconShow:item.selected}" ></i>
-				<div class="detail-left fl">
-					<div class="upton-name">{{item.title}}</div>
-					<p class="validity">{{item.leftDayDes}}</p>
-					<span class="text">使用期限 {{item.useStartDateStr}}至{{item.useEndDateStr}}</span>
+			<!-- 贵州银行卡支付 -->
+			<div class="Manner" v-show="cardPayService == 'true'">
+				<div class="Manner-title">选择支付方式</div>
+				<div class="Manner-hand ov">
+					<div class="Manner-img fl">
+						<img src="../../assets/image/wei.png" alt="">
+					</div>
+					<span>微信支付</span>
+					<div class="fr">
+						<label class="chendadm" :class="{addsem:payType=='0'}" for="checkbox_a3"></label>
+						<input type="radio" id="checkbox_a3" value="0" v-model="payType" class="chk_1"  />
+					</div>
 				</div>
-				<div class="detail-right fr">
-					<p class="upton-number">￥{{item.amount}}</p>
-					<p class="upton-type">现金券</p>
+				<div v-for="(item,i) in bankCards" :key="item.id" >
+					<div class="Manner-handm ov   " style= "height: 0.61rem;line-height: 0.61rem;    font-size: 0.36rem;">
+						<!-- <div class="Manner-img fl Mt15">
+							<img src="../../assets/image/zhifu.png" alt="">
+						</div>
+						<span class="Mt1 fs3">银行卡 ({{item.acctNo.substring(item.acctNo.length-4)}})</span> -->
+						<!-- <span class="Mt1 fs3" v-show="item.cardType==1">贵州银行借记卡 ({{item.acctNo.substring(item.acctNo.length-4)}})</span> -->
+						<!-- <span class="Mt1 fs3" v-show="item.cardType==2">贵州银行贷记卡 ({{item.acctNo.substring(item.acctNo.length-4)}})</span> -->
+						<!-- <br>
+						<span class="Mtext Mtextl">贵州银行缴费，享减免折扣</span> -->
+						<!-- <div class="fr Manner-bottom">
+							<label class="chendadm " :class="{addsem:payType == i+2}" :for="'checkbox_a'+(i+7)" @click="btncard(item)"></label>
+							<input type="radio" :id="'checkbox_a'+(i+7)" :value="i+2" v-model="payType" class="chk_1"  />
+						</div> -->
+
+						<div class="Manner-img fl">
+							<img src="../../assets/image/zhifu.png" alt="">
+						</div>
+						<span>银行卡 ({{item.acctNo.substring(item.acctNo.length-4)}})</span>
+
+						<div class="fr Manner-bottom" style="bottom:0">
+							<label class="chendadm " :class="{addsem:payType == i+2}" :for="'checkbox_a'+(i+7)" @click="btncard(item)"></label>
+							<input type="radio" :id="'checkbox_a'+(i+7)" :value="i+2" v-model="payType" class="chk_1"  />
+						</div>
+					</div>
+
+					<div class="Manner" v-show="payType == i+2">
+						<div class="Manner-bd Manner-name ov">
+							<div class="fl Mannerwl">姓名</div>
+							<div class="fl Mannerwr">
+								<input type="text" placeholder="请输入持卡人姓名" :value="item.acctName" @blur="fixScroll">
+							</div>					
+						</div>
+						<div class="Manner-bd Manner-name ov">
+							<div class="fl Mannerwl">卡号</div>
+							<div class="fl Mannerwr">
+								<input type="text" placeholder="请输入银行卡号   " :value="item.acctNo" @blur="fixScroll" >
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="Manner-hand ov">
+					<div class="Manner-img fl">
+						<img src="../../assets/image/zhifu.png" alt="">
+					</div>
+					<span>使用新卡支付</span>
+					<div class="fr">
+						<label class="chendadm" :class="{addsem:payType=='1'}" for="checkbox_a5"></label>
+						<input type="radio" id="checkbox_a5" value="1" v-model="payType" class="chk_1"  />
+					</div>
+				</div>
+			</div>	
+			<div v-show="payType == '1' ">
+			<div class="Manner" >
+				<div class="Manner-bd Manner-name ov">
+					<div class="fl Mannerwl">姓名</div>
+					<div class="fl Mannerwr">
+						<input type="text" placeholder="请输入持卡人姓名"  @blur="fixScroll" v-model="customerName">
+					</div>
+				</div>
+				<div class="Manner-bd Manner-name ov">
+					<div class="fl Mannerwl">卡号</div>
+					<div class="fl Mannerwr">
+						<input type="text" placeholder="请输入银行卡号   "  @blur="fixScroll" v-model="acctNo">
+					</div>
+				</div>
+				<div class="Manner-bd Manner-name ov">
+					<div class="fl Mannerwl">证件类型</div>
+					<div class="fl Mannerwr Manner-dev">
+						<span :class="{Mannercolor : certType != ''}">{{certspan}}</span>
+						<select class="Manner-st" v-model="certType" @blur="fixScroll">
+							<option v-for=" item  in certTypes " :key="item.type" :value="item.type">{{item.name}}</option>
+						</select>
+					</div>
+				</div>
+				<div class="Manner-bd Manner-name ov">
+					<div class="fl Mannerwl">证件号</div>
+					<div class="fl Mannerwr">
+						<input type="text" placeholder="请输入证件号      "  @blur="fixScroll" v-model="certId">
+					</div>
+				</div>
+				<div class="Manner-name ov">
+					<div class="fl Mannerwl">手机号</div>
+					<div class="fl Mannerwr">
+						<input type="text" placeholder=" 请输入预留手机号"  @blur="fixScroll" v-model="phoneNo">
+					</div>
 				</div>
 			</div>
-			<!-- 提交按钮 -->
-			<div class="btn" @click="submit">确定</div>
+				<div class="ov">
+					<div class="fr ml remember">
+						<label class="chendad rept " :class="{addse:remember == true,addseb:remember == true}" for="checkbox_a6"></label>
+						<span>记住卡号</span>
+						<input type="checkbox" id="checkbox_a6" name="flag"  v-model="remember" class="chk_1"  />
+					</div>
+				</div>
+			</div>
+			<div style="height:1.5rem;"></div>
+			<div class="pay-btn" :class="{paycolor : payType!= ''}" @click="btnPay">确定支付</div>
 		</div>
 
 	</div>
@@ -398,53 +507,53 @@
 	export default {
 		data(){
 			return {
-				Member:true,
-				yins:false,
 				invoice_title:'',//发票抬头
 				credit_code:'',//公司税号
 				invoice_title_type:'01',//个人01或公司02 
-				needInvoice:'1',//是否需要发票
-				uptonAmount:'未使用',
-				upronAmountNumber:0,////优惠券金额 数量
-				uptonData:[
-					// {
-					// 	id:1,
-					// 	selected:false,
-					// 	title:'滴滴滴',
-					// 	leftDayDes:'11',
-					// 	useStartDateStr:'22',
-					// 	useEndDateStr:'33',
-					// 	amount:100,
-					// },
-				],
-				allCoupons:[],
-				selectUpton:true,//显示的是缴费详情页面还是选择优惠劵页面
+				needInvoice:'1',//是否需要发票				
 				routeParams:{
 					billIds : this.$route.query.billIds,//id 集合
 					stmtId:this.$route.query.stmtId,//扫码数据
 					totalPrice:this.$route.query.totalPrice,//合计金额
 					reduceMode:this.$route.query.reduceMode,//减免方式
+					payFeeType:this.$route.query.payFeeType,//01管理费，02停车费
 				},
 				count:0,//实际支付金额
-				hasReduce:'0',//是否有减免
-				reduceAmt:'0',//减免合计
 				verNumber:'',//户号
 				addr:'',//地址
 				area:'',//面积
 				feeList:'',//费用列表
-				couponId:'',//优惠券id
-				mianBill:'0',//优惠的账单id
-				mianAmt:0.00,
-				fee_mianBill:'0',
-				fee_mianAmt:0.00,
-				mian_amt:0.00,//标准版减免
 				show_invoice_flag:'0',
 				show_com_flag:'0',//是否允许开具公司发票
 				show_invoice:'',//是否显示发票
 				version:'',
-				bind_switch:"1",
-				 price: "",
-      			reduceMoney:"0"
+				bind_switch:'1',
+				reduceMoney:'0',
+				
+				cardPayService:this.$route.query.cardPayService, //控制是否可以 绑卡支付
+				payType:'',//支付方式
+				customerName:'',//持卡人姓名
+				acctNo:'',//卡号
+				acctNNo:'',//卡号
+				certType:'',//证件类型
+				certId:'',//证件号
+				phoneNo:'',//银行卡预留手机号
+				remember:true,//记住密码
+				remerbernumm:'1',//记住密码
+				certTypes: [
+					{type:'',name:'请选择'},
+					{type:'01',name:'身份证'},
+					{type:'02',name:'军官证'},
+					{type:'03',name:'护照'},
+					{type:'04',name:'回乡'},
+					{type:'05',name:'台胞证'},
+					{type:'06',name:'警官证'},
+					{type:'07',name:'士兵证'},
+					{type:'99',name:'其他证件'}
+				],
+				certspan:'请选择',
+				bankCards:[],
+				cardId:'',//记录卡的id
 			}
 		},
 		filters:{
@@ -455,13 +564,9 @@
 		},
 		created(){
 			vm = this;		
-			
-			this.directRightUrl();
 			if(vm.routeParams.stmtId == " "){
 				vm.routeParams.stmtId = ""
 			}
-			//得到实际支付金额 和是否减免 和减免了多少钱
-			// vm.calcReduceAmt()
 			//无账单缴费
 			    this.house_id = this.$route.query.house_id;
                 this.sect_id = this.$route.query.sect_id;
@@ -472,13 +577,11 @@
                 vm.version=this.$route.query.getversion;
 		},
 		mounted(){
-		
 			vm.common.checkRegisterStatus();
-			// this.initSession4Test()
+			// this.initSession4Test();
+			this.cardpaySer();
 			this.getBillDetail();
-			this.Coupons();
-			// this.getMember(); 判断是否开通会员
-			
+			this.Getremember();
 		},
 		watch:{
 			invoice_title_type() {
@@ -496,17 +599,77 @@
 					this.invoice_title_type ='01'
 				}
 			},
-			bind_switch(na,nw) {
+			bind_switch(na,nw) {	
 				this.bind_switch=na;
 				
+			},
+			remember(na,nw) { //监控是否记住卡号 0->false 1->true
+				if(na == true){
+					vm.remerbernumm = '1';
+				}else {
+					vm.remerbernumm = '0';
+				}
+				
+			},
+			certType(na,nw) { //证件类型
+				if(na != nw) {
+					for(var i = 0;i < vm.certTypes.length;i++) {
+						if(na == vm.certTypes[i].type) {
+							vm.certspan = vm.certTypes[i].name;
+						}
+					}
+				}
+			},
+			payType(na,nw) { //监控银行卡支付类型		
+				if(na == '1'){
+					vm.customerName = '',//姓名
+					vm.acctNo = '',//卡号
+					vm.certType = '',//证件类型
+					vm.certId = '',//证件号
+					vm.phoneNo = ''//手机号
+					
+				}
 			}
+
 		},
 		methods:{
+			//判断支付方式
+			cardpaySer() {
+				if(vm.cardPayService == 'false') {
+					vm.payType = '0';
+				}
+			},
+			//记住卡号获取姓名 卡号
+			Getremember() {
+				let url = '/bankCard';
+					vm.receiveData.getData(vm,url,'res',function(){
+						if(vm.res.success) {
+							if(vm.res.result.length > 0) {
+								vm.bankCards = vm.res.result;
+							}
+						}
+					});
+			},
+			btncard(item){ //使用保存的卡				
+				vm.acctNNo = item.acctNo;
+				vm.cardId = item.cardId;
+			},
 			//创造用户
 			initSession4Test(){
-				let url = '/initSession4Test/2';
+				let url = '/initSession4Test/62';
 					vm.receiveData.getData(vm,url,'Data',function(){
 				});
+			},
+			//ios中留白问题
+			fixScroll() {
+				let u = navigator.userAgent;
+				let isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+				if (isiOS) {
+				setTimeout(() => {
+					const  scrollheight = document.documentElement.scrollTop || document.body.scrollTop || 0;
+					window.scrollTo(0,Math.max(scrollheight, 0))
+				}, 200);
+				}
 			},
 			getBillDetail() {
 			if(vm.version=='01'){
@@ -515,47 +678,23 @@
              
              vm.receiveData.getData(
                 vm,url,'data',function(){
-						  
 				    vm.show_com_flag=vm.data.result.other_bill_info[0].show_com_flag;
 					vm.show_invoice_flag = vm.data.result.other_bill_info[0].show_invoice_flag;
 					vm.show_invoice=vm.data.result.other_bill_info[0].show_invoice;
 					if(vm.show_invoice=='1') {
-								vm.invoice_title_type='01';
-							}
-					if(vm.data.result.fee_data  == null){
-						
-						
+						vm.invoice_title_type='01';
 					}
 					let useDate = vm.data.result.other_bill_info[0];
-					let mian_amt = vm.data.result.other_bill_info[0].mian_amt;
-					if ( mian_amt) {
-						
-						vm.mian_amt = vm.data.result.other_bill_info[0].mian_amt;
-						
-						
-					}
                     vm.verNumber = useDate.ver_no;
                  			//地址
                     vm.addr = useDate.cell_addr;
-	
               				//面积
                     vm.area = useDate.cnst_area;
                				//费用列表
 					vm.feeList = vm.data.result.other_bill_info;
-					vm.mian_amt=useDate.mian_amt;//标准版减免
-					vm.count = vm.routeParams.totalPrice;//传来的总价格
-					let reduced_amt=parseFloat(vm.mian_amt)//减少的钱
-					vm.reduceAmt = parseFloat(reduced_amt).toFixed(2); //合计
-					vm.count =parseFloat(vm.routeParams.totalPrice) - parseFloat(vm.reduceAmt);//减免之后的金额
-					vm.count = vm.count.toFixed(2);
-					//缴费四舍五入
-					let zcount=vm.count;
-					// vm.Carandpay(zcount,reduced_amt);
-					vm.Carandpay(zcount);//四舍五入
                 }
 			 )
-			//   vm.calcReduceAmt();
-            }else if(vm.version == "02"){
+            }else {
 			let url = "getBillDetail?regionname="+this.regionname;
 			vm.receiveData.getData(
 				vm,
@@ -566,371 +705,77 @@
 					vm.show_invoice_flag = vm.data.result.show_invoice_flag
 					vm.show_invoice=vm.data.result.show_invoice;
 					if(vm.show_invoice=='1') {
-								vm.invoice_title_type='01';
-							}
-					if(vm.data.result.fee_data  == null){
-						
-						// var herf1 = "https://www.e-shequ.com/weixin/wuye/index.html";
-						// location.href = herf1;
+						vm.invoice_title_type='01';
 					}
 	  				let useDate = vm.data.result.fee_data[0];
-	  				let mianBill = vm.data.result.mianBill;
-					let mianAmt = vm.data.result.mianAmt;
-					let fee_mianBill = vm.data.result.fee_mianBill;//物业费减免账单id
-            		let fee_mianAmt = vm.data.result.fee_mianAmt;//物业费减免金额
-	  				if ( mianBill) {
-						vm.mianBill = vm.data.result.mianBill;
-					}
-					if ( mianAmt) {
-						vm.mianAmt = vm.data.result.mianAmt;
-					}
-					if (fee_mianBill) {
-              			vm.fee_mianBill = vm.data.result.fee_mianBill;
-            		}
-					if (fee_mianAmt) {
-					    vm.fee_mianAmt = vm.data.result.fee_mianAmt;
-					}
 	  				//户号
 	  				vm.verNumber = useDate.ver_no;
 	  				//地址
 	  				vm.addr = useDate.cell_addr;
-					
 	  				//面积
 	  				vm.area = useDate.cnst_area;
 	  				//费用列表
 					vm.feeList = useDate.fee_name;
-					vm.count = vm.routeParams.totalPrice;//传来的总价格
-					let reduced_amt=parseFloat(vm.fee_mianAmt)+parseFloat(vm.mianAmt);//减少的钱
-					vm.reduceAmt = parseFloat(reduced_amt).toFixed(2); //合计
-					vm.count =parseFloat(vm.routeParams.totalPrice) - parseFloat(vm.reduceAmt);//减免之后的金额
-					vm.count = vm.count.toFixed(2);
-					//缴费四舍五入
-					let zcount=vm.count;
-					// vm.Carandpay(zcount,reduced_amt);
-					vm.Carandpay(zcount);//四舍五入
 	  			},
 	  			{
 	  				billId :vm.routeParams.billIds,
 	  				stmtId :vm.routeParams.stmtId
 	  			}
 			  );
-       }      //停车费减免ifbefore_condition为1，可以优惠，为0则不可优惠
-      else {
-        let url = "getBillDetail?regionname=" + this.regionname;
-        vm.receiveData.getData(
-          vm,
-          url,
-          "data",
-          function() {
-            vm.show_com_flag = vm.data.result.show_com_flag;
-            vm.show_invoice_flag = vm.data.result.show_invoice_flag;
-            vm.show_invoice = vm.data.result.show_invoice;
-            if (vm.show_invoice == "1") {
-              vm.invoice_title_type = "01";
-            }
-            if (vm.data.result.fee_data == null) {
-            }
-            let useDate = vm.data.result.fee_data[0];
-            let mianBill = vm.data.result.mianBill;//停车费减免账单id
-			let mianAmt = vm.data.result.mianAmt;//停车费减免金额
-			let fee_mianBill = vm.data.result.fee_mianBill;//物业费减免账单id
-            let fee_mianAmt = vm.data.result.fee_mianAmt;//物业费减免金额
-            if (mianBill) {
-              vm.mianBill = vm.data.result.mianBill;
-            }
-            if (mianAmt) {
-              vm.mianAmt = vm.data.result.mianAmt;
-			}
-			if (fee_mianBill) {
-              vm.fee_mianBill = vm.data.result.fee_mianBill;
-            }
-			if (fee_mianAmt) {
-			  vm.fee_mianAmt = vm.data.result.fee_mianAmt;
-			}
+       }     
+	},
 
-            //户号
-            vm.verNumber = useDate.ver_no;
-            //地址
-            vm.addr = useDate.cell_addr;
-
-            //面积
-            vm.area = useDate.cnst_area;
-            //费用列表
-            vm.feeList = useDate.fee_name;
-            //字符串
-  
-              vm.count = vm.routeParams.totalPrice;
-              let reduced_amt=vm.mianAmt;
-              vm.reduceAmt =  parseFloat(reduced_amt).toFixed(2); //合计
-              vm.count =parseFloat(vm.routeParams.totalPrice) - parseFloat(vm.reduceAmt);
-              vm.count = vm.count.toFixed(2);
-               //缴费四舍五入
-              let zcount=vm.count;
-			  vm.Carandpay(zcount);
-          },
-          {
-            billId: vm.routeParams.billIds,
-            stmtId: vm.routeParams.stmtId
-            //停车减免传优惠账单的id
-          }
-        );
-      }
-			},
-			 Carandpay(zcount){
-			  vm.count=zcount;
-			  let reduced_amt=0;
-              let reduce_rate = 0; //减少到角还是分减少到角还是分
-              if ("0" == vm.routeParams.reduceMode) {
-              //不减免
-              return;
-              } else if ("1" == vm.routeParams.reduceMode) {
-                //四舍五入至元
-                reduce_rate = "1";
-                reduced_amt = Math.round(vm.count * reduce_rate) / reduce_rate;
-                vm.hasReduce = "1";
-              } else if ("2" == vm.routeParams.reduceMode) {
-                //表示四舍五入至角
-                reduce_rate = "10";
-                reduced_amt = Math.round(vm.count * reduce_rate) / reduce_rate;
-                vm.hasReduce = "1";
-              }
-              else if ("4" == vm.routeParams.reduceMode) {
-                //表示保留至角去分
-                reduce_rate = "10";
-                reduced_amt = Math.floor(vm.count * reduce_rate) / reduce_rate;
-                vm.hasReduce = "1";
-              }else if ("5" == vm.routeParams.reduceMode) {
-                //表示保留至角入分
-                reduce_rate = "10";
-                reduced_amt = Math.ceil(vm.count * reduce_rate) / reduce_rate;
-                vm.hasReduce = "1";
-                //保留至元去角
-              } else if("6" == vm.routeParams.reduceMode){
-                reduce_rate = "1";
-                reduced_amt = Math.floor(vm.count * reduce_rate) / reduce_rate;
-                vm.hasReduce = "1";
-              }else if("7" == vm.routeParams.reduceMode){
-                // 保留至元入角
-                reduce_rate = "1";
-                reduced_amt = Math.ceil(vm.count * reduce_rate) / reduce_rate;
-                vm.hasReduce = "1";
-              }else {
-                return;
-              }
-            vm.reduceMoney = parseFloat(vm.count) - parseFloat(reduced_amt.toFixed(2));//四舍五入的钱传给后端
-            vm.reduceMoney = vm.reduceMoney.toFixed(2); //减少的钱  
-            vm.count = reduced_amt.toFixed(2); //合计
-     
-         
-  },
-	  		//优惠券
-			Coupons(){
-				//请求优惠券数据 第一步 更新优惠券 第二步:获取优惠券
-				let url2 = 'updateCouponStatus';
-				vm.receiveData.getData(vm,url2,'temp',function(){	  			
-					//更新后 获取优惠劵
-					let url3 = 'getCouponsPayWuYe';
-					vm.receiveData.getData(vm,url3,'uptonDatas',function(){
-						vm.uptonData = vm.uptonDatas.result;
-						vm.allCoupons=vm.uptonDatas.result;
-						vm.filterCouponByAmount();
-					})
-				});
-			},
-			//使用filterCouponByAmount进行金额过滤
-			filterCouponByAmount() {
-				var c=[];
-				for(var i=0;i<vm.allCoupons.length;i++) {
-					if(vm.allCoupons[i].usageCondition<=vm.count) {
-						c.push(vm.allCoupons[i])
-					}
-				}
-				vm.uptonData=c;
-			},
-			// 重定向到正确的url
-			directRightUrl () {
-			  let paths = window.location.href.split('#')
-			  paths[1] = paths[1] || '/'
-			  // 老式的#!分隔跳转
-			  if (paths[0].charAt(paths[0].length - 1) !== '?') {
-			    paths[0] = `${paths[0]}?`
-			  }
-			  if (paths[1].charAt(0) === '!') {
-			     paths[1] = paths[1].substr(1)
-			  }
-			  let url = `${paths[0]}#${paths[1]}`
-			  if (window.location.href !== url) {
-			  	console.log(url);
-			    window.location.href = url
-			  }
-			},
-			//判断是否开通vip
-			// getMember() {
-				// 	let url = '/getMember';
-				// 		vm.receiveData.getData(vm,url,'res',function(){
-				// 			if(vm.res.length!=0) {
-				// 				if(vm.res[0].status==0) {
-				// 					vm.Member=false;
-				// 				}
-				// 			} 
-							
-				// 	});
-			// },
-			// //点击vip跳转
-			// mebaerherf() {
-				// 	window.location.href=vm.basePageUrlpay+'orderpay.html?start=123#/kaitong'
-			// },
-			//切换优惠券选中状态
-			showIcon(index){
-				if(vm.uptonData[index].selected){
-					vm.$set(vm.uptonData[index],'selected',false);
-				}else{
-					vm.$set(vm.uptonData[index],'selected',true);
-					for(let i in vm.uptonData){
-						if(i != index && vm.uptonData[i].selected == true){
-							vm.$set(vm.uptonData[i],'selected',false);
-							break;							
-						}
-					}
-				}
-			},
-			//根据合计金额和减免方式得到实际支付金额
-			calcReduceAmt(){
-				//实际支付的钱
-				vm.count = vm.routeParams.totalPrice;//传过来的合计金额
-				let reduced_amt = 0;//减少的钱
-				let reduce_rate = 0;//减少到角还是分减少到角还是分
-				if ("0" == vm.routeParams.reduceMode) {	//不减免 
-					return;
-				}else if ("1" == vm.routeParams.reduceMode) {	//四舍五入至元
-					reduce_rate = "1";
-					reduced_amt=Math.round(vm.count*reduce_rate)/reduce_rate;
-					vm.hasReduce = "1";
-				}else if ("2" == vm.routeParams.reduceMode) {	//表示四舍五入至角
-					reduce_rate = "10";
-					reduced_amt=Math.round(vm.count*reduce_rate)/reduce_rate;
-					vm.hasReduce = "1";
-				}else {
-					return;
-				}
-				vm.count = reduced_amt.toFixed(2);//合计
-				vm.reduceAmt = parseFloat(vm.routeParams.totalPrice) - parseFloat(vm.count);
-				vm.reduceAmt = vm.reduceAmt.toFixed(2);//减少的钱
-			},
-			//跳转到优惠券列表
-			uptonList(){
-				if(vm.uptonData.length == 0){//无优惠券
-					return
-				}else{
-					vm.selectUpton = false;	
-				}
-				
-			},
-			submit(){//点击确定选择优惠劵
-				let flag = false;
-				for(let i in vm.uptonData){
-					if(vm.uptonData[i].selected == true){
-						flag = true;
-						vm.couponId = vm.uptonData[i].id;//优惠券id
-						vm.uptonAmount = '￥' + vm.uptonData[i].amount+'元';//优惠券额度
-						vm.upronAmountNumber = vm.uptonData[i].amount;
-						vm.count = vm.routeParams.totalPrice;//传过来的合计金额
-						vm.count -= vm.uptonData[i].amount
-						vm.count = vm.count.toFixed(2);//金额
-						if(vm.count < 0 ){
-							vm.count = 0;
-						}
-					}
-					if(!flag){
-						vm.uptonAmount = "未使用";
-						vm.upronAmountNumber = 0,
-						vm.couponId = '';
-						vm.calcReduceAmt();
-					}
-					vm.selectUpton = true;
-				};
-				
-				
-			},
 			//微信支付 post请求接口，在post成功的回调函数里调用微信支付接口
-			wechatPay(){
-				//vm, url, params,backdataname,callback
-				//let url = 'getPrePayInfo'
+			btnPay (){
 				if(this.invoice_title_type=="02"){
-						if(this.invoice_title==""){
-							alert("请填写发票抬头信息");
-							return;
-						};
-						if(this.credit_code==""){
-							alert("请填写发票公司税号信息");
-							return;
-						}
+					if(this.invoice_title==""){
+						alert("请填写发票抬头信息");
+						return;
+					};
+					if(this.credit_code==""){
+						alert("请填写发票公司税号信息");
+						return;
+					}
 				};
-				$('.box-bg').css("display",'block');
-				let url;
-				if(vm.version=='01'){
-				 url = "getOtherPrePayInfo?houseId="+this.house_id+"&regionname="+this.regionname+"&start_date="+ this.start_date+"&end_date="+this.end_date+"&couponUnit="+vm.upronAmountNumber+"&couponNum=1&couponId="+vm.couponId+"&mianBill="+vm.mianBill+"&mianAmt="+vm.mianAmt+"&mian_amt="+vm.mian_amt+"&reduceAmt="+vm.reduceAmt+"&invoice_title_type="+this.invoice_title_type+"&credit_code="+this.credit_code+"&invoice_title="+this.invoice_title;
-				}else{
-			    url = "getPrePayInfo?billId="+vm.routeParams.billIds+"&stmtId="+vm.routeParams.stmtId+"&regionname="+this.regionname+"&couponUnit="+vm.upronAmountNumber+"&couponNum=1&couponId="+vm.couponId+"&mianBill="+vm.mianBill+"&mianAmt="+vm.mianAmt+"&fee_mianAmt="+vm.fee_mianAmt+"&fee_mianBill="+vm.fee_mianBill+"&reduceAmt="+vm.reduceMoney+"&invoice_title_type="+this.invoice_title_type+"&credit_code="+this.credit_code+"&invoice_title="+this.invoice_title;
-				}
-				this.axios.post(
-					url,
-					{},
-				).then(
-					function(res){
-						let wd = JSON.parse(res.data);
-						console.log(wd);
-						if(wd.success == false){
-							alert(wd.message);
-							$('.box-bg').css("display",'none');
+				if(vm.payType != '') {
+					if(vm.payType == '1') {
+						if(vm.customerName == '' || vm.acctNo == '' || vm.certType == '' || vm.certId == ''){
+							alert('请填写完整信息');
 							return;
 						}
-						wx.config({
-		                    debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
-		                    appId: wd.result.appid, // 必填，公众号的唯一标识
-		                    timestamp: wd.result.timestamp, // 必填，生成签名的时间戳
-		                    nonceStr: wd.result.noncestr, // 必填，生成签名的随机串
-		                    signature: wd.result.paysign,// 必填，签名，见附录1
-		                    jsApiList: ['chooseWXPay'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
-		                });
-		                wx.chooseWXPay({
-						 	"appId":wd.result.appid,
-			                "timestamp":wd.result.timestamp,
-			                "nonceStr":wd.result.noncestr,
-			                "package":wd.result.packageValue,
-			                "signType":wd.result.signtype,
-			                "paySign":wd.result.paysign,
-							
-			          	    success: function (res) {
-			          	    	// alert("起步走起");
-								let reqUrl = "noticePayed?billId="+vm.routeParams.billIds+"&stmtId="+vm.routeParams.stmtId+"&tradeWaterId="+wd.result.trade_water_id+"&packageId="+wd.result.packageId+"&feePrice="+vm.routeParams.totalPrice+"&bind_switch="+vm.bind_switch;
-								if(vm.uptonAmount != "未使用"){
-									// alert("走到这一步")
-									reqUrl += "&couponId="+vm.couponId;
-								}
-								vm.receiveData.postData(vm,reqUrl,{},'reqUrlData',function(){
-									vm.payInfo = vm.reqUrlData.result;
-									//支付成功跳转详情
-									// var oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
-									var oriapp=vm.common.getoriApp();
-									window.location.href = vm.basePageUrl+'wuye/index.html?'+oriapp+'#/paymentquery';
-					  			})											
-			          	    },
-			          	    fail:function(res) {
-			          	    	console.log(JSON.stringify(res))
-			          	    },
-			          	    cancel:function(res){
-			          	    	alert('支付取消');
-			          	    	$('.box-bg').css("display",'none');
-							}
-			          	    
-			          	})
+						if(!(/^1[3-9][0-9]\d{8}$/.test(vm.phoneNo))) {
+							alert("请填写正确的手机号！");
+							return;
+						}	
 					}
-				).catch(
-					function(err){
-						console.log(err);
-					}
-				)
+					vm.wechatPay(); //微信支付
+				}
+			},
+			wechatPay(){
+				let urlc= {
+					regionname : this.regionname,
+					couponNum : 1,
+					invoice_title_type : this.invoice_title_type,
+					credit_code : this.credit_code,
+					invoice_title : this.invoice_title,
+					billId : vm.routeParams.billIds,
+					stmtId : vm.routeParams.stmtId,
+				};
+				urlc.payType = vm.payType;//支付方式
+				if(vm.payType == 1) {
+					urlc.customerName = vm.customerName,//姓名
+					urlc.acctNo = vm.acctNo,//卡号
+					urlc.certType = vm.certType,//证件类型
+					urlc.certId = vm.certId,//证件号
+					urlc.phoneNo = vm.phoneNo//手机号
+					urlc.remember = vm.remerbernumm//记住卡号
+					vm.acctNNo = vm.acctNo;
+				}
+
+				
+				window.localStorage.setItem('paylist',JSON.stringify(urlc));
+				vm.$router.push({path:'/payzhifu',query:{bind_switch:vm.bind_switch,version:vm.version,reduceMode:vm.routeParams.reduceMode,acctNNo:vm.acctNNo,cardId:vm.cardId,payFeeType:vm.routeParams.payFeeType}})
+
 			},
 
 		}
