@@ -1,12 +1,12 @@
 <template>
    <div class="invite">
        <div style="background-color:#fff;">
-         <div   @click="gotosgrouprulr" style="width:100%;">
+         <div   @click="gotosgrouprulr" :class="{rule_intro:searchBarFixed}" style="width:100%;" id="searchBar">
                  <img alt="" src="../../assets/images/index/img_tuangou_zhifu.png" style="width: 100%;">
         </div>  
-        <div class="rule_intro"  @click="gotosgrouprulr" style="width:100%;">
+        <!-- <div class="rule_intro"  @click="gotosgrouprulr" style="width:100%;">
                  <img alt="" src="../../assets/images/index/img_tuangou_zhifu.png" style="width: 100%;">
-        </div>
+        </div> -->
            
         <div class="divider"></div>
 
@@ -96,6 +96,7 @@ import wx from 'weixin-js-sdk';
 export default {
    data () {
        return {
+        searchBarFixed:false,
         ruleId:this.$route.query.ruleId,//参数
         share_page:this.$route.query.share,
         finished:true,
@@ -133,12 +134,21 @@ export default {
         let url = location.href.split('#')[0];
         vm.receiveData.wxconfig(vm,wx,['onMenuShareTimeline','onMenuShareAppMessage'],url);
         vm.query();
+        window.addEventListener('scroll', this.handleScroll)
    },
 
    components: {},
 
    methods: {
-  
+     handleScroll () {
+        var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+        var offsetTop = document.querySelector('#searchBar').offsetTop
+        if (scrollTop > offsetTop) {
+            vm.searchBarFixed = true
+        } else {
+            vm.searchBarFixed = false
+        }
+    },   
     query() {
         let url ="getRgroupRule/"+vm.ruleId;
         vm.receiveData.getData(vm,url,'Data',function(){

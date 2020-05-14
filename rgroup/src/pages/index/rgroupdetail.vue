@@ -9,12 +9,12 @@
 		<div id="fade" class="black_overlay" v-show="load">
 		</div>
          <!-- load -->
-         <div   @click="gotosgrouprulr"  style="width:100%;">
+         <div   @click="gotosgrouprulr"  :class="{rule_intro:searchBarFixed}" style="width:100%;" id="searchBar">
              <img alt="" src="../../assets/images/index/img_tuangou_zhifu.png" style="width: 100%;">
          </div>
-        <div  class="rule_intro" @click="gotosgrouprulr" style="width:100%;">
+        <!-- <div  class="rule_intro" @click="gotosgrouprulr" style="width:100%;">
                  <img alt="" src="../../assets/images/index/img_tuangou_zhifu.png" style="width: 100%;">
-        </div> 
+        </div>  -->
         <!-- 轮播图 -->
         <div>
             <swiper v-if="product.pictureList.length>0" :options="swiperOption" ref="mySwiper">
@@ -102,6 +102,7 @@ import wx from 'weixin-js-sdk';
 export default {
    data () {
        return {
+           searchBarFixed:false,
            load:true,
            finished:false,
            showDetail: false,
@@ -140,13 +141,22 @@ export default {
          let url = location.href.split('#')[0];
         vm.receiveData.wxconfig(vm,wx,['onMenuShareTimeline','onMenuShareAppMessage'],url);
         vm.read();
+        window.addEventListener('scroll', this.handleScroll)
    },
    updated(){
        vm.drawP()
    },
 
    methods: {
-      
+        handleScroll () {
+            var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+            var offsetTop = document.querySelector('#searchBar').offsetTop
+            if (scrollTop > offsetTop) {
+                vm.searchBarFixed = true
+            } else {
+                vm.searchBarFixed = false
+            }
+        },
         read() {
             if(vm.ruleId!=""){
                 vm.query()

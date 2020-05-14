@@ -286,6 +286,7 @@ export default {
         e = function(n) {
            if(n.success&&n.result==null) {
                  reLogin();
+                 return
            }
           vm.donghu=n.result.donghu;//东湖标识
           vm.user = n.result;
