@@ -266,6 +266,7 @@ export default {
         unit: "", //门牌id
         house: "" //室号id
       },
+      bills:'',
       openunit: false, //搜索小区
 
       stmtId: "", //快捷缴费 扫描出来的账单号
@@ -480,15 +481,26 @@ export default {
         this.$route.query.City;
       vm.receiveData.getData(vm, url, "Datas", function() {
             //判断是标准还是专业版
-            if (vm.Datas.result.sect_info[0].version == "01") {
-              vm.getversion = vm.Datas.result.sect_info[0].version;
-              vm.zhuanpay = "biaozhun";
-            } else {
-              vm.standard1 = false;
-            }
-            let link = null;
+            // if (vm.Datas.result.sect_info[0].version == "01") {
+            //   vm.getversion = vm.Datas.result.sect_info[0].version;
+            //   vm.zhuanpay = "biaozhun";
+            // } else {
+            //   vm.standard1 = false;
+            // }
+            let link = [];
             link = vm.Datas.result.sect_info;
-            vm.wschat_house_sel_mode=link[0].params.WECHAT_HOUSE_SEL_MODE;
+            for(var i =0;i<link.length;i++) {
+                if(vm.$route.query.queryID == link[i].id) { //判断是哪个小区
+                  //判断是标准还是专业版
+                  if (link[i].version == "01") {
+                    vm.getversion = link[i].version;
+                    vm.zhuanpay = "biaozhun";
+                  } else {
+                    vm.standard1 = false;
+                  }
+                  vm.wschat_house_sel_mode = link[i].params.WECHAT_HOUSE_SEL_MODE;
+                }
+            }
             if (link && link.length > 0) {
               if(vm.wschat_house_sel_mode=='0'){
                 vm.add();
@@ -632,8 +644,6 @@ export default {
           this.$route.query.City +
           "&house_id=" +
           vm.query.house +
-          "&sect_id=" +
-          vm.query.sectID +
           "&start_date=" +
           startData +
           "&end_date=" +
@@ -647,8 +657,10 @@ export default {
               vm.showp = false;
              }
             vm.otherbillinfo = vm.res.result.other_bill_info;
-             vm.isshow=false;
-             vm.showp = false;
+            vm.reduceMode = vm.res.result.reduce_mode;
+            vm.bills = vm.res.result.other_bill_info[0].bills;
+            vm.isshow=false;
+            vm.showp = false;
           }else {
             alert(vm.res.message);
             vm.isshow = false;
@@ -955,7 +967,6 @@ export default {
           }
         }
         let bills = ""; //id
-        let pay_addr = selectedArr[0].pay_addr;
         for (let i in selectedArr) {
           if (selectedArr.length - 1 == i) {
             bills += selectedArr[i].bill_id;
@@ -972,11 +983,11 @@ export default {
         var oriapp=vm.common.getoriApp();
         var oriap = vm.getUrlParam('oriApp');
         if(oriap == 'wxe8dea53aad1a93b9') {
-          window.location.href =vm.basedhzj3Url +"wuyepay.html?"+oriapp+"#/?billIds=" +bills + "&stmtId=" + vm.stmtId + "&payAddr=" + escape(pay_addr) +
-         "&totalPrice=" +vm[allPrice] + "&reduceMode=" + vm.reduceMode + "&regionname=" +vm.regionname +"&getversion=" + "02"+"&cardPayService="+vm.cardPayService;
+          window.location.href =vm.basedhzj3Url +"wuyepay.html?"+oriapp+"?#/?billIds=" +bills + "&stmtId=" + vm.stmtId + 
+         "&totalPrice=" +vm[allPrice] + "&reduceMode=" + vm.reduceMode + "&regionname=" +vm.regionname +"&getversion=" + "02"+"&cardPayService="+vm.cardPayService + "&payFeeType=01";
         }else {
-         window.location.href =vm.basePageUrl +"wuyepay.html?"+oriapp+"#/?billIds=" +bills + "&stmtId=" + vm.stmtId + "&payAddr=" + escape(pay_addr) +
-         "&totalPrice=" +vm[allPrice] + "&reduceMode=" + vm.reduceMode + "&regionname=" +vm.regionname +"&getversion=" + "02"+"&cardPayService="+vm.cardPayService;
+         window.location.href =vm.basePageUrl +"wuyepay.html?"+oriapp+"?#/?billIds=" +bills + "&stmtId=" + vm.stmtId + 
+         "&totalPrice=" +vm[allPrice] + "&reduceMode=" + vm.reduceMode + "&regionname=" +vm.regionname +"&getversion=" + "02"+"&cardPayService="+vm.cardPayService + "&payFeeType=01";
         }
     },
     //点击物业缴费按钮
@@ -991,11 +1002,11 @@ export default {
         var oriapp=vm.common.getoriApp();
         var oriap = vm.getUrlParam('oriApp');
         if(oriap == 'wxe8dea53aad1a93b9') {
-          window.location.href =vm.basedhzj3Url +"wuyepay.html?"+oriapp+"#/?regionname=" +this.$route.query.City +"&totalPrice="+vm[queryallPrice1] +"&house_id=" +
-          vm.query.house +"&sect_id=" +vm.query.sectID + "&start_date=" +startData + "&end_date=" + endData +"&getversion=" + '01'+"&cardPayService="+vm.cardPayService;
+          window.location.href =vm.basedhzj3Url +"wuyepay.html?"+oriapp+"#/?billIds=" +vm.bills + "&regionname=" +this.$route.query.City +"&totalPrice="+vm[queryallPrice1] +"&house_id=" +
+          vm.query.house +"&sect_id=" +vm.query.sectID + "&start_date=" +startData + "&end_date=" + endData +"&getversion=" + '01' + "&reduceMode=" + vm.reduceMode + "&cardPayService="+vm.cardPayService + "&payFeeType=01";
         }else {
-          window.location.href =vm.basePageUrl +"wuyepay.html?"+oriapp+"#/?regionname=" +this.$route.query.City +"&totalPrice="+vm[queryallPrice1] +"&house_id=" +
-          vm.query.house +"&sect_id=" +vm.query.sectID + "&start_date=" +startData + "&end_date=" + endData +"&getversion=" + '01'+"&cardPayService="+vm.cardPayService;
+          window.location.href =vm.basePageUrl +"wuyepay.html?"+oriapp+"#/?billIds=" +vm.bills + "&regionname=" +this.$route.query.City +"&totalPrice="+vm[queryallPrice1] +"&house_id=" +
+          vm.query.house +"&sect_id=" +vm.query.sectID + "&start_date=" +startData + "&end_date=" + endData +"&getversion=" + '01' + "&reduceMode=" + vm.reduceMode + "&cardPayService="+vm.cardPayService + "&payFeeType=01";
         }
       } else { // 专业版
          vm.pays(list, allPrice, allselect)

@@ -1,6 +1,3 @@
-import xml2js from'xml2js' 
-var xmlParser = new xml2js.Parser({explicitArray : false, ignoreAttrs : true})
-    //xml转json
 import wx from 'weixin-js-sdk';
 
 
@@ -159,36 +156,6 @@ let receiveData = {
                 // console.log('fail', err);
             });
     },
-    //将字符串转为xml对象
-    toxml:function(xmlStr){
-        var root = document.createElement('XMLROOT');
-        root.innerHTML = xmlStr
-        return root
-    },
-
-    //字符串转为json对象
-    loadxml: function(xmlStr){
-        
-        var root = document.createElement('XMLROOT');
-        root.innerHTML = xmlStr;
-        return this.parse(root)
-    },
-    
-    //递归解析 将xml对象转为 json对象
-    parse: function(node){
-        var result = {};
-        for(var i = 0 ; i < node.childNodes.length ; ++i){
-            if(node.childNodes[i].nodeType == 1){//元素节点 继续递归解析
-                result[node.childNodes[i].nodeName.toLowerCase()] = this.parse(node.childNodes[i]);
-            }else if(node.childNodes[i].nodeType==3){//文本节点 返回
-                return node.childNodes[i].nodeValue;
-            }
-        }
-        return result;
-    } ,
-
-
-
 };
 
 export default receiveData;

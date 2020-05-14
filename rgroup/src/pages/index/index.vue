@@ -46,6 +46,9 @@
                        
 			    	</div>
                 </div>
+                <!-- <div class="text-b" v-show="rgroups.length == 0">
+                    <span>您所在的小区未开通当前服务</span>
+                </div>   -->
             </div>
         </div>
         <div style="height:.5rem;clear:both">&nbsp;</div>
@@ -412,6 +415,12 @@ export default {
     -webkit-border-radius: 15px;
 }
  /* load */
+ /* .text-b {
+    width: 100%;
+    text-align: center;
+    margin-top: 3rem;
+    font-size: 0.3rem;
+} */
  .mlr1 {
     margin-left: .2rem;
     margin-right: .2rem;

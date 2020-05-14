@@ -293,7 +293,7 @@
 </style>
 <template>
 	<div>
-		<div  class="pay-detail">
+		<div  class="pay-detail" v-show="feeList.length > 0">
 		<!-- 用户信息 -->
 			<div class="user-info">
 				<div class="number">户号&nbsp;{{verNumber}}</div>
@@ -507,30 +507,22 @@
 	export default {
 		data(){
 			return {
-				Member:true,
 				invoice_title:'',//发票抬头
 				credit_code:'',//公司税号
 				invoice_title_type:'01',//个人01或公司02 
-				needInvoice:'1',//是否需要发票
-				
+				needInvoice:'1',//是否需要发票				
 				routeParams:{
 					billIds : this.$route.query.billIds,//id 集合
 					stmtId:this.$route.query.stmtId,//扫码数据
 					totalPrice:this.$route.query.totalPrice,//合计金额
 					reduceMode:this.$route.query.reduceMode,//减免方式
+					payFeeType:this.$route.query.payFeeType,//01管理费，02停车费
 				},
 				count:0,//实际支付金额
-				hasReduce:'0',//是否有减免
-				reduceAmt:'0',//减免合计
 				verNumber:'',//户号
 				addr:'',//地址
 				area:'',//面积
 				feeList:'',//费用列表
-				mianBill:'0',//优惠的账单id
-				mianAmt:0.00,
-				fee_mianBill:'0',
-				fee_mianAmt:0.00,
-				mian_amt:0.00,//标准版减免
 				show_invoice_flag:'0',
 				show_com_flag:'0',//是否允许开具公司发票
 				show_invoice:'',//是否显示发票
@@ -572,7 +564,6 @@
 		},
 		created(){
 			vm = this;		
-			this.directRightUrl();
 			if(vm.routeParams.stmtId == " "){
 				vm.routeParams.stmtId = ""
 			}
@@ -591,8 +582,6 @@
 			this.cardpaySer();
 			this.getBillDetail();
 			this.Getremember();
-			// this.getMember(); 判断是否开通会员
-			
 		},
 		watch:{
 			invoice_title_type() {
@@ -695,14 +684,7 @@
 					if(vm.show_invoice=='1') {
 						vm.invoice_title_type='01';
 					}
-					if(vm.data.result.fee_data  == null){
-						
-					}
 					let useDate = vm.data.result.other_bill_info[0];
-					let mian_amt = vm.data.result.other_bill_info[0].mian_amt;
-					if ( mian_amt) {
-						vm.mian_amt = vm.data.result.other_bill_info[0].mian_amt;
-					}
                     vm.verNumber = useDate.ver_no;
                  			//地址
                     vm.addr = useDate.cell_addr;
@@ -710,18 +692,9 @@
                     vm.area = useDate.cnst_area;
                				//费用列表
 					vm.feeList = vm.data.result.other_bill_info;
-					vm.mian_amt=useDate.mian_amt;//标准版减免
-					vm.count = vm.routeParams.totalPrice;//传来的总价格
-					let reduced_amt=parseFloat(vm.mian_amt)//减少的钱
-					vm.reduceAmt = parseFloat(reduced_amt).toFixed(2); //合计
-					vm.count =parseFloat(vm.routeParams.totalPrice) - parseFloat(vm.reduceAmt);//减免之后的金额
-					vm.count = vm.count.toFixed(2);
-					//缴费四舍五入
-					// let zcount=vm.count;
-					// vm.Carandpay(zcount);//四舍五入
                 }
 			 )
-            }else if(vm.version == "02"){
+            }else {
 			let url = "getBillDetail?regionname="+this.regionname;
 			vm.receiveData.getData(
 				vm,
@@ -734,27 +707,7 @@
 					if(vm.show_invoice=='1') {
 						vm.invoice_title_type='01';
 					}
-					if(vm.data.result.fee_data  == null){
-						// var herf1 = "https://www.e-shequ.com/weixin/wuye/index.html";
-						// location.href = herf1;
-					}
 	  				let useDate = vm.data.result.fee_data[0];
-	  				let mianBill = vm.data.result.mianBill;
-					let mianAmt = vm.data.result.mianAmt;
-					let fee_mianBill = vm.data.result.fee_mianBill;//物业费减免账单id
-            		let fee_mianAmt = vm.data.result.fee_mianAmt;//物业费减免金额
-	  				if ( mianBill) {
-						vm.mianBill = vm.data.result.mianBill;
-					}
-					if ( mianAmt) {
-						vm.mianAmt = vm.data.result.mianAmt;
-					}
-					if (fee_mianBill) {
-              			vm.fee_mianBill = vm.data.result.fee_mianBill;
-            		}
-					if (fee_mianAmt) {
-					    vm.fee_mianAmt = vm.data.result.fee_mianAmt;
-					}
 	  				//户号
 	  				vm.verNumber = useDate.ver_no;
 	  				//地址
@@ -763,159 +716,14 @@
 	  				vm.area = useDate.cnst_area;
 	  				//费用列表
 					vm.feeList = useDate.fee_name;
-					vm.count = vm.routeParams.totalPrice;//传来的总价格
-					let reduced_amt=parseFloat(vm.fee_mianAmt)+parseFloat(vm.mianAmt);//减少的钱
-					vm.reduceAmt = parseFloat(reduced_amt).toFixed(2); //合计
-					vm.count =parseFloat(vm.routeParams.totalPrice) - parseFloat(vm.reduceAmt);//减免之后的金额
-					vm.count = vm.count.toFixed(2);
-					//缴费四舍五入
-					// let zcount=vm.count;
-					// vm.Carandpay(zcount);//四舍五入
 	  			},
 	  			{
 	  				billId :vm.routeParams.billIds,
 	  				stmtId :vm.routeParams.stmtId
 	  			}
 			  );
-       }      //停车费减免ifbefore_condition为1，可以优惠，为0则不可优惠
-      else {
-        let url = "getBillDetail?regionname=" + this.regionname;
-        vm.receiveData.getData(
-          vm,
-          url,
-          "data",
-          function() {
-            vm.show_com_flag = vm.data.result.show_com_flag;
-            vm.show_invoice_flag = vm.data.result.show_invoice_flag;
-            vm.show_invoice = vm.data.result.show_invoice;
-            if (vm.show_invoice == "1") {
-              vm.invoice_title_type = "01";
-            }
-            if (vm.data.result.fee_data == null) {
-            }
-            let useDate = vm.data.result.fee_data[0];
-            let mianBill = vm.data.result.mianBill;//停车费减免账单id
-			let mianAmt = vm.data.result.mianAmt;//停车费减免金额
-			let fee_mianBill = vm.data.result.fee_mianBill;//物业费减免账单id
-            let fee_mianAmt = vm.data.result.fee_mianAmt;//物业费减免金额
-            if (mianBill) {
-              vm.mianBill = vm.data.result.mianBill;
-            }
-            if (mianAmt) {
-              vm.mianAmt = vm.data.result.mianAmt;
-			}
-			if (fee_mianBill) {
-              vm.fee_mianBill = vm.data.result.fee_mianBill;
-            }
-			if (fee_mianAmt) {
-			  vm.fee_mianAmt = vm.data.result.fee_mianAmt;
-			}
-
-            //户号
-            vm.verNumber = useDate.ver_no;
-            //地址
-            vm.addr = useDate.cell_addr;
-
-            //面积
-            vm.area = useDate.cnst_area;
-            //费用列表
-            vm.feeList = useDate.fee_name;
-            //字符串
-              vm.count = vm.routeParams.totalPrice;
-              let reduced_amt=vm.mianAmt;
-              vm.reduceAmt =  parseFloat(reduced_amt).toFixed(2); //合计
-              vm.count =parseFloat(vm.routeParams.totalPrice) - parseFloat(vm.reduceAmt);
-              vm.count = vm.count.toFixed(2);
-               //缴费四舍五入
-            //   let zcount=vm.count;
-			//   vm.Carandpay(zcount);
-          },
-          {
-            billId: vm.routeParams.billIds,
-            stmtId: vm.routeParams.stmtId
-            //停车减免传优惠账单的id
-          }
-        );
-      }
+       }     
 	},
-		Carandpay(zcount){
-			vm.count=zcount;
-			let reduced_amt=0;
-			let reduce_rate = 0; //减少到角还是分减少到角还是分
-			if ("0" == vm.routeParams.reduceMode) {
-			//不减免
-			return;
-			} else if ("1" == vm.routeParams.reduceMode) {
-			//四舍五入至元
-			reduce_rate = "1";
-			reduced_amt = Math.round(vm.count * reduce_rate) / reduce_rate;
-			vm.hasReduce = "1";
-			} else if ("2" == vm.routeParams.reduceMode) {
-			//表示四舍五入至角
-			reduce_rate = "10";
-			reduced_amt = Math.round(vm.count * reduce_rate) / reduce_rate;
-			vm.hasReduce = "1";
-			}
-			else if ("4" == vm.routeParams.reduceMode) {
-			//表示保留至角去分
-			reduce_rate = "10";
-			reduced_amt = Math.floor(vm.count * reduce_rate) / reduce_rate;
-			vm.hasReduce = "1";
-			}else if ("5" == vm.routeParams.reduceMode) {
-			//表示保留至角入分
-			reduce_rate = "10";
-			reduced_amt = Math.ceil(vm.count * reduce_rate) / reduce_rate;
-			vm.hasReduce = "1";
-			//保留至元去角
-			} else if("6" == vm.routeParams.reduceMode){
-			reduce_rate = "1";
-			reduced_amt = Math.floor(vm.count * reduce_rate) / reduce_rate;
-			vm.hasReduce = "1";
-			}else if("7" == vm.routeParams.reduceMode){
-			// 保留至元入角
-			reduce_rate = "1";
-			reduced_amt = Math.ceil(vm.count * reduce_rate) / reduce_rate;
-			vm.hasReduce = "1";
-			}else {
-			return;
-			}
-			vm.reduceMoney = parseFloat(vm.count) - parseFloat(reduced_amt.toFixed(2));//四舍五入的钱传给后端
-			vm.reduceMoney = vm.reduceMoney.toFixed(2); //减少的钱  
-			vm.count = reduced_amt.toFixed(2); //合计
-  		},
-			// 重定向到正确的url
-			directRightUrl () {
-			  let paths = window.location.href.split('#')
-			  paths[1] = paths[1] || '/'
-			  // 老式的#!分隔跳转
-			  if (paths[0].charAt(paths[0].length - 1) !== '?') {
-			    paths[0] = `${paths[0]}?`
-			  }
-			  if (paths[1].charAt(0) === '!') {
-			     paths[1] = paths[1].substr(1)
-			  }
-			  let url = `${paths[0]}#${paths[1]}`
-			  if (window.location.href !== url) {
-			  	console.log(url);
-			    window.location.href = url
-			  }
-			},
-			//判断是否开通vip
-			// getMember() {
-				// 	let url = '/getMember';
-				// 		vm.receiveData.getData(vm,url,'res',function(){
-				// 			if(vm.res.length!=0) {
-				// 				if(vm.res[0].status==0) {
-				// 					vm.Member=false;
-				// 				}
-				// 			} 
-							
-				// 	});
-			// },
-			// //点击vip跳转
-			// mebaerherf() {
-				// 	window.location.href=vm.basePageUrlpay+'orderpay.html?start=123#/kaitong'
-			// },
 			//微信支付 post请求接口，在post成功的回调函数里调用微信支付接口
 			btnPay (){
 				if(this.invoice_title_type=="02"){
@@ -946,11 +754,11 @@
 				let urlc= {
 					regionname : this.regionname,
 					couponNum : 1,
-					mianBill : vm.mianBill,
-					mianAmt : vm.mianAmt,
 					invoice_title_type : this.invoice_title_type,
 					credit_code : this.credit_code,
 					invoice_title : this.invoice_title,
+					billId : vm.routeParams.billIds,
+					stmtId : vm.routeParams.stmtId,
 				};
 				urlc.payType = vm.payType;//支付方式
 				if(vm.payType == 1) {
@@ -962,24 +770,8 @@
 					urlc.remember = vm.remerbernumm//记住卡号
 					vm.acctNNo = vm.acctNo;
 				}
-
-				if(vm.version=='01'){ //标准版
-				//  url = "getOtherPrePayInfo?houseId="+this.house_id+"&regionname="+this.regionname+"&start_date="+ this.start_date+"&end_date="+this.end_date+"&couponUnit="+vm.upronAmountNumber+"&couponNum=1&couponId="+vm.couponId+"&mianBill="+vm.mianBill+"&mianAmt="+vm.mianAmt+"&mian_amt="+vm.mian_amt+"&reduceAmt="+vm.reduceAmt+"&invoice_title_type="+this.invoice_title_type+"&credit_code="+this.credit_code+"&invoice_title="+this.invoice_title;
-					urlc.houseId = this.house_id;
-					urlc.start_date = this.start_date;
-					urlc.end_date = this.end_date;
-					urlc.mian_amt = vm.mian_amt;
-					urlc.reduceAmt = vm.reduceAmt;
-				}else{ //02 专业版
-				// url = "getPrePayInfo?billId="+vm.routeParams.billIds+"&stmtId="+vm.routeParams.stmtId+"&regionname="+this.regionname+"&couponUnit="+vm.upronAmountNumber+"&couponNum=1&couponId="+vm.couponId+"&mianBill="+vm.mianBill+"&mianAmt="+vm.mianAmt+"&fee_mianAmt="+vm.fee_mianAmt+"&fee_mianBill="+vm.fee_mianBill+"&reduceAmt="+vm.reduceMoney+"&invoice_title_type="+this.invoice_title_type+"&credit_code="+this.credit_code+"&invoice_title="+this.invoice_title;
-					urlc.billId = vm.routeParams.billIds;
-					urlc.stmtId = vm.routeParams.stmtId;
-					urlc.fee_mianAmt = vm.fee_mianAmt;
-					urlc.fee_mianBill = vm.fee_mianBill;
-					// urlc.reduceAmt = vm.reduceMoney;
-				}
 				window.localStorage.setItem('paylist',JSON.stringify(urlc));
-				vm.$router.push({path:'/payzhifu',query:{totalPrice:vm.count,totalPrices:vm.routeParams.totalPrice,reduceAmt:vm.reduceAmt,bind_switch:vm.bind_switch,version:vm.version,reduceMode:vm.routeParams.reduceMode,acctNNo:vm.acctNNo,cardId:vm.cardId}})
+				vm.$router.push({path:'/payzhifu',query:{bind_switch:vm.bind_switch,version:vm.version,reduceMode:vm.routeParams.reduceMode,acctNNo:vm.acctNNo,cardId:vm.cardId,payFeeType:vm.routeParams.payFeeType}})
 
 			},
 
