@@ -15,7 +15,7 @@
     "better-scroll": "^1.15.2",
     "es6-promise": "^4.2.6",
     "fastclick": "^1.0.6",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "js-cookie": "^2.2.0",
     "mint-ui": "^2.2.9",
     "moment": "^2.24.0",
