@@ -998,6 +998,7 @@ export default {
           alert("请选择帐单后支付");
           return;
         }
+
         var oriapp=vm.common.getoriApp();
         var oriap = vm.getUrlParam('oriApp');
         if(oriap == 'wxe8dea53aad1a93b9') {

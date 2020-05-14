@@ -724,7 +724,6 @@
 			  );
        }     
 	},
-
 			//微信支付 post请求接口，在post成功的回调函数里调用微信支付接口
 			btnPay (){
 				if(this.invoice_title_type=="02"){
@@ -771,8 +770,6 @@
 					urlc.remember = vm.remerbernumm//记住卡号
 					vm.acctNNo = vm.acctNo;
 				}
-
-				
 				window.localStorage.setItem('paylist',JSON.stringify(urlc));
 				vm.$router.push({path:'/payzhifu',query:{bind_switch:vm.bind_switch,version:vm.version,reduceMode:vm.routeParams.reduceMode,acctNNo:vm.acctNNo,cardId:vm.cardId,payFeeType:vm.routeParams.payFeeType}})
 
