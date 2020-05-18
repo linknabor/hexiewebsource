@@ -181,7 +181,6 @@ export default {
        vm.geturl();//获取参数
        vm.Coupons();//优惠券
        vm.getDiscount();
-
    },
 
    components: {
