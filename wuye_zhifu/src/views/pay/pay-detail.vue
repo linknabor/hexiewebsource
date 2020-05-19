@@ -386,7 +386,7 @@
 			</div>
 
 			<!-- 贵州银行卡支付 -->
-			<div class="Manner" v-show="cardPayService == 'true'">
+			<div class="Manner" v-show="cardPayService == 'true' && support_card_pay=='1'">
 				<div class="Manner-title">选择支付方式</div>
 				<div class="Manner-hand ov">
 					<div class="Manner-img fl">
@@ -526,6 +526,7 @@
 				show_invoice_flag:'0',
 				show_com_flag:'0',//是否允许开具公司发票
 				show_invoice:'',//是否显示发票
+				support_card_pay:'',
 				version:'',
 				bind_switch:'1',
 				reduceMoney:'0',
@@ -578,10 +579,11 @@
 		},
 		mounted(){
 			vm.common.checkRegisterStatus();
-			// this.initSession4Test();
-			this.cardpaySer();
+			//this.initSession4Test();
 			this.getBillDetail();
-			this.Getremember();
+			if(vm.cardPayService == 'true'){
+				this.getBankCard();
+			}
 		},
 		watch:{
 			invoice_title_type() {
@@ -635,12 +637,12 @@
 		methods:{
 			//判断支付方式
 			cardpaySer() {
-				if(vm.cardPayService == 'false') {
+				if(vm.cardPayService == 'false' || vm.support_card_pay != '1'){
 					vm.payType = '0';
 				}
 			},
 			//记住卡号获取姓名 卡号
-			Getremember() {
+			getBankCard() {
 				let url = '/bankCard';
 					vm.receiveData.getData(vm,url,'res',function(){
 						if(vm.res.success) {
@@ -672,58 +674,63 @@
 				}
 			},
 			getBillDetail() {
-			if(vm.version=='01'){
-		       let url="getPayListStd?regionname="+this.regionname+"&house_id="+ this.house_id +
-		      "&sect_id="+this.sect_id +"&start_date="+this.start_date +"&end_date="+this.end_date; 
-             
-             vm.receiveData.getData(
-                vm,url,'data',function(){
-				    vm.show_com_flag=vm.data.result.other_bill_info[0].show_com_flag;
-					vm.show_invoice_flag = vm.data.result.other_bill_info[0].show_invoice_flag;
-					vm.show_invoice=vm.data.result.other_bill_info[0].show_invoice;
-					if(vm.show_invoice=='1') {
-						vm.invoice_title_type='01';
-					}
-					let useDate = vm.data.result.other_bill_info[0];
-                    vm.verNumber = useDate.ver_no;
-                 			//地址
-                    vm.addr = useDate.cell_addr;
-              				//面积
-                    vm.area = useDate.cnst_area;
-               				//费用列表
-					vm.feeList = vm.data.result.other_bill_info;
-                }
-			 )
-            }else {
-			let url = "getBillDetail?regionname="+this.regionname;
-			vm.receiveData.getData(
-				vm,
-				url,
-				'data',
-				function(){
-					vm.show_com_flag=vm.data.result.show_com_flag;
-					vm.show_invoice_flag = vm.data.result.show_invoice_flag
-					vm.show_invoice=vm.data.result.show_invoice;
-					if(vm.show_invoice=='1') {
-						vm.invoice_title_type='01';
-					}
-	  				let useDate = vm.data.result.fee_data[0];
-	  				//户号
-	  				vm.verNumber = useDate.ver_no;
-	  				//地址
-	  				vm.addr = useDate.cell_addr;
-	  				//面积
-	  				vm.area = useDate.cnst_area;
-	  				//费用列表
-					vm.feeList = useDate.fee_name;
-	  			},
-	  			{
-	  				billId :vm.routeParams.billIds,
-	  				stmtId :vm.routeParams.stmtId
-	  			}
-			  );
-       }     
-	},
+				if(vm.version=='01'){
+					let url="getPayListStd?regionname="+this.regionname+"&house_id="+ this.house_id +
+					"&sect_id="+this.sect_id +"&start_date="+this.start_date +"&end_date="+this.end_date; 
+					
+					vm.receiveData.getData(
+						vm,url,'data',function(){
+							vm.show_com_flag=vm.data.result.other_bill_info[0].show_com_flag;
+							vm.show_invoice_flag = vm.data.result.other_bill_info[0].show_invoice_flag;
+							vm.show_invoice=vm.data.result.other_bill_info[0].show_invoice;
+							if(vm.show_invoice=='1') {
+								vm.invoice_title_type='01';
+							}
+							vm.support_card_pay = vm.data.result.other_bill_info[0].support_card_pay;
+							let useDate = vm.data.result.other_bill_info[0];
+							vm.verNumber = useDate.ver_no;
+									//地址
+							vm.addr = useDate.cell_addr;
+									//面积
+							vm.area = useDate.cnst_area;
+									//费用列表
+							vm.feeList = vm.data.result.other_bill_info;
+							vm.cardpaySer();
+						}
+					)
+            	} else {
+					let url = "getBillDetail?regionname="+this.regionname;
+					vm.receiveData.getData(
+						vm,
+						url,
+						'data',
+						function(){
+							vm.show_com_flag=vm.data.result.show_com_flag;
+							vm.show_invoice_flag = vm.data.result.show_invoice_flag;
+							vm.show_invoice=vm.data.result.show_invoice;
+							if(vm.show_invoice=='1') {
+								vm.invoice_title_type='01';
+							}
+							vm.support_card_pay = vm.data.result.support_card_pay;
+							let useDate = vm.data.result.fee_data[0];
+							//户号
+							vm.verNumber = useDate.ver_no;
+							//地址
+							vm.addr = useDate.cell_addr;
+							//面积
+							vm.area = useDate.cnst_area;
+							//费用列表
+							vm.feeList = useDate.fee_name;
+							vm.cardpaySer();
+						},
+						{
+							billId :vm.routeParams.billIds,
+							stmtId :vm.routeParams.stmtId
+						}
+					);
+				}
+				
+			},
 			//微信支付 post请求接口，在post成功的回调函数里调用微信支付接口
 			btnPay (){
 				if(this.invoice_title_type=="02"){
