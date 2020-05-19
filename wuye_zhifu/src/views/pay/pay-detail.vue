@@ -579,9 +579,9 @@
 		},
 		mounted(){
 			vm.common.checkRegisterStatus();
-			// this.initSession4Test();
+			//this.initSession4Test();
 			this.getBillDetail();
-			if(vm.cardPayService){
+			if(vm.cardPayService == 'true'){
 				this.getBankCard();
 			}
 		},
@@ -636,8 +636,8 @@
 		},
 		methods:{
 			//判断支付方式
-			cardpaySer() {	
-				if (!vm.cardPayService || vm.support_card_pay != '1'){
+			cardpaySer() {
+				if(vm.cardPayService == 'false' || vm.support_card_pay != '1'){
 					vm.payType = '0';
 				}
 			},
