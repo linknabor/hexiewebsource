@@ -580,7 +580,6 @@
 		mounted(){
 			vm.common.checkRegisterStatus();
 			// this.initSession4Test();
-			this.cardpaySer();
 			this.getBillDetail();
 			if(vm.cardPayService){
 				this.getBankCard();
