@@ -130,6 +130,14 @@
     </div>
     <div v-else>
       <div class="info-wrap" style="overflow:hidden; clear: both;">
+        <router-link
+          :to="{path:'/service'}"
+          class="input-wrap menu-person-link lite-divider"
+          v-show="service_list.length>0"
+        >
+          <span class="input-info lf30 fs16">我是服务人员</span>
+          <span class="fr fs14 left_color">查看订单&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        </router-link>
         <router-link :to="{path:'/myrepair'}" class="input-wrap menu-person-link lite-divider">
           <span class="input-info lf30 fs16">我的维修单</span>
           <span class="fr fs14 left_color">查看维修单&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -226,6 +234,7 @@ export default {
         lvdou: "0",
         couponCount: 0,
       },
+      service_list:[],
       login:true,
       oriapp:'', //我是业主
       cardService:'',
@@ -284,33 +293,35 @@ export default {
         i = null,
         d = function() {},
         e = function(n) {
-           if(n.success&&n.result==null) {
+          if(n.success&&n.result==null) {
                  reLogin();
                  return
-           }
-          vm.donghu=n.result.donghu;//东湖标识
-          vm.user = n.result;
-          vm.user.headimgurl = "" != n.result.name || n.result? n.result.headimgurl: vm.user_info.avatar;  
-          vm.user.name ="" != n.result.name ? n.result.name : vm.user_info.nickname;
-          
-          vm.qrCode=n.result.qrCode;
-          vm.cardService=n.result.cardService;
-          if(vm.user.point<0){//小于0等于0
-            vm.point=0;
           }else {
-            vm.point=vm.user.point;
-          }
-          vm.login=false;
-          Bus.$emit('sends',n.result.iconList);
-          
-          //保存图片
-          var duration = new Date().getTime()/1000 + 3600*24*30;
-          cookie.set('cardStatus',n.result.cardStatus,duration);
-          cookie.set('cardService',n.result.cardService,duration);
+            vm.donghu=n.result.donghu;//东湖标识
+            vm.user = n.result;
+            vm.user.headimgurl = "" != n.result.name || n.result? n.result.headimgurl: vm.user_info.avatar;  
+            vm.user.name ="" != n.result.name ? n.result.name : vm.user_info.nickname;
+            
+            vm.qrCode=n.result.qrCode;
+            vm.cardService=n.result.cardService;
+            if(vm.user.point<0){//小于0等于0
+              vm.point=0;
+            }else {
+              vm.point=vm.user.point;
+            }
+            vm.login=false;
+            Bus.$emit('sends',n.result.iconList);
+            
+            //保存图片
+            var duration = new Date().getTime()/1000 + 3600*24*30;
+            cookie.set('cardStatus',n.result.cardStatus,duration);
+            cookie.set('cardService',n.result.cardService,duration);
 
-          for(var j=0;j<n.result.bgImageList.length;j++){
-              vm.common.localSet(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl)
-          }
+            for(var j=0;j<n.result.bgImageList.length;j++){
+                vm.common.localSet(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl)
+            }
+            vm.qrCodePayService();
+         }
         },
         r = function() {
           vm.login=false;
@@ -321,6 +332,17 @@ export default {
       this.common.invokeApi(n, a, i, d, e, r);
 
       // vm.receiveData.getData(vm, 'userInfo', "n", function() { vm.user = vm.n.result;});
+    },
+    //是否配置服务人员
+     qrCodePayService() {
+      vm.receiveData.getData(vm, "/qrCodePayService", "res", function() {
+        if (vm.res.success) {
+            vm.service_list = vm.res.result.service_list;
+            vm.common.localSet('service_list',JSON.stringify(vm.res.result.service_list));
+        } else {
+          alert(vm.res.message);
+        }
+      });
     },
     //点击头像
     gotoEdit() {

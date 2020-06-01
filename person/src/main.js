@@ -40,7 +40,8 @@ var axiosInstance = axios.create({
       'Content-Type':"application/json",
 
       // 'Accept': '*/*',
-      'Accept': 'application/json',
+      // 'Accept': 'application/json',
+      'Accept': 'application/json;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
 
   },
   baseURL: Vue.prototype.baseUrl,
