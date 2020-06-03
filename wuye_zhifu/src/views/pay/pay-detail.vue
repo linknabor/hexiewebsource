@@ -92,6 +92,7 @@
 .determine {
 	padding: 0 0.4rem;
 }
+
 /*发票*/
 .invoice{
 	border:1px solid #cecdc9;
@@ -303,7 +304,6 @@
 .Mannercolor {
 	color:#000;
 }
-
 </style>
 <template>
 	<div>
