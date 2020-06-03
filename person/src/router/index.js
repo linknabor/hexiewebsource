@@ -137,6 +137,30 @@ let router= new Router({
         title:''
       }
     },
+    {
+      path:'/service',
+      name:'service',
+      component:resolve=> require(['@/pages/service/service'],resolve),
+      meta: {
+        title:'服务'
+      }
+    },
+    {
+      path:'/codeimg',
+      name:'codeimg',
+      component:resolve=> require(['@/pages/service/codeimg'],resolve),
+      meta: {
+        title:''
+      }
+    },
+    {
+      path:'/ordermation',
+      name:'ordermation',
+      component:resolve=> require(['@/pages/service/ordermation'],resolve),
+      meta: {
+        title:'订单信息'
+      }
+    },
   ]
 })
 

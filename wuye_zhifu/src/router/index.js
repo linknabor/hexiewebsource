@@ -31,6 +31,14 @@ const router= new Router({
       meta:{
         title:''
       },
+    },
+    {
+      path:'/personnel',
+      name:'personnel',
+      component:resolve=> require(['@/views/pay/personnel'],resolve),
+      meta:{
+        title:''
+      },
     }
   ]
 });
