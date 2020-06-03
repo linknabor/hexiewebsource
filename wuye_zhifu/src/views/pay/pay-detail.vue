@@ -1,84 +1,97 @@
 
 <style scoped>
-	.pay-detail{
-		padding:0.3rem;
-		padding-bottom: 0;
-	}
-	.user-info{
-		padding:0.2rem;
-		border:1px solid #cecdc9;
-		/* border-radius: 5px; */
-		/* height: 1.7rem; */
-		font-size: 14px;
-		line-height: 32px;
-	}
-	.user-info .number{
-		font:0.28rem/0.8rem "";
-		color: #000;
-	}
-	.user-info .addr{
-		font:0.26rem/0.6rem "";
-		color: #000;
-	}
-	.name-color {
-		color: #000;
-	}
-	.fee-list{
-		border:1px solid #cecdc9;
-		border-bottom: none;
-		/* border-radius: 5px; */
-		margin-top: 0.3rem;
-	}
-	.fee-list dt,.fee-list dd{
-		padding: 0 0.2rem;
-		border-bottom:1px solid #cecdc9;
-		margin: 0;
-		line-height:1.2rem;
-		height: 1.2rem;
-	}
-	.fee-list dt p,.fee-list dd p{
-		margin:0;
-	}
-	.fee-list dt .fee-price{
-		/* color: #ff7200; */
-	}
-	.fee-list dd{
-		color: #7d7d7d;
-	}
-	.coupon{
-		color: #ff8a05;
-	}
-	.payCount{
-		padding: 0 0.2rem;
-		height: 1.2rem;
-		line-height: 1.2rem;
-		/* background-color: #f6f7f1; */
-		color: #ff8a05;
-		border:1px solid #cecdc9;
-		margin-top: 0.3rem;
-	}
-	.bigfont{
-		font-size: 0.32rem;
-		font-weight: bold;
-	}
+.pay-detail{
+	padding:0.3rem;
+	padding-bottom: 0;
+}
+.user-info{
+	padding:0.2rem;
+	border:1px solid #cecdc9;
+	/* border-radius: 5px; */
+	/* height: 1.7rem; */
+	font-size: 14px;
+	line-height: 32px;
+}
+.user-info .number{
+	font:0.28rem/0.8rem "";
+	color: #000;
+}
+.user-info .addr{
+	font:0.26rem/0.6rem "";
+	color: #000;
+}
+.name-color {
+	color: #000;
+}
+.fee-list{
+	border:1px solid #cecdc9;
+	border-bottom: none;
+	/* border-radius: 5px; */
+	margin-top: 0.3rem;
+}
+.fee-list dt,.fee-list dd{
+	padding: 0 0.2rem;
+	border-bottom:1px solid #cecdc9;
+	margin: 0;
+	line-height:1.2rem;
+	height: 1.2rem;
+}
+.fee-list dt p,.fee-list dd p{
+	margin:0;
+}
+.fee-list dt .fee-price{
+	/* color: #ff7200; */
+}
+.fee-list dd{
+	color: #7d7d7d;
+}
+.coupon{
+	color: #ff8a05;
+}
+.payCount{
+	padding: 0 0.2rem;
+	height: 1.2rem;
+	line-height: 1.2rem;
+	/* background-color: #f6f7f1; */
+	color: #ff8a05;
+	border:1px solid #cecdc9;
+	margin-top: 0.3rem;
+}
+.bigfont{
+	font-size: 0.32rem;
+	font-weight: bold;
+}
 
-	.pay-btn{
-		position: fixed;
-		left: 4%;
-		right: 4%;
-		bottom: 0;
-		z-index: 3;
-		width: 92%;
-		height: 0.9rem;
-		text-align: center;
-		color: #fff;
-		line-height: 0.9rem;
-		background-color:#ccc;
-	}
-	.paycolor {
-		background-color: #F69C05;
-	}
+.pay-btn{
+	position: fixed;
+	left: 4%;
+	right: 4%;
+	bottom: 0;
+	z-index: 3;
+	width: 92%;
+	height: 0.9rem;
+	text-align: center;
+	color: #fff;
+	line-height: 0.9rem;
+	background-color: #ccc;
+}
+.paycolor {
+	background-color: #F69C05;
+}
 
+.personnel,.determine {
+	height: 0.8rem;
+	line-height: 0.8rem;
+	text-align: center;
+	color: #fff;
+	padding:0 0.2rem 0 0.4rem;
+	border-radius: 5px;
+	background-color: #F69C05;
+	font-size:0.3rem;
+}
+.determine {
+	padding: 0 0.4rem;
+}
 /*发票*/
 .invoice{
 	border:1px solid #cecdc9;
@@ -290,6 +303,7 @@
 .Mannercolor {
 	color:#000;
 }
+
 </style>
 <template>
 	<div>
@@ -495,7 +509,12 @@
 				</div>
 			</div>
 			<div style="height:1.5rem;"></div>
-			<div class="pay-btn" :class="{paycolor : payType!= ''}" @click="btnPay">确定支付</div>
+			<!-- <div v-show="selected == 'd'">
+				<div class="fl personnel" @click="personnel">工作人员收费</div>
+				<div class="fr determine" @click="btnPay">确定支付</div>
+			</div> -->
+			<!-- v-show="selected != 'd'" -->
+			<div  class="pay-btn" :class="{paycolor : payType!= ''}" @click="btnPay">确定支付</div>
 		</div>
 
 	</div>
@@ -531,6 +550,7 @@
 				bind_switch:'1',
 				reduceMoney:'0',
 				
+				selected:this.$route.query.selected,//查询缴费显示工作人员收费
 				cardPayService:this.$route.query.cardPayService, //控制是否可以 绑卡支付
 				payType:'',//支付方式
 				customerName:'',//持卡人姓名
@@ -579,7 +599,7 @@
 		},
 		mounted(){
 			vm.common.checkRegisterStatus();
-			//this.initSession4Test();
+			// this.initSession4Test();
 			this.getBillDetail();
 			if(vm.cardPayService == 'true'){
 				this.getBankCard();
@@ -730,6 +750,10 @@
 					);
 				}
 				
+			},
+			//工作人员收费
+			personnel(){
+				vm.$router.push({path:'/personnel'})
 			},
 			//微信支付 post请求接口，在post成功的回调函数里调用微信支付接口
 			btnPay (){

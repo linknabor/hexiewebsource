@@ -7,8 +7,9 @@
       <li>
         <span>服务内容: {{item.service_type_cn}}</span>
       </li>
-      <li>
+      <li class="ov">
         <span class="fl border" @click="ViewQRcode(item.qrcode_id,item.sect_name,item.service_type_cn)">查看二维码</span>
+        <!-- <span class="fl border M17" @click="ViewOrder">查看订单</span> -->
         <span
           class="fr border1"
           @click="SigninOut(index,item.cfg_id,item.sect_id,item.signin_flag)"
@@ -86,6 +87,10 @@ export default {
       }
      
     },
+    //查看订单
+    // ViewOrder() {
+    //   vm.$router.push({path:'/ordermation'})
+    // },
     //查看二维码
     ViewQRcode(qrcode_id,sect_name,service_type_cn) {
       vm.$router.push({ path: "/codeimg",query:{'qrcode_id':qrcode_id,'sect_name':sect_name,'service_type_cn':service_type_cn} });
@@ -175,6 +180,9 @@ li {
 li:last-child {
   margin-bottom: 0;
 }
+.ov {
+  overflow: hidden;
+}
 .border,.border1 {
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -184,6 +192,9 @@ li:last-child {
 }
 .border1 {
   padding: 0.1rem 0.4rem 0.1rem;
+}
+.M17 {
+  margin-left: 17%;
 }
 /* 弹出框 */
 .v-modal {

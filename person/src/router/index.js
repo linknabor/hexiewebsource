@@ -153,6 +153,14 @@ let router= new Router({
         title:''
       }
     },
+    {
+      path:'/ordermation',
+      name:'ordermation',
+      component:resolve=> require(['@/pages/service/ordermation'],resolve),
+      meta: {
+        title:'订单信息'
+      }
+    },
   ]
 })
 

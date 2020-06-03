@@ -984,10 +984,10 @@ export default {
         var oriap = vm.getUrlParam('oriApp');
         if(oriap == 'wxe8dea53aad1a93b9') {
           window.location.href =vm.basedhzj3Url +"wuyepay.html?"+oriapp+"?#/?billIds=" +bills + "&stmtId=" + vm.stmtId + 
-         "&totalPrice=" +vm[allPrice] + "&reduceMode=" + vm.reduceMode + "&regionname=" +vm.regionname +"&getversion=" + "02"+"&cardPayService="+vm.cardPayService + "&payFeeType=01";
+         "&totalPrice=" +vm[allPrice] + "&reduceMode=" + vm.reduceMode + "&regionname=" +vm.regionname +"&getversion=" + "02"+"&cardPayService="+vm.cardPayService + "&payFeeType=01" + "&selected="+vm.selected;
         }else {
          window.location.href =vm.basePageUrl +"wuyepay.html?"+oriapp+"?#/?billIds=" +bills + "&stmtId=" + vm.stmtId + 
-         "&totalPrice=" +vm[allPrice] + "&reduceMode=" + vm.reduceMode + "&regionname=" +vm.regionname +"&getversion=" + "02"+"&cardPayService="+vm.cardPayService + "&payFeeType=01";
+         "&totalPrice=" +vm[allPrice] + "&reduceMode=" + vm.reduceMode + "&regionname=" +vm.regionname +"&getversion=" + "02"+"&cardPayService="+vm.cardPayService + "&payFeeType=01" + "&selected="+vm.selected;
         }
     },
     //点击物业缴费按钮
@@ -998,15 +998,14 @@ export default {
           alert("请选择帐单后支付");
           return;
         }
-
         var oriapp=vm.common.getoriApp();
         var oriap = vm.getUrlParam('oriApp');
         if(oriap == 'wxe8dea53aad1a93b9') {
           window.location.href =vm.basedhzj3Url +"wuyepay.html?"+oriapp+"#/?billIds=" +vm.bills + "&regionname=" +this.$route.query.City +"&totalPrice="+vm[queryallPrice1] +"&house_id=" +
-          vm.query.house +"&sect_id=" +vm.query.sectID + "&start_date=" +startData + "&end_date=" + endData +"&getversion=" + '01' + "&reduceMode=" + vm.reduceMode + "&cardPayService="+vm.cardPayService + "&payFeeType=01";
+          vm.query.house +"&sect_id=" +vm.query.sectID + "&start_date=" +startData + "&end_date=" + endData +"&getversion=" + '01' + "&reduceMode=" + vm.reduceMode + "&cardPayService="+vm.cardPayService + "&payFeeType=01" + "&selected="+vm.selected;
         }else {
           window.location.href =vm.basePageUrl +"wuyepay.html?"+oriapp+"#/?billIds=" +vm.bills + "&regionname=" +this.$route.query.City +"&totalPrice="+vm[queryallPrice1] +"&house_id=" +
-          vm.query.house +"&sect_id=" +vm.query.sectID + "&start_date=" +startData + "&end_date=" + endData +"&getversion=" + '01' + "&reduceMode=" + vm.reduceMode + "&cardPayService="+vm.cardPayService + "&payFeeType=01";
+          vm.query.house +"&sect_id=" +vm.query.sectID + "&start_date=" +startData + "&end_date=" + endData +"&getversion=" + '01' + "&reduceMode=" + vm.reduceMode + "&cardPayService="+vm.cardPayService + "&payFeeType=01" + "&selected="+vm.selected;
         }
       } else { // 专业版
          vm.pays(list, allPrice, allselect)
