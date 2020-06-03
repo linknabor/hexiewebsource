@@ -12,7 +12,7 @@
         <!-- <span class="fl border M17" @click="ViewOrder">查看订单</span> -->
         <span
           class="fr border1"
-          @click="SigninOut(index,item.cfg_id,item.sect_id,item.signin_flag)"
+          @click="SigninOut(index,item.cfg_id,item.sect_id,item.signin_flag,item.fee_id)"
         >{{item.signin_flag == '1'?'下线':'上线'}}</span>
       </li>
     </ul>
@@ -58,7 +58,8 @@ export default {
       index:'',
       cfg_id:'',
       sect_id:'',
-      signin_flag:''
+      signin_flag:'',
+      fee_id:''
       // openid: "o_3Dlwdy4btrm8kiyWHkmvyQO_ls",
     };
   },
@@ -96,7 +97,7 @@ export default {
       vm.$router.push({ path: "/codeimg",query:{'qrcode_id':qrcode_id,'sect_name':sect_name,'service_type_cn':service_type_cn} });
     },
     //上线 下线
-    SigninOut(index, cfg_id, sect_id, signin_flag) {
+    SigninOut(index, cfg_id, sect_id, signin_flag,fee_id) {
         if(vm.flay) {
           vm.Mask = 1;//显示遮罩
         }else {
@@ -106,6 +107,7 @@ export default {
         vm.cfg_id = cfg_id;
         vm.sect_id = sect_id;
         vm.signin_flag = signin_flag;
+        vm.fee_id = fee_id;
         if(vm.signin_flag == '1') {
             vm.text = '是否下线';
         }else {
@@ -124,6 +126,7 @@ export default {
         }
         let data = {
           // openid: vm.openid,
+          fee_id:vm.fee_id,
           cfg_id: vm.cfg_id,
           sect_id: vm.sect_id,
           sign_in: sigin_in
