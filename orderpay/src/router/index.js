@@ -99,15 +99,46 @@ let router= new Router({
       }
 
     },
-    // {
-    //   path: '/success',
-    //   name: 'success',
-    //   component:resolve=>require(['@/pages/success'],resolve),
-    //   meta: {
-    //     title:'已开通'
-    //   }
-
-    // },
+    {
+      path: '/detailspage',
+      name: 'detailspage',
+      component: resolve=>require(['@/pages/service/detailspage'],resolve),
+      meta:{
+        title:'服务'
+      }
+    },
+    {
+      path: '/singlepage',
+      name: 'singlepage',
+      component: resolve=>require(['@/pages/service/singlepage'],resolve),
+      meta:{
+        title:'服务'
+      }
+    },
+    {
+      path: '/payment',
+      name: 'payment',
+      component:resolve=>require(['@/pages/service/payment'],resolve),
+      meta:{
+        title:'社区'
+      }
+    },
+    {
+      path: '/appraise',
+      name: 'appraise',
+      component:resolve=>require(['@/pages/service/appraise'],resolve),
+      meta:{
+        title:''
+      }
+    },
+    {
+      path: '/checkoutsuccess',
+      name: 'checkoutsuccess',
+      component:resolve=>require(['@/pages/service/checkoutsuccess'],resolve) ,
+      meta:{
+        title:''
+      }
+    },
     
 
   ]

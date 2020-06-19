@@ -37,15 +37,6 @@
           </div>
         </div>
       </div>
-      <!-- <div class="huiyuan">
-        <div class="huiyuan-1">
-          <a :href="this.basePageUrlpay+'orderpay.html?start=123#/kaitong'">
-            <img v-if="isMember" src="../../assets/images/common/VIP已开通.png" />
-            <img v-else src="../../assets/images/common/VIP未开通(4).png" alt />
-          </a>
-        </div>
-      </div> -->
-
       <div id="point-list" style="border-bottom: none;" class="div_bottom" v-show="cardService==true">
         <div class="point-item-wrap item-wraps">
           <div class="point-item">
@@ -131,6 +122,14 @@
     <div v-else>
       <div class="info-wrap" style="overflow:hidden; clear: both;">
         <router-link
+          :to="{path:'/myservice'}"
+          class="input-wrap menu-person-link lite-divider"
+          v-show="service_list.length>0"
+        >
+          <span class="input-info lf30 fs16">我的服务单</span>
+          <span class="fr fs14 left_color">查看订单&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        </router-link>
+        <router-link
           :to="{path:'/service'}"
           class="input-wrap menu-person-link lite-divider"
           v-show="service_list.length>0"
@@ -194,9 +193,6 @@
         <span class="input-info lf30 fs16">客服电话</span>
         <span class="fr fs14 left_color">021-50876295</span>
       </a>
-      <!--<a href=" " class="input-wrap menu-person-link ">   
-                        <span class="input-info lf30 fs16">在线客服</span>
-      </a>-->
     </div>
 
     <div class="bottom-info divider" style="text-align: center; display: block;">
@@ -241,8 +237,6 @@ export default {
       qrCode:'',//二维码
       point:0,//积分
       cardStatus:'',//是否领卡激活的标记
-      // 默认未开通会员
-      // isMember: false,
       donghu:false,//标识判断是不是东湖
       user_info: {
         avatar: img,
@@ -260,26 +254,12 @@ export default {
     vm = this;
   },
   mounted() {
-    // this.initSession4Test();
+    this.initSession4Test();
     this.User(); 
-    // this.panduan(); //先判断
     vm.oriApp();//判断我是业主地址
   },
   components: {},
   methods: {
-    //先判断是否为会员
-    // panduan() {
-    //   vm.receiveData.getData(vm, "/getMember", "res", function(res) {
-    //     if (vm.res[0].status == "0") {
-    //       // 已开通会员
-    //       // console.log(vm.res[0].enddate)
-    //       vm.isMember = true;
-    //       vm.enddate = vm.res[0].enddate;
-    //     }
-    //   });
-
-     
-    // },
     //模仿线上用户信息
     // 105/747/384
     initSession4Test() {
@@ -467,11 +447,7 @@ export default {
   width: 100%;
   top: 1.4rem;
 }
-.huiyuan-1 img {
-  border-style: none;
-  width: 100%;
-  height: 0.8rem;
-}
+
 .div_bottom {
   position: absolute;
   /* bottom: 0; */
@@ -612,31 +588,7 @@ export default {
   padding-right: 0;
   background: none;
 }
-/* 开通会员 */
-.huiyuan {
-  width: 101%;
-  height: 1rem;
-  /* background: #cfba1b; */
-  position: relative;
-  visibility: middle;
-  text-align: center;
-  top: 0.57rem;
-  margin: 0.9rem -0.2%;
-}
-.huiyuan-left {
-  float: left;
-  margin-left: 10px;
-  color: white;
-}
-.huiyuan-right {
-  float: right;
-  border: 1px solid #ccc;
-  background: black;
-  color: white;
-  border-radius: 5px;
-  margin-top: 10px;
-  margin-right: 10px;
-}
+
 #module-list .moduledh {
   width: 50%;
 }

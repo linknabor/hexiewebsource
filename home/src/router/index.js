@@ -40,10 +40,10 @@ const router= new Router({
 router.beforeEach((to, from, next) => {
     var flag;
     if(to.matched[0].name != "index"&& to.matched[0].name!='register') {
-       flag= common.checkRegisterStatus()
-        if(!flag) {
-            return
-        }
+      //  flag= common.checkRegisterStatus()
+      //   if(!flag) {
+      //       return
+      //   }
       }
     //动态改变title
     changeTitle(to.meta.title)

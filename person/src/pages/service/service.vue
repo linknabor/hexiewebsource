@@ -8,11 +8,11 @@
         <span>服务内容: {{item.service_type_cn}}</span>
       </li>
       <li class="ov">
-        <span class="fl border" @click="ViewQRcode(item.qrcode_id,item.sect_name,item.service_type_cn)">查看二维码</span>
-        <!-- <span class="fl border M17" @click="ViewOrder">查看订单</span> -->
+        <span v-show="nubmer1" class="fl border" @click="ViewQRcode(item.qrcode_id,item.sect_name,item.service_type_cn)">查看二维码</span>
+        <span v-show="nubmer2" class="fl border" :class="{M17:nubmer1 == true}" @click="ViewOrder">查看订单</span>
         <span
           class="fr border1"
-          @click="SigninOut(index,item.cfg_id,item.sect_id,item.signin_flag,item.fee_id)"
+          @click="SigninOut(index,item.person_id,item.signin_flag)"
         >{{item.signin_flag == '1'?'下线':'上线'}}</span>
       </li>
     </ul>
@@ -56,11 +56,11 @@ export default {
       Mask:0,
       text:'',
       index:'',
-      cfg_id:'',
-      sect_id:'',
+      person_id:'',
       signin_flag:'',
-      fee_id:''
       // openid: "o_3Dlwdy4btrm8kiyWHkmvyQO_ls",
+      nubmer1:'',
+      nubmer2:'',
     };
   },
   created() {
@@ -68,11 +68,26 @@ export default {
   },
   mounted() {
     vm.qrCodeService();
+    vm.Dis();
   },
 
   components: {},
 
   methods: {
+    Dis(){
+      var a = 1; //1二维码收费  2线下收费 3 在线收费
+      var b = 3; //1全部收费  2物业收费 3 其他收费
+      if(a == 1 && b == 3) { //二维码收费 其他收房费
+        vm.nubmer1 = true;
+        vm.nubmer2 = true;
+      }else if (a == 1 && b == 2) { //二维码收费 物业收费
+        vm.nubmer1 = false;
+        vm.nubmer2 = true;
+      }else if((a == 2 || a == 3) &&  b == 1) {
+        vm.nubmer1 = false;
+        vm.nubmer2 = true;
+      }
+    },
     qrCodeService(){
       if(window.localStorage.getItem('service_list')){
         vm.service_list = JSON.parse(window.localStorage.getItem('service_list'));
@@ -89,25 +104,24 @@ export default {
      
     },
     //查看订单
-    // ViewOrder() {
-    //   vm.$router.push({path:'/ordermation'})
-    // },
+    ViewOrder() {
+      // vm.$router.push({path:'/ordermation'})
+      vm.$router.push({path:'/CanReceiveOrders'})
+    },
     //查看二维码
     ViewQRcode(qrcode_id,sect_name,service_type_cn) {
       vm.$router.push({ path: "/codeimg",query:{'qrcode_id':qrcode_id,'sect_name':sect_name,'service_type_cn':service_type_cn} });
     },
     //上线 下线
-    SigninOut(index, cfg_id, sect_id, signin_flag,fee_id) {
+    SigninOut(index,person_id,signin_flag) {
         if(vm.flay) {
           vm.Mask = 1;//显示遮罩
         }else {
           vm.Mask = 0;//隐藏遮罩  
         }
         vm.index = index; 
-        vm.cfg_id = cfg_id;
-        vm.sect_id = sect_id;
+        vm.person_id = person_id;
         vm.signin_flag = signin_flag;
-        vm.fee_id = fee_id;
         if(vm.signin_flag == '1') {
             vm.text = '是否下线';
         }else {
@@ -125,10 +139,7 @@ export default {
             sigin_in = '1';   
         }
         let data = {
-          // openid: vm.openid,
-          fee_id:vm.fee_id,
-          cfg_id: vm.cfg_id,
-          sect_id: vm.sect_id,
+          person_id: vm.person_id,
           sign_in: sigin_in
         };
         if(vm.signin_flag == '1'){//上线状态

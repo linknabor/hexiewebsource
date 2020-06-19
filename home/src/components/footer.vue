@@ -90,7 +90,7 @@
 
 <script>
 let vm;
-import Bus from '../api/bus.js'
+import Bus from '../api/bus.js';
 export default{
     data(){
       return {
@@ -104,7 +104,7 @@ export default{
       vm=this;
     },
     mounted(){
-      // this.initSession4Test();
+      this.initSession4Test();
       this.initUserInfo(); 
       vm.geturl();
     },
@@ -116,7 +116,7 @@ export default{
         //105/747/384
         initSession4Test() {
           let _this = this;
-          let url = "/initSession4Test/46";
+          let url = "/initSession4Test/62";
           _this.receiveData.getData(_this, url, "Data", function() {
             
           });
@@ -129,6 +129,7 @@ export default{
             e = function(n) {
             if (n.success && n.result == null) {
                 reLogin();
+                return;
             }
             _this.login=false;
             _this.list=n.result.iconList;

@@ -161,6 +161,54 @@ let router= new Router({
         title:'订单信息'
       }
     },
+    {
+      path:'/canReceiveorders',
+      name:'canReceiveorders',
+      component:resolve=>require(['@/pages/service/CanReceiveOrders'],resolve),
+      mate:{
+        title:''
+      }
+    },
+    {
+      path:'/openServiceDetail',
+      name:'openServiceDetail',
+      component:resolve=>require(['@/pages/service/openServiceDetail'],resolve),
+      mate:{
+        title:''
+      }
+    },
+    {
+      path:'/openServicesuccess',
+      name:'openServicesuccess',
+      component:resolve=>require(['@/pages/service/openServicesuccess'],resolve),
+      mate:{
+        title:''
+      }
+    },
+    {
+      path:'/myservice',
+      name:'myservice',
+      component:resolve=>require(['@/pages/service/myservice'],resolve),
+      mate:{
+        title:'我的服务单'
+      }
+    },
+    {
+      path:'/myserviceDetail',
+      name:'myserviceDetail',
+      component:resolve=>require(['@/pages/service/myserviceDetail'],resolve),
+      mate:{
+        title:'订单详情'
+      }
+    },
+    {
+      path:'/cancelservice',
+      name:'cancelservice',
+      component:resolve=>require(['@/pages/service/cancelservice'],resolve),
+      mate:{
+        title:'取消订单'
+      }
+    }
   ]
 })
 
@@ -171,10 +219,10 @@ router.beforeEach((to, from, next) => {
   //动态改变title
   var flag;
   if(to.matched[0].name != "index"&& to.matched[0].name!='register'&&to.matched[0].name!='welfare') {
-     flag=common.checkRegisterStatus()
-     if(!flag) {
-       return
-     }
+    //  flag=common.checkRegisterStatus()
+    //  if(!flag) {
+    //    return
+    //  }
   }
 
   changeTitle(to.meta.title);
