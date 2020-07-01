@@ -1,6 +1,7 @@
 <template>
    <div class="oper" >
        <div class="emptybg" v-show="orders.length==0">
+           <!-- <img src="../../assets/images/img/bg_orders.jpg" alt="" class="adimg"> -->
            <img :src="bgImage" alt="" class="adimg">
        </div>
         <div class="statusBar">
@@ -11,7 +12,8 @@
         <div style="width:100%;height:40px;">&nbsp;</div>
         <div class="ov pr15 lite-divider" style="color:#3b3937"  v-for="(item,i) in orders" @click="gotoDetail(i)" :key="item.id">
             <img class="icon-repair fl" src="../../assets/images/img/service.png"/>
-            <div class="ov ptb15">
+            <div class="ov ptb-top ">
+                <span class="fl fs15" style="color: #666;max-width: 100px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">{{item.productName}}</span>
                 <span class="fr fs12" style="color: #999;"><i class="icon time-icon"></i>{{item.createDateStr}}</span> 
             </div>
             <div class="comment ov  pb15">
@@ -24,12 +26,14 @@
 
 <script>
 let vm;
+import cookie from 'js-cookie';
 export default {
    data () {
        return {
            orders:[],
-           status:15,
-           bgImage:this.common.GetImages('3'),//背景图          
+           status:0,
+           bgImage:this.common.GetImages('9'),//背景图
+           service_id:cookie.get('service_id'),          
        };
    },
    created() {
@@ -42,11 +46,11 @@ export default {
 
    methods: {
        query() {
-            vm.receiveData.getData(vm,'customService/order/queryByStatus?orderStatus='+vm.status,'res',function(){
+            vm.receiveData.getData(vm,'customService/order/queryByStatus?orderStatus='+vm.status+'&service_id='+vm.service_id,'res',function(){
                 if(vm.res.success){
                         vm.orders=vm.res.result;
                 }else {
-                    alert("查询服务记录异常，请稍后重试");
+                    alert(vm.res.message == null ? "查询服务记录异常，请稍后重试" : vm.res.message);
                 }   
             });
        },
@@ -119,6 +123,9 @@ export default {
 .ptb15 {
     padding: 15px 0;
 }
+.ptb-top {
+    padding-top:20px;
+}
 .fs15 {
     font-size: 15px;
 }
@@ -142,7 +149,7 @@ export default {
     background-repeat: no-repeat;
 }
 .comment {
-    margin-top: 5%;
+    margin-top: 8%;
     line-height: 20px;
 }
 .pb15 {

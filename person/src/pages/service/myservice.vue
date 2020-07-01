@@ -2,9 +2,9 @@
    <div class="myrepair" >
         <div class="ov pr15 lite-divider" style="color:#3b3937" v-for="(item,i) in orders" @click="gotoDetail(i)" :key="i">
                 <img class="icon-repair fl" src="../../assets/images/img/service.png"/>
-                <div class="ov ptb15">
-                     <span class="fr fs12" style="color: #999;">
-                        <i class="icon time-icon"></i>{{item.createDateStr}}</span>
+                <div class="ov ptb-top">   
+                    <span class="fl fs15" style="color: #666;max-width: 100px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">{{item.productName}}</span>
+                    <span class="fr fs12" style="color: #999;"><i class="icon time-icon"></i>{{item.createDateStr}}</span>
                 </div>
                 <div class="comment ov  pb15">
                     <span class="fl fs15" style="font-size: 16px;color: #666;max-width: 120px;height:30px;line-height:30px; overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">{{item.memo}}</span>
@@ -12,6 +12,7 @@
              </div>
         </div>
         <div class="emptybg" v-show="orders.length==0">
+            <!-- <img src="../../assets/images/img/bg_orders.jpg" alt="" class="adimg"> -->
             <img :src="bgImage" alt="" class="adimg">
 	    </div>
    </div>
@@ -23,7 +24,7 @@ export default {
    data () {
        return {
            orders:[],
-            bgImage:this.common.GetImages('3'), //背景图        
+           bgImage:this.common.GetImages('9'), //背景图        
        };
    },
    created() {
@@ -40,6 +41,8 @@ export default {
            vm.receiveData.getData(vm,'/customService/order/queryByUser','res',function(){
                 if(vm.res.success) {
                         vm.orders=vm.res.result;
+                }else {
+                    alert(vm.res.message == null ? "获取数据失败" : vm.res.message);
                 }
             });
        },
@@ -87,6 +90,9 @@ export default {
 .ptb15 {
     padding: 15px 0;
 }
+.ptb-top {
+    padding-top:20px;
+}
 .fs15 {
     font-size: 15px;
 }
@@ -108,7 +114,7 @@ export default {
     background-repeat: no-repeat;
 }
 .comment {
-    margin-top: 5%;
+    margin-top: 8%;
     line-height: 20px;
 }
 .pb15 {

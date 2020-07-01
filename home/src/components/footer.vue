@@ -104,7 +104,7 @@ export default{
       vm=this;
     },
     mounted(){
-      this.initSession4Test();
+      // this.initSession4Test();
       this.initUserInfo(); 
       vm.geturl();
     },
@@ -130,14 +130,15 @@ export default{
             if (n.success && n.result == null) {
                 reLogin();
                 return;
-            }
-            _this.login=false;
-            _this.list=n.result.iconList;
-            Bus.$emit('sends',n.result);
-            var duration = new Date().getTime()/1000 + 3600*24*30;
-            for(var j=0;j<n.result.bgImageList.length;j++){
-                  _this.common.localSet(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl,duration)
+            }else {
+              _this.login=false;
+              _this.list=n.result.iconList;
+              Bus.$emit('sends',n.result);
+              var duration = new Date().getTime()/1000 + 3600*24*30;
+              for(var j=0;j<n.result.bgImageList.length;j++){
+                    _this.common.localSet(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl,duration)
               }
+            }
             },
             r = function() {_this.login=false;};
           _this.common.invokeApi(n, a, i, null, e, r);

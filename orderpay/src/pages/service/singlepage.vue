@@ -14,7 +14,8 @@
       </div>
     </div>
 
-    <div class="addr_area" @click="choseAddress">
+     <!-- @click="choseAddress" -->
+    <div class="addr_area">
         <div class="addrtop">&nbsp;</div>
         <div class="custom-menu-link" v-show="address.receiveName">
           <div class="sustoma">
@@ -29,22 +30,22 @@
     </div>
     <!-- -------- -->
     <div>
-      <div class="single-wt">具体描述</div>
+      <div class="single-wt">请具体描述服务需求</div>
       <div class="single-content">
         <textarea class="single-text" @blur="fixScroll" placeholder="输入具体内容..." v-model="memo"></textarea>
       </div>
     </div>
-    <!-- <div class="single-wt">上传图片</div>
+    <div class="single-wt">上传图片</div>
     <div class="pdr2">
       <div id="pic" class="pic_frame"></div>
-      <div>
+      <div class="pl15 pr15">
         <div id="add" @click="addPic" class="add-pic-bg fl"></div>
       </div>
       <div class="clear"></div>
-    </div> -->
+    </div>
     <div style="width: 100%;height: 80px;"></div>
     <div class="btn-fixed">
-            <div class="btn" @click="determine()">确定</div>
+            <div class="btn" @click="determine()">立即下单</div>
     </div>
   </div>
         <!-- 选择地址 -->
@@ -80,6 +81,7 @@ export default {
       memo:'',//具体内容
       localIdsid:"",
       uploadPicId:"",
+      pic_length:0,
       service_order:JSON.parse(window.localStorage.getItem('service_order')),
       address: {}, //报修地址
       addrd:'',
@@ -89,12 +91,30 @@ export default {
   },
   created() {
     vm = this;
-    let url = location.href.split('#')[0];
-    vm.receiveData.wxconfig(vm,wx,['chooseImage','previewImage','uploadImage','downloadImage'],url);
+    // let url = location.href.split('#')[0];
+    // vm.receiveData.wxconfig(vm,wx,['chooseImage','previewImage','uploadImage','downloadImage'],url);
   },
   components: {},
   computed: {},
   mounted() {
+    let url1 = "getUrlJsSign";
+    vm.receiveData.postData(
+        vm,
+        url1,
+        {url:window.location.href.split('#')[0]},
+        'heheData',
+        function(){
+            let wd = vm.heheData.result;
+            wx.config({
+                debug:false,
+                appId:wd.appId,
+                timestamp:wd.timestamp,
+                nonceStr:wd.nonceStr,
+                signature:wd.signature,
+                jsApiList:['chooseImage','previewImage','uploadImage','downloadImage','getLocalImgData']
+            });
+        }
+    );
     vm.initInfo();
   },
   methods: {
@@ -143,97 +163,103 @@ export default {
  
 
     //点击添加上传图片
-    addPic() {
+    addPic:function(){
         wx.chooseImage({
-            count:6,//默认9
-            sizeType:['compressed'],// 可以指定是原图还是压缩图，默认二者都有
-            sourceType:['album','camera'],//可以指定来源是相册还是相机，默认两者都有
-            success:function(res) {
-                var localIds = res.localIds;//返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
-                vm.localIdsid=res.localIds;//保存起来
-                var html = "";
-                var pic_length = $("[name='pice']").length;
-                if( pic_length+localIds.length > 6) {
-                    alert("所选图片超过6张");
-                    return;
-                }
-                var i = 0;
-                if(window._wxjs_is_wkwebview) {
-                    function addimage(i) {
-                        wx.getLocalImgData({
-                            localId: localIds[i],
-                            success: function(res) {
-                                localData = localData.replace('jgp','jpeg');
-                                html = "<div name='pics' class=\"fl\" style=\"margin-right:5px;\"><img src=\""+localData+"\" id =\""+vm.localIdsid[i]+"\" style=\"height:100px;width:90px;\"/></div>"
-                                $('#pic').append(html);
-                                i++;
-                                if(i < localIds.length) {
-                                    addimage(i);
-                                }
-                            },
-                            fail:function(res) {
-                                alert(res);
-                            }
-                        })
-                    }
-                    addimage(i)
+            count: 6, // 默认9
+            sizeType: ['compressed'], // 可以指定是原图还是压缩图，默认二者都有
+            sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+            success: function (res) {
+                var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+                 vm.localIdsid=res.localIds;
+                // alert('已选择'+localIds.length+'张图片');
+               var html = "";
+               var pic_length = $("[name='pics']").length;
+               if(pic_length+localIds.length>6){
+                   alert("所选图片超过6张。")
+                   return false;
+               }
+               vm.pic_length+=localIds.length;
+              var i=0;
+                if(window.__wxjs_is_wkwebview) {//ios 环境
+                   function addimage(i) {
+                            //  setTimeout(function(){
+                                wx.getLocalImgData({
+                                    localId: localIds[i],
+                                    success: function (res) {                                          
+                                        var localData = res.localData;
+                                        // var addds=res.localData;
+                                        localData = localData.replace('jgp', 'jpeg');
+                                            html = "<div name='pics' class=\"fl\" style=\"margin-right:5px;\"><img src=\""+localData+"\" id=\""+vm.localIdsid[i]+"\"  style=\"height:100px;width:90px;\"/></div>"
+                                            $("#pic").append(html);
+                                        i++;  
+                                        if(i<localIds.length) {
+                                            // alert(i)
+                                            addimage(i)
+                                        }   
+                                    },
+                                    fail:function(res){
+                                        alert(res);
+                                    }
+                                }) 
+                            //  },100)  
+                         }  
+                         addimage(i); 
                 }else {
                     for(var i=0;i<localIds.length;i++){
                       html = "<div name='pics' class=\"fl\" style=\"margin-right:5px;\"><img src=\""+localIds[i]+"\"  id=\""+localIds[i]+"\" style=\"height:100px;width:90px;\"/></div>"
                       $("#pic").append(html);
-                    }    
+                    }
                 }
-                if(pic_length+localIds.length >= 6) {
-                    $("#add").hide();
+
+                if(pic_length+localIds.length >= 6){
+                        $("#add").hide();
                 }
             },
-            fail:function(err) {
-                alert(err);
+            fail:function(err){
+                    alert(err)
             }
-        });
+        });            
     },
-    //上传图片到微信
-    loadToWechat() { 
+  // //上传图片到微信
+    uploadToWechat() { 
         var i = 0;
-        var pics = $("[name='pice']");
-        function upload() {
+        var pics = $("[name='pics']");
+        function upload(){
             var img = pics.eq(i).find("img");
             var id = img.attr("id");
             setTimeout(function(){
                 wx.uploadImage({
-                    localId:id,// 需要上传的图片的本地ID，由chooseImage接口获得
-                    isShowProgressTips:1, //默认为1，显示进度提升
-                    success:function(res) {
-                        var serverId = res.serverId;//返回图片的服务器端ID
+                    localId: id, // 需要上传的图片的本地ID，由chooseImage接口获得
+                    isShowProgressTips: 1, // 默认为1，显示进度提示
+                    success: function (res) {
+                        var serverId = res.serverId; // 返回图片的服务器端ID
                         vm.uploadPicId+=serverId+",";
                         i++;
-                        if(i<pics.length) {
+                        if(i<pics.length){
                             upload();
-                        }else if(i == pics.length){
-                            vm.payMent()
+                        }else if(i==pics.length){
+                           vm.payMent();
                         }
+                        
                     }
                 })
-            },50)
+            },50);
         }
         upload();
     },
     //点击确定
     determine() {
-      if(vm.memo==''){
-        alert('描述内容不能为空');return;
-      }
-      // var pic_length = $("[name='pics']").length;
-      // if(pic_length>0){
-      //     vm.uploadToWechat();
-      // }else {
+      var pic_length = $("[name='pics']").length;
+      $("#zzmb").show();
+      if(pic_length>0){
+          vm.uploadToWechat();
+      }else {
           vm.payMent();
-      // }
+      }
     },
     //支付
     payMent(){
-      $("#zzmb").show();
-      //拼接地址
+      //拼接地址 
       vm.addrd = vm.address.province+''+vm.address.city+''+vm.address.county+''+vm.address.xiaoquName+''+vm.address.detailAddress;
       var data = {
         service_id :vm.service_order.service_id,
@@ -245,7 +271,8 @@ export default {
         tran_amt:vm.service_order.price,
         memo:vm.memo,
         sect_name:vm.address.xiaoquName,
-        sect_id:vm.address.xiaoquId
+        sect_id:vm.address.xiaoquId,
+        imgUrls:vm.uploadPicId,
       }
       vm.receiveData.postData(vm, "/customService/order", data, "res", function() {
         if (vm.res.success) {
@@ -275,15 +302,26 @@ export default {
                   $("#zzmb").hide();
                 },
                 cancel(){
-                  alert('支付取消');
-                  $("#zzmb").hide();
+                  vm.paycancel(vm.res.result.orderId);
                 }
               })
           } 
         }else {
             alert(vm.res.message == null ?"支付请求失败，请稍后重试!":vm.res.message);
+            $("#zzmb").hide();
         }
       });
+    },
+    paycancel(orderId){
+      vm.receiveData.postData(vm, "customService/order/cancelPay?orderId="+orderId, null, "res", function() {
+          if(vm.res.success) {
+              alert('支付取消');
+              $("#zzmb").hide();
+          }else {
+              alert(vm.res.message)
+              $("#zzmb").hide();
+          }
+      })
     }
   }
 };
@@ -437,8 +475,14 @@ export default {
   width: 94%;
   margin: 0 0 0 6%;
 }
+.pl15 {
+  padding-left: 15px;
+}
+.pr15 {
+  padding-right: 15px;
+}
 .add-pic-bg {
-  background: url("../../assets/images/bg.png") right;
+  background-image: url("../../assets/images/bg.png");
   height: 100px;
   width: 95px;
 }

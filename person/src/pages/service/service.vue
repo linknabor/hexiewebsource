@@ -2,17 +2,19 @@
   <div>
     <ul class="content" v-for="(item,index) in service_list" :key="index">
       <li>
-        <span>项目: {{item.sect_name}}</span>
+        <span v-show="item.service_type != 1">项目: {{item.sect_name}}</span>
       </li>
-      <li>
+      <li class="text-service">
         <span>服务内容: {{item.service_type_cn}}</span>
       </li>
       <li class="ov">
-        <span v-show="nubmer1" class="fl border" @click="ViewQRcode(item.qrcode_id,item.sect_name,item.service_type_cn)">查看二维码</span>
-        <span v-show="nubmer2" class="fl border" :class="{M17:nubmer1 == true}" @click="ViewOrder">查看订单</span>
+        <span v-show="item.service_type != 1" class="fl border" @click="ViewQRcode(item.qrcode_id,item.sect_name,item.service_type_cn)">查看二维码</span>
+        <span v-show="item.service_type != 0" class="fl border"  @click="ViewOrder(item.service_type,item.service_id)">查看订单</span>
+        <!-- :class="{M17:item.service_type != 0}" -->
         <span
           class="fr border1"
           @click="SigninOut(index,item.person_id,item.signin_flag)"
+          v-show="item.service_type != 1"
         >{{item.signin_flag == '1'?'下线':'上线'}}</span>
       </li>
     </ul>
@@ -38,6 +40,7 @@
 
 <script>
 let vm;
+import cookie from 'js-cookie';
 export default {
   data() {
     return {
@@ -67,46 +70,32 @@ export default {
     vm = this;
   },
   mounted() {
-    vm.qrCodeService();
-    vm.Dis();
+    vm.qrCodePayService();
   },
 
   components: {},
 
   methods: {
-    Dis(){
-      var a = 1; //1二维码收费  2线下收费 3 在线收费
-      var b = 3; //1全部收费  2物业收费 3 其他收费
-      if(a == 1 && b == 3) { //二维码收费 其他收房费
-        vm.nubmer1 = true;
-        vm.nubmer2 = true;
-      }else if (a == 1 && b == 2) { //二维码收费 物业收费
-        vm.nubmer1 = false;
-        vm.nubmer2 = true;
-      }else if((a == 2 || a == 3) &&  b == 1) {
-        vm.nubmer1 = false;
-        vm.nubmer2 = true;
-      }
-    },
-    qrCodeService(){
-      if(window.localStorage.getItem('service_list')){
-        vm.service_list = JSON.parse(window.localStorage.getItem('service_list'));
-      }else {
-        vm.receiveData.getData(vm, "/qrCodePayService", "res", function() {
-          if (vm.res.success) {
-              vm.service_list = vm.res.result.service_list;
-              vm.common.localSet('service_list',JSON.stringify(vm.res.result.service_list));
-          } else {
-            alert(vm.res.message);
-          }
-        }); 
-      }
-     
+    //是否配置服务人员
+    qrCodePayService() {
+      vm.receiveData.getData(vm, "/qrCodePayService", "res", function() {
+        if (vm.res.success) {
+            vm.service_list = vm.res.result.service_list;
+        } else {
+          alert(vm.res.message);
+        }
+      });
     },
     //查看订单
-    ViewOrder() {
-      // vm.$router.push({path:'/ordermation'})
-      vm.$router.push({path:'/CanReceiveOrders'})
+    ViewOrder(type,service_id) {
+      cookie.set('service_id',service_id);
+      if(type == 1) {
+         vm.$router.push({path:'/CanReceiveOrders'})
+      }
+      // else {
+      //    vm.$router.push({path:'/ordermation'})
+      // }
+      
     },
     //查看二维码
     ViewQRcode(qrcode_id,sect_name,service_type_cn) {
@@ -148,7 +137,6 @@ export default {
                   vm.flay = true;
                   vm.Mask = 0;//隐藏遮罩
                   vm.$set(vm.service_list[index],'signin_flag','0');
-                  vm.common.localSet('service_list',JSON.stringify(vm.service_list));
                 } else {
                   vm.flay = true;
                   vm.Mask = 0;//隐藏遮罩
@@ -161,7 +149,6 @@ export default {
                   vm.flay = true;
                   vm.Mask = 0;//隐藏遮罩
                   vm.$set(vm.service_list[index],'signin_flag','1');
-                  vm.common.localSet('service_list',JSON.stringify(vm.service_list));
                 } else {
                   vm.flay = true;
                   vm.Mask = 0;//隐藏遮罩
@@ -209,6 +196,11 @@ li:last-child {
 }
 .M17 {
   margin-left: 17%;
+}
+.text-service {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 /* 弹出框 */
 .v-modal {

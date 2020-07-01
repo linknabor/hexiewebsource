@@ -1,5 +1,6 @@
 <template>
    <div class="operorder">
+    <div id="zzmb"  class="zzmb" v-show="zzmb"></div>
     <div class="opers">
             <div class="ov top-title pr15" style=" padding-left:15px;">
                 <div class="ov ptb15" >
@@ -7,13 +8,13 @@
                     <span class="fr fs12 status-font">{{item.statusStr}}</span>   
                 </div>
             </div>
-            <!-- 如果用户上传了维修图片   -->
+            <!-- 如果用户上传了图片   -->
              <div style="background: white;">
-                <!-- <div class="photo_area" v-show="imgUrlList.length>0">
+                <div class="photo_area" v-show="imgUrlList.length>0">
                     <div v-for="(photo,i) in imgUrlList" class="photo_wrap a_third_m20_height" @click="showPhoto(i)" :key="i">
                         <img :src="photo" class="photo a_third_m22_height"/>
                     </div>
-                </div> -->
+                </div>
                 <div class="top-info" v-show="item.memo!=''">
                     <div class="item" style="padding-left: 15px;">
                         <span class="value" v-html="item.memo"></span>
@@ -59,13 +60,14 @@
 let vm;
 import wx from 'weixin-js-sdk';
 import { MessageBox } from 'mint-ui';
+import cookie from 'js-cookie';
 export default {
    data () {
        return {
            item:{},
            imgUrlList:[],
-           commentImgUrlList:[],
            orderId:this.$route.query.ordersID,
+           zzmb:'',//遮住
        };
    },
    created() {
@@ -83,29 +85,33 @@ export default {
              if(vm.res.success) {  
                 var order=vm.res.result
                 vm.item=order;
-                // vm.imgUrlList = order.imgUrlList;
-                // vm.commentImgUrlList = order.commentImgUrlList;
+                if(order.imgUrls){
+                     vm.imgUrlList = order.imgUrls.split(',');
+                }
+                cookie.set('service_id',vm.item.productId);
              }else {
-                    alert("获取信息失败，请去服务记录中查看！");
+                    alert(vm.res.message == null?"获取信息失败，请去服务记录中查看！":vm.res.message);
              }   
             })
        },
        //预览图片
-    //    showPhoto(idx) {
-    //        wx.previewImage({
-    //     	    current: vm.imgUrlList[idx], // 当前显示图片的http链接
-    //     	    urls: vm.imgUrlList // 需要预览的图片http链接列表
-    //     	});
-    //    },
+       showPhoto(idx) {
+           wx.previewImage({
+        	    current: vm.imgUrlList[idx], // 当前显示图片的http链接
+        	    urls: vm.imgUrlList // 需要预览的图片http链接列表
+        	});
+       },
        //抢单
        accept() {
             MessageBox.confirm('确定要抢下该单吗？').then(action => {
                    if(action== 'confirm') {
+                        vm.zzmb = true;
                         vm.receiveData.postData(vm, "/customService/order/accept?orderId="+vm.orderId, null, "res", function() {
                                 if(vm.res.success) {
                                   vm.$router.push({path:'/openServicesuccess',query:{ordersID:vm.orderId}})
                                 }else {
-                                     alert(vm.res.message == null ?"系统异常，请稍后重试！" : vm.res.message);
+                                    vm.zzmb = false;
+                                    alert(vm.res.message == null ?"系统异常，请稍后重试！" : vm.res.message);
                                 }
                         })
                    }
@@ -117,13 +123,15 @@ export default {
        },
        //完成
        finish() {
+            vm.zzmb = true;
             vm.receiveData.postData(vm,"customService/order/confirmByOper?orderId="+vm.item.id,null,'res',function(){
                       if(vm.res.success) {
                             vm.$router.push({path:'/openServicesuccess',query:{ordersID:vm.orderId}})      
                         }else {
-                             alert(vm.res.message == null ?"系统异常，请稍后重试！" : vm.res.message);
+                            vm.zzmb = false;
+                            alert(vm.res.message == null ?"系统异常，请稍后重试！" : vm.res.message);
                         }
-                    })
+            })
        },
        //删除
         // deleteOrder() {
@@ -157,7 +165,17 @@ export default {
     background: #F9F9E9;
     padding-bottom: 50px;
 }
-
+.zzmb {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.5;
+  -moz-opacity: 0.5;
+  background: #000;
+  z-index: 100000;
+}
 .ov {
     overflow: hidden;
     padding: 1px;

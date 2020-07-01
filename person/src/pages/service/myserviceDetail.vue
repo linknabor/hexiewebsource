@@ -17,14 +17,13 @@
                             <p class="value2" style="font-size: 16px;">{{item.operatorCompanyName}}</p>
                             <p class="value2" style="font-size: 16px;padding-top: 5px;">{{item.operatorName}}<span style="padding-left: 20px;">{{item.operatorTel}}</span></p>
                         </div>
-                        <!-- 图片待替换 -->
                         <div class="fr">
                             <a :href="oTel" class="weia">
                                 <img src="../../assets/images/img/btn_phone_03.png" class="phone_icon">
                             </a>
                         </div>
                     </div>
-                    <div class="detail-title" style="height:20px" v-show="item.price > 0">
+                    <div class="detail-title" style="height:20px" v-show="item.payDate != null">
                         <div class="fl">服务费用</div>
                         <div class="fr highlight">￥{{item.price}}</div>
                         <div class="fr highlight mr10">{{payTypeName}}&nbsp;●&nbsp;</div>
@@ -34,7 +33,7 @@
             <div style="background: white;">
                   <!-- 如果用户上传了维修图片  -->
                 <div class="photo_area"  v-show="imgUrlList.length>0">
-                    <div v-for="(photo,i) in imgUrlList" class="photo_wrap a_third_m20_height" @click="showPhoto(i)">
+                    <div v-for="(photo,i) in imgUrlList" class="photo_wrap a_third_m20_height" @click="showPhoto(i)" :key="i">
                         <img :src="photo" class="photo a_third_m22_height"/>
                     </div>
                 </div>
@@ -61,8 +60,7 @@
                     </div>
                 </div>
             </div>
-
-            <div style="background: white;padding: 0 15px ;margin:15px 0" v-show="item.confirmDate != null && item.payDate != null">
+            <!-- <div style="background: white;padding: 0 15px ;margin:15px 0" v-show="item.pingjiaStatus == 1">
                 <div class="lite-divider detail-title fs14">
                     服务费用
                 </div>
@@ -71,7 +69,7 @@
                         <p class="value2">费用<span style="float: right;padding-right: 10px;">{{payTypeName}}</span></p>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <div style="background: white;padding: 0 15px ;margin-top:15px" v-show="1 == item.pingjiaStatus">
                     <div class="lite-divider detail-title fs14">
                         我的评价
@@ -119,8 +117,8 @@
             </div>
             <div style="width: 100%;height: 15px;"></div>
             <div class="cbtn-fixed">
-                <div class="cbtn" @click="cancel" v-show="item.status==0">取消订单</div>
-                <div class="tow_btn"  v-show="item.status == 15">
+                <div class="cbtn" @click="cancel" v-show="item.showStatus==1">取消订单</div>
+                <div class="tow_btn"  v-show="item.showStatus == 2 && item.payDate == null">
                     <span  class="fl tow_btn_l" @click="cancel">
                         取消
                     </span>
@@ -128,10 +126,11 @@
                         完成并支付
                     </span>
                 </div>
-                <div class="cbtn" @click="finish" v-show="item.status == 9">完成并支付</div>
+                <div class="cbtn" @click="finish"  v-show="item.showStatus == 2 && item.payDate != null">完成</div>
+                <div class="cbtn" @click="finish" v-show="item.showStatus == 3 ">完成并支付</div>
+                <div class="cbtn" @click="comment" v-show="item.showStatus == 4">去评价</div>
+
                 <!-- <div class="cbtn" @click="deleteOrder" v-show="item.showStatus==4">删除</div> -->
-                
-                <div class="cbtn" @click="comment" v-show="item.confirmDate != null && item.payDate != null">去评价</div>
                 <!-- <div class="cbtn" @click="back" v-show="item.showStatus==6">返回</div> -->
             </div>
 
@@ -168,17 +167,18 @@ export default {
             vm.receiveData.getData(vm,'customService/order?orderId='+vm.$route.query.orderId,'res',function(){
             if(vm.res.success) {
                 var order=vm.res.result
-                // vm.imgUrlList = order.imgUrlList;
-                // vm.commentImgUrlList = order.commentImgUrlList;
-                // if(order.payType==1){
-        		// vm.payTypeName="微信支付";
-                // }
+                if(order.imgUrls){
+                    vm.imgUrlList = order.imgUrls.split(',');
+                }
+                if(order.commentImgUrls) {
+                    vm.commentImgUrlList = order.commentImgUrls.split(',');
+                }
                 if(order.operatorTel!=null&&order.operatorTel!=""){
-	    		vm.oTel="tel:"+order.operatorTel;
+	    		    vm.oTel="tel:"+order.operatorTel;
 	        	}
                 vm.item=order;
             }else {
-                alert("获取服务信息失败，请去服务记录中查看！");
+                alert(vm.res.message == null ? "获取服务信息失败，请去服务记录中查看！" : vm.res.message);
             }
             })
        },
@@ -189,6 +189,7 @@ export default {
         	    urls: vm.imgUrlList // 需要预览的图片http链接列表
         	});
        },
+        //预览图片
        showCommentPhoto(i) {
            wx.previewImage({
         		current: vm.commentImgUrlList[i], // 当前显示图片的http链接
@@ -201,29 +202,30 @@ export default {
         },
         // 完成并支付
         finish() {
+            if(vm.item.payDate == null){ //没支付以被接单
                MessageBox.confirm('确认完工后，进入付费操作').then(action => {
                 if(action== 'confirm') {
-                    if(vm.item.payDate == null){ //没支付以被接单
-                        if(vm.item.status == 15) {
-                            vm.receiveData.postData(vm,"customService/order/confirm?orderId="+vm.item.id,null,'res',function(){
-                                if(vm.res.success) { 
-                                    window.location.href=vm.basePageUrlpay+'orderpay.html?'+vm.common.getoriApp()+'#/payment?orderId='+vm.item.id
-                                }else {
-                                    alert(vm.res.message==null?"系统异常，请稍后重试！":vm.res.message);
-                                }
-                            })
-                        }else {
-                            window.location.href=vm.basePageUrlpay+'orderpay.html?'+vm.common.getoriApp()+'#/payment?orderId='+vm.item.id
-                        }
-                    }else {//已经支付
-                        window.location.href=vm.basePageUrlpay+"orderpay.html?"+vm.common.getoriApp()+"#/appraise?ordersID="+vm.item.id
-                    }
-                   }
-               }).catch(err => {
-                  if(err == 'cancel') {
+                    window.location.href=vm.basePageUrlpay+'orderpay.html?'+vm.common.getoriApp()+'#/payment?orderId='+vm.item.id+'&showstatus='+vm.item.status
+                }
+                }).catch(err => {
+                    if(err == 'cancel') {
 
-                  }
-              })
+                    }
+                })
+            }else {//已经支付
+                if(vm.item.status == 15){
+                    vm.receiveData.postData(vm,"customService/order/confirm?orderId="+vm.item.id,null,'res',function(){
+                        if(vm.res.success) { 
+                            window.location.href=vm.basePageUrlpay+"orderpay.html?"+vm.common.getoriApp()+"#/appraise?ordersID="+vm.item.id
+                        }else {
+                            alert(vm.res.message==null?"系统异常，请稍后重试！":vm.res.message);
+                        }
+                     })
+                }else {
+                    window.location.href=vm.basePageUrlpay+"orderpay.html?"+vm.common.getoriApp()+"#/appraise?ordersID="+vm.item.id
+                }
+                
+            }
         },
         // //删除
             // deleteOrder() {

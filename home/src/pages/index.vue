@@ -196,18 +196,19 @@ export default {
     IsectId(){//判断是否绑定房子
       if(vm.sectId == 0 || vm.sectId == null) {
         alert("您暂未绑定房屋，请前往“我是业主”进行操作，感谢！");
-        window.location.href = vm.basePageUrlpay+'wuye/index.html?'+vm.common.getoriApp()+'#/myhouse'
+        window.location.href = vm.basePageUrl+'wuye/index.html?'+vm.common.getoriApp()+'#/myhouse'
         return
       }else {
-         vm.query();
+        vm.query();
       }
     },
     query(){
       let url="/customService/service";
       vm.receiveData.getData(vm,url,'res',function(){
         if(vm.res.success) {
-            if(vm.res.result.length < 0) {
+            if(vm.res.result.length == 0) {
               alert("您所在小区暂未开通该功能，敬请期待");
+              window.location.href = vm.basePageUrl+'wuye/index.html?'+vm.common.getoriApp()+'#/';
               return 
             }else {
               vm.serviceContent = vm.res.result;

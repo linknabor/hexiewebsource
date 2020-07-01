@@ -7,7 +7,7 @@
         <div v-show="repairOrder.status == 9">
             <div class="payStatus item" v-show="repairOrder.payDate != null ">
                     <div class="content-bg">
-                        <div class="content-top-bg">用户已支付维修费用</div>
+                        <div class="content-top-bg">用户已支付费用</div>
                         <div class="content-bottom-bg">
                             <p>￥<span style="font-size: 60px">{{repairOrder.price}}</span></p>
                             <p class="fs15" style="color: #999">支付方式：{{payTypeName}}</p>
@@ -16,7 +16,7 @@
             </div>
             <div class="payStatus item" v-show="repairOrder.payDate == null ">
                 <div class="content-bg">
-                     <div class="content-top-bg">用户还未支付维修费用</div>
+                     <div class="content-top-bg">用户还未支付费用</div>
                 </div>
             </div>
         </div>  
@@ -54,7 +54,7 @@ export default {
        return {
            title:'服务成功',
            desc:'',
-           repairOrder:{publicProject:false},
+           repairOrder:{},
            payTypeName:"微信支付",
        };
    },
@@ -74,7 +74,7 @@ export default {
                             vm.desc='恭喜你抢到一份订单';
                         }
                     }else {
-                         alert('获取成功列表信息失败，请去服务记录中查看！')
+                         alert(vm.res.message == null ? '获取成功列表信息失败，请去服务记录中查看！' : vm.res.message);
                     }
                 });
        },

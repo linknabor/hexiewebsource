@@ -1,5 +1,6 @@
 <template>
    <div>
+            <div id="zzmb"  class="zzmb" v-show="zzmb"></div>
             <div class="title_area">
                 <div class="brand-tip-1">支付成功</div>
                 <div class="brand-tip-2">对本次服务进行评价</div>
@@ -29,19 +30,19 @@
             <div contenteditable class="content p15 fs15" style="line-height: 20px;" :class="{hasvalue:comment}" @click="focus" @blur="storeComment"></div>
 
             <div class="photo_area">
-                        <div style="margin-top:15px;width:100%;height:35px">
-                            <div style="float: left;padding-left: 5px;">上传照片</div>
-                            <div style="float: right;padding-right: 15px;color: #999">{{photos.length}}/6</div>
-                        </div>
+                <div style="margin-top:15px;width:100%;height:35px">
+                    <div style="float: left;padding-left: 5px;">上传照片</div>
+                    <div style="float: right;padding-right: 15px;color: #999">{{pic_length}}/6</div>
+                </div>
 
-                        <div v-for="(item,index) in photos" class="photo_wrap a_third_m20_height"  :key="index">
-                            <img :src="item.imgUrl" class="photo a_third_m22_height"/>
-                            <!-- <img class="photo a_third_m22_height" src="../../assets/images/7f1b3b58-c5b6-4022-b1ed-dc4188c43a3a.gif" alt=""> -->
-                        </div>
-                        
-                        <div class="photo_wrap a_third_m20_height"  @click="addPic" v-show="photos.length<6">
-                            <div class="photo addicon a_third_m22_height" style="margin-left:4px;margin-right:2px;outline: #e5e2dd solid 1px;"></div>
-                        </div>
+                <div id="pic" class="pic_frame"></div>
+
+                <!-- <div class="photo_wrap a_third_m20_height"  @click="addPic" >
+                    <div id="add" class="photo addicon a_third_m22_height" style="margin-left:4px;margin-right:2px;outline: #e5e2dd solid 1px;"></div>
+                </div> -->
+                <div class="pl15 pr15">
+                    <div id="add" @click="addPic" class="add-pic-bg fl"></div>
+                </div>
   	        </div>
             <div style="clear:both;"></div>
             <div style="width: 100%;height: 60px;">&nbsp;</div>
@@ -62,8 +63,11 @@ export default {
 		    commentAttitude:5,
             commentService:5,
             comment:'',
-            photos:[],
             uploadImgMap:{},
+            zzmb:false,
+            localIdsid:"",
+            uploadPicId:"",
+            pic_length:0,
        };
    },
    created() {
@@ -141,40 +145,92 @@ export default {
             }
         },
         //点击添加图片
-        addPic() {
-                wx.chooseImage({
-			    count: 6, // 默认9
-			    // sizeType: ['original', 'compressed']
-			    sizeType: ['compressed'], // 可以指定是原图还是压缩图，默认二者都有 original, compressed
-			    sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
-			    success: function (res) {
-                    var localIds=res.localIds;
-                    if(localIds.length==0) {
-                        alert("未获取图片，请刷新后重新选择图片。");
-                        return false;
+    //点击添加上传图片
+    addPic:function(){
+        wx.chooseImage({
+            count: 6, // 默认9
+            sizeType: ['compressed'], // 可以指定是原图还是压缩图，默认二者都有
+            sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+            success: function (res) {
+                var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+                 vm.localIdsid=res.localIds;
+                // alert('已选择'+localIds.length+'张图片');
+               var html = "";
+               var pic_length = $("[name='pics']").length;
+               if(pic_length+localIds.length>6){
+                   alert("所选图片超过6张。")
+                   return false;
+               }
+               vm.pic_length+=localIds.length;
+              var i=0;
+                if(window.__wxjs_is_wkwebview) {//ios 环境
+                   function addimage(i) {
+                            //  setTimeout(function(){
+                                wx.getLocalImgData({
+                                    localId: localIds[i],
+                                    success: function (res) {                                          
+                                        var localData = res.localData;
+                                        // var addds=res.localData;
+                                        localData = localData.replace('jgp', 'jpeg');
+                                            html = "<div name='pics' class=\"fl\" style=\"margin-right:5px;\"><img src=\""+localData+"\" id=\""+vm.localIdsid[i]+"\"  style=\"height:100px;width:90px;\"/></div>"
+                                            $("#pic").append(html);
+                                        i++;  
+                                        if(i<localIds.length) {
+                                            // alert(i)
+                                            addimage(i)
+                                        }   
+                                    },
+                                    fail:function(res){
+                                        alert(res);
+                                    }
+                                }) 
+                            //  },100)  
+                         }  
+                         addimage(i); 
+                }else {
+                    for(var i=0;i<localIds.length;i++){
+                      html = "<div name='pics' class=\"fl\" style=\"margin-right:5px;\"><img src=\""+localIds[i]+"\"  id=\""+localIds[i]+"\" style=\"height:100px;width:90px;\"/></div>"
+                      $("#pic").append(html);
                     }
-                    for(var i=0;i<localIds.length;i++) {
-                        if(vm.photos.length==6) {
-                            alert("最多只能上传6张图片");
-                            break;
-                            }
-                        var ig={imgUrl:localIds[i]}
-                            vm.photos.push(ig);
-                            vm.uploadImg(localIds[i]);
+                }
+
+                if(pic_length+localIds.length >= 6){
+                        $("#add").hide();
+                }
+            },
+            fail:function(err){
+                    alert(err)
+            }
+        });            
+    },
+  // //上传图片到微信
+    uploadToWechat() { 
+        var i = 0;
+        var pics = $("[name='pics']");
+        function upload(){
+            var img = pics.eq(i).find("img");
+            var id = img.attr("id");
+            setTimeout(function(){
+                wx.uploadImage({
+                    localId: id, // 需要上传的图片的本地ID，由chooseImage接口获得
+                    isShowProgressTips: 1, // 默认为1，显示进度提示
+                    success: function (res) {
+                        var serverId = res.serverId; // 返回图片的服务器端ID
+                        vm.uploadPicId+=serverId+",";
+                        i++;
+                        if(i<pics.length){
+                            upload();
+                        }else if(i==pics.length){
+                           vm.sendComment();
                         }
-                     }
+                        
+                    }
                 })
-        },
-        uploadImg(localId) {
-            wx.uploadImage({
-			    localId: localId, // 需要上传的图片的本地ID，由chooseImage接口获得
-			    isShowProgressTips: 1, // 默认为1，显示进度提示
-			    success: function (res) {
-			        vm.uploadImgMap[localId] = res.serverId; // 返回图片的服务器端ID
-			    }
-         })
-        },
-        // 发表
+            },50);
+        }
+        upload();
+    },
+      // 发表
         submit() {
             if(vm.comment=='' || vm.comment.length<5) {
                 alert("评论字数不能小于5个！");
@@ -184,26 +240,29 @@ export default {
                 alert("评论字数不能大于400！");
                 return
             }
-            vm.sendComment();
+            var pic_length = $("[name='pics']").length;
+            $("#zzmb").show();
+            if(pic_length>0){
+                vm.uploadToWechat();
+            }else {
+                vm.sendComment();
+            };
         },
         sendComment() {
-            var imgurl="";
-            for(var k in vm.uploadImgMap) {
-                imgurl+=vm.uploadImgMap[k]+",";
-            }
-
             var add={
                 orderId:vm.$route.query.ordersID,
                 commentQuality:vm.commentQuality,
                 commentAttitude:vm.commentAttitude,
                 commentService:vm.commentService,
                 comment:vm.comment,
-                commentImgUrls:imgurl
+                commentImgUrls:vm.uploadPicId
             }
             vm.receiveData.postData(vm,'/customService/order/comment',add,'res',function(){
                 if(vm.res.success) {
+                    $("#zzmb").hide();
                     window.location.href=vm.basePageUrl+"person/index.html?"+vm.common.getoriApp()+"#/myserviceDetail?orderId="+vm.$route.query.ordersID; 
                 }else {
+                    $("#zzmb").hide();
                     alert(vm.res.message == null ?"评论失败，请稍后重试":vm.res.message);
                 }
                   
@@ -216,7 +275,17 @@ export default {
 </script>
 
 <style  scoped>
-
+.zzmb {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.5;
+  -moz-opacity: 0.5;
+  background: #000;
+  z-index: 100000;
+}
 .title_area {
     padding: 45px 0;
     background: #f7f7f1;
@@ -309,9 +378,28 @@ export default {
     margin: 3px;
     width: 93%;
     height: 96px;
-    /* outline: #e5e2dd solid 1px; */
 }
-
+.pdr2 {
+  margin: 0 0.2rem;
+}
+.pic_frame {
+  width: 94%;
+  margin: 0 0 0 6%;
+}
+.pl15 {
+  margin-left: 22px;
+}
+.pr15 {
+  padding-right: 15px;
+}
+.add-pic-bg {
+  background: url('../../assets/images/add_photo.png') no-repeat;
+  background-size: 40px;
+  background-position: 50%;
+  outline: rgb(229, 226, 221) solid 1px;
+  height: 100px;
+  width: 90px;
+}
 .btn-fixed {
     position: fixed;
     bottom: -15px;

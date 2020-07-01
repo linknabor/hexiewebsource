@@ -219,10 +219,10 @@ router.beforeEach((to, from, next) => {
   //动态改变title
   var flag;
   if(to.matched[0].name != "index"&& to.matched[0].name!='register'&&to.matched[0].name!='welfare') {
-    //  flag=common.checkRegisterStatus()
-    //  if(!flag) {
-    //    return
-    //  }
+     flag=common.checkRegisterStatus()
+     if(!flag) {
+       return
+     }
   }
 
   changeTitle(to.meta.title);

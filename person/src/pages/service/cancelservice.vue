@@ -77,7 +77,7 @@ export default {
                   alert("订单已取消");
                   vm.$router.push({path:'/myserviceDetail',query:{orderId:vm.$route.query.orderId}})
                 }else {
-                  alert("订单取消失败，请稍后重试！");  
+                  alert(vm.res.message == null ? "订单取消失败，请稍后重试！" : vm.res.message);  
                 }  
               })
         }

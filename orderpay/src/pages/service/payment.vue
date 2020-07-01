@@ -1,18 +1,13 @@
 <template>
   <div class="repay">
+    <div id="zzmb"  class="zzmb" ></div>
     <div class="title-top">服务已完工，请支付费用</div>
-
     <div class="title-mid lite-divider">
       <div class="title-mid-top">请输入费用（元）</div>
-      <div
-        contenteditable="true"
-        class="title-mid-bottom"
-        :class="{hasvalue:amount!=''}"
-        @blur="storeMemo"
-      ></div>
+      <input type="text" class="title-mid-bottom"  :class="{tcolor : incolor}" v-model="amount" @focus="getfocus()" @blur="getblur()">
     </div>
     <div class="main_btn">
-      <div class="btn" @click="onlinePay" :class="{useless:paying}">立即微信支付</div>
+      <div class="btn" @click="onlinePay" >立即微信支付</div>
     </div>
   </div>
 </template>
@@ -24,9 +19,10 @@ import { MessageBox } from "mint-ui";
 export default {
   data() {
     return {
-      amount: "",
-      paying: false,
-      orderId: this.$route.query.orderId
+      amount: "|",
+      orderId: this.$route.query.orderId,
+      incolor:false,
+      status:this.$route.query.status
     };
   },
   created() {
@@ -39,10 +35,21 @@ export default {
   components: {},
 
   methods: {
-    //失去焦点
-    storeMemo(e) {
-      vm.amount = e.srcElement.innerText;
+    //获取焦点
+    getfocus() {
+      if(vm.amount == '|'){
+        vm.amount = "" ;
+      }
+      vm.incolor =true;
     },
+    //失去焦点
+    getblur(){
+      if(vm.amount == ''){
+        vm.amount = "|" ;
+        vm.incolor =false;
+      }
+    },
+
     //微信支付
     onlinePay() {
       if (!vm.orderId || vm.orderId <= 0) {
@@ -61,6 +68,7 @@ export default {
          orderId: vm.orderId,
          amount: vm.amount
       }
+      $("#zzmb").show();
       vm.receiveData.postData(vm, "/customService/order/pay?orderId="+vm.orderId+"&amount="+vm.amount,{}, "res", function() {
         if (vm.res.success) {
           wx.config({
@@ -80,25 +88,54 @@ export default {
             success: function(res) {
               // 支付成功后的回调函数
               alert("支付成功！");
-              vm.$router.push({
+              if(vm.status == 15) {
+                vm.ChangeState();//改变状态
+              }else {
+                vm.$router.push({
                 path: "/appraise",
                 query: { ordersID: vm.orderId }
-              });
+              }); 
+              }
+              
             },
             fail(res){
-              vm.paying = false;
+              $("#zzmb").hide();
             },
             cancel(res){
-              alert('支付取消');
-              vm.paying = false;
+              vm.paycancel();
             }
           });
         } else {
           alert(vm.res.message == null ?"支付请求失败，请稍后重试!":vm.res.message);
-          vm.paying = false;
+          $("#zzmb").hide();
         }
       });
     },
+    paycancel(){
+      vm.receiveData.postData(vm, "customService/order/cancelPay?orderId="+vm.orderId, null, "res", function() {
+          if(vm.res.success) {
+              alert('支付取消');
+              $("#zzmb").hide();
+          }else {
+              $("#zzmb").hide();
+              alert(vm.res.message)
+          }
+      })
+    },
+    // 改变状态
+    ChangeState(){
+      vm.receiveData.postData(vm,"customService/order/confirm?orderId="+vm.orderId,null,'res',function(){
+          if(vm.res.success) { 
+              vm.$router.push({
+                path: "/appraise",
+                query: { ordersID: vm.orderId }
+              });  
+          }else {
+              alert(vm.res.message==null?"系统异常，请稍后重试！":vm.res.message);
+              $("#zzmb").hide();
+          }
+      })
+    }
   },
 
   computed: {}
@@ -106,7 +143,6 @@ export default {
 </script>
 
 <style  scoped>
-
 .repay {
   background: #f9f9e9;
   margin: 0;
@@ -116,6 +152,15 @@ export default {
   left: 0%;
   right: 0%;
   bottom: 0%;
+}
+.zzmb {
+  z-index: 100000;
+  position: fixed;top: 0;left: 0;
+  -moz-opacity: 0.65;opacity: 0.65;
+  filter: alpha(opacity=65);
+  background: #000;width: 100%;
+  height: 100%;
+  display: none;
 }
 .title-top {
   padding: 15px;
@@ -139,17 +184,15 @@ export default {
 .title-mid-bottom {
   padding-bottom: 13px;
   font-size: 50px;
-  color: #3b3937;
-  outline: none;
-}
-.title-mid-bottom:before {
-  content: "|";
-  font-size: 50px;
+  width: 100%;
   color: #7e6b5a;
+  outline: none;
+  border: none;
+  text-align: center;
+  background-color: #f9f9e9;
 }
-.title-mid-bottom:focus:before,
-.title-mid-bottom.hasvalue:before {
-  display: none;
+.tcolor {
+  color:#3b3937;
 }
 
 /* 按钮 */
@@ -172,7 +215,5 @@ export default {
   border: none;
   text-decoration: none;
 }
-.useless {
-  background-color: #e6e3df;
-}
+
 </style>
