@@ -97,6 +97,7 @@ export default {
       // }
       
     },
+
     //查看二维码
     ViewQRcode(qrcode_id,sect_name,service_type_cn) {
       vm.$router.push({ path: "/codeimg",query:{'qrcode_id':qrcode_id,'sect_name':sect_name,'service_type_cn':service_type_cn} });

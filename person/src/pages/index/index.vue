@@ -229,6 +229,7 @@ export default {
         lvdou: "0",
         couponCount: 0,
       },
+      service_list:[],
       login:true,
       oriapp:'', //我是业主
       cardService:'',
@@ -310,6 +311,17 @@ export default {
       this.common.invokeApi(n, a, i, d, e, r);
 
       // vm.receiveData.getData(vm, 'userInfo', "n", function() { vm.user = vm.n.result;});
+    },
+    //是否配置服务人员
+     qrCodePayService() {
+      vm.receiveData.getData(vm, "/qrCodePayService", "res", function() {
+        if (vm.res.success) {
+            vm.service_list = vm.res.result.service_list;
+            vm.common.localSet('service_list',JSON.stringify(vm.res.result.service_list));
+        } else {
+          alert(vm.res.message);
+        }
+      });
     },
     //点击头像
     gotoEdit() {
