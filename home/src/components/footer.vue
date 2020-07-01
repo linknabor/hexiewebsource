@@ -90,7 +90,7 @@
 
 <script>
 let vm;
-import Bus from '../api/bus.js'
+import Bus from '../api/bus.js';
 export default{
     data(){
       return {
@@ -116,7 +116,7 @@ export default{
         //105/747/384
         initSession4Test() {
           let _this = this;
-          let url = "/initSession4Test/46";
+          let url = "/initSession4Test/62";
           _this.receiveData.getData(_this, url, "Data", function() {
             
           });
@@ -129,14 +129,16 @@ export default{
             e = function(n) {
             if (n.success && n.result == null) {
                 reLogin();
-            }
-            _this.login=false;
-            _this.list=n.result.iconList;
-            Bus.$emit('sends',n.result);
-            var duration = new Date().getTime()/1000 + 3600*24*30;
-            for(var j=0;j<n.result.bgImageList.length;j++){
-                  _this.common.localSet(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl,duration)
+                return;
+            }else {
+              _this.login=false;
+              _this.list=n.result.iconList;
+              Bus.$emit('sends',n.result);
+              var duration = new Date().getTime()/1000 + 3600*24*30;
+              for(var j=0;j<n.result.bgImageList.length;j++){
+                    _this.common.localSet(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl,duration)
               }
+            }
             },
             r = function() {_this.login=false;};
           _this.common.invokeApi(n, a, i, null, e, r);

@@ -21,7 +21,7 @@ import './assets/js/rem';
 
 import cookie from 'js-cookie'
 
-// import {common,MasterConfig,getUrlParam} from './assets/js/common'
+// import {common,MasterConfig,getUrlParam} from './assets/js/common';
 
 Vue.prototype.common=common;
 Vue.prototype.getUrlParam=getUrlParam;
