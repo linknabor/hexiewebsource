@@ -618,4 +618,33 @@ export default {
     padding-top: 7%;
     color: #3b3937;
 }
+#module-list .moduledh {
+  width: 50%;
+}
+.module-itemdh {
+    margin-top: 10px;
+    display: block;
+    width: 100%;
+    background-position: 50% 0;
+    background-size: 42px;
+    background-repeat: no-repeat;
+    font-size: 16px;
+    color: #3b3937;
+    -webkit-border-radius: 2px;
+}
+.module-logodh{
+    margin-top: -5px;
+    display: block;
+    height: 1.2rem;
+    background-position: 25% 0;
+    background-size: .7rem;
+    background-repeat: no-repeat;
+}
+.module-titledh {
+    text-align: center;
+    margin-top: 10px;
+    margin-left: 27%;
+    padding-top: 7%;
+    color: #3b3937;
+}
 </style>

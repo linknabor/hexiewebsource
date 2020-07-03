@@ -93,6 +93,7 @@
 	padding: 0 0.4rem;
 }
 
+
 /*发票*/
 .invoice{
 	border:1px solid #cecdc9;
@@ -749,7 +750,6 @@
 						}
 					);
 				}
-				
 			},
 			//工作人员收费
 			personnel(){
