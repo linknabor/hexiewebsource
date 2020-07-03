@@ -131,7 +131,7 @@
         <router-link
           :to="{path:'/service'}"
           class="input-wrap menu-person-link lite-divider"
-          v-show="serviceOperator"
+          v-show="serviceOperator || service_list.length > 0"
         >
           <span class="input-info lf30 fs16">我是服务人员</span>
           <span class="fr fs14 left_color">查看订单&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -257,6 +257,8 @@ export default {
     // this.initSession4Test();
     this.User(); 
     vm.oriApp();//判断我是业主地址
+    vm.qrCodePayService();
+
   },
   components: {},
   methods: {
@@ -317,9 +319,8 @@ export default {
       vm.receiveData.getData(vm, "/qrCodePayService", "res", function() {
         if (vm.res.success) {
             vm.service_list = vm.res.result.service_list;
-            vm.common.localSet('service_list',JSON.stringify(vm.res.result.service_list));
         } else {
-          alert(vm.res.message);
+          // alert(vm.res.message);
         }
       });
     },
