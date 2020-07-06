@@ -37,15 +37,6 @@
           </div>
         </div>
       </div>
-      <!-- <div class="huiyuan">
-        <div class="huiyuan-1">
-          <a :href="this.basePageUrlpay+'orderpay.html?start=123#/kaitong'">
-            <img v-if="isMember" src="../../assets/images/common/VIP已开通.png" />
-            <img v-else src="../../assets/images/common/VIP未开通(4).png" alt />
-          </a>
-        </div>
-      </div> -->
-
       <div id="point-list" style="border-bottom: none;" class="div_bottom" v-show="cardService==true">
         <div class="point-item-wrap item-wraps">
           <div class="point-item">
@@ -130,6 +121,21 @@
     </div>
     <div v-else>
       <div class="info-wrap" style="overflow:hidden; clear: both;">
+        <router-link
+          :to="{path:'/myservice'}"
+          class="input-wrap menu-person-link lite-divider"
+        >
+          <span class="input-info lf30 fs16">我的服务单</span>
+          <span class="fr fs14 left_color">查看订单&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        </router-link>
+        <router-link
+          :to="{path:'/service'}"
+          class="input-wrap menu-person-link lite-divider"
+          v-show="serviceOperator || service_list.length > 0"
+        >
+          <span class="input-info lf30 fs16">我是服务人员</span>
+          <span class="fr fs14 left_color">查看订单&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        </router-link>
         <router-link :to="{path:'/myrepair'}" class="input-wrap menu-person-link lite-divider">
           <span class="input-info lf30 fs16">我的维修单</span>
           <span class="fr fs14 left_color">查看维修单&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -186,9 +192,6 @@
         <span class="input-info lf30 fs16">客服电话</span>
         <span class="fr fs14 left_color">021-50876295</span>
       </a>
-      <!--<a href=" " class="input-wrap menu-person-link ">   
-                        <span class="input-info lf30 fs16">在线客服</span>
-      </a>-->
     </div>
 
     <div class="bottom-info divider" style="text-align: center; display: block;">
@@ -226,15 +229,15 @@ export default {
         lvdou: "0",
         couponCount: 0,
       },
+      service_list:[],
       login:true,
       oriapp:'', //我是业主
       cardService:'',
       qrCode:'',//二维码
       point:0,//积分
       cardStatus:'',//是否领卡激活的标记
-      // 默认未开通会员
-      // isMember: false,
       donghu:false,//标识判断是不是东湖
+      serviceOperator:false, //我是服务人员
       user_info: {
         avatar: img,
         nickname: "游客",
@@ -253,24 +256,12 @@ export default {
   mounted() {
     // this.initSession4Test();
     this.User(); 
-    // this.panduan(); //先判断
     vm.oriApp();//判断我是业主地址
+    vm.qrCodePayService();
+
   },
   components: {},
   methods: {
-    //先判断是否为会员
-    // panduan() {
-    //   vm.receiveData.getData(vm, "/getMember", "res", function(res) {
-    //     if (vm.res[0].status == "0") {
-    //       // 已开通会员
-    //       // console.log(vm.res[0].enddate)
-    //       vm.isMember = true;
-    //       vm.enddate = vm.res[0].enddate;
-    //     }
-    //   });
-
-     
-    // },
     //模仿线上用户信息
     // 105/747/384
     initSession4Test() {
@@ -284,33 +275,34 @@ export default {
         i = null,
         d = function() {},
         e = function(n) {
-           if(n.success&&n.result==null) {
+          if(n.success&&n.result==null) {
                  reLogin();
                  return
-           }
-          vm.donghu=n.result.donghu;//东湖标识
-          vm.user = n.result;
-          vm.user.headimgurl = "" != n.result.name || n.result? n.result.headimgurl: vm.user_info.avatar;  
-          vm.user.name ="" != n.result.name ? n.result.name : vm.user_info.nickname;
-          
-          vm.qrCode=n.result.qrCode;
-          vm.cardService=n.result.cardService;
-          if(vm.user.point<0){//小于0等于0
-            vm.point=0;
           }else {
-            vm.point=vm.user.point;
-          }
-          vm.login=false;
-          Bus.$emit('sends',n.result.iconList);
-          
-          //保存图片
-          var duration = new Date().getTime()/1000 + 3600*24*30;
-          cookie.set('cardStatus',n.result.cardStatus,duration);
-          cookie.set('cardService',n.result.cardService,duration);
+            vm.donghu=n.result.donghu;//东湖标识
+            vm.user = n.result;
+            vm.user.headimgurl = "" != n.result.name || n.result? n.result.headimgurl: vm.user_info.avatar;  
+            vm.user.name ="" != n.result.name ? n.result.name : vm.user_info.nickname;
+            vm.qrCode=n.result.qrCode;
+            vm.cardService=n.result.cardService;
+            vm.serviceOperator = n.result.serviceOperator;//我是服务人员
+            if(vm.user.point<0){//小于0等于0
+              vm.point=0;
+            }else {
+              vm.point=vm.user.point;
+            }
+            vm.login=false;
+            Bus.$emit('sends',n.result.iconList);
+            
+            //保存图片
+            var duration = new Date().getTime()/1000 + 3600*24*30;
+            cookie.set('cardStatus',n.result.cardStatus,duration);
+            cookie.set('cardService',n.result.cardService,duration);
 
-          for(var j=0;j<n.result.bgImageList.length;j++){
-              vm.common.localSet(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl)
-          }
+            for(var j=0;j<n.result.bgImageList.length;j++){
+                vm.common.localSet(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl)
+            }
+         }
         },
         r = function() {
           vm.login=false;
@@ -321,6 +313,16 @@ export default {
       this.common.invokeApi(n, a, i, d, e, r);
 
       // vm.receiveData.getData(vm, 'userInfo', "n", function() { vm.user = vm.n.result;});
+    },
+    //是否配置服务人员
+     qrCodePayService() {
+      vm.receiveData.getData(vm, "/qrCodePayService", "res", function() {
+        if (vm.res.success) {
+            vm.service_list = vm.res.result.service_list;
+        } else {
+          // alert(vm.res.message);
+        }
+      });
     },
     //点击头像
     gotoEdit() {
@@ -445,11 +447,7 @@ export default {
   width: 100%;
   top: 1.4rem;
 }
-.huiyuan-1 img {
-  border-style: none;
-  width: 100%;
-  height: 0.8rem;
-}
+
 .div_bottom {
   position: absolute;
   /* bottom: 0; */
@@ -590,30 +588,35 @@ export default {
   padding-right: 0;
   background: none;
 }
-/* 开通会员 */
-.huiyuan {
-  width: 101%;
-  height: 1rem;
-  /* background: #cfba1b; */
-  position: relative;
-  visibility: middle;
-  text-align: center;
-  top: 0.57rem;
-  margin: 0.9rem -0.2%;
+
+#module-list .moduledh {
+  width: 50%;
 }
-.huiyuan-left {
-  float: left;
-  margin-left: 10px;
-  color: white;
+.module-itemdh {
+    margin-top: 10px;
+    display: block;
+    width: 100%;
+    background-position: 50% 0;
+    background-size: 42px;
+    background-repeat: no-repeat;
+    font-size: 16px;
+    color: #3b3937;
+    -webkit-border-radius: 2px;
 }
-.huiyuan-right {
-  float: right;
-  border: 1px solid #ccc;
-  background: black;
-  color: white;
-  border-radius: 5px;
-  margin-top: 10px;
-  margin-right: 10px;
+.module-logodh{
+    margin-top: -5px;
+    display: block;
+    height: 1.2rem;
+    background-position: 25% 0;
+    background-size: .7rem;
+    background-repeat: no-repeat;
+}
+.module-titledh {
+    text-align: center;
+    margin-top: 10px;
+    margin-left: 27%;
+    padding-top: 7%;
+    color: #3b3937;
 }
 #module-list .moduledh {
   width: 50%;
