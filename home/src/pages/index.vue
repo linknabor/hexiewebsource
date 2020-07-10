@@ -140,7 +140,7 @@ export default {
         loop: true
       },
       swiperData: [],
-      jingxuans:[],
+      // jingxuans:[],
       data1:'',
 			data2:'',
       data3:'',
@@ -171,7 +171,7 @@ export default {
         let res = _this.res;
         if (res.success) {
           _this.swiperData = res.result.banners;
-          _this.jingxuans = res.result.modules;
+          // _this.jingxuans = res.result.modules;
           _this.data1 = res.result.jingxuan1;
 					_this.data2 = res.result.jingxuan2;
 					_this.data3 = res.result.jingxuan3;
@@ -188,18 +188,18 @@ export default {
       vm.donghu=result.donghu;//东湖标识
       vm.cfgParam=result.cfgParam;
       vm.sectId=result.sectId;
-      if(!vm.donghu){
-        vm.initData();
-        vm.IsectId();
-      }
+      vm.IsectId();
+      vm.initData();
     },
     IsectId(){//判断是否绑定房子
-      if(vm.sectId == 0 || vm.sectId == null) {
-        alert("您暂未绑定房屋，请前往“我是业主”进行操作，感谢！");
-        window.location.href = vm.basePageUrl+'wuye/index.html?'+vm.common.getoriApp()+'#/myhouse'
-        return
-      }else {
-        vm.query();
+      if(!vm.donghu) {
+        if(vm.sectId == 0 || vm.sectId == null) {
+          alert("您暂未绑定房屋，请前往“我是业主”进行操作，感谢！");
+          window.location.href = vm.basePageUrl+'wuye/index.html?'+vm.common.getoriApp()+'#/myhouse'
+          return
+        }else {
+          vm.query();
+        } 
       }
     },
     query(){
