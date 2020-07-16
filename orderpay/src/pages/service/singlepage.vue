@@ -251,6 +251,12 @@ export default {
     determine() {
       var pic_length = $("[name='pics']").length;
       $("#zzmb").show();
+      let sectId = cookie.get('sectId');
+      if(sectId == "" || sectId == 'null' || sectId == 0 || sectId == null) {
+        alert('您暂未绑定房屋，请前往“我是业主”进行操作，感谢！')
+        location.href=vm.basePageUrl+'wuye/index.html?'+vm.common.getoriApp()+'#/myhouse'
+        return false;
+      }
       if(pic_length>0){
           vm.uploadToWechat();
       }else {

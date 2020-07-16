@@ -162,9 +162,9 @@
             class="pay"
             @click="pay('queryBillInfo','queryAllPrice','queryAllselect','otherbillinfo','queryAllPrice1')"
           >
-            <span style="position: absolute;left: 30%;">我要缴费</span>
-            <span v-if="zhuanpay=='zhuanye'" style="right: -11%;position: relative;">￥{{queryAllPrice}}</span>
-            <span v-if="zhuanpay=='biaozhun'"  style="right: -11%;position: relative;">￥{{queryAllPrice1}}</span>
+            <span >确定</span>
+            <span v-if="zhuanpay=='zhuanye'" >￥{{queryAllPrice}}</span>
+            <span v-if="zhuanpay=='biaozhun'" >￥{{queryAllPrice1}}</span>
           </div>
         </div>
       </mt-tab-container-item>
@@ -998,7 +998,6 @@ export default {
           alert("请选择帐单后支付");
           return;
         }
-
         var oriapp=vm.common.getoriApp();
         var oriap = vm.getUrlParam('oriApp');
         if(oriap == 'wxe8dea53aad1a93b9') {

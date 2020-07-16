@@ -116,6 +116,7 @@ import { swiper, swiperSlide } from "vue-awesome-swiper";
 import "../assets/css/swiper.min.css";
 import Footer from '../components/footer.vue';
 import Bus from '../api/bus.js';
+import cookie from 'js-cookie';
 let vm;
 export default {
   components: {
@@ -140,14 +141,13 @@ export default {
         loop: true
       },
       swiperData: [],
-      // jingxuans:[],
       data1:'',
 			data2:'',
       data3:'',
       donghu:false,//是否是东湖
       cfgParam:{},//用户绑定的小区是否有服务功能
-      sectId:0, //是否绑定房子
       serviceContent:[],//首页数据
+      sectId:'',
     };
   },
   beforeCreate() {
@@ -171,7 +171,6 @@ export default {
         let res = _this.res;
         if (res.success) {
           _this.swiperData = res.result.banners;
-          // _this.jingxuans = res.result.modules;
           _this.data1 = res.result.jingxuan1;
 					_this.data2 = res.result.jingxuan2;
 					_this.data3 = res.result.jingxuan3;
@@ -187,25 +186,20 @@ export default {
     getMsgFromZha(result) {
       vm.donghu=result.donghu;//东湖标识
       vm.cfgParam=result.cfgParam;
-      vm.sectId=result.sectId;
-      vm.IsectId();
-      vm.initData();
-    },
-    IsectId(){//判断是否绑定房子
+      vm.sectId = result.sectId;
+      cookie.set('sectId',result.sectId);
       if(!vm.donghu) {
-        if(vm.sectId == 0 || vm.sectId == null) {
-          alert("您暂未绑定房屋，请前往“我是业主”进行操作，感谢！");
-          window.location.href = vm.basePageUrl+'wuye/index.html?'+vm.common.getoriApp()+'#/myhouse'
-          return
-        }else {
-          vm.query();
-        } 
+         vm.query();
       }
+         vm.initData();
     },
     query(){
       let url="/customService/service";
       vm.receiveData.getData(vm,url,'res',function(){
         if(vm.res.success) {
+          if(vm.sectId == "" || vm.sectId == 'null' || vm.sectId == 0 || vm.sectId == null) {
+             vm.serviceContent = vm.res.result;
+          }else {
             if(vm.res.result.length == 0) {
               alert("您所在小区暂未开通该功能，敬请期待");
               window.location.href = vm.basePageUrl+'wuye/index.html?'+vm.common.getoriApp()+'#/';
@@ -213,6 +207,7 @@ export default {
             }else {
               vm.serviceContent = vm.res.result;
             }
+          }  
         }else {
           alert(vm.res.message)
         }
