@@ -205,7 +205,7 @@ export default {
             if(vm.item.payDate == null){ //没支付以被接单
                MessageBox.confirm('确认完工后，进入付费操作').then(action => {
                 if(action== 'confirm') {
-                    window.location.href=vm.basePageUrlpay+'orderpay.html?'+vm.common.getoriApp()+'#/payment?orderId='+vm.item.id+'&showstatus='+vm.item.status
+                    window.location.href=vm.basePageUrlpay+'orderpay.html?'+vm.common.getoriApp()+'#/payment?orderId='+vm.item.id+'&status='+vm.item.status
                 }
                 }).catch(err => {
                     if(err == 'cancel') {

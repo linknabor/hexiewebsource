@@ -74,23 +74,28 @@
 	color: #fff;
 	line-height: 0.9rem;
 	background-color: #ccc;
+	font-size: 0.3rem;
 }
 .paycolor {
 	background-color: #F69C05;
 }
-
+.btn-fix {
+	position: fixed;
+	left: 4%;
+	right: 4%;
+	bottom: 0;
+	z-index: 3;
+	width: 92%;
+}
 .personnel,.determine {
-	height: 0.8rem;
-	line-height: 0.8rem;
+	height: 0.9rem;
+	line-height: 0.9rem;
 	text-align: center;
 	color: #fff;
-	padding:0 0.2rem 0 0.4rem;
+	width:3rem;
 	border-radius: 5px;
 	background-color: #F69C05;
 	font-size:0.3rem;
-}
-.determine {
-	padding: 0 0.4rem;
 }
 
 /*发票*/
@@ -356,7 +361,7 @@
 			</div>
 
 			<!-- 发票 -->
-			<form class="invoice" v-show="show_invoice=='1'">
+			<form class="invoice" v-show="show_invoice=='1' ">
 				<div class="form-row">
 					是否需要发票:&nbsp;&nbsp;
 					 <input  type="radio" id="yes" value="1" v-model="needInvoice">
@@ -384,7 +389,7 @@
 				<h4 class="qufapiao" v-show="show_invoice_flag==1">申请的电子发票预计在3个工作日内通过短信发送至您手机上,请注意查收</h4>
 			</form>
 			<!-- 支付按钮 -->
-			<div class="card " >
+			<div class="card " v-show="bindhouse">
 				<div class="ov item" >
 					<span  class="fl">是否自动绑定为该房屋的业主：</span>
 					<div class="ov fl  ml">
@@ -509,12 +514,11 @@
 				</div>
 			</div>
 			<div style="height:1.5rem;"></div>
-			<!-- <div v-show="selected == 'd'">
+			<div v-if="selected == 'd' && is_create_qrcode == 1" class="btn-fix">
 				<div class="fl personnel" @click="personnel">工作人员收费</div>
 				<div class="fr determine" @click="btnPay">确定支付</div>
-			</div> -->
-			<!-- v-show="selected != 'd'" -->
-			<div  class="pay-btn" :class="{paycolor : payType!= ''}" @click="btnPay">确定支付</div>
+			</div>
+			<div v-else  class="pay-btn" :class="{paycolor : payType!= ''}" @click="btnPay">确定支付</div>
 		</div>
 
 	</div>
@@ -545,6 +549,7 @@
 				show_invoice_flag:'0',
 				show_com_flag:'0',//是否允许开具公司发票
 				show_invoice:'',//是否显示发票
+				is_create_qrcode:'',//是否开启工作人员收费
 				support_card_pay:'',
 				version:'',
 				bind_switch:'1',
@@ -552,7 +557,7 @@
 				
 				selected:this.$route.query.selected,//查询缴费显示工作人员收费
 				cardPayService:this.$route.query.cardPayService, //控制是否可以 绑卡支付
-				payType:'',//支付方式
+				payType:'0',//支付方式
 				customerName:'',//持卡人姓名
 				acctNo:'',//卡号
 				acctNNo:'',//卡号
@@ -575,6 +580,7 @@
 				certspan:'请选择',
 				bankCards:[],
 				cardId:'',//记录卡的id
+				bindhouse:true,
 			}
 		},
 		filters:{
@@ -655,6 +661,18 @@
 
 		},
 		methods:{
+			//判断是否显示绑定房子
+			bindhouses() {
+				if(vm.selected == 'd' && vm.is_create_qrcode == 1) {
+					vm.bindhouse = false;
+				}else if (vm.selected == 'd' && vm.is_create_qrcode == 0) {
+					vm.bindhouse = true;
+				}else if(vm.selected != 'd' && vm.is_create_qrcode != 1) {
+					vm.bindhouse = true;
+				}else if (vm.selected != 'd' && vm.is_create_qrcode == 0) {
+					vm.bindhouse = true;
+				}
+			},
 			//判断支付方式
 			cardpaySer() {
 				if(vm.cardPayService == 'false' || vm.support_card_pay != '1'){
@@ -702,10 +720,15 @@
 						vm,url,'data',function(){
 							vm.show_com_flag=vm.data.result.other_bill_info[0].show_com_flag;
 							vm.show_invoice_flag = vm.data.result.other_bill_info[0].show_invoice_flag;
-							vm.show_invoice=vm.data.result.other_bill_info[0].show_invoice;
-							if(vm.show_invoice=='1') {
-								vm.invoice_title_type='01';
+							vm.is_create_qrcode = vm.data.result.other_bill_info[0].is_create_qrcode;
+							if(vm.is_create_qrcode == 0 || vm.selected != 'd') {
+								vm.show_invoice=vm.data.result.other_bill_info[0].show_invoice;
+								if(vm.show_invoice=='1') {
+									vm.invoice_title_type='01';
+								}
 							}
+							vm.bindhouses();
+							
 							vm.support_card_pay = vm.data.result.other_bill_info[0].support_card_pay;
 							let useDate = vm.data.result.other_bill_info[0];
 							vm.verNumber = useDate.ver_no;
@@ -727,10 +750,14 @@
 						function(){
 							vm.show_com_flag=vm.data.result.show_com_flag;
 							vm.show_invoice_flag = vm.data.result.show_invoice_flag;
-							vm.show_invoice=vm.data.result.show_invoice;
-							if(vm.show_invoice=='1') {
-								vm.invoice_title_type='01';
+							vm.is_create_qrcode = vm.data.result.is_create_qrcode;
+							if(vm.is_create_qrcode == 0 || vm.selected != 'd') {
+								vm.show_invoice=vm.data.result.show_invoice;
+								if(vm.show_invoice=='1') {
+									vm.invoice_title_type='01';
+								}	
 							}
+							vm.bindhouses();
 							vm.support_card_pay = vm.data.result.support_card_pay;
 							let useDate = vm.data.result.fee_data[0];
 							//户号
@@ -749,11 +776,12 @@
 						}
 					);
 				}
+
 				
 			},
 			//工作人员收费
 			personnel(){
-				vm.$router.push({path:'/personnel'})
+				vm.$router.push({path:'/personnel',query:{'payFeeType':vm.routeParams.payFeeType,'billId':vm.routeParams.billIds,'stmtId':vm.routeParams.stmtId,'payType':vm.payType,'regionname':vm.regionname}})
 			},
 			//微信支付 post请求接口，在post成功的回调函数里调用微信支付接口
 			btnPay (){

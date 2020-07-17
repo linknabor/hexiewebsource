@@ -131,7 +131,7 @@
         <router-link
           :to="{path:'/service'}"
           class="input-wrap menu-person-link lite-divider"
-          v-show="serviceOperator"
+          v-show="serviceOperator || service_list.length > 0"
         >
           <span class="input-info lf30 fs16">我是服务人员</span>
           <span class="fr fs14 left_color">查看订单&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -257,6 +257,8 @@ export default {
     // this.initSession4Test();
     this.User(); 
     vm.oriApp();//判断我是业主地址
+    vm.qrCodePayService();
+
   },
   components: {},
   methods: {
@@ -317,9 +319,8 @@ export default {
       vm.receiveData.getData(vm, "/qrCodePayService", "res", function() {
         if (vm.res.success) {
             vm.service_list = vm.res.result.service_list;
-            vm.common.localSet('service_list',JSON.stringify(vm.res.result.service_list));
         } else {
-          alert(vm.res.message);
+          // alert(vm.res.message);
         }
       });
     },
@@ -588,6 +589,35 @@ export default {
   background: none;
 }
 
+#module-list .moduledh {
+  width: 50%;
+}
+.module-itemdh {
+    margin-top: 10px;
+    display: block;
+    width: 100%;
+    background-position: 50% 0;
+    background-size: 42px;
+    background-repeat: no-repeat;
+    font-size: 16px;
+    color: #3b3937;
+    -webkit-border-radius: 2px;
+}
+.module-logodh{
+    margin-top: -5px;
+    display: block;
+    height: 1.2rem;
+    background-position: 25% 0;
+    background-size: .7rem;
+    background-repeat: no-repeat;
+}
+.module-titledh {
+    text-align: center;
+    margin-top: 10px;
+    margin-left: 27%;
+    padding-top: 7%;
+    color: #3b3937;
+}
 #module-list .moduledh {
   width: 50%;
 }

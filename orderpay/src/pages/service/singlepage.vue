@@ -251,6 +251,12 @@ export default {
     determine() {
       var pic_length = $("[name='pics']").length;
       $("#zzmb").show();
+      let sectId = cookie.get('sectId');
+      if(sectId == "" || sectId == 'null' || sectId == 0 || sectId == null) {
+        alert('您暂未绑定房屋，请前往“我是业主”进行操作，感谢！')
+        location.href=vm.basePageUrl+'wuye/index.html?'+vm.common.getoriApp()+'#/myhouse'
+        return false;
+      }
       if(pic_length>0){
           vm.uploadToWechat();
       }else {
@@ -295,8 +301,8 @@ export default {
                 paySign:vm.res.result.paysign,
                 success:function(res) {
                   alert('支付成功！')
-                  $("#zzmb").hide();
-                  vm.$router.push({path:'/checkoutsuccess',query:{'address':vm.addrd,orderId:vm.res.result.orderId}});
+                  vm.ChangeState(vm.res.result.orderId)
+
                 },
                 fail() {
                   $("#zzmb").hide();
@@ -322,11 +328,22 @@ export default {
               $("#zzmb").hide();
           }
       })
+    },
+    // 改变状态
+    ChangeState(orderId){
+      vm.receiveData.postData(vm,"customService/order/notifyPay?orderId="+orderId,null,'res',function(){
+          if(vm.res.success) { 
+               $("#zzmb").hide();
+               vm.$router.push({path:'/checkoutsuccess',query:{'address':vm.addrd,'orderId':orderId}});  
+          }else {
+              alert(vm.res.message==null?"系统异常，请稍后重试！":vm.res.message);
+              $("#zzmb").hide();
+          }
+      })
     }
   }
 };
 </script>
-
 <style scoped>
 .singlepage {
   position: absolute;

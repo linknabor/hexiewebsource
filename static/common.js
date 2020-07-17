@@ -26,7 +26,7 @@ var MasterConfig = function() {
         'wxbd214f5765f346c1',
         
         componentAppId: /127|test/.test(location.origin)?'wx4d706a1a7a139d1f':
-        /uat/.test(location.origin)?'wx4d706a1a7a139d1f':
+        /uat/.test(location.origin)?'wxc65085912aca5444':
         'wx0d408844b35d85e2',
         
 		oauthUrl: "https://open.weixin.qq.com/connect/oauth2/authorize?",

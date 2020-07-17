@@ -89,13 +89,14 @@ export default {
               // 支付成功后的回调函数
               alert("支付成功！");
               if(vm.status == 15) {
-                vm.ChangeState();//改变状态
+                vm.ChangeState()
               }else {
                 vm.$router.push({
-                path: "/appraise",
-                query: { ordersID: vm.orderId }
-              }); 
+                  path: "/appraise",
+                  query: { ordersID: vm.orderId }
+                }); 
               }
+
               
             },
             fail(res){
@@ -124,7 +125,8 @@ export default {
     },
     // 改变状态
     ChangeState(){
-      vm.receiveData.postData(vm,"customService/order/confirm?orderId="+vm.orderId,null,'res',function(){
+      // customService/order/confirm?orderId="+vm.orderId+"&paid=1
+      vm.receiveData.postData(vm,"customService/order/notifyPay?orderId="+vm.orderId,null,'res',function(){
           if(vm.res.success) { 
               vm.$router.push({
                 path: "/appraise",

@@ -132,7 +132,7 @@ import cookie  from 'js-cookie';
                 });
 			},
 			goback(){
-				window.location.href = vm.basePageUrlpay+'home/index.html?'+vm.common.getoriApp()+'#/'
+				window.location.href = vm.basePageUrl+'home/index.html?'+vm.common.getoriApp()+'#/'
 			}
 		}
 	}
