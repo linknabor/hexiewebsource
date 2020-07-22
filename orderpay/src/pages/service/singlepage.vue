@@ -302,7 +302,6 @@ export default {
                 success:function(res) {
                   alert('支付成功！')
                   vm.ChangeState(vm.res.result.orderId)
-
                 },
                 fail() {
                   $("#zzmb").hide();

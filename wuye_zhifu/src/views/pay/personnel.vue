@@ -13,8 +13,7 @@
        </div>
        <div class="fonter content-marg">
            <span>支付金额:{{realityAmt | keepTwoNum}}</span>
-       </div>
-       
+       </div>       
    </div>
 </template>
 
