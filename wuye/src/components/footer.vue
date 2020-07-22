@@ -103,7 +103,7 @@ export default{
       vm=this;
     },
     mounted(){
-      // let url = '/initSession4Test/62';
+      // let url = '/initSession4Test/8425';
       //           vm.receiveData.getData(vm,url,'Data',function(){
       // });
       vm.initUserInfo();
@@ -125,22 +125,25 @@ export default{
                     if(n.result!=null) {
                       vm.login=false;
                       vm.list=n.result.iconList;
-                      cookie.set('userId',n.result.id);
-                      cookie.set('appid',n.result.appid);
-                      cookie.set('cspId',n.result.cspId);
-                      cookie.set('sectId',n.result.sectId);
-                      cookie.set('cardPayService',n.result.cardPayService);
                       Bus.$emit('sends',n.result);
+                      //存储cookie
+                      vm.common.updatecookie(n.result.cardStatus,n.result.cardService,n.result.id,n.result.appid,n.result.cspId,n.result.sectId,n.result.cardPayService,n.result.bgImageList,n.result.wuyeTabsList);
+                      // console.log(cookie.get('sectId'))
                     }
-                    var duration = new Date().getTime()/1000 + 3600*24*30;
-                    if(n.result.bgImageList) {
-                      for(var j=0;j<n.result.bgImageList.length;j++){
-                          vm.common.localSet(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl)
-                      }
-                    }
-                    if(n.result.wuyeTabsList) {
-                          vm.common.localSet('wuyeTabsList',JSON.stringify(n.result.wuyeTabsList));
-                    }
+                    // cookie.set('userId',n.result.id);
+                    // cookie.set('appid',n.result.appid);
+                    // cookie.set('cspId',n.result.cspId);
+                    // cookie.set('sectId',n.result.sectId);
+                    // cookie.set('cardPayService',n.result.cardPayService);
+                    // var duration = new Date().getTime()/1000 + 3600*24*30;
+                    // if(n.result.bgImageList) {
+                    //   for(var j=0;j<n.result.bgImageList.length;j++){
+                    //       vm.common.localSet(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl)
+                    //   }
+                    // }
+                    // if(n.result.wuyeTabsList) {
+                    //       vm.common.localSet('wuyeTabsList',JSON.stringify(n.result.wuyeTabsList));
+                    // }
                 },
                 r = function(res) { 
                    vm.login=false;

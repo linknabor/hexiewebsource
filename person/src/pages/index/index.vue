@@ -294,14 +294,15 @@ export default {
             vm.login=false;
             Bus.$emit('sends',n.result.iconList);
             
-            //保存图片
-            var duration = new Date().getTime()/1000 + 3600*24*30;
-            cookie.set('cardStatus',n.result.cardStatus,duration);
-            cookie.set('cardService',n.result.cardService,duration);
+            //保存
+            vm.common.updatecookie(n.result.cardStatus,n.result.cardService,n.result.id,n.result.appid,n.result.cspId,n.result.sectId,n.result.cardPayService,n.result.bgImageList,n.result.wuyeTabsList);
+            // var duration = new Date().getTime()/1000 + 3600*24*30;
+            // cookie.set('cardStatus',n.result.cardStatus,duration);
+            // cookie.set('cardService',n.result.cardService,duration);
 
-            for(var j=0;j<n.result.bgImageList.length;j++){
-                vm.common.localSet(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl)
-            }
+            // for(var j=0;j<n.result.bgImageList.length;j++){
+            //     vm.common.localSet(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl)
+            // }
          }
         },
         r = function() {
