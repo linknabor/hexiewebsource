@@ -91,6 +91,7 @@
 <script>
 let vm;
 import Bus from '../api/bus.js';
+import cookie from 'js-cookie';
 export default{
     data(){
       return {
@@ -116,7 +117,7 @@ export default{
         //105/747/384
         initSession4Test() {
           let _this = this;
-          let url = "/initSession4Test/62";
+          let url = "/initSession4Test/8425";
           _this.receiveData.getData(_this, url, "Data", function() {
             
           });
@@ -134,10 +135,12 @@ export default{
               _this.login=false;
               _this.list=n.result.iconList;
               Bus.$emit('sends',n.result);
-              var duration = new Date().getTime()/1000 + 3600*24*30;
-              for(var j=0;j<n.result.bgImageList.length;j++){
-                    _this.common.localSet(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl,duration)
-              }
+              _this.common.updatecookie(n.result.cardStatus,n.result.cardService,n.result.id,n.result.appid,n.result.cspId,n.result.sectId,n.result.cardPayService,n.result.bgImageList,n.result.wuyeTabsList);
+              // console.log(cookie.get('sectId'))
+              // var duration = new Date().getTime()/1000 + 3600*24*30;
+              // for(var j=0;j<n.result.bgImageList.length;j++){
+              //       _this.common.localSet(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl,duration)
+              // }
             }
             },
             r = function() {_this.login=false;};
