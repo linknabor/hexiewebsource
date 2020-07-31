@@ -352,7 +352,7 @@ window.common = {
         setCookie("appId", user.appId);
     },
     //存储公共userinfo中参数的cookie
-    updatecookie(cardStatus,cardService,userId,appid,cspId,sectId,cardPayService,bgImageList,wuyeTabsList){
+    updatecookie(cardStatus,cardService,userId,appid,cspId,sectId,cardPayService,bgImageList,wuyeTabsList,qrCode,result){
             var duration = new Date().getTime()/1000 + 3600*24*30;
             setCookie("cardStatus", cardStatus,duration);
             setCookie("cardService", cardService,duration);
@@ -361,7 +361,8 @@ window.common = {
             setCookie('cspId',cspId,duration);
             setCookie('sectId',sectId,duration);
             setCookie('cardPayService',cardPayService,duration);
-    
+            setCookie('qrCode',qrCode,duration);
+            console.log(result);
             for(var j=0;j<bgImageList.length;j++){
                 common.localSet(bgImageList[j].type,bgImageList[j].imgUrl)
             }

@@ -1,21 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-// import Index from '@/pages/index'
-// import index from '@/pages/index/index'//首页
-// import Bindphone from '@/pages/bindphone'//个人信息
-// import Register from '@/pages/register'//手机注册页
-// import Coupons from '@/pages/coupons'//我的优惠券
-// import Myrepair from '@/pages/myRepair/myrepair'//我的维修
-// import OrdersDetail from '@/pages/myRepair/ordersDetail'//维修详情
-// import cancelOrders from '@/pages/myRepair/cancelOrders'//取消维修
-// import OperatorOrders from '@/pages/myRepair/operatorOrders'//我的维修单
-// import OperatorOrdersDetail from '@/pages/myRepair/operatorOrdersDetail'//我的维修我要抢单
-// import OperatorRepairSuccess from '@/pages/myRepair/operatorRepairSuccess'//我要抢单 公共页面
-// import Notices from '@/pages/notices'//我的消息
-// import MyPublish from '@/pages/communities/myPublish'//我的发布
-// import ThreadDetail from '@/pages/communities/threadDetail'//发布回复
-// import Addresses from '@/pages/addresses'//常用地址
-
 Vue.use(Router)
 
 let router= new Router({
@@ -208,7 +192,31 @@ let router= new Router({
       mate:{
         title:'取消订单'
       }
-    }
+    },
+    {
+      path:'/cardrolldetail',
+      name:'cardrolldetail',
+      component:resolve => require(['@/pages/Cardroll/cardrollDetail'],resolve),
+      mate:{
+        title:'商品订单'
+      }
+    },
+    {
+      path:'/cardrollgoods',
+      name:'cardrollgoods',
+      component:resolve =>require(['@/pages/Cardroll/cardrollgoods'],resolve),
+      mate:{
+        title:'商品核销'
+      }
+    },
+    {
+      path:'/cardrollrecords',
+      name:'cardrollrecords',
+      component:resolve =>require(['@/pages/Cardroll/cardrollrecords'],resolve),
+      mate:{
+        title:'核销记录'
+      }
+    },
   ]
 })
 
@@ -219,10 +227,10 @@ router.beforeEach((to, from, next) => {
   //动态改变title
   var flag;
   if(to.matched[0].name != "index"&& to.matched[0].name!='register'&&to.matched[0].name!='welfare') {
-     flag=common.checkRegisterStatus()
-     if(!flag) {
-       return
-     }
+    //  flag=common.checkRegisterStatus()
+    //  if(!flag) {
+    //    return
+    //  }
   }
 
   changeTitle(to.meta.title);
