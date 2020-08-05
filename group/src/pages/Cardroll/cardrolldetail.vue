@@ -134,7 +134,7 @@ export default {
                            setInterval(vm.updateLeftTime,1000);//倒计时 
                          }
                     }else {    
-                        alert(vm.Data.message==null?"获取团购信息失败！":vm.Data.message);
+                        alert(vm.Data.message==null?"获取产品信息失败！":vm.Data.message);
                     }
             });
         },

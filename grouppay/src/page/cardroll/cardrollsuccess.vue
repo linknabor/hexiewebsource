@@ -24,7 +24,7 @@
             </div>
 	    </div>
         <div class="bottom-info divider pb30" style="text-align: center;">
-            <div class="divider highlight" style="text-align: center;width:100%;font-size:16px">长按关注二维码，尊享更多优惠</div>
+            <div class="divider highlight" style="text-align: center;width:100%;font-size:16px">长按二维码关注，尊享更多优惠</div>
             <!-- 公众号二维码 -->
             <!-- <img style="width: 200px;" src="http://img.e-shequ.com/FrNERaxTnTNFrFO-iYMY6vx2kRe6"> -->
             <img style="width: 200px;" :src="qrcode_img">
@@ -51,25 +51,44 @@
 let vm;
 import { MessageBox } from 'mint-ui';
 import wx from 'weixin-js-sdk';
-import coolkie from 'js-cookie';
+import cookie from 'js-cookie';
 export default {
    data () {
        return {
            order:{seedStr:""},
            orderId:this.$route.query.orderId,
            type:this.$route.query.type,
-           qrcode_img:coolkie.get('qrCode'),
+           qrcode_img:'',
        };
    },
    created() {
        vm=this;
    },
    mounted() {
-       vm.query();
+       vm.info();
         let url = location.href.split('#')[0];
         vm.receiveData.wxconfig(vm,wx,['onMenuShareTimeline','onMenuShareAppMessage'],url);
    },
    methods: {
+       info() {
+            let n = "GET",
+            a = "userInfo?oriApp="+vm.getUrlParam('oriApp'),
+            i = null,
+            d = function() {},
+            e = function(n) {
+            if(n.success&&n.result==null) {
+                    reLogin();
+                    return
+            }else {
+                vm.qrcode_img = n.result.qrCode;
+                vm.query();
+            }
+            },
+            r = function(n) {
+                alert(vm.n.message);
+            };
+          vm.common.invokeApi(n, a, i, d, e, r);
+        },
        query() {
             vm.receiveData.getData(vm,"/getOrder/"+vm.orderId,'n',function() {
                 if(vm.n.success) {
@@ -114,12 +133,12 @@ export default {
             // }else if(order.orderType==0&&order.groupId!=0){
             // }
 
-            if(order.seedStr!=null&&order.seedStr!=''){
-                title = vm.common.newname+"专享现金券";
-                desc="分享给小伙伴们一个超赞的购物现金券！";
+            // if(order.seedStr!=null&&order.seedStr!=''){
+            //     title = vm.common.newname+"专享现金券";
+            //     desc="分享给小伙伴们一个超赞的购物现金券！";
                 // img="../../assets/images/coupon_share_icon.jpg"
                 // link=baseurl+"coupon.html?o="+order.seedStr;
-            }
+            // }
             vm.common.initShareConfig(title,link,img,desc,wx);
        },
 

@@ -149,7 +149,7 @@ let router= new Router({
       path:'/canReceiveorders',
       name:'canReceiveorders',
       component:resolve=>require(['@/pages/service/CanReceiveOrders'],resolve),
-      mate:{
+      meta:{
         title:''
       }
     },
@@ -157,7 +157,7 @@ let router= new Router({
       path:'/openServiceDetail',
       name:'openServiceDetail',
       component:resolve=>require(['@/pages/service/openServiceDetail'],resolve),
-      mate:{
+      meta:{
         title:''
       }
     },
@@ -165,7 +165,7 @@ let router= new Router({
       path:'/openServicesuccess',
       name:'openServicesuccess',
       component:resolve=>require(['@/pages/service/openServicesuccess'],resolve),
-      mate:{
+      meta:{
         title:''
       }
     },
@@ -173,7 +173,7 @@ let router= new Router({
       path:'/myservice',
       name:'myservice',
       component:resolve=>require(['@/pages/service/myservice'],resolve),
-      mate:{
+      meta:{
         title:'我的服务单'
       }
     },
@@ -181,7 +181,7 @@ let router= new Router({
       path:'/myserviceDetail',
       name:'myserviceDetail',
       component:resolve=>require(['@/pages/service/myserviceDetail'],resolve),
-      mate:{
+      meta:{
         title:'订单详情'
       }
     },
@@ -189,7 +189,7 @@ let router= new Router({
       path:'/cancelservice',
       name:'cancelservice',
       component:resolve=>require(['@/pages/service/cancelservice'],resolve),
-      mate:{
+      meta:{
         title:'取消订单'
       }
     },
@@ -197,7 +197,7 @@ let router= new Router({
       path:'/cardrolldetail',
       name:'cardrolldetail',
       component:resolve => require(['@/pages/Cardroll/cardrollDetail'],resolve),
-      mate:{
+      meta:{
         title:'商品订单'
       }
     },
@@ -205,7 +205,7 @@ let router= new Router({
       path:'/cardrollgoods',
       name:'cardrollgoods',
       component:resolve =>require(['@/pages/Cardroll/cardrollgoods'],resolve),
-      mate:{
+      meta:{
         title:'商品核销'
       }
     },
@@ -213,8 +213,16 @@ let router= new Router({
       path:'/cardrollrecords',
       name:'cardrollrecords',
       component:resolve =>require(['@/pages/Cardroll/cardrollrecords'],resolve),
-      mate:{
+      meta:{
         title:'核销记录'
+      }
+    },
+    {
+      path:'/keyboard',
+      name:'keyboard',
+      component:resolve =>require(['@/pages/Cardroll/keyboard'],resolve),
+      meta:{
+        title:'搜索'
       }
     },
   ]
@@ -227,10 +235,10 @@ router.beforeEach((to, from, next) => {
   //动态改变title
   var flag;
   if(to.matched[0].name != "index"&& to.matched[0].name!='register'&&to.matched[0].name!='welfare') {
-    //  flag=common.checkRegisterStatus()
-    //  if(!flag) {
-    //    return
-    //  }
+     flag=common.checkRegisterStatus()
+     if(!flag) {
+       return
+     }
   }
 
   changeTitle(to.meta.title);

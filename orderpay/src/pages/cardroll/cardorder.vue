@@ -142,6 +142,8 @@ export default {
             item.status = 1;
             item.statusStr = "已支付";
             vm.zzshow=false;
+          }else {
+              alert(vm.res.message);
           }
       });
     },
@@ -158,7 +160,7 @@ export default {
                 item.statusStr = "已取消";
                 alert("订单已取消");
             } else {
-                alert("取消失败，请稍后重试！");
+                alert(vm.res.message == null ?"取消失败，请稍后重试！":vm.res.message);
             }
             }
         );

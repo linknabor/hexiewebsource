@@ -2,11 +2,11 @@
     <div class="records">
         <div >
             <div class="search">
-                <form  action="javascript:void 0">
-                    <input type="number" pattern="[0-9]*" oninput="this.value=this.value.replace(/\D/g,'');" placeholder="请输入核销劵码" @keyup.13="tapToSearch" @blur="tapblur" v-model="code"> 
-                    <em class="iconfont icon-sousuo" v-show="andios != 'ios'" @click.stop="search"></em>
-                    <em class="iconfont icon-sousuo" v-show="andios == 'ios'"></em>
+                <form  action="javascript:javascript:viod 0" class="fl">
+                    <input type="number" pattern="[0-9]*" oninput="this.value=this.value.replace(/\D/g,'');" placeholder="请输入核销劵码" @keyup.13="tapToSearch"  v-model="code"> 
+                    <em class="iconfont icon-sousuo" ></em>
                 </form>
+                <div class="fr search-sub"  :class="{'scolor':code!=''}"  @click.stop="search">核销</div>
             </div>
             <div v-for="item in Operator" :key="item.orderId">
                 <div class="ov right-text" >   
@@ -30,6 +30,7 @@ export default {
             code:'',
             Operator:[],
             andios:'',
+            faly:true,
         };
     },
     created() {
@@ -43,7 +44,6 @@ export default {
     },
     mounted() {
         vm.query();
-        vm.Compatibility();
     },
     methods: {
         query() {
@@ -51,55 +51,49 @@ export default {
             vm.receiveData.getData(vm, url, "res", function() {
                 if(vm.res.success) {
                     vm.Operator=vm.res.result;
-                }
-            });
-        },
-        Compatibility(){
-            const u = navigator.userAgent, app = navigator.appVersion;
-            // iOS 判断
-            const isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); 
-            if (isIOS) {
-                vm.andios='ios';
-            }
-        },
-        bycode(){
-            document.activeElement.blur();
-            let url = "/evoucher/getByCode/"+vm.code;
-            vm.receiveData.getData(vm, url, "res", function() {
-                if(vm.res.success) {
-                    if(vm.res.result.code == null){
-                        alert('已消费')
-                    }else {
-                          vm.$router.push({path:'/cardrollgoods',query:{'code':vm.code}})
-                    }
                 }else {
-                    alert(vm.res.message == null?'劵码错误':vm.res.message);
+                    alert(vm.res.message)
                 }
             });
+        },
+    
+        bycode(){
+            if(vm.faly){
+                vm.faly = false;
+                let url = "/evoucher/getByCode/"+vm.code;
+                vm.receiveData.getData(vm, url, "res", function() {
+                    if(vm.res.success) {
+                        if(vm.res.result.code == null){
+                            alert('核销失败！该券码不存在');
+                        }else {
+                            if(vm.res.result.status == 2 || vm.res.result.status == 3) {
+                               alert('核销失败：券码已核销');
+                            }else {
+                               vm.$router.push({path:'/cardrollgoods',query:{'code':vm.code}})
+                            }
+                        }
+                    }else {
+                        alert(vm.res.message == null?'核销失败！该券码不存在':vm.res.message);
+                    }
+                    vm.faly = true;
+                });
+            }
+
+
         },
         //点击搜索
         search(){
-            if(!(vm.andios == 'ios')) {
-                if(vm.code != '' && vm.code.length == 17) {
+                if(vm.code != '') {
                     vm.bycode();
                 }
-            }
         },
         //点击键盘确定
         tapToSearch() {
             // alert('触发了')
-            if(vm.code != '' && vm.code.length == 17) {
+            if(vm.code != '') {
                 vm.bycode();
             }
         },
-        //失去焦点
-        tapblur(){
-            if(vm.andios == 'ios') {
-                if(vm.code != '' && vm.code.length == 17) {
-                     vm.bycode();
-                }
-            }
-        }
     }
 };
 </script>
@@ -114,15 +108,19 @@ export default {
   bottom:0;
 }
 .search{
-    padding:0.2rem 1.1rem;
+    padding:0.2rem 0.8rem;
     border-bottom: 1px solid rgba(187, 187, 187, 1);
+    overflow: hidden;
+}
+.search form {
+    position:relative;
+    width: 75%;
 }
 .search input {
     width: 100%;
     height:0.6rem;
     border: 1px solid #CFCFCF;      
     box-sizing: border-box;
-    position: relative;
     padding-right: 0.68rem;
     padding-left: 0.2rem;
     border-radius: 0.3rem;
@@ -130,11 +128,24 @@ export default {
 }
 .search em {
     position: absolute;
-    right: 1.13rem;
-    top: 0.26rem;
+    right: 0.03rem;
+    top: 0.05rem;
     width: 0.68rem;
     text-align: center;
     font-size: 0.45rem;
+}
+.search-sub {
+    width: 20%;
+    height: 0.6rem;
+    line-height: 0.6rem;
+    text-align: center;
+    font-size: 0.3rem;
+    background-color: #EEE;
+    border-radius: 0.07rem;
+}
+.scolor {
+    color:#fff;
+    background-color:#F0851F;
 }
 .ov {
     overflow: hidden;

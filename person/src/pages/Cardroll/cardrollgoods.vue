@@ -57,21 +57,28 @@ export default {
                 if(vm.res.success) {
                     vm.item=vm.res.result;
                 }else {
-                    alert(vm.res.message == null?'劵码错误':vm.res.message);
+                    alert(vm.res.message == null?'该券码不存在':vm.res.message);
                 }
             });
         },
         info() {
-            let url = "/userInfo?oriApp="+vm.getUrlParam('oriApp');
-            vm.receiveData.getData(vm, url, "res", function() {
-                if(vm.res.success) {
-                    vm.evoucherOperator = vm.res.result.evoucherOperator;
-                    vm.common.updatecookie(vm.res.result.cardStatus,vm.res.result.cardService,vm.res.result.id,vm.res.result.appid,vm.res.result.cspId,vm.res.result.sectId,vm.res.result.cardPayService,vm.res.result.bgImageList,vm.res.result.wuyeTabsList,vm.res.result.qrCode,vm.res.result);
-                    vm.query();
+            let n = "GET",
+                a = "userInfo?oriApp="+vm.getUrlParam('oriApp'),
+                i = null,
+                d = function() {},
+                e = function(n) {
+                if(n.success&&n.result==null) {
+                        reLogin();
+                        return
                 }else {
-                    alert(vm.res.message);
+                    vm.evoucherOperator = n.result.evoucherOperator;
+                    vm.query();
                 }
-            });
+                },
+                r = function(n) {
+                    alert(vm.n.message);
+                };
+            vm.common.invokeApi(n, a, i, d, e, r);
         },
         btn(){
             let url = "/evoucher/consume/"+vm.code+"?evouchers=1";
@@ -80,7 +87,7 @@ export default {
                     alert('核销成功');
                     vm.$router.push({path:'/cardrollrecords'})
                 }else {
-                    alert(vm.res.message);
+                    alert(vm.res.message == null?'核销失败':vm.res.message);
                 }
             });
         },

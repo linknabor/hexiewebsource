@@ -199,30 +199,6 @@ overflow: hidden; background-color: white;}
           </router-link>
         </li> 
         
-         <!-- <li class="jgg_li" v-show="coronaPy">
-          <div @click="goepi()">
-            <div class="jgg_img">
-              <img src="../../assets/img/snqx.png" alt="tt">
-            </div>
-            <span>社区防疫</span>
-          </div>
-        </li>
-        <li class="jgg_li" v-show="coronaPj">
-          <div @click="gotoThread()">
-            <div class="jgg_img">
-              <img src="../../assets/img/e89789b1-7aaf-4493-b95c-56be4146b93c.jpg" alt="tt">
-            </div>
-            <span>业主意见</span>
-          </div>
-        </li>  -->
-        <!-- <li class="jgg_li" >
-            <div class="link"  @click="gotorepair()">
-                <div class="jgg_img">
-                    <img src="../../assets/images/index/bmwx1.png" alt="tt">
-                </div>
-                <span class="jgg-span">便民维修</span>
-            </div>
-        </li> -->
         <li class="jgg_li">
           <a :href="this.basePageUrl+'home/index.html?'+this.common.getoriApp()">
             <div class="jgg_img">
@@ -249,15 +225,39 @@ overflow: hidden; background-color: white;}
             <span>社区团购</span>
           </a>
         </li>
-
         <li class="jgg_li" >
+            <div class="link"  @click="gotorepair()">
+                <div class="jgg_img">
+                    <img src="http://img.e-shequ.cn/FvXta8SzetfBaBYyaB3fX-HQ1Vza" alt="tt">
+                </div>
+                <span class="jgg-span">便民维修</span>
+            </div>
+        </li>
+        
+        <!-- <li class="jgg_li" v-show="coronaPy">
+          <div @click="goepi()">
+            <div class="jgg_img">
+              <img src="../../assets/img/snqx.png" alt="tt">
+            </div>
+            <span>社区防疫</span>
+          </div>
+        </li> -->
+        <!-- <li class="jgg_li" v-show="coronaPj">
+          <div @click="gotoThread()">
+            <div class="jgg_img">
+              <img src="http://img.e-shequ.cn/FvOdWYYKMdqshuLarpN0URwzk_x5" alt="tt">
+            </div>
+            <span>业主意见</span>
+          </div>
+        </li>  -->
+     <!--<li class="jgg_li" >
           <a :href="this.basePageUrl+'wuye/index.html?'+this.common.getoriApp()+'#/mysteward?n=12'">
             <div class="jgg_img">
               <img src="http://img.e-shequ.cn/FokvKXxpY9__2_6FRzVe1Ay0mBkb" alt="tt">
             </div>
             <span>预约服务</span>
           </a>
-        </li>
+        </li> -->
 
       </ul>
     </div>

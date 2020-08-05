@@ -62,6 +62,7 @@
 let vm;
 let hasNext=true,isloadPage=false,loadheight;
 import Footer from '../index.vue';
+import cookie from 'js-cookie';
 export default {
    data () {
        return {
@@ -72,6 +73,7 @@ export default {
            page:0,
            banners:[],
            titles:[],
+           sectId:''
        };
    },
    created() {
@@ -116,15 +118,28 @@ export default {
             // });
         },
        query() {
+            vm.sectId = cookie.get('sectId');
             vm.receiveData.getData(vm,"onsales/v2/1000/"+vm.page,"res", function() {
                 if (vm.res.success) {
-                    vm.temais = vm.res.result;
-                    vm.load=false;
-                    vm.page++;
+                    if(vm.sectId == "" || vm.sectId == 'null' || vm.sectId == 0 || vm.sectId == null) {
+                        vm.temais = vm.res.result;
+                        vm.load=false;
+                    }else {
+                        if(vm.res.result.length == 0) {
+                            vm.load=false;
+                            alert("您所在小区暂未开通该功能，敬请期待");
+                            window.location.href = vm.basePageUrl+'wuye/index.html?'+vm.common.getoriApp()+'#/';
+                            return 
+                        }else {
+                            vm.temais = vm.res.result;
+                            vm.load=false;
+                            vm.page++;
+                        }
+                    }  
                 } else {
                     vm.temais=[];
                     vm.load=false;
-                    alert(vm.messages)
+                    alert(vm.res.messages)
                 }
             })
        },
@@ -161,7 +176,7 @@ export default {
                             }
                     }else {
                         isloadPage = false;
-                        alert(vm.Data.messages)
+                        alert(vm.Data.message)
                     }
             });
         }

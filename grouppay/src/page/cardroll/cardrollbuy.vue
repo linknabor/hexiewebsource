@@ -33,20 +33,20 @@
                 <div class="product_pri_area">
                     <div class="fl fs16 highlight pt5"> ¥{{rule.price}} </div>
                     <div class="fl fs13" style="margin-left: 10px;padding-top: 7px;color:#888888"> <del>¥{{product.oriPrice}}</del> </div>
-                    <div class="fr fs13" style="padding-top: 7px;color:#888888">X {{count}}</div>
+                    <!-- <div class="fr fs13" style="padding-top: 7px;color:#888888">X {{count}}</div> -->
                 </div>
             </div>
         </div>
 
-        <div class="line fs15" style="height:50px;line-height: 50px;">
+        <!-- <div class="line fs15" style="height:50px;line-height: 50px;">
             <span>购买数量</span> 
             <span class="fr">
                 <span class="sbtn btn-minus minus-btn-size" :class="{active:count>1}" @click="minusCount"></span>
                 <span class="number fs16">{{count}}</span>
                 <span class="sbtn btn-add active minus-btn-size" @click="addCount"></span>
             </span>
-        </div>
-        <div class="p15  highlight" style="height:36px">
+        </div> -->
+        <div class="p15  highlight" style="height:36px;">
                 <span class="fl fs15">支付金额</span> 
                 <span class="fr fs20 mlr10"> ¥&nbsp;{{totalAmount}}  </span>
         </div>
@@ -119,19 +119,19 @@ export default {
                 })
         }, 
 
-       //减
-       minusCount() {
-           vm.count>1 && --vm.count && vm.computeAmount()
-       },
-       //加
-       addCount() {
-           if(vm.count<vm.rule.limitNumOnce) {
-               vm.count++;
-            vm.computeAmount();
-           }else {
-               alert("最多能购买"+vm.rule.limitNumOnce+"个");
-           }
-       },
+    //    //减
+    //    minusCount() {
+    //        vm.count>1 && --vm.count && vm.computeAmount()
+    //    },
+    //    //加
+    //    addCount() {
+    //        if(vm.count<vm.rule.limitNumOnce) {
+    //            vm.count++;
+    //         vm.computeAmount();
+    //        }else {
+    //            alert("最多能购买"+vm.rule.limitNumOnce+"个");
+    //        }
+    //    },
        //计算价格
        computeAmount() {
            var  pa,pf,a,ta;

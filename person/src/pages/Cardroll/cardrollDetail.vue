@@ -9,7 +9,8 @@
                 <div class="v-mg03">
                     <span>劵码:</span><span class="color" :class="{'greycolor':list.status == '2' || list.status == '3'}">{{code+''+foter_code}}</span><br>
                     <span>数量:</span><span class="color" :class="{'greycolor':list.status == '2' || list.status == '3'}">{{list.count}}</span>
-                    <img class="used" src="../../assets/images/img/yishiy.png" alt="" v-show="list.status == '2' || list.status == '3'">
+                    <img class="used" src="../../assets/images/img/yishiy.png" alt="" v-show="list.status == '2'">
+                     <img class="used" src="../../assets/images/img/guoqi.png" alt="" v-show="list.status == '3'">
                 </div>
             </div>
             <div class="footer"  v-show="list.qrcode != null"> 

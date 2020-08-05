@@ -57,10 +57,10 @@
       <!-- 链接地址要换 -->
       <a
         :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/orders'"
-        class="input-wrap menu-person-link lite-divider"
+        class="input-wrap  lite-divider disb"
       >
         <span class="input-info lf30 fs16">全部订单</span>
-        <span class="fr fs14 left_color">查看全部订单&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <!-- <span class="fr fs14 left_color">查看全部订单&nbsp;&nbsp;&nbsp;&nbsp;</span> -->
       </a>
     </div>
 
@@ -136,7 +136,7 @@
           class="input-wrap menu-person-link lite-divider"
           v-show="evoucherOperator"
         >
-          <span class="input-info lf30 fs16">核销卡卷</span>
+          <span class="input-info lf30 fs16">我是核销人员</span>
           <span class="fr fs14 left_color">查看记录&nbsp;&nbsp;&nbsp;&nbsp;</span>
         </router-link>
 
@@ -285,7 +285,7 @@ export default {
     //模仿线上用户信息
     // 105/747/384
     initSession4Test() {
-      let url = "/initSession4Test/62";
+      let url = "/initSession4Test/8427";
       vm.receiveData.getData(vm, url, "Data", function() {});
     },
     User() {
@@ -537,6 +537,10 @@ export default {
   background-size: 7px 14px;
   background-position: 98% center;
   padding-right: 15px;
+}
+.disb {
+  display:block;
+  color: #3b3937;
 }
 /* 订单服务 */
 #module-list {
