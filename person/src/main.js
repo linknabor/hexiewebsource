@@ -13,7 +13,8 @@ import VueAxios from 'vue-axios';
 import './assets/css/base.css';
 import './assets/css/normalize.css'
 import './assets/js/rem';
-import cookie from 'js-cookie'
+import cookie from 'js-cookie';
+import './assets/download/font_954185_gwiryn5z3ch/iconfont.css';
 
 
 // import {common,MasterConfig,getUrlParam} from './api/common';

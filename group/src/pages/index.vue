@@ -106,6 +106,7 @@
                     if(n.result!=null) {
                         Bus.$emit('logins',false)
                         vm.list=n.result.iconList;
+                        vm.common.updatecookie(n.result.cardStatus,n.result.cardService,n.result.id,n.result.appid,n.result.cspId,n.result.sectId,n.result.cardPayService,n.result.bgImageList,n.result.wuyeTabsList,n.result.qrCode,n.result);
                     }
                    
                 },

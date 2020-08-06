@@ -156,7 +156,8 @@ export default {
   data() {
     return {
       sectList: [], //小区列表
-      regionname: "上海市",
+      regionname: "上海",//显示值
+      address:'上海市',//传值
       shows: false,
       query: {
         //查询缴费数据
@@ -242,7 +243,8 @@ export default {
         "res",
         function() {
           if (vm.res.success) {
-            vm.regionname = vm.res.result.address;
+            vm.regionname = vm.res.result.showAddress;
+            vm.address = vm.res.result.address;
             vm.replacecity();
           } else {
             alert("获取数据失败");
@@ -254,6 +256,7 @@ export default {
     replacecity() {
       if (this.$route.query.citydata1) {
         vm.regionname = this.$route.query.citydata1;
+        vm.address = this.$route.query.address;
       }
     },
 
@@ -275,7 +278,7 @@ export default {
         "/getVagueSectByName?sect_name=" +
         name +
         "&regionname=" +
-        vm.regionname;
+        vm.address;
       vm.receiveData.getData(vm, url, "Datas", function() {
         let link = null;
         link = vm.Datas.result.sect_info;
@@ -298,7 +301,7 @@ export default {
         
         var unitdata = s.name;
         var ID = s.id;
-        var CityL = vm.regionname;
+        var CityL = vm.address;
         vm.$router.push({
           path: "/Pay",
           query: { selected: "d", userunit: unitdata, queryID: ID, City: CityL }

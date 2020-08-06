@@ -167,6 +167,10 @@ export default {
         },
          getComeFrom(){
                 vm.comeFrom=vm.getUrlParam("comeFrom") || vm.$route.query.comeFrom;
+                var url = location.href;
+                var idx = url.lastIndexOf('#');
+                var hash=url.substring(idx)
+                vm.comeFrom =comeFrom +''+hash;
             }
    },
 

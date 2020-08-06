@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"  />
+    <meta content="telephone=no" name="format-detection" />
+    <meta charset="UTF-8">
+    <title>申请电子发票</title>
+    <link rel="stylesheet" href="../static/css/header.css?v=20151217">
+	<link rel="stylesheet" href="../static/css/common.css?v=20151217">
+	<script src="../static/js/zepto.min.js?v=20151217"></script>
+	<script src="../static/js/fastclick.min-1.0.6.js?v=20151217"></script>
+	<script src="../static/js/common_invoice_v1.js?v=2015123456217"></script>
+	<script src="invoice.js?v=2011111111123456027"></script>
+	
+	<style>
+
+	.card {
+		    margin-bottom: 15px;
+		    border: 1px solid #d4cfc8;
+		    border-radius: 3px;
+		    color: #666;
+		}
+
+	.item {
+            padding:10px 10px;
+            border-top: 1px solid #d4cfc8;
+        }
+
+	.chk_2 {
+    	display: none;
+	}
+
+	.chk_2 + label {
+		background-color: #FFF;
+		border: 1px solid #C1CACA;
+		padding: 9px;
+		border-radius: 5px;
+		display: inline-block;
+		position: relative;
+		margin-right: 15px;
+		top: 5px;
+	}
+
+	.chk_2:checked + label:after {
+		content: '\2713';
+		position: absolute;
+		top: -10px;
+		left: 0px;
+		color: #758794;
+		width: 100%;
+		text-align: center;
+		font-size: 1.4em;
+		padding: 1px 0 0 0;
+		vertical-align: text-top;
+	}
+
+	.input{
+		padding:2px 8px 0pt 3px;
+		height:25px;
+		width:150px;
+		border:1px solid #CCC;
+		background-color:#FFF;
+		outline: none;
+	}
+	.button1 {
+		text-align: center;
+		font: 10px/100% 'SimSun',Arial, Helvetica, sans-serif;
+		padding: .3em 0.5em .277em;
+		color: #606060;
+		border: solid 1px #b7b7b7;
+		background: #fff;
+		width:80px;
+	}
+		
+	.button {
+		display: inline-block;
+		text-align: center;
+		text-decoration: none;
+		font: 16px/100% 'SimSun',Arial, Helvetica, sans-serif;
+		padding: .5em 2em .55em;
+		color: #fef4e9;
+		border: solid 1px #da7c0c;
+		background: #f78d1d;
+		-webkit-border-radius: 2em;
+	}
+	.pdf{display:none;margin-top:100px;text-align:center;}
+	#pdfClick{padding:5px 10px;background:#bd2630;color:white;font-size:20px;
+		border-radius:5px;-webkit-border-radius: 5px;}
+	.gyzm {
+		text-align: center;
+		display: inline-block;
+		padding-left: 120px;
+		padding-top: 5px;
+		color: red;
+		font-size: 15px;
+	}	
+	</style>
+</head>
+
+<body>
+<div class="pdf">
+	<a id ="pdfClick" href ="http://dev.fapiao.com:19080/dzfp-wx/pdf/download?request=e5uhf8WETIOMgaa2cCUMtn9HB2R8XgACzctByiVPIA2y5sAL1ZOZvtveTd6U7Pg1YY6v2QPIi0nNZjIRBDiZQw__%5EEahADieJjd"><span class="fl fs15">发票已开具,请点击查看</span></a>
+</div>
+<div class="p15" style="padding-bottom: 0px;">
+	<div id="phoneAjax" class="hidden">
+		<img src="../static/images/common/loading.gif" style="width:40px;height:40px;vertical-align: middle;">
+	</div>
+	
+	<div class="card fs15">
+		<div class="ov fs13 item">
+			<span class="fl fs15" style="padding:10px 10px 0px 5px;">申请发票类型：</span>
+			<div class="ov fs15" style="padding:5px 10px 5px 0px;">
+				<input type="radio" id="checkbox_b1" name="per" checked class="chk_2"/><label for="checkbox_b1"></label><span>个人&nbsp;&nbsp;</span>
+				<span id="csp">
+					<input type="radio" id="checkbox_b2" name="per" class="chk_2"/><label for="checkbox_b2"></label><span >公司</span>
+				</span>
+			</div>
+		</div>
+		
+		<div class="ov fs13">
+			<span class="fl fs15" style="padding:10px 10px 0px 35px;">发票抬头：</span>
+			<div class="ov fs15" style="padding:5px 10px 0px 0px;">
+				<input class="input" name="invoice_title" placeholder="请输入发票抬头"/>&nbsp;<span style="color:red">*</span>
+			</div>
+		</div>
+			
+		<div class="ov fs13" id="div3" style="display:none">
+			<span class="fl fs15" style="padding:15px 10px 0px 35px;">公司税号：</span>
+			<div class="ov fs15" style="padding:15px 10px 0px 0px;">
+				<input class="input" name="credit_code"  placeholder="请输入公司税号"/>&nbsp;<span style="color:red">*</span>
+			</div>
+		</div>
+
+		<div class="ov fs13">
+			<span class="fl fs15" style="padding:15px 10px 0px 35px;">手机号码：</span>
+			<div class="ov fs15" style="padding:15px 10px 0px 0px;">
+				<input class="input" name="tel"  placeholder="请输入您的手机"/>&nbsp;<span style="color:red">*</span>
+			</div>
+		</div>
+		
+		<div class="ov fs13" id="div2">
+			<span class="fl fs15" style="padding:15px 10px 0px 50px;">验证码：</span>
+			<div class="ov fs15" style="padding:15px 10px 0px 0px;">
+				<input class="input" name="captcha" style="width:80px;"  placeholder="验证码" />&nbsp;
+				<input type="button"  class="button1" value="获取验证码" />  
+			</div>
+		</div>
+		<div id="getyzm" class="gyzm"></div> 
+		<div class="ov" align="center" style="padding:10px 10px 10px 5px;">
+			<a href="#" class="button" id="submit">申请开票</a><br>
+			<div style="padding-top: 10px;"><span style="color: red;font-size: 12px;">申请的发票预计在3个工作日内通过短信发送至您手机上。</span></div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

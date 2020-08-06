@@ -121,7 +121,9 @@ export default {
             i = null,
             d = function() {},
             e = function(n) {
-            But.$emit('sends',n.result.iconList)
+            But.$emit('sends',n.result.iconList);
+            //存储cookie中
+            vm.common.updatecookie(n.result.cardStatus,n.result.cardService,n.result.id,n.result.appid,n.result.cspId,n.result.sectId,n.result.cardPayService,n.result.bgImageList,n.result.wuyeTabsList);
             },
             r = function() {
             };

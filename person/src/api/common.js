@@ -9,7 +9,11 @@ var MasterConfig = function() {
         /uat/.test(location.origin)?'https://uat.e-shequ.com/hexie/weixin/':
         'https://www.e-shequ.cn/weixin/',
         
-        basePageUrlpay:/127|test/.test(location.origin)?'https://test.e-shequ.com/weixin/pay/':
+        basedhzj3Url:/127|test/.test(location.origin)?'https://test.e-shequ.com/weixin/':
+        /uat/.test(location.origin)?'https://uat.e-shequ.com/hexie/weixin/':
+        'https://www.e-shequ.cn/dhzj3/weixin/',
+
+        basePageUrlpay:/127|test/.test(location.origin)?'https://test.e-shequ.com/weixin/':
         /uat/.test(location.origin)?'https://uat.e-shequ.com/pay/':
         'https://www.e-shequ.cn/weixin/',
 
@@ -22,7 +26,7 @@ var MasterConfig = function() {
         'wxbd214f5765f346c1',
         
         componentAppId: /127|test/.test(location.origin)?'wx4d706a1a7a139d1f':
-        /uat/.test(location.origin)?'wx4d706a1a7a139d1f':
+        /uat/.test(location.origin)?'wxc65085912aca5444':
         'wx0d408844b35d85e2',
         
 		oauthUrl: "https://open.weixin.qq.com/connect/oauth2/authorize?",
@@ -168,14 +172,24 @@ function isRegisted(){
 function toRegisterAndBack(){
     var n = location.origin + common.removeParamFromUrl(["from", "bind", "code", "share_id", "isappinstalled", "state", "m", "c", "a"]);
     let appurl='';
+    //1未领卡  //2领卡未激活
+    var cardStatus=getCookie('cardStatus');
+    var cardService=getCookie('cardService');
     if(getUrlParam('oriApp')){
         appurl='oriApp='+getUrlParam('oriApp');
     }else {
         appurl='';
+    };
+    if(cardService=='true'){
+        if(cardStatus == '1'||cardStatus==null || cardStatus=='0' ){
+            location.href=MasterConfig.C('basePageUrl')+"person/index.html?"+appurl+"#/welfare"
+        }else {
+            location.href=MasterConfig.C('basePageUrl')+"person/index.html?"+appurl+"#/register?comeFrom="+encodeURIComponent(n)+common.addParamHsah();
+        }
+    }else {
+        location.href=MasterConfig.C('basePageUrl')+"person/index.html?"+appurl+"#/register?comeFrom="+encodeURIComponent(n)+common.addParamHsah();
     }
-    location.href=MasterConfig.C('basePageUrl')+"person/index.html?"+appurl+"#/register?comeFrom="+encodeURIComponent(n)+common.addParamHsah();
 }
-
 //判断当前是那个公众号
 function Getofficial() {
     var appid=getCookie('appId');
@@ -183,7 +197,6 @@ function Getofficial() {
         common.newname='社区'
     }
 }
-
 
 var AJAXFlag = !0;
 window.common = {
@@ -254,7 +267,7 @@ window.common = {
                 for(var j=0;j<n.result.bgImageList.length;j++){
                     window.localStorage.setItem(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl,duration)
                 } 
-                location.reload();
+                imgUrl=window.localStorage.getItem(type)
             },
             r = function() { 
             };
@@ -265,7 +278,8 @@ window.common = {
         return imgUrl;
    },
    getoriApp:function() {
-        var oriapp=getUrlParam('oriApp')?'oriApp='+getUrlParam('oriApp'):'state=123';
+		var mainAppId = MasterConfig.C("appId");
+		var oriapp=getUrlParam('oriApp')?'oriApp='+getUrlParam('oriApp'):'oriApp='+mainAppId;
         return  oriapp;
    },
 
@@ -274,14 +288,18 @@ window.common = {
 		var timestamp="";
 		var o = this._GET().code;
 		var oriApp = getUrlParam("oriApp");
+		var mainAppId = MasterConfig.C("appId");
+		if(!oriApp){
+			oriApp = mainAppId;
+		}
 		var param = {"oriApp":oriApp};
         if (common.alert("code: " + o), void 0 === o) {
 			var n = location.origin + common.removeParamFromUrl(["from","bind", "code", "share_id", "isappinstalled", "state", "m", "c", "a"])+common.addParamHsah(),
 			t = MasterConfig.C("oauthUrl"),
 		    end = MasterConfig.C("oauthUrlPostFix");
 			var url = t + "appid=" ;
-			var mainAppId = MasterConfig.C("appId") ;
-			if(oriApp && oriApp!=mainAppId){
+			
+			if(oriApp){
 				url +=  oriApp + "&component_appid=" + MasterConfig.C("componentAppId"); 
 			}else{
 				url +=  mainAppId;
@@ -304,7 +322,9 @@ window.common = {
 		if(document.URL.indexOf('.html?t=') < 0) {
 			 timestamp= (new Date()).valueOf();
 		}
+
 		var url= location.origin +common.removeParamFromUrl(["code","appid","state"]);
+
 		if(url.indexOf('?')<0){
 			url+='?';
 		}else {
@@ -323,22 +343,42 @@ window.common = {
         })
     },
     /**变更才需要重设置*/
-updateUserStatus(user) {
-    var duration = new Date().getTime()/1000 + 3600*24*30;
-    setCookie("UID", user.uid,  duration);
-    setCookie("currentAddrId", user.currentAddrId, duration);
-    setCookie("tel", user.tel, duration);
-    setCookie("shareCode", user.shareCode, duration);
-    setCookie("appId", user.appId);
-},
+    updateUserStatus(user) {
+        var duration = new Date().getTime()/1000 + 3600*24*30;
+        setCookie("UID", user.uid,  duration);
+        setCookie("currentAddrId", user.currentAddrId, duration);
+        setCookie("tel", user.tel, duration);
+        setCookie("shareCode", user.shareCode, duration);
+        setCookie("appId", user.appId);
+    },
+    //存储公共userinfo中参数的cookie
+    updatecookie(cardStatus,cardService,userId,appid,cspId,sectId,cardPayService,bgImageList,wuyeTabsList,qrCode,result){
+        var duration = new Date().getTime()/1000 + 3600*24*30;
+        setCookie("cardStatus", cardStatus,duration);
+        setCookie("cardService", cardService,duration);
+        setCookie('userId',userId,duration);
+        setCookie('appid',appid,duration);
+        setCookie('cspId',cspId,duration);
+        setCookie('sectId',sectId,duration);
+        setCookie('cardPayService',cardPayService,duration);
+        setCookie('qrCode',qrCode,duration);
+        // console.log(result);
+        for(var j=0;j<bgImageList.length;j++){
+            common.localSet(bgImageList[j].type,bgImageList[j].imgUrl)
+        }
+
+        if(wuyeTabsList) {
+            common.localSet('wuyeTabsList',JSON.stringify(wuyeTabsList));
+        }
+    },
      //入口程序 检查状态
     checkRegisterStatus:function(){
         if(!getCookie("UID")){
             common.login();/**不应该出现*/
             return false;
         }
-        if(!isRegisted()){
-            alert("请先完成注册！");
+
+        if(!isRegisted()){              
             toRegisterAndBack();
             return false;
         }

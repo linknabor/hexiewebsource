@@ -1,21 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-// import Index from '@/pages/index'
-// import index from '@/pages/index/index'//首页
-// import Bindphone from '@/pages/bindphone'//个人信息
-// import Register from '@/pages/register'//手机注册页
-// import Coupons from '@/pages/coupons'//我的优惠券
-// import Myrepair from '@/pages/myRepair/myrepair'//我的维修
-// import OrdersDetail from '@/pages/myRepair/ordersDetail'//维修详情
-// import cancelOrders from '@/pages/myRepair/cancelOrders'//取消维修
-// import OperatorOrders from '@/pages/myRepair/operatorOrders'//我的维修单
-// import OperatorOrdersDetail from '@/pages/myRepair/operatorOrdersDetail'//我的维修我要抢单
-// import OperatorRepairSuccess from '@/pages/myRepair/operatorRepairSuccess'//我要抢单 公共页面
-// import Notices from '@/pages/notices'//我的消息
-// import MyPublish from '@/pages/communities/myPublish'//我的发布
-// import ThreadDetail from '@/pages/communities/threadDetail'//发布回复
-// import Addresses from '@/pages/addresses'//常用地址
-
 Vue.use(Router)
 
 let router= new Router({
@@ -165,7 +149,7 @@ let router= new Router({
       path:'/canReceiveorders',
       name:'canReceiveorders',
       component:resolve=>require(['@/pages/service/CanReceiveOrders'],resolve),
-      mate:{
+      meta:{
         title:''
       }
     },
@@ -173,7 +157,7 @@ let router= new Router({
       path:'/openServiceDetail',
       name:'openServiceDetail',
       component:resolve=>require(['@/pages/service/openServiceDetail'],resolve),
-      mate:{
+      meta:{
         title:''
       }
     },
@@ -181,7 +165,7 @@ let router= new Router({
       path:'/openServicesuccess',
       name:'openServicesuccess',
       component:resolve=>require(['@/pages/service/openServicesuccess'],resolve),
-      mate:{
+      meta:{
         title:''
       }
     },
@@ -189,7 +173,7 @@ let router= new Router({
       path:'/myservice',
       name:'myservice',
       component:resolve=>require(['@/pages/service/myservice'],resolve),
-      mate:{
+      meta:{
         title:'我的服务单'
       }
     },
@@ -197,7 +181,7 @@ let router= new Router({
       path:'/myserviceDetail',
       name:'myserviceDetail',
       component:resolve=>require(['@/pages/service/myserviceDetail'],resolve),
-      mate:{
+      meta:{
         title:'订单详情'
       }
     },
@@ -205,10 +189,42 @@ let router= new Router({
       path:'/cancelservice',
       name:'cancelservice',
       component:resolve=>require(['@/pages/service/cancelservice'],resolve),
-      mate:{
+      meta:{
         title:'取消订单'
       }
-    }
+    },
+    {
+      path:'/cardrolldetail',
+      name:'cardrolldetail',
+      component:resolve => require(['@/pages/Cardroll/cardrollDetail'],resolve),
+      meta:{
+        title:'商品订单'
+      }
+    },
+    {
+      path:'/cardrollgoods',
+      name:'cardrollgoods',
+      component:resolve =>require(['@/pages/Cardroll/cardrollgoods'],resolve),
+      meta:{
+        title:'商品核销'
+      }
+    },
+    {
+      path:'/cardrollrecords',
+      name:'cardrollrecords',
+      component:resolve =>require(['@/pages/Cardroll/cardrollrecords'],resolve),
+      meta:{
+        title:'核销记录'
+      }
+    },
+    {
+      path:'/keyboard',
+      name:'keyboard',
+      component:resolve =>require(['@/pages/Cardroll/keyboard'],resolve),
+      meta:{
+        title:'搜索'
+      }
+    },
   ]
 })
 

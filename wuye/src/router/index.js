@@ -74,15 +74,15 @@ const router= new VueRouter({
           meta:{
             title:'查询缴费'
           }
-      },
-      {
-        path:'/location',
-        name:'location',
-        component:resolve=>require(['@/pages/pay/location'],resolve),
-        meta:{
-          title:'查询缴费'
-        }
-    },
+        },
+        {
+          path:'/location',
+          name:'location',
+          component:resolve=>require(['@/pages/pay/location'],resolve),
+          meta:{
+            title:'查询缴费'
+          }
+        },
         {
             path:'/paymentquery',
             name:'paymentquery',
@@ -98,8 +98,8 @@ const router= new VueRouter({
             meta:{
             title:'绑定房子'
             }
-       },
-       {
+        },
+        {
         path:'/repair',
         name:'repair',
         component:resolve=> require(['@/pages/repair/repair'],resolve),

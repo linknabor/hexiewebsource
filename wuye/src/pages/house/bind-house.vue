@@ -34,7 +34,7 @@
 				<span class="fr">{{data.cnst_area}}平米</span>
 			</li>
 			<li>
-				{{data.mng_cell_id}}(户号)
+				{{data.ver_no}}(户号)
 			</li>
 		</ul>
 		<div class="bottomBtn"  @click="addHouse">绑定房子</div>
