@@ -124,6 +124,7 @@ export default {
                     if(vm.sectId == "" || vm.sectId == 'null' || vm.sectId == 0 || vm.sectId == null) {
                         vm.temais = vm.res.result;
                         vm.load=false;
+                        vm.page++;
                     }else {
                         if(vm.res.result.length == 0) {
                             vm.load=false;
