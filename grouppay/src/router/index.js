@@ -40,7 +40,22 @@ var router= new Router({
         title:''
       }
     },
-    
+    {
+      path:'/cardrollbuy',
+      name:'cardrollbuy',
+      component:resolve=>require(['@/page/cardroll/cardrollbuy'],resolve),
+      meta:{
+        title:'优惠'
+      }
+    },
+    {
+      path:'/cardrollsuccess',
+      name:'cardrollsuccess',
+      component:resolve=> require(['@/page/cardroll/cardrollsuccess'],resolve),
+      meta:{
+        title:'优惠'
+      }
+    }
   ]
 })
 

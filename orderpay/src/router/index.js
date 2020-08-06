@@ -1,15 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-// import Orders from '@/pages/orders'
-// import Orderdetail from '@/pages/orderdetail'
-// import Onsaleorders from '@/pages/onsaleorders'
-// import Logistice from '@/pages/logistice'
-// import Comment from '@/pages/comment'
-// import Grouporders from '@/pages/grouporders'
-// import RepairPay from '@/pages/repairPay'
-// import Commentxiu from '@/pages/commentxiu'
-// import Homeorders from '@/pages/homeorders'
-// import Homeorderdetail from '@/pages/homeorderdetail'
 
 Vue.use(Router)
 
@@ -139,7 +129,14 @@ let router= new Router({
         title:''
       }
     },
-    
+    {
+      path:'/cardorder',
+      name:'cardorder',
+      component:resolve=>require(['@/pages/Cardroll/cardorder'],resolve),
+      mate:{
+        title:'商品订单'
+      }
+    },
 
   ]
 })

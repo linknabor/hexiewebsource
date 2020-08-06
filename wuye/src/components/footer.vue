@@ -103,7 +103,7 @@ export default{
       vm=this;
     },
     mounted(){
-      // let url = '/initSession4Test/8425';
+      // let url = '/initSession4Test/8427';
       //           vm.receiveData.getData(vm,url,'Data',function(){
       // });
       vm.initUserInfo();
@@ -127,7 +127,7 @@ export default{
                       vm.list=n.result.iconList;
                       Bus.$emit('sends',n.result);
                       //存储cookie
-                      vm.common.updatecookie(n.result.cardStatus,n.result.cardService,n.result.id,n.result.appid,n.result.cspId,n.result.sectId,n.result.cardPayService,n.result.bgImageList,n.result.wuyeTabsList);
+                      vm.common.updatecookie(n.result.cardStatus,n.result.cardService,n.result.id,n.result.appid,n.result.cspId,n.result.sectId,n.result.cardPayService,n.result.bgImageList,n.result.wuyeTabsList,n.result.qrCode,n.result);
                       // console.log(cookie.get('sectId'))
                     }
                     // cookie.set('userId',n.result.id);

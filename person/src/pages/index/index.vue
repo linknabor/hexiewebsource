@@ -57,45 +57,55 @@
       <!-- 链接地址要换 -->
       <a
         :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/orders'"
-        class="input-wrap menu-person-link lite-divider"
+        class="input-wrap  lite-divider disb"
       >
         <span class="input-info lf30 fs16">全部订单</span>
-        <span class="fr fs14 left_color">查看全部订单&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <!-- <span class="fr fs14 left_color">查看全部订单&nbsp;&nbsp;&nbsp;&nbsp;</span> -->
       </a>
     </div>
 
     <div id="module-list">
-      <div class="module-item-wrap" v-if="!donghu">
-        <!-- 链接地址要换 -->
+      <!-- <div class="module-item-wrap" v-if="!donghu">
         <a :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/onsaleorders'" class="module-item">
           <div class="module-logo logo1"></div>
           <div class="module-title fs14">商品订单</div>
         </a>
-      </div>
-      <div class="module-item-wrap" :class="{'moduledh':donghu}">
+      </div>:class="{'moduledh':donghu}" -->
+      <div v-if="donghu" class="module-item-wrap" >
         <a v-if="donghu" class="module-itemdh" :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/grouporders'">
             <div class="module-logodh logo4" >
                 <div class="module-titledh fs14">团购订单</div>
             </div>
             <div></div>
          </a>
-        <a v-else class="module-item" :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/grouporders'">
+        <!-- <a v-else class="module-item" :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/grouporders'">
           <div class="module-logo logo2"></div>
           <div class="module-title fs14">团购订单</div>
-        </a>
-        
+        </a> :class="{'moduledh':donghu}"-->
       </div>
-      <div class="module-item-wrap" :class="{'moduledh':donghu}">
+      <div class="module-item-wrap" :class="{'module-newwidth':!donghu}">
         <a v-if="donghu" class="module-itemdh" :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/homeorders'">
             <div class="module-logodh logo5" >
                 <div class="module-titledh fs14">服务订单</div>
             </div>
         </a> 
-        <a v-else class="module-item" :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/homeorders'">
+        <router-link v-else class="module-item" :to="{path:'/myservice'}">
           <div class="module-logo logo3"></div>
           <div class="module-title fs14">服务订单</div>
-        </a>
+        </router-link> 
+      </div>
 
+      <div v-if="!donghu" class="module-item-wrap" :class="{'module-newwidth':!donghu}">
+        <a class="module-item" :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/cardorder'">
+          <div class="module-logo logo6"></div>
+          <div class="module-title fs14">优惠订单</div>
+        </a>
+      </div>
+       <div v-if="!donghu" class="module-item-wrap" :class="{'module-newwidth':!donghu}">
+        <router-link class="module-item" :to="{path:'/myrepair'}">
+          <div class="module-logo logo7"></div>
+          <div class="module-title fs14">维修订单</div>
+        </router-link>
       </div>
     </div>
 
@@ -122,12 +132,21 @@
     <div v-else>
       <div class="info-wrap" style="overflow:hidden; clear: both;">
         <router-link
+          :to="{path:'/cardrollrecords'}"
+          class="input-wrap menu-person-link lite-divider"
+          v-show="evoucherOperator"
+        >
+          <span class="input-info lf30 fs16">我是核销人员</span>
+          <span class="fr fs14 left_color">查看记录&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        </router-link>
+
+        <!-- <router-link
           :to="{path:'/myservice'}"
           class="input-wrap menu-person-link lite-divider"
         >
           <span class="input-info lf30 fs16">我的服务单</span>
           <span class="fr fs14 left_color">查看订单&nbsp;&nbsp;&nbsp;&nbsp;</span>
-        </router-link>
+        </router-link> -->
         <router-link
           :to="{path:'/service'}"
           class="input-wrap menu-person-link lite-divider"
@@ -136,10 +155,10 @@
           <span class="input-info lf30 fs16">我是服务人员</span>
           <span class="fr fs14 left_color">查看订单&nbsp;&nbsp;&nbsp;&nbsp;</span>
         </router-link>
-        <router-link :to="{path:'/myrepair'}" class="input-wrap menu-person-link lite-divider">
+        <!-- <router-link :to="{path:'/myrepair'}" class="input-wrap menu-person-link lite-divider">
           <span class="input-info lf30 fs16">我的维修单</span>
           <span class="fr fs14 left_color">查看维修单&nbsp;&nbsp;&nbsp;&nbsp;</span>
-        </router-link>
+        </router-link> -->
         <!-- 我是维修工目前不隐藏 v-show="user.repairOperator" -->
         <router-link
           :to="{path:'/operatorOrders'}"
@@ -238,6 +257,7 @@ export default {
       cardStatus:'',//是否领卡激活的标记
       donghu:false,//标识判断是不是东湖
       serviceOperator:false, //我是服务人员
+      evoucherOperator:false,//核销卡卷
       user_info: {
         avatar: img,
         nickname: "游客",
@@ -265,7 +285,7 @@ export default {
     //模仿线上用户信息
     // 105/747/384
     initSession4Test() {
-      let url = "/initSession4Test/62";
+      let url = "/initSession4Test/8427";
       vm.receiveData.getData(vm, url, "Data", function() {});
     },
     User() {
@@ -286,6 +306,7 @@ export default {
             vm.qrCode=n.result.qrCode;
             vm.cardService=n.result.cardService;
             vm.serviceOperator = n.result.serviceOperator;//我是服务人员
+            vm.evoucherOperator = n.result.evoucherOperator;//核销卡卷
             if(vm.user.point<0){//小于0等于0
               vm.point=0;
             }else {
@@ -295,7 +316,7 @@ export default {
             Bus.$emit('sends',n.result.iconList);
             
             //保存
-            vm.common.updatecookie(n.result.cardStatus,n.result.cardService,n.result.id,n.result.appid,n.result.cspId,n.result.sectId,n.result.cardPayService,n.result.bgImageList,n.result.wuyeTabsList);
+            vm.common.updatecookie(n.result.cardStatus,n.result.cardService,n.result.id,n.result.appid,n.result.cspId,n.result.sectId,n.result.cardPayService,n.result.bgImageList,n.result.wuyeTabsList,n.result.qrCode,n.result);
             // var duration = new Date().getTime()/1000 + 3600*24*30;
             // cookie.set('cardStatus',n.result.cardStatus,duration);
             // cookie.set('cardService',n.result.cardService,duration);
@@ -376,7 +397,7 @@ export default {
 </script>
 
 <style  scoped>
- #login {
+  #login {
     position: fixed;
     top: 35%;
     left: 50%;
@@ -488,14 +509,14 @@ export default {
   color: #3b3937;
   padding-bottom: 0;
   border-bottom: 10px solid #eeeeee;
-  padding: 0 4px;
+  /* padding: 0 4px; */
   font-size: 12px;
 
 }
 
 .section-title,
 .lite-divider {
-  border-bottom: 1px solid #f2f2f2;
+  border-bottom: 1px solid #d4cfc8;
 }
 .menu-person-link {
   padding-right: 1rem;
@@ -514,26 +535,35 @@ export default {
   display: block;
   background: url(../../assets/images/person/icon_arrow.png) no-repeat;
   background-size: 7px 14px;
-  background-position: right center;
+  background-position: 98% center;
   padding-right: 15px;
+}
+.disb {
+  display:block;
+  color: #3b3937;
 }
 /* 订单服务 */
 #module-list {
   width: 100%;
   overflow: hidden;
+  border-bottom: 1px solid #d4cfc8;
 }
 #module-list .module-item-wrap {
   margin-top: 8px;
-  width: 33.3%;
+  width: 50%;
   float: left;
-  border-bottom: 10px solid #eeeeee;
+  /* border-bottom: 10px solid #d4cfc8; */
   position: relative;
 }
+#module-list .module-newwidth {
+  width: 33%;
+} 
 #module-list .module-item-wrap .module-item {
   margin-top: 10px;
   display: block;
   width: 100%;
-  height: 1.5rem;
+  /* height: 1.5rem; */
+  padding: 0.2rem;
   background-position: 50% 0;
   background-size: 42px;
   background-repeat: no-repeat;
@@ -549,7 +579,8 @@ export default {
 .module-logo {
   margin-top: 4px;
   display: block;
-  height: 43px;
+  /* height: 43px; */
+  height: 0.7rem;
   background-position: 50% 0;
   background-size: 0.6rem;
   background-repeat: no-repeat;
@@ -568,6 +599,12 @@ export default {
 }
 .logo3 {
   background-image: url("../../assets/images/person/icon_person_yuyue.png");
+}
+.logo6 {
+  background-image: url(http://img.e-shequ.cn/Ftfh6I1VTTeiMW-Cj8TUe8o5ONc5);
+}
+.logo7 {
+  background-image: url(http://img.e-shequ.cn/FlyfitH09IfIP9RiTgUddHa25auM);
 }
 .logo4 {
   background-image: url("../../assets/images/person/icon_person_tuangoudh.png");

@@ -10,13 +10,6 @@ Vue.use(Router)
 let router= new Router({
   // mode:'history',
   routes: [
-    // {
-    //   path: '/',
-    //   component: resolve=>require(['@/pages/index'],resolve),
-    //   children:[
-
-    //   ]
-    // },
     { 
       path:'/',
       name:'index',
@@ -56,9 +49,23 @@ let router= new Router({
       meta:{
           title:''
       }  
+    },
+    {
+      path:'/cardrollindex',
+      name:'cardrollindex',
+      component:resolve=>require(['@/pages/Cardroll/cardrollindex'],resolve),
+      meta:{
+        title:'优惠'
+      }
+    },
+    {
+      path:'/cardrolldetail',
+      name:'cardrolldetail',
+      component:resolve=>require(['@/pages/Cardroll/cardrolldetail'],resolve),
+      meta:{
+        title:'优惠'
+      }
     }
-    
-
   ]
 })
 

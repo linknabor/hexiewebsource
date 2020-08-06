@@ -95,7 +95,7 @@ body {
     <div class="loccity">
       <div class="loccity-t">
         <div class="locity-t-t">
-          定位城市
+          定位区域
         </div>
         <!-- <input type="text" v-model="value2" class="locity-t-b" id="btnd1" /> -->
         <div class="locity-t-b" id="btnd1">
@@ -105,10 +105,10 @@ body {
       <div class="hx"></div>
       <!-- 可选城市 -->
       <div class="choosecity">
-        <div class="choose-t">可选城市</div>
+        <div class="choose-t">可选区域</div>
         <div class="choose-b">
-          <div class="choose-ct" v-for="item in citys" :key="item.id">
-            <div class="choose-ct-1" @click="dj(item)">{{item.regionName}}</div>
+          <div class="choose-ct" v-for="(item,index) in citys" :key="index">
+            <div class="choose-ct-1" @click="dj(item)">{{item.showRegionName}}</div>
           </div>
         </div>
       </div>
@@ -122,6 +122,7 @@ body {
       data() {
         return {
           value2:"",
+          address:"",
           citys: [
           ],
         
@@ -133,23 +134,17 @@ body {
           vm = this;
         },
         mounted(){
-        vm.city();    //触发获取城市方法
+         vm.city();    //触发获取城市方法
          let url2 = location.href.split('#')[0];
-        vm.receiveData.wxconfig(vm,wx,['getLocation'],url2);
-
+         vm.receiveData.wxconfig(vm,wx,['getLocation'],url2);
         },
-  
         methods: {
-
           dj(item){
-              
-              var citydata=item.regionName;
-              vm.$router.push({path:'/Fontunit',query:{citydata1:citydata}})
+              var citydata=item.showRegionName;
+              vm.$router.push({path:'/Fontunit',query:{citydata1:citydata,address:item.regionName}})
           },
            city(){    //定义获取城市方法
-           
               wx.ready(function () {
-               
               wx.checkJsApi({
                   jsApiList: [
                       'getLocation'
@@ -183,13 +178,13 @@ body {
                 })
               },
           getRegionurl(longitude,latitude){
-          
               vm.receiveData.getData(vm,'/getRegionUrl?coordinate='+longitude+','+latitude,'res',function(){
                 if(vm.res.success){
-                vm.value2=vm.res.result.address;
+                vm.value2=vm.res.result.showAddress;
+                vm.address=vm.res.result.address;
                 vm.citys=vm.res.result.regionUrl;
                 }else{
-                  alert("获取数据失败")
+                  alert(vm.res.message == null ?"获取数据失败":vm.res.message)
                 }
               })
           }
