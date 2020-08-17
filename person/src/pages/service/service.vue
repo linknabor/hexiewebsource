@@ -8,9 +8,8 @@
         <span>服务内容: {{item.service_type_cn}}</span>
       </li>
       <li class="ov">
-        <span v-show="item.service_type != 1" class="fl border" @click="ViewQRcode(item.qrcode_id,item.sect_name,item.service_type_cn)">查看二维码</span>
-        <span v-show="item.service_type != 0" class="fl border"  @click="ViewOrder(item.service_type,item.service_id)">查看订单</span>
-        <!-- :class="{M17:item.service_type != 0}" -->
+        <span v-show="item.service_type != 1 && item.scene_type == '01'&& item.qrcode_id != ''" class="fl border" @click="ViewQRcode(item.qrcode_id,item.sect_name,item.service_type_cn)">查看二维码</span>
+        <span  class="fl border" v-show="item.scene_type != '02' && item.scene_type != '03'" :class="{M17:item.scene_type == '01'&& item.qrcode_id != ''}" @click="ViewOrder(item.service_type,item.service_id,item.sect_id,item.fee_id)">查看订单</span>
         <span
           class="fr border1"
           @click="SigninOut(index,item.person_id,item.signin_flag)"
@@ -87,14 +86,14 @@ export default {
       });
     },
     //查看订单
-    ViewOrder(type,service_id) {
+    ViewOrder(type,service_id,sectId,feeId) {
       cookie.set('service_id',service_id);
       if(type == 1) {
          vm.$router.push({path:'/CanReceiveOrders'})
       }
-      // else {
-      //    vm.$router.push({path:'/ordermation'})
-      // }
+      else {
+         vm.$router.push({path:'/ordermation',query:{'sectId':sectId,'feeId':feeId}})
+      }
       
     },
 
