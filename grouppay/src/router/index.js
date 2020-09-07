@@ -55,7 +55,31 @@ var router= new Router({
       meta:{
         title:'优惠'
       }
-    }
+    },
+    {
+      path:'/salespage',
+      name:'salespage',
+      component:resolve=>require(['@/page/cardroll/salespage'],resolve),
+      meta:{
+        title:'招募社区合伙人'
+      }
+    },
+    {
+      path:'/salessuccess',
+      name:'salessuccess',
+      component:resolve=>require(['@/page/cardroll/salessuccess'],resolve),
+      meta:{
+        title:'欢迎加入'
+      }
+    },
+    // {
+    //   path:'/conventions',
+    //   name:'conventions',
+    //   component:resolve=>require(['@/page/cardroll/conventions'],resolve),
+    //   meta:{
+    //     title:''
+    //   }
+    // },
   ]
 })
 
@@ -64,7 +88,7 @@ var router= new Router({
 router.beforeEach((to, from, next) => {
   //动态改变title
   var flag;
-  if(to.matched[0].name != "index"&& to.matched[0].name!='register') {
+  if(to.matched[0].name != "index"&& to.matched[0].name!='register'&& to.matched[0].name!='salespage'&& to.matched[0].name!='salessuccess'&& to.matched[0].name!='conventions') {
      flag= common.checkRegisterStatus()
       if(!flag) {
           return

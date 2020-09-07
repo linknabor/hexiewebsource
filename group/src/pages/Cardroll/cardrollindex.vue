@@ -118,7 +118,7 @@ export default {
         },
        query() {
             vm.sectId = cookie.get('sectId');
-            vm.receiveData.getData(vm,"onsales/v2/1000/"+vm.page,"res", function() {
+            vm.receiveData.getData(vm,"onsales/v2/1000/0/"+vm.page,"res", function() {
                 if (vm.res.success) {
                     if(vm.sectId == "" || vm.sectId == 'null' || vm.sectId == 0 || vm.sectId == null) {
                         vm.temais = vm.res.result;
@@ -157,7 +157,7 @@ export default {
             }
         },
         loadNextPage() {
-            let url ="onsales/v2/1000/"+vm.page;
+            let url ="onsales/v2/1000/0/"+vm.page;
                 vm.receiveData.getData(vm,url,'Data',function(){
                     if(vm.Data.success){
                         if(vm.Data.result==null||vm.Data.result.length==0) {
@@ -362,7 +362,7 @@ img {
     margin-left: 1px;
 }
 .fs20 {
-    font-size: 20px;
+    font-size:0.4rem;
 }
 .highlight {
     color: #ff8a00;

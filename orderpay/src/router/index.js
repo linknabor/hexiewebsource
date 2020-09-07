@@ -133,7 +133,7 @@ let router= new Router({
       path:'/cardorder',
       name:'cardorder',
       component:resolve=>require(['@/pages/Cardroll/cardorder'],resolve),
-      mate:{
+      meta:{
         title:'商品订单'
       }
     },

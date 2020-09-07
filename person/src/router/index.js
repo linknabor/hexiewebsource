@@ -222,7 +222,15 @@ let router= new Router({
       name:'keyboard',
       component:resolve =>require(['@/pages/Cardroll/keyboard'],resolve),
       meta:{
-        title:'搜索'
+        title:''
+      }
+    },
+    {
+      path:'/reset',
+      name:'reset',
+      component:resolve =>require(['@/pages/index/reset'],resolve),
+      meta:{
+        title:'重置密码'
       }
     },
   ]
@@ -234,7 +242,7 @@ let router= new Router({
 router.beforeEach((to, from, next) => {
   //动态改变title
   var flag;
-  if(to.matched[0].name != "index"&& to.matched[0].name!='register'&&to.matched[0].name!='welfare') {
+  if(to.matched[0].name != "index"&& to.matched[0].name!='register'&&to.matched[0].name!='welfare'&&to.matched[0].name!='ageess'&&to.matched[0].name!='reset') {
      flag=common.checkRegisterStatus()
      if(!flag) {
        return
