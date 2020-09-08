@@ -21,12 +21,13 @@ Vue.use(Mint);
 import cookie from 'js-cookie'
 
 //本地使用
-// import {common,MasterConfig,getUrlParam} from './assets/js/common';
+// import {common,MasterConfig,getUrlParam,dealWithAjaxData} from './assets/js/common';
 Vue.prototype.common=common;
 Vue.prototype.getUrlParam = getUrlParam;
 Vue.prototype.baseUrl=MasterConfig.C('baseUrl');
 Vue.prototype.basePageUrl=MasterConfig.C('basePageUrl');
 Vue.prototype.basePageUrlpay=MasterConfig.C('basePageUrlpay');
+Vue.prototype.dealWithAjaxData = dealWithAjaxData;
 
 import receiveData from './assets/js/receiveData'
 Vue.prototype.receiveData=receiveData
@@ -44,7 +45,7 @@ var axiosInstance = axios.create({
       'Content-Type':"application/json",
 
       // 'Accept': '*/*',
-      'Accept': 'application/json',
+      'Accept': 'application/json;',
 
   },
   // baseURL: "/api",

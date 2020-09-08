@@ -66,10 +66,14 @@ export default {
                         if(vm.res.result.code == null){
                             alert('核销失败！该券码不存在');
                         }else {
-                            if(vm.res.result.status == 2 || vm.res.result.status == 3) {
+                            if(vm.res.result.status == 2) {
                                alert('核销失败：券码已核销');
+                            }else if(vm.res.result.status == 3) {
+                               alert('核销失败：券码已过期');
+                            }else if(vm.res.result.status == 4){
+                                alert('核销失败：券码已退款');
                             }else {
-                               vm.$router.push({path:'/cardrollgoods',query:{'code':vm.code}})
+                                vm.$router.push({path:'/cardrollgoods',query:{'code':vm.code}})
                             }
                         }
                     }else {

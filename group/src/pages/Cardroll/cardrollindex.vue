@@ -16,7 +16,6 @@
 			<img src="../../assets/images/index/c3d7f369-4a5e-4c4a-9fb9-a4b9d274c7e1.gif" style="width:40px;height40px;vertical-align: middle;">
 		</div>
         <!-- load -->
-        
      <div id="indexdivs" @scroll="getscroll">
         <div id="indexDiv">
         <div class="banner" v-for="banner in banners" :key="banner.id" >
@@ -119,11 +118,12 @@ export default {
         },
        query() {
             vm.sectId = cookie.get('sectId');
-            vm.receiveData.getData(vm,"onsales/v2/1000/"+vm.page,"res", function() {
+            vm.receiveData.getData(vm,"onsales/v2/1000/0/"+vm.page,"res", function() {
                 if (vm.res.success) {
                     if(vm.sectId == "" || vm.sectId == 'null' || vm.sectId == 0 || vm.sectId == null) {
                         vm.temais = vm.res.result;
                         vm.load=false;
+                        vm.page++;
                     }else {
                         if(vm.res.result.length == 0) {
                             vm.load=false;
@@ -157,7 +157,7 @@ export default {
             }
         },
         loadNextPage() {
-            let url ="onsales/v2/1000/"+vm.page;
+            let url ="onsales/v2/1000/0/"+vm.page;
                 vm.receiveData.getData(vm,url,'Data',function(){
                     if(vm.Data.success){
                         if(vm.Data.result==null||vm.Data.result.length==0) {
@@ -362,7 +362,7 @@ img {
     margin-left: 1px;
 }
 .fs20 {
-    font-size: 20px;
+    font-size:0.4rem;
 }
 .highlight {
     color: #ff8a00;
@@ -382,7 +382,7 @@ img {
     padding-right: 4px;
     margin-right: 4px;
     height: 16px;
-    font-size: 12px;
+    font-size: 10px;
     line-height: 16px;
     display: block;
     color: white;

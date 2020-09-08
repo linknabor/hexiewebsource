@@ -13,7 +13,7 @@
         </div> 
         <div class="product-info p15">
                 <div class="product-detail-name fs16">{{rule.name}}</div>
-                <div style="width: 100%;height:30px;">
+                <div style="width: 100%;height:30px;line-height: 30px;">
                     <div class="highlight fs22 fl three_div">¥&nbsp;{{rule.price}}&nbsp;</div>
                 <!-- </div> -->
                     <div class="ori-posi"> 
@@ -28,7 +28,7 @@
 	    </div>
         <!-- //剩余时间 -->
         <!--只有活动的分类才显示倒计时-->
-        <div  v-if="rule.productType==6">
+        <!-- <div  v-if="rule.productType==6">
             <div class="mt2 time-wrap bb3" v-if="!finished">
                     <span class="time-text">剩余</span>
                     <span v-if="left.days!='00'"><span class="time-number">{{left.days}}</span>天</span>
@@ -40,7 +40,7 @@
             <div class="mt2 time-wrap bb3  fs18" v-if="finished">
                 已结束
             </div>
-        </div>
+        </div> -->
         <div class="p15 mb15">
             <div class="section-title" style="padding-left:0px;padding-top:0px;"  @click="toggleDetail">
                 商品详情
@@ -82,12 +82,12 @@ export default {
        return {
            finished:false,
            showDetail: false,
-            left:{ //剩余时间
-                days:"0",
-                hours:"0",
-                minitus:"0",
-                seconds:"0"
-             },
+            // left:{ //剩余时间
+            //     days:"0",
+            //     hours:"0",
+            //     minitus:"0",
+            //     seconds:"0"
+            //  },
            product: {
                 pictureList:[],
             },
@@ -131,7 +131,7 @@ export default {
                          if(vm.Data.result) {
                             vm.rule=vm.Data.result;                          
                             vm.productss(vm.rule.productId)
-                           setInterval(vm.updateLeftTime,1000);//倒计时 
+                        //    setInterval(vm.updateLeftTime,1000);//倒计时 
                          }
                     }else {    
                         alert(vm.Data.message==null?"获取产品信息失败！":vm.Data.message);
@@ -151,29 +151,29 @@ export default {
                     }
             });
         },
-        //剩余时间
-        updateLeftTime() {
-            if(vm.rule.leftSeconds > 0){
-                vm.finished = false;
-                vm.rule.leftSeconds=vm.rule.leftSeconds-1;
-                var iRemain = vm.rule.leftSeconds;
-                var days=parseInt(iRemain/86400);
-                vm.left.days = days<10?"0"+days:days;
-                iRemain%=86400;
+       //剩余时间
+        // updateLeftTime() {
+        //     if(vm.rule.leftSeconds > 0){
+        //         vm.finished = false;
+        //         vm.rule.leftSeconds=vm.rule.leftSeconds-1;
+        //         var iRemain = vm.rule.leftSeconds;
+        //         var days=parseInt(iRemain/86400);
+        //         vm.left.days = days<10?"0"+days:days;
+        //         iRemain%=86400;
 
-                var hours=parseInt(iRemain/3600);
-                vm.left.hours = hours<10?"0"+hours:hours;
-                iRemain%=3600;
+        //         var hours=parseInt(iRemain/3600);
+        //         vm.left.hours = hours<10?"0"+hours:hours;
+        //         iRemain%=3600;
 
-                var minitus = parseInt(iRemain/60);
-                vm.left.minitus = minitus<10?"0"+minitus:minitus;
-                iRemain%=60;
+        //         var minitus = parseInt(iRemain/60);
+        //         vm.left.minitus = minitus<10?"0"+minitus:minitus;
+        //         iRemain%=60;
 
-                vm.left.seconds=iRemain<10?"0"+iRemain:iRemain;
-            }else{
-                vm.finished = true;
-            }
-        },
+        //         vm.left.seconds=iRemain<10?"0"+iRemain:iRemain;
+        //     }else{
+        //         vm.finished = true;
+        //     }
+        // },
         toggleDetail() {
             vm.showDetail = !vm.showDetail;
         },
@@ -253,8 +253,8 @@ export default {
     font-size: 0.28rem;
 }
 .ori-posi {
-    position: relative;
-    top: 0.2rem;
+    /* position: relative;
+    top: 0.2rem; */
 }
 /* 剩余时间 */
 .time-wrap {

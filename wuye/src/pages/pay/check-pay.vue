@@ -41,14 +41,13 @@
 			  			<option v-for="(item,index) in houseList" :value="item.id" :key="index">{{item.name}}</option>	
 			  		</select>
 			  	</div>	
-			  	<div class="input-row last">
+			  	<!-- <div class="input-row last">
 			  		建筑面积：
 			  		<input type="text" class="virtual-input classinput" value="" @blur="fixScroll" v-model="query.area">&nbsp;&nbsp;m²
-			  		
 			  	</div>
 			  	<div class="input-row add">
 			  		建筑面积允许误差±1m²以内
-			  	</div>
+			  	</div> -->
 		  	</div>
 			</div>  
 			<div style="width:100%;height:0.92rem;"></div>
@@ -80,7 +79,7 @@
 		  			build:'',//楼宇id
 		  			unit:'',//门牌id
 		  			house:'',//室号id
-		  			area:'',//建筑面积id
+		  			area:'0',//建筑面积id
 		  		},
 		  		stmtId:'',//快捷缴费 扫描出来的账单号
 		  		url : '/billList',
@@ -187,7 +186,7 @@
 			
 		   },
 		   house(){
-			   	if(vm.query.sect==''||vm.query.area==''||vm.query.house==''||vm.query.unit==''){
+			   	if(vm.query.sect==''||vm.query.house==''){
            			MessageBox.alert('请输入完整信息');
            			return;
            		}else{
