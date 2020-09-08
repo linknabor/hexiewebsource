@@ -206,7 +206,7 @@ export default {
         yzmreq(){
             var n = "POST",
             a = "getyzm",
-            i = {mobile:vm.tel},
+            i = {mobile:vm.tel,type:'103'},
             b = function(xhr) {
                 //  setRequestHeader设置头部
                 xhr.setRequestHeader('Access-Control-Allow-Token',Token);
@@ -286,6 +286,7 @@ export default {
                         success: function (res) {
                             //支付成功跳转详情
                             vm.zzshow = false;
+                            cookie.set('tel',vm.tel);
                             vm.$router.push({path:'/salessuccess'})
                         },
                         fail:function(res) {

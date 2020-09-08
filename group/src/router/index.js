@@ -90,6 +90,30 @@ let router= new Router({
         title:''
       }
     },
+    {
+      path:'/course',
+      name:'course',
+      component:resolve=>require(['@/pages/cardroll/course'],resolve),
+      meta:{
+        title:''
+      }
+    },
+    {
+      path:'/process',
+      name:'process',
+      component:resolve=>require(['@/pages/cardroll/process'],resolve),
+      meta:{
+        title:''
+      }
+    },
+    {
+      path:'/videos',
+      name:'videos',
+      component:resolve=>require(['@/pages/cardroll/videos'],resolve),
+      meta:{
+        title:''
+      }
+    },
   ]
 })
 

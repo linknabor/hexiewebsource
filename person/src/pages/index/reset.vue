@@ -23,6 +23,7 @@ var vm;
 var Token;
 import wx from 'weixin-js-sdk';
 import { MessageBox } from 'mint-ui';
+import cookie from 'js-cookie';
 export default {
     data() {
         return {
@@ -32,6 +33,8 @@ export default {
             yzm:'',
             yzmtime : 60,
             yzmstr:"获取验证码",
+            ruleId:'',
+            productType:'',
         };
     },
     created() {
@@ -43,8 +46,9 @@ export default {
     computed: {
 
     },
-    mounted() {        
-       vm.query();
+    mounted() { 
+        vm.info();
+        vm.getdetail();       
     },
     methods: {
         initSession4Test() {
@@ -55,15 +59,17 @@ export default {
              vm.receiveData.getData(vm, "/queryPromotionOrder", "res", function() {
                 if(vm.res.success) {
                     if(vm.res.result == 0 ) {
-                        if(vm.res.result !== null) {
-                            var text = '未查询到您的用户名</br>请先成为社区合伙人后进行重置密码操作';
-							MessageBox.alert(text).then( action =>{
-								vm.getdetail();
-							})
-						}
+                        var text = '未查询到您的用户名</br>请先成为社区合伙人后进行重置密码操作';
+                        MessageBox.alert(text).then( action =>{
+                              window.location.href = vm.basePageUrl+'group/onsales.html?'+vm.common.getoriApp()+'#/salesdetail?ruleId='+vm.ruleId+'&productType='+vm.productType;
+                        })
                     }
                     else {
-                       vm.info();
+                        vm.flag = true;
+                    }
+                }else {
+                    if(vm.res.message!=null) {
+                        alert(vm.res.message);
                     }
                 }
             })
@@ -71,7 +77,8 @@ export default {
         getdetail() {
             vm.receiveData.getData(vm, "/onsales/getPromotion", "res", function() {
                 if(vm.res.success) {
-                    window.location.href = vm.basePageUrl+'group/onsales.html?'+vm.common.getoriApp()+'#/salesdetail?ruleId='+vm.res.result[0].ruleId+'&productType='+vm.res.result[0].productType;
+                    vm.ruleId = vm.res.result[0].ruleId;
+                    vm.productType = vm.res.result[0].productType;
                 }else {
                     if(vm.res.message!=null) {
                        alert(vm.res.message);
@@ -84,7 +91,19 @@ export default {
                 if(vm.res.success) {
                     vm.name = vm.res.result.name;
                     vm.tel = vm.res.result.tel;
-                    vm.flag = true;
+                    if(!vm.tel) {
+                        cookie.set('tel','');
+                        var text = '未查询到您的用户名</br>请先成为社区合伙人后进行重置密码操作';
+                        MessageBox.alert(text).then( action =>{
+                             location.href=vm.basePageUrl+'group/onsales.html?'+vm.common.getoriApp()+'#/salesdetail?ruleId='+vm.ruleId+'&productType='+vm.productType;
+                        })
+                    }else {
+                        vm.query();
+                    }
+                }else {
+                  if(vm.res.message!=null) {
+                       alert(vm.res.message);
+                  }
                 }
             });
         },
@@ -106,7 +125,7 @@ export default {
         yzms() {
             var n = "POST",
             a = "getyzm",
-            i = {mobile:vm.tel},
+            i = {mobile:vm.tel,type:'104'},
             b = function(xhr) {
                 //  setRequestHeader设置头部
                 xhr.setRequestHeader('Access-Control-Allow-Token',Token);

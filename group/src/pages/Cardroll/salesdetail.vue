@@ -45,19 +45,19 @@
             </span>
         </div>          
     </div>
-    <!-- <agreement></agreement> -->
+    <div id="zzmb" v-show="zzshow" class="zzmb"></div>
 </div>   
 </template>
 
 <script>
 let vm;
 import wx from 'weixin-js-sdk';
-import {swiper,swiperSlide} from 'vue-awesome-swiper';
 let Base64 = require('js-base64').Base64;
-import agreement from './agreement'
+import cookie from 'js-cookie';
 export default {
    data () {
        return {
+           zzshow:false,
            product: {
                 pictureList:[],
             },
@@ -69,11 +69,13 @@ export default {
             ruleId:this.$route.query.ruleId,//参数
             productType:this.$route.query.productType,
             shareCode:this.$route.query.shareCode,
+            orderid:'',
        };
    },
    created(){
        vm=this;
         vm.query();
+        vm.queryorderid();
    },
    mounted() {
         // this.common.checkRegisterStatus()
@@ -124,17 +126,73 @@ export default {
         goclassify() {
             vm.$router.push({path:'/cardrollindex',query:{'flush':1}})
         },
+        queryorderid() {
+             vm.receiveData.getData(vm, "/queryPromotionOrder", "res", function() {
+                if(vm.res.success) {
+                    vm.orderid =vm.res.result;
+                }else {
+                    if(vm.res.message!=null) {
+                        alert(vm.res.message);
+                    }
+                }
+            })
+        },
         //立即购买
         buy() {
-             if(vm.ruleId) {
+            if(vm.orderid !='0') {
+                vm.PayV2();
+            }else {
                 location.href=vm.basePageUrlpay+'hxgrouppay.html?'+vm.common.getoriApp()+'#/salespage?ruleId='+vm.ruleId+'&productType='+vm.productType+'&shareCode='+vm.shareCode;
-             }   
-        }
+            }
+        },
+        PayV2() {
+            vm.zzshow = true;
+            let url ="/promotionPayV2";
+            var data = {
+                ruleId:vm.ruleId,
+                productType:vm.productType,
+                shareCode:vm.shareCode
+            }
+                vm.receiveData.postData(vm,url,data,'res',function(){
+                    if(vm.res.success) {
+                        let wd = vm.res;
+                        wx.config({
+                            debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+                            appId: wd.result.appId, // 必填，公众号的唯一标识
+                            timestamp: wd.result.timestamp, // 必填，生成签名的时间戳
+                            nonceStr: wd.result.nonceStr, // 必填，生成签名的随机串
+                            signature: wd.result.signature,// 必填，签名，见附录1
+                            jsApiList: ['chooseWXPay'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+                        });
+                        wx.chooseWXPay({
+                            "appId":wd.result.appId,
+                            "timestamp":wd.result.timestamp,
+                            "nonceStr":wd.result.nonceStr,
+                            "package":wd.result.pkgStr,
+                            "signType":wd.result.signType,
+                            "paySign":wd.result.signature,
+                            success: function (res) {
+                                //支付成功跳转详情
+                                vm.zzshow = false;
+                                location.href=vm.basePageUrlpay+'hxgrouppay.html?'+vm.common.getoriApp()+'#/salessuccess';
+                            },
+                            fail:function(res) {
+                                console.log(JSON.stringify(res))
+                            },
+                            cancel:function(res){
+                                vm.zzshow = false;
+                                alert('支付取消');
+                            }
+                         })  
+                    }else {
+                         vm.zzshow = false;
+                         alert(vm.res.message)
+                    }
+            });    
+        },
    },
     components: {
-        swiper,
-        swiperSlide,
-        agreement
+     
    },
    computed: {},
 }
@@ -302,5 +360,17 @@ export default {
     font-size:16px;
     color:#fff;
 }
-
+.zzmb {
+  z-index: 100000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  -moz-opacity: 0.65;
+  opacity: 0.65;
+  filter: alpha(opacity=65);
+  background: #000;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
 </style>
