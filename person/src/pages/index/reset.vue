@@ -56,7 +56,7 @@ export default {
             vm.receiveData.getData(vm, url, "Data", function() {});
         },
          query() {
-             vm.receiveData.getData(vm, "/queryPromotionOrder", "res", function() {
+             vm.receiveData.getData(vm, "/queryPromotionOrder?orderType=13", "res", function() {
                 if(vm.res.success) {
                     if(vm.res.result == 0 ) {
                         var text = '未查询到您的用户名</br>请先成为社区合伙人后进行重置密码操作';
@@ -75,7 +75,7 @@ export default {
             })
         },
         getdetail() {
-            vm.receiveData.getData(vm, "/onsales/getPromotion", "res", function() {
+            vm.receiveData.getData(vm, "/onsales/getPromotion?prodcutType=1003", "res", function() {
                 if(vm.res.success) {
                     vm.ruleId = vm.res.result[0].ruleId;
                     vm.productType = vm.res.result[0].productType;

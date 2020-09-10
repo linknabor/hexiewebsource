@@ -35,7 +35,7 @@ export default {
     },
     methods: {
         query() {
-             vm.receiveData.getData(vm, "/queryPromotionOrder", "res", function() {
+             vm.receiveData.getData(vm, "/queryPromotionOrder?orderType=13", "res", function() {
                 if(vm.res.success) {
                     if(vm.res.result == 0 ) {
                          vm.order();
