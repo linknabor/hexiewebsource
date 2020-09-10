@@ -34,14 +34,15 @@ import receiveData from './assets/js/receiveData'
 Vue.prototype.receiveData = receiveData;
 
 //本地用
-// import {common,MasterConfig,getUrlParam} from './assets/js/common';
+// import {common,MasterConfig,getUrlParam,dealWithAjaxData} from './assets/js/common';
 
 Vue.prototype.common = common;
-Vue.prototype.getUrlParam = getUrlParam;
 Vue.prototype.baseUrl = MasterConfig.C('baseUrl');
 Vue.prototype.basePageUrl = MasterConfig.C('basePageUrl');
 Vue.prototype.basePageUrlpay = MasterConfig.C('basePageUrlpay');
 Vue.prototype.basedhzj3Url = MasterConfig.C('basedhzj3Url');
+Vue.prototype.getUrlParam = getUrlParam;
+Vue.prototype.dealWithAjaxData = dealWithAjaxData;
 Vue.prototype.$axios = axios;
 //创建axios 实例
 

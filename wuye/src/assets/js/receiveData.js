@@ -1,5 +1,4 @@
-
-
+import Vue from 'vue';
 let receiveData = {
     /*
      * 微信配置提取的公共方法
@@ -104,7 +103,7 @@ let receiveData = {
             })
             .then(function (res){
                 let a = JSON.parse(res.data)
-                // dealWithAjaxData(null,a,function(e){},function(){})
+                Vue.prototype.dealWithAjaxData(null,a,function(){},function(){});
                 vm[backdataname] = a
                 if (typeof (callback) == 'function') {//回调
                     callback()
@@ -130,7 +129,7 @@ let receiveData = {
         vm.axios.post(url, params)
             .then(function (res) {
                 let a = res.data;
-                // dealWithAjaxData(null,a,function(e){},function(){})
+                Vue.prototype.dealWithAjaxData(null,a,function(){},function(){});
                  vm[backdataname] = JSON.parse(a)
                 if (typeof (callback) == 'function') {//回调
                         callback()

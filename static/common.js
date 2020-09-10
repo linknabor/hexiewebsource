@@ -453,9 +453,9 @@ window.common = {
                 link = link + "&";
             }
 
-            link = link + "shareCode="+getCookie("shareCode");
-			var appId = getCookie("appId");
-			link += "&oriApp=" + appId;
+            // link = link + "shareCode="+getCookie("shareCode");
+			// var appId = getCookie("appId");
+			// link += "&oriApp=" + appId;
         }
     
         wx.ready(function(){

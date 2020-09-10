@@ -1,9 +1,6 @@
-import xml2js from'xml2js' 
-var xmlParser = new xml2js.Parser({explicitArray : false, ignoreAttrs : true})
-    //xml转json
-import wx from 'weixin-js-sdk';
 
-
+// import {dealWithAjaxData} from '../js/import 
+import Vue from 'vue';
 let receiveData = {
     
     /*
@@ -55,15 +52,13 @@ let receiveData = {
             .then(function (res){
                 let a = JSON.parse(res.data)
                 vm[backdataname] = a;
-                // dealWithAjaxData(null,a,function(){},function(){})
+                Vue.prototype.dealWithAjaxData(null,a,function(){},function(){});
                 if (typeof (callback) == 'function') {//回调
                     callback()
                 }
             })
             .catch(function (err) {
-                //alert('暂放-接口调用失败')
-                // console.log(err);
-                // callbackss(err)
+               
             })
     },
    /**
@@ -82,7 +77,7 @@ let receiveData = {
 
                 let a = res.data;
                  vm[backdataname] = JSON.parse(a)
-                // dealWithAjaxData(null,a,function(){},function(){})
+                 Vue.prototype.dealWithAjaxData(null,a,function(){},function(){});
                 if (typeof (callback) == 'function') {//回调
                         callback()
                 }

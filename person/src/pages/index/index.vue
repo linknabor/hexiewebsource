@@ -65,12 +65,6 @@
     </div>
 
     <div id="module-list">
-      <!-- <div class="module-item-wrap" v-if="!donghu">
-        <a :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/onsaleorders'" class="module-item">
-          <div class="module-logo logo1"></div>
-          <div class="module-title fs14">商品订单</div>
-        </a>
-      </div>:class="{'moduledh':donghu}" -->
       <div v-if="donghu" class="module-item-wrap" >
         <a v-if="donghu" class="module-itemdh" :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/grouporders'">
             <div class="module-logodh logo4" >
@@ -78,10 +72,6 @@
             </div>
             <div></div>
          </a>
-        <!-- <a v-else class="module-item" :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/grouporders'">
-          <div class="module-logo logo2"></div>
-          <div class="module-title fs14">团购订单</div>
-        </a> :class="{'moduledh':donghu}"-->
       </div>
       <div class="module-item-wrap" :class="{'module-newwidth':!donghu}">
         <a v-if="donghu" class="module-itemdh" :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/homeorders'">
@@ -263,11 +253,6 @@ export default {
         nickname: "游客",
         levelname: "普通会员"
       },
-      user_level: {
-        0: "普通会员",
-        1: "钻石会员",
-        2: "大楼VIP"
-      }
     };
   },
   created() {
@@ -280,7 +265,6 @@ export default {
     vm.qrCodePayService();
 
   },
-  components: {},
   methods: {
     //模仿线上用户信息
     // 105/747/384
@@ -317,13 +301,6 @@ export default {
             
             //保存
             vm.common.updatecookie(n.result.cardStatus,n.result.cardService,n.result.id,n.result.appid,n.result.cspId,n.result.sectId,n.result.cardPayService,n.result.bgImageList,n.result.wuyeTabsList,n.result.qrCode,n.result);
-            // var duration = new Date().getTime()/1000 + 3600*24*30;
-            // cookie.set('cardStatus',n.result.cardStatus,duration);
-            // cookie.set('cardService',n.result.cardService,duration);
-
-            // for(var j=0;j<n.result.bgImageList.length;j++){
-            //     vm.common.localSet(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl)
-            // }
          }
         },
         r = function() {
@@ -333,8 +310,7 @@ export default {
             (vm.user.name = vm.user_info.nickname);
         };
       this.common.invokeApi(n, a, i, d, e, r);
-
-      // vm.receiveData.getData(vm, 'userInfo', "n", function() { vm.user = vm.n.result;});
+  
     },
     //是否配置服务人员
      qrCodePayService() {
@@ -392,7 +368,10 @@ export default {
       vm.oriapp=vm.common.getoriApp();
     }
   },
-  computed: {}
+  computed: {},
+  components: {
+
+  }
 };
 </script>
 

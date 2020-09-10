@@ -476,4 +476,4 @@ window.common = {
 };
 Getofficial();
 checkCodeAndLogin();
-export {common,MasterConfig,getUrlParam} 
+export {common,MasterConfig,getUrlParam,dealWithAjaxData} 

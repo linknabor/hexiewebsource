@@ -17,13 +17,14 @@ import cookie from 'js-cookie';
 import './assets/download/font_954185_gwiryn5z3ch/iconfont.css';
 
 
-// import {common,MasterConfig,getUrlParam} from './api/common';
+// import {common,MasterConfig,getUrlParam,dealWithAjaxData} from './api/common';
 
 Vue.prototype.common=common;
 Vue.prototype.getUrlParam=getUrlParam;
 Vue.prototype.baseUrl=MasterConfig.C('baseUrl');
 Vue.prototype.basePageUrl=MasterConfig.C('basePageUrl');
 Vue.prototype.basePageUrlpay=MasterConfig.C('basePageUrlpay');
+Vue.prototype.dealWithAjaxData=dealWithAjaxData;
 
 import receiveData from './api/receiveData'
 Vue.prototype.receiveData=receiveData

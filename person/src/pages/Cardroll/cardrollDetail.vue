@@ -7,11 +7,12 @@
             </div>
             <div class="mrg-b15"> 
                 <div class="v-mg03">
-                    <span>劵码:</span><span class="color" :class="{'greycolor':list.status == '2' || list.status == '3'}">{{code+''+foter_code}}</span><br>
-                    <span>数量:</span><span class="color" :class="{'greycolor':list.status == '2' || list.status == '3'}">{{list.count}}</span>
+                    <span>劵码:</span><span class="color" :class="{'greycolor':list.status == '2' || list.status == '3' || list.status == '4'}">{{code+''+foter_code}}</span><br>
+                    <span>数量:</span><span class="color" :class="{'greycolor':list.status == '2' || list.status == '3' || list.status == '4'}">{{list.count}}</span>
                     <img class="used" src="../../assets/images/img/yishiy.png" alt="" v-show="list.status == '2'">
-                     <img class="used" src="../../assets/images/img/guoqi.png" alt="" v-show="list.status == '3'">
-                </div>
+                    <img class="used" src="../../assets/images/img/guoqi.png" alt="" v-show="list.status == '3'">
+                    <img class="used" src="../../assets/images/img/tuikuan.png" alt="" v-show="list.status == '4'">
+                </div>   
             </div>
             <div class="footer"  v-show="list.qrcode != null"> 
                 <img :src="list.qrcode" alt="">
@@ -28,7 +29,7 @@ export default {
             orderId:this.$route.query.orderId,
             list:{},
             code:'',
-            foter_code:''
+            foter_code:'',
         };
     },
     created() {

@@ -1,3 +1,4 @@
+import $ from 'jquery'
 //开发环境
 var MasterConfig = function() {
     var t = {
@@ -205,7 +206,7 @@ window.common = {
                 dataType: "json",
                 beforeSend: t,
                 success: function(e) {
-                    common.alert("success data: " + JSON.stringify(e));
+                    // common.alert("success data: " + JSON.stringify(e));
                     dealWithAjaxData(o, e, i, r);
                 },
                 error: function(e) {
@@ -422,4 +423,4 @@ updateUserStatus(user) {
 };
 Getofficial();
 checkCodeAndLogin();
-export {common,MasterConfig,getUrlParam} 
+export {common,MasterConfig,getUrlParam,dealWithAjaxData} 
