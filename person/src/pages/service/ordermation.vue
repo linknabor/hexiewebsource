@@ -86,6 +86,7 @@ export default {
        }
    },
 
+
    computed: {},
 }
 </script>
@@ -117,6 +118,7 @@ export default {
     -moz-border-radius: 15px;
     -webkit-border-radius: 15px;
 }
+
 .content {
  overflow: hidden;
  border-bottom:1px solid #ccc;
@@ -155,6 +157,7 @@ export default {
     margin-top:0.2rem;
     margin-bottom: 0.31rem;
     /* padding-left: 0.2rem; */
+
 }
 .order-right .r-bot {
     font-size: 0.3rem;
