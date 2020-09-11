@@ -62,16 +62,17 @@ export default {
                 currentNum:0,
             },
             serviceDesc1:'',
-            ruleId:this.$route.query.ruleId,//参数
-            productType:this.$route.query.productType,
-            shareCode:this.$route.query.shareCode,
+            ruleId:'',//参数
+            productType:'',
             orderid:'',
+            shareCode:this.$route.query.shareCode,
+
        };
    },
    created(){
        vm=this;
-        vm.query();
-        vm.queryorderid();
+       vm.getPromotion();
+       vm.queryorderid();
    },
    mounted() {
         let url = location.href.split('#')[0];
@@ -81,13 +82,27 @@ export default {
        
    },
    methods: {
+        //获取规则id
+        getPromotion() {
+            vm.receiveData.getData(vm, "/onsales/getPromotion?prodcutType=1004", "res", function() {
+                if(vm.res.success) {
+                    vm.ruleId = vm.res.result[0].ruleId;
+                    vm.productType = vm.res.result[0].productType;
+                    vm.query();
+                }else {
+                    if(vm.res.message!=null) {
+                       alert(vm.res.message);
+                    }
+                }
+            })
+        },
         query() {
             let url ="getOnSaleRule/"+vm.ruleId;
                 vm.receiveData.getData(vm,url,'Data',function(){
                     if(vm.Data.success) {
                          if(vm.Data.result) {
                             vm.rule=vm.Data.result;                          
-                            vm.productss(vm.rule.productId)
+                            vm.productss(vm.rule.productId);
                          }
                     }else {
                         if(vm.Data.errorCode != '40001') {
@@ -108,15 +123,16 @@ export default {
                     }
             });
         },
-        initShareSetting(){
+
+         initShareSetting(){
             var title = vm.rule.name;
             var link=location.href;
+            var desc="社区合伙人专属SAAS平台，限时特惠";
             var img=vm.product.smallPicture;
-            var desc="加入社区合伙人，挑战副业月入过万";
             vm.common.initShareConfig(title,link,img,desc,wx);
         },
         queryorderid() {
-             vm.receiveData.getData(vm, "/queryPromotionOrder?orderType=13", "res", function() {
+             vm.receiveData.getData(vm, "/queryPromotionOrder?orderType=99", "res", function() {
                 if(vm.res.success) {
                     vm.orderid =vm.res.result;
                 }else {
@@ -131,7 +147,7 @@ export default {
             if(vm.orderid !='0') {
                 vm.PayV2();
             }else {
-                location.href=vm.basePageUrlpay+'hxgrouppay.html?'+vm.common.getoriApp()+'#/salespage?ruleId='+vm.ruleId+'&productType='+vm.productType+'&shareCode='+vm.shareCode;
+                vm.$router.push({path:'/salegoods',query:{'ruleId':vm.ruleId,'productType':vm.productType,'name':vm.rule.name,'price':vm.rule.price,'oriPrice':vm.product.oriPrice,'pictures':vm.product.smallPicture}});
             }
         },
         PayV2() {
@@ -163,9 +179,10 @@ export default {
                             success: function (res) {
                                 //支付成功跳转详情
                                 vm.zzshow = false;
-                                location.href=vm.basePageUrlpay+'hxgrouppay.html?'+vm.common.getoriApp()+'#/salessuccess';
+                               vm.$router.push({path:'/sassuccess'})
                             },
                             fail:function(res) {
+                                 vm.zzshow = false;
                                 console.log(JSON.stringify(res))
                             },
                             cancel:function(res){

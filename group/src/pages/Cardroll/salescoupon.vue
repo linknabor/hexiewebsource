@@ -36,7 +36,7 @@ export default {
     },
     methods: {
         query() {
-             vm.receiveData.getData(vm, "/queryPromotionOrder", "res", function() {
+             vm.receiveData.getData(vm, "/queryPromotionOrder?orderType=13", "res", function() {
                 if(vm.res.success) {
                     if(vm.res.result == 0 ) {
                         vm.getdetail();
@@ -53,7 +53,7 @@ export default {
             })
         },
         order (){
-            vm.receiveData.getData(vm, "/evoucher/getByOrder/"+vm.orderId, "res", function() {
+            vm.receiveData.getData(vm, "/evoucher/getAvailable/1", "res", function() {
                 if(vm.res.success) {
                     vm.item = vm.res.result;
                     vm.bgload();
@@ -66,7 +66,7 @@ export default {
             })
         },
         getdetail() {
-            vm.receiveData.getData(vm, "/onsales/getPromotion", "res", function() {
+            vm.receiveData.getData(vm, "/onsales/getPromotion?prodcutType=1003", "res", function() {
                 if(vm.res.success) {
                     vm.$router.push({path:'/salesdetail',query:{ruleId:vm.res.result[0].ruleId,productType:vm.res.result[0].productType}})
                 }else {

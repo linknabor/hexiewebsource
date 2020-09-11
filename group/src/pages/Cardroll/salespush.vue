@@ -1,21 +1,18 @@
 <template>
-    <div >
+    <div class="add">
         <div v-show="falg">
             <canvas id="canvas"></canvas>
             <img :src="imgUrl" id="bg" crossOrigin="Anonymous">
         </div>
-        <img :src="imgs" alt="">
-        <img :src="item.qrcode" alt="" style="display:none">
+        <img :src="imgs" alt="" @click="good">
     </div>
 </template>
 
 <script>
 var vm;
-import wx from 'weixin-js-sdk';
 export default {
     data() {
         return {
-            item:{},
             imgUrl:'',
             falg:false,
             imgs:''
@@ -31,44 +28,15 @@ export default {
 
     },
     mounted() {
-        vm.query();
+        vm.bgload();
     },
     methods: {
-        query() {
-             vm.receiveData.getData(vm, "/queryPromotionOrder?orderType=13", "res", function() {
-                if(vm.res.success) {
-                    if(vm.res.result == 0 ) {
-                         vm.order();
-                    }
-                    else {
-                        vm.$router.push({path:'/salescoupon'})
-                    }
-                }else {
-                      if(vm.res.message!=null) {
-                       alert(vm.res.message);
-                      }
-                }
-            })
-        },
-        order (){
-            vm.receiveData.getData(vm, "/evoucher/getDefaultPromotion", "res", function() {
-                if(vm.res.success) {
-                    vm.item = vm.res.result;
-                    vm.bgload();
-                }else {
-                    if(vm.res.message!=null) {
-                       alert(vm.res.message);
-                    }
-                }
-                
-            })
-        },
+
         bgload(){
-            vm.imgUrl='http://img.e-shequ.com/FogXNV1BmqMXGGTQ-LDyVr1rkRZk';
+            vm.imgUrl='http://img.e-shequ.com/FszR3YBT5tH_TMtKe4TuIvk2tE3p';
             var w = document.documentElement.clientWidth || document.body.clientWidth;
             var h = document.documentElement.clientHeight || document.body.clientHeight;
             var bg=document.getElementById("bg");
-            var imgCode=vm.item.qrcode;
             var canvas="";
             bg.onload= function() {
                 canvas=document.getElementById("canvas");
@@ -86,21 +54,22 @@ export default {
                 canvas.style.height = h + 'px'
                 var ratio = getPixelRatio(ctx);
                 canvas.width = w  * ratio;
-                canvas.height = h  * ratio;  
-                var img= new Image();
-                img.src=imgCode;
+                canvas.height = h  * ratio;
                     ctx.drawImage(bg, 0, 0, ctx.canvas.width, ctx.canvas.height);
-                    ctx.drawImage(img, canvas.width-canvas.height/4, canvas.height-canvas.height/8-10, canvas.height/8, canvas.height/8); 
                     vm.imgs =canvas.toDataURL("image/jpeg"); 
-                    vm.falg =false;
-                    $('#bg').hide();
                 }
-        },    
+        }, 
+        good() {
+            vm.$router.push({path:'/salesnabo'})
+        }   
     }
 };
 
 </script>
-
+<style >
+</style>
 <style scoped>
-
+img {
+    vertical-align: top;
+}
 </style>

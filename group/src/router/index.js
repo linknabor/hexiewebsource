@@ -91,27 +91,35 @@ let router= new Router({
       }
     },
     {
-      path:'/course',
-      name:'course',
-      component:resolve=>require(['@/pages/cardroll/course'],resolve),
+      path:'/salegoods',
+      name:'salegoods',
+      component:resolve=>require(['@/pages/cardroll/salegoods'],resolve),
       meta:{
-        title:''
+        title:'合伙人专属福利'
       }
     },
     {
-      path:'/process',
-      name:'process',
-      component:resolve=>require(['@/pages/cardroll/process'],resolve),
+      path:'/newsaledetail',
+      name:'newsaledetail',
+      component:resolve=>require(['@/pages/cardroll/newsaledetail'],resolve),
       meta:{
-        title:''
+        title:'合伙人专属福利'
       }
     },
     {
-      path:'/videos',
-      name:'videos',
-      component:resolve=>require(['@/pages/cardroll/videos'],resolve),
+      path:'/sassuccess',
+      name:'sassuccess',
+      component:resolve=>require(['@/pages/cardroll/sassuccess'],resolve),
       meta:{
-        title:''
+        title:'欢迎加入'
+      }
+    },
+    {
+      path:'/salespush',
+      name:'salespush',
+      component:resolve=>require(['@/pages/cardroll/salespush'],resolve),
+      meta:{
+        title:'招募社区合伙人'
       }
     },
   ]
@@ -122,7 +130,7 @@ let router= new Router({
 router.beforeEach((to, from, next) => {
   //动态改变title
   var flag;
-  if(to.matched[0].name != "index"&& to.matched[0].name!='register'&& to.matched[0].name!='salesdetail'&& to.matched[0].name!='salescoupon'&& to.matched[0].name!='salescoupon'&& to.matched[0].name!='salesnabo') {
+  if(to.matched[0].name != "index"&& to.matched[0].name!='register'&& to.matched[0].name!='salesdetail'&&to.matched[0].name!='salescoupon'&& to.matched[0].name!='salesnabo'&& to.matched[0].name!='newsaledetail'&& to.matched[0].name!='salegoods'&& to.matched[0].name!='sassuccess'&& to.matched[0].name!='salespush') {
       flag=common.checkRegisterStatus()
       if(!flag) {
         return
