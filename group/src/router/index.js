@@ -122,6 +122,14 @@ let router= new Router({
         title:'招募社区合伙人'
       }
     },
+    {
+      path:'/customerservice',
+      name:'customerservice',
+      component:resolve =>require(['@/pages/cardroll/customerservice'],resolve),
+      meta:{
+        title:''
+      }
+    }
   ]
 })
 
@@ -130,7 +138,7 @@ let router= new Router({
 router.beforeEach((to, from, next) => {
   //动态改变title
   var flag;
-  if(to.matched[0].name != "index"&& to.matched[0].name!='register'&& to.matched[0].name!='salesdetail'&&to.matched[0].name!='salescoupon'&& to.matched[0].name!='salesnabo'&& to.matched[0].name!='newsaledetail'&& to.matched[0].name!='salegoods'&& to.matched[0].name!='sassuccess'&& to.matched[0].name!='salespush') {
+  if(to.matched[0].name != "index"&& to.matched[0].name!='register'&& to.matched[0].name!='salesdetail'&&to.matched[0].name!='salescoupon'&& to.matched[0].name!='salesnabo'&& to.matched[0].name!='newsaledetail'&& to.matched[0].name!='salegoods'&& to.matched[0].name!='sassuccess'&& to.matched[0].name!='salespush'&& to.matched[0].name!='customerservice') {
       flag=common.checkRegisterStatus()
       if(!flag) {
         return
