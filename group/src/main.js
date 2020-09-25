@@ -17,7 +17,8 @@ Vue.use(VueAwesomeSwiper)
 import axios from 'axios';
 import VueAxios from 'vue-axios';
 
-
+import './assets/inconfont/iconfont.css'
+import './assets/icon2/iconfont.css'
 //引入一些初始化css 
 import './assets/css/base.css'
 import './assets/css/normalize.css'

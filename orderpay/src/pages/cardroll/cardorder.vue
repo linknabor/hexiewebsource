@@ -1,7 +1,11 @@
 <template>
 <div class="cardorder">
-    <div class="card-content">
-        <div class="dropdown-wrap " :class="{dropdownCollapsed:dropdownCollapsed}" @click="toggleDropdown">
+    <div class="headersp ov">
+        <div class="fl" :class="{'white':type == 1}" @click="goorder(1)"><span :class="{'spanborder':type == 1}">电商订单</span></div>
+        <div class="fl" :class="{'white':type == 2}"  @click="goorder(2)"><span :class="{'spanborder':type == 2}">优惠订单</span></div>
+        <div class="fl" :class="{'white':type == 3}"  @click="goorder(3)"><span :class="{'spanborder':type == 3}">团购订单</span></div>
+    </div>
+    <div class="dropdown-wrap " :class="{dropdownCollapsed:dropdownCollapsed}" @click="toggleDropdown">
             <span>{{selectedName}}</span>
             <div class="dropdown" v-if="dropdownCollapsed">
                 <div
@@ -13,6 +17,7 @@
                 >{{item.name}}</div>
             </div>
         </div>
+    <div class="card-content">
         <div class="ov lite-divider pd10 " style="color:#3b3937" v-for="item in orders" :key="item.id">
             <div class="marg-bottom">
                 <img class="icon-repair fl" :src="item.productThumbPic"/>
@@ -48,6 +53,7 @@ export default {
             orders: [], //订单数组
             currentStatus: "ALL", //参数
             dropdownCollapsed: false, //切换订单
+            type:this.$route.query.type,
             selectedName: "订单筛选",
             dropdowns: [
                 {
@@ -92,6 +98,16 @@ export default {
         }
       );
     },
+     //切换订单
+        goorder(ind) {
+            if(ind == 1) {
+                vm.$router.push({path:'/special',query:{'type':ind}});
+            }else if (ind == 2) {
+                vm.$router.push({path:'/cardorder',query:{'type':ind}});
+            }else {
+                vm.$router.push({path:'/grouporders',query:{'type':ind}})
+            }
+     },
     //切换订单
     toggleDropdown() {
         vm.dropdownCollapsed = !vm.dropdownCollapsed;
@@ -206,23 +222,44 @@ export default {
   right:0;
   top:0;
   bottom:0;
+  overflow:auto;
 }
+/* -- */
+.headersp {
+    border-bottom: 1px solid #C8C4C4;
+    font-size: 14px;
+    background-color:#E8E8E8;
+}
+.headersp div {
+    width:33.3%;
+    height: 45px;
+    line-height: 45px;
+    text-align: center;
+}
+.headersp div .spanborder{
+   padding-bottom:5px;
+   border-bottom:2px solid #F08500;
+}
+.headersp div.white {
+    background-color:white;
+}
+/* --- */
 .card-content {
     padding:0 20px 0 10px;
 }
 .dropdown-wrap {
   position: relative;
-  padding: 10px 0;
+  padding: 15px 20px;
   border-bottom: 1px solid #d4cfc8;
   background: url('../../assets/images/icon_bottom.png') no-repeat;
   background-size: 12px 7px;
-  background-position: 85px;
+  background-position: 95px;
   color:#000;
 }
 .dropdownCollapsed {
   background: url('../../assets/images/icon_top.png') no-repeat;
   background-size: 12px 7px;
-  background-position: 85px;
+  background-position: 95px;
 }
 .pd10 {
     padding-top: 10px;

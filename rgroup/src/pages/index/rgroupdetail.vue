@@ -56,23 +56,23 @@
 	    </div>
 
         <div class="rgroup-info bb3" id="products">
-            <div class="fl " style="margin-top:23px;margin-left:15px;color:#999;font-size: 14px;">报名进度</div>
+            <div class="fl " style="margin-top:23px;margin-left:15px;color:#999;font-size: 14px;">成团进度</div>
             <div class="fr plr10" style="border-left:#d5d59d 1px solid ;"  id="processImg">
               <canvas width="70px" height="70px" ></canvas>
             </div>
-            <div class="fr" style="margin-top:23px;color:#333;font-size: 15px;margin-right: 15px;">已报名人数<span style="color:#FF9933;font-size:15px;margin-left: 5px;">{{rule.currentNum}}</span></div>
+            <div class="fr" style="margin-top:23px;color:#333;font-size: 15px;margin-right: 15px;">已参团人数<span style="color:#FF9933;font-size:15px;margin-left: 5px;">{{rule.currentNum}}</span></div>
 	    </div>
 
         <div class="p15 mb15">
             <div class="section-title" style="padding-left:0px;padding-top:0px;"  @click="toggleDetail">
-                报名规则
+                商品详情
                 <i class="icon more-icon align-right fr" :class={topIcon:showDetail}></i>
             </div>
             <ul class="" style="padding-top: 3px;">
-                <li class="detail-item" v-html="product.serviceDesc"></li>
+                <li class="detail-item" v-html="serviceDesc1"></li>
             </ul>
             <ul class=""  v-if="showDetail" style="padding-top: 3px">
-                <li class="detail-item" v-html="product.serviceDescMore"></li>
+                <li class="detail-item" v-html="serviceDescMore1"></li>
             </ul>
 	    </div> 
 
@@ -99,6 +99,7 @@
 let vm;
 import {swiper,swiperSlide} from 'vue-awesome-swiper';
 import wx from 'weixin-js-sdk';
+// let Base64 = require('js-base64').Base64;
 export default {
    data () {
        return {
@@ -131,6 +132,8 @@ export default {
                 },
                 loop: true,
             },
+            serviceDesc1:'',
+            serviceDescMore1:'',
        };
    },
    created(){
@@ -141,13 +144,17 @@ export default {
          let url = location.href.split('#')[0];
         vm.receiveData.wxconfig(vm,wx,['onMenuShareTimeline','onMenuShareAppMessage'],url);
         vm.read();
-        window.addEventListener('scroll', this.handleScroll)
+        window.addEventListener('scroll', this.handleScroll);
+        vm.setShare();
    },
    updated(){
        vm.drawP()
    },
 
    methods: {
+       setShare() {
+			 vm.common.initShareConfig(vm.rule.name,vm.basePageUrlpay+"hxrgroups.html?"+vm.common.getoriApp()+"#/rgroupdetail?ruleId="+vm.ruleId,vm.product.smallPicture,"快来参加"+vm.common.newname+"的优惠商品抢购吧",wx);
+       },
         handleScroll () {
             var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
             var offsetTop = document.querySelector('#searchBar').offsetTop
@@ -167,7 +174,7 @@ export default {
                 vm.receiveData.getData(vm,url,'Data',function(){
                     if(vm.Data.success) {
                          if(vm.Data.result) {
-                             vm.load=false;
+                            vm.load=false;
                             vm.rule=vm.Data.result;                          
                             vm.products(vm.rule.productId)
                            setInterval(vm.updateLeftTime,1000);//倒计时 
@@ -184,7 +191,8 @@ export default {
                     if(vm.res.success) {
                         if(vm.res.result) {
                             vm.product = vm.res.result;   
-			                vm.common.initShareConfig(vm.rule.name,vm.basePageUrlpay+"hxrgroups.html?"+vm.common.getoriApp()+"#/rgroupdetail?ruleId="+vm.ruleId,vm.product.smallPicture,"快来参加"+vm.common.newname+"的优惠商品抢购吧",wx);
+                            vm.serviceDesc1 = Base64.decode(vm.product.serviceDesc);
+                            vm.serviceDescMore1 = Base64.decode(vm.product.serviceDescMore)
                         }
                     }else {
                         alert(vm.res.message==null ?"获取产品信息失败！":vm.res.message);
@@ -293,7 +301,8 @@ export default {
         },
         //更多商品
         goclassify() {
-            location.href=vm.basePageUrlpay+"hxrgroups.html?"+vm.common.getoriApp()+"&type="+vm.rule.productType;
+            // location.href=vm.basePageUrlpay+"hxrgroups.html?"+vm.common.getoriApp()+"&type="+vm.rule.productType;
+            vm.$router.push({path:'/',query:{'type':vm.rule.productType}});
         },
          //马上参团
         buy() {

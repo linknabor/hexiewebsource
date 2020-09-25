@@ -13,6 +13,7 @@ import VueAxios from 'vue-axios';
 import './assets/css/base.css'
 import './assets/css/normalize.css'
 import './assets/js/rem';
+import './assets/font_dingwei/iconfont.css'
 
 import Mint from 'mint-ui';
 import 'mint-ui/lib/style.css';

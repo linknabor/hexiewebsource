@@ -80,6 +80,14 @@ var router= new Router({
     //     title:''
     //   }
     // },
+    { 
+      path:'/confirmation',
+      name:'confirmation',
+      component:resolve=>require(['@/page/purchase/confirmation'],resolve),
+      meta:{
+        title:'确定订单'
+      }
+    },
   ]
 })
 

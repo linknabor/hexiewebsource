@@ -172,15 +172,6 @@ overflow: hidden; background-color: white;}
           </router-link>
         </li>
 
-        <li class="jgg_li" >
-          <div @click="Paystop">
-            <div class="jgg_img">
-              <img src="http://img.e-shequ.cn/Ft8SrYFFe0TUmUtKMIHNGkNEu3hw" alt="tt">
-            </div>
-            <span>停车缴费</span>
-          </div>
-        </li>
-
         <li class="jgg_li">
           <router-link to="/paymentquery">
             <div class="jgg_img">
@@ -198,6 +189,33 @@ overflow: hidden; background-color: white;}
             <span>我是业主</span>
           </router-link>
         </li> 
+        
+        <li class="jgg_li" >
+            <div class="link"  @click="gotorepair()">
+                <div class="jgg_img">
+                    <img src="http://img.e-shequ.cn/FvXta8SzetfBaBYyaB3fX-HQ1Vza" alt="tt">
+                </div>
+                <span class="jgg-span">便民维修</span>
+            </div>
+        </li>
+
+        <li class="jgg_li" >
+          <div @click="Paystop">
+            <div class="jgg_img">
+              <img src="http://img.e-shequ.cn/FuGXrSZLRWdYqydXGir48wipF2Fn" alt="tt">
+            </div>
+            <span>社区电商</span>
+          </div>
+        </li>
+
+        <li class="jgg_li">
+          <a :href="this.basePageUrlpay+'hxrgroups.html?'+this.common.getoriApp()">
+            <div class="jgg_img">
+              <img src="http://img.e-shequ.cn/FkJWpnGhosNorRy4zPilU0kWZmG9" alt="tt">
+            </div>
+            <span>社区团购</span>
+          </a>
+        </li>
         
         <li class="jgg_li">
           <a :href="this.basePageUrl+'home/index.html?'+this.common.getoriApp()">
@@ -217,23 +235,6 @@ overflow: hidden; background-color: white;}
           </a>
         </li>
 
-        <li class="jgg_li">
-          <a :href="this.basePageUrlpay+'hxrgroups.html?'+this.common.getoriApp()">
-            <div class="jgg_img">
-              <img src="http://img.e-shequ.cn/FkJWpnGhosNorRy4zPilU0kWZmG9" alt="tt">
-            </div>
-            <span>社区团购</span>
-          </a>
-        </li>
-        <li class="jgg_li" >
-            <div class="link"  @click="gotorepair()">
-                <div class="jgg_img">
-                    <img src="http://img.e-shequ.cn/FvXta8SzetfBaBYyaB3fX-HQ1Vza" alt="tt">
-                </div>
-                <span class="jgg-span">便民维修</span>
-            </div>
-        </li>
-        
         <!-- <li class="jgg_li" v-show="coronaPy">
           <div @click="goepi()">
             <div class="jgg_img">
@@ -523,11 +524,12 @@ export default {
     	   }
         },
         Paystop(){//停车
-            if(vm.donghu){
-                alert("内容正在丰富中,敬请期待。")
-            }else {
-                vm.$router.push({path:'/paystop'});
-            }
+            // if(vm.donghu){
+            //     alert("内容正在丰富中,敬请期待。")
+            // }else {
+            //     vm.$router.push({path:'/paystop'});
+            // }
+            location.href=vm.basePageUrl+'/group/onsales.html?'+vm.common.getoriApp()+'#/classification';
         },
         gotoThread() {
             if(vm.sectId==0 || vm.sectId== null)
