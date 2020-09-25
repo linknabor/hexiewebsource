@@ -55,43 +55,50 @@
 
     <div class="info-wrap" style="overflow:hidden; clear: both; border-bottom:none ;">
       <!-- 链接地址要换 -->
+      <!-- :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/orders'" -->
       <a
-        :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/orders'"
+        href="javascript:void(0);"
         class="input-wrap  lite-divider disb"
       >
         <span class="input-info lf30 fs16">全部订单</span>
-        <!-- <span class="fr fs14 left_color">查看全部订单&nbsp;&nbsp;&nbsp;&nbsp;</span> -->
+        <!-- <span class="fr fs16 left_color mrg5" >全部订单&nbsp;&nbsp;&nbsp;&nbsp;</span> -->
       </a>
     </div>
 
     <div id="module-list">
-      <div v-if="donghu" class="module-item-wrap" >
+      <div class="module-item-wrap module-newwidth" >
+        <a class="module-item" :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/special?type=1'">
+          <div class="module-logo logo6"></div>
+          <div class="module-title fs14">商城订单</div>
+        </a>
+      </div>
+      <!-- <div v-if="donghu" class="module-item-wrap" >
         <a v-if="donghu" class="module-itemdh" :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/grouporders'">
             <div class="module-logodh logo4" >
                 <div class="module-titledh fs14">团购订单</div>
             </div>
             <div></div>
          </a>
-      </div>
-      <div class="module-item-wrap" :class="{'module-newwidth':!donghu}">
-        <a v-if="donghu" class="module-itemdh" :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/homeorders'">
+      </div> -->
+      <div class="module-item-wrap module-newwidth">
+        <!-- <a v-if="donghu" class="module-itemdh" :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/homeorders'">
             <div class="module-logodh logo5" >
                 <div class="module-titledh fs14">服务订单</div>
             </div>
-        </a> 
-        <router-link v-else class="module-item" :to="{path:'/myservice'}">
+        </a>  -->
+        <router-link  class="module-item" :to="{path:'/myservice'}">
           <div class="module-logo logo3"></div>
           <div class="module-title fs14">服务订单</div>
         </router-link> 
       </div>
 
-      <div v-if="!donghu" class="module-item-wrap" :class="{'module-newwidth':!donghu}">
+      <!-- <div  class="module-item-wrap module-newwidth" >
         <a class="module-item" :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/cardorder'">
           <div class="module-logo logo6"></div>
           <div class="module-title fs14">优惠订单</div>
         </a>
-      </div>
-       <div v-if="!donghu" class="module-item-wrap" :class="{'module-newwidth':!donghu}">
+      </div> -->
+       <div  class="module-item-wrap module-newwidth" >
         <router-link class="module-item" :to="{path:'/myrepair'}">
           <div class="module-logo logo7"></div>
           <div class="module-title fs14">维修订单</div>
@@ -99,7 +106,7 @@
       </div>
     </div>
 
-    <div class="info-wrap" v-if="donghu">
+    <!-- <div class="info-wrap" v-if="donghu">
         <a :href="this.basePageUrl+'wuye/index.html?'+this.common.getoriApp()+'#/mysteward?n=2'" class="input-wrap menu-person-link lite-divider">
           <span class="input-info lf30 fs16">报修</span>
           <span class="fr fs14 left_color">
@@ -118,9 +125,16 @@
             <span id="mypublic"></span>查看消息&nbsp;&nbsp;&nbsp;&nbsp;
           </span>
         </a>
-    </div>
-    <div v-else>
+    </div> -->
+    <div>
       <div class="info-wrap" style="overflow:hidden; clear: both;">
+        <!-- <router-link
+            :to="{path:'/'}"
+            class="input-wrap menu-person-link lite-divider"
+          >
+            <span class="input-info lf30 fs16">我是商家</span>
+            <span class="fr fs14 left_color">查看记录&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        </router-link> -->
         <router-link
           :to="{path:'/cardrollrecords'}"
           class="input-wrap menu-person-link lite-divider"
@@ -129,14 +143,6 @@
           <span class="input-info lf30 fs16">我是核销人员</span>
           <span class="fr fs14 left_color">查看记录&nbsp;&nbsp;&nbsp;&nbsp;</span>
         </router-link>
-
-        <!-- <router-link
-          :to="{path:'/myservice'}"
-          class="input-wrap menu-person-link lite-divider"
-        >
-          <span class="input-info lf30 fs16">我的服务单</span>
-          <span class="fr fs14 left_color">查看订单&nbsp;&nbsp;&nbsp;&nbsp;</span>
-        </router-link> -->
         <router-link
           :to="{path:'/service'}"
           class="input-wrap menu-person-link lite-divider"
@@ -145,11 +151,6 @@
           <span class="input-info lf30 fs16">我是服务人员</span>
           <span class="fr fs14 left_color">查看订单&nbsp;&nbsp;&nbsp;&nbsp;</span>
         </router-link>
-        <!-- <router-link :to="{path:'/myrepair'}" class="input-wrap menu-person-link lite-divider">
-          <span class="input-info lf30 fs16">我的维修单</span>
-          <span class="fr fs14 left_color">查看维修单&nbsp;&nbsp;&nbsp;&nbsp;</span>
-        </router-link> -->
-        <!-- 我是维修工目前不隐藏 v-show="user.repairOperator" -->
         <router-link
           :to="{path:'/operatorOrders'}"
           class="input-wrap menu-person-link lite-divider"
@@ -181,8 +182,8 @@
           <span class="fr fs14 left_color">绑定房屋&nbsp;&nbsp;&nbsp;&nbsp;</span>
         </a>
         <a @click="gotoAddress" class="input-wrap menu-person-link lite-divider">
-          <span class="input-info lf30 fs16">常用地址</span>
-          <span class="fr fs14 left_color">收货地址&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span class="input-info lf30 fs16">常用地址</span>
+            <span class="fr fs14 left_color">收货地址&nbsp;&nbsp;&nbsp;&nbsp;</span>
         </a>
       </div>
     </div>
@@ -239,13 +240,13 @@ export default {
         couponCount: 0,
       },
       service_list:[],
-      login:true,
+      login:false,
       oriapp:'', //我是业主
       cardService:'',
       qrCode:'',//二维码
       point:0,//积分
       cardStatus:'',//是否领卡激活的标记
-      donghu:false,//标识判断是不是东湖
+      // donghu:false,//标识判断是不是东湖
       serviceOperator:false, //我是服务人员
       evoucherOperator:false,//核销卡卷
       user_info: {
@@ -261,9 +262,8 @@ export default {
   mounted() {
     // this.initSession4Test();
     this.User(); 
-    vm.oriApp();//判断我是业主地址
     vm.qrCodePayService();
-
+    // vm.oriApp();//判断我是业主地址
   },
   methods: {
     //模仿线上用户信息
@@ -283,7 +283,7 @@ export default {
                  reLogin();
                  return
           }else {
-            vm.donghu=n.result.donghu;//东湖标识
+            // vm.donghu=n.result.donghu;//东湖标识
             vm.user = n.result;
             vm.user.headimgurl = "" != n.result.name || n.result? n.result.headimgurl: vm.user_info.avatar;  
             vm.user.name ="" != n.result.name ? n.result.name : vm.user_info.nickname;
@@ -310,7 +310,6 @@ export default {
             (vm.user.name = vm.user_info.nickname);
         };
       this.common.invokeApi(n, a, i, d, e, r);
-  
     },
     //是否配置服务人员
      qrCodePayService() {
@@ -487,12 +486,12 @@ export default {
 .info-wrap {
   color: #3b3937;
   padding-bottom: 0;
-  border-bottom: 10px solid #eeeeee;
-  /* padding: 0 4px; */
   font-size: 12px;
 
 }
-
+.mrg5 {
+  margin-right: 0.5rem;
+}
 .section-title,
 .lite-divider {
   border-bottom: 1px solid #d4cfc8;
@@ -564,7 +563,6 @@ export default {
   background-size: 0.6rem;
   background-repeat: no-repeat;
 }
-
 .module-title {
   text-align: center;
   /* margin-top: 10px; */

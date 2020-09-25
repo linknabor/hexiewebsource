@@ -204,7 +204,7 @@
 
     <div class="info-wrap bgwhite">
 		<div class="section-title">收货时间</div>
-		<a href="#" class="menu-link custom-menu-link fs14" style="height:30px" @click="showModal">
+		<a href="javascript:void(0)" class="menu-link custom-menu-link fs14" style="height:30px" @click="showModal">
             <i class="address_icon time-icon fl"></i>{{datechoooser.time}}</a>
 	</div>
 
@@ -215,7 +215,7 @@
 	</div>
 
     <div class="btn-fixed">
-    	<div class="btn" @click="pay" :class="{useless:paying}">立即微信支付</div>
+    	<div class="btn" @click="pay" >立即微信支付</div>
 	</div>
 
     <div class="modal-mask" v-show="datechoooser.modalShown" @click="hideModal" >
@@ -234,6 +234,7 @@
 <script>
 let vm;
 import wx from 'weixin-js-sdk';
+import cookie from 'js-cookie';
 export default {
    data () {
        return {
@@ -279,7 +280,6 @@ export default {
             couponDesc:'未使用',
             selectedIndex:-1,
             totalAmount:0,
-            paying:false,
             order:{},
             receiveTimeType:2,
             //备注
@@ -334,7 +334,8 @@ export default {
              showz:false,
              suggestLocation:'',//小区名
              suggestion:{},
-             suggestions:[]
+             suggestions:[],
+             paying:false,//支付限制
        };
    },
    watch: {
@@ -426,7 +427,7 @@ export default {
                vm.count++;
             vm.computeAmount();
            }else {
-               alert("最多能购买"+vm.rule.limitNumOnce+"个");
+               alert("数量限购"+vm.rule.limitNumOnce+"件");
            }
        },
        //计算价格
@@ -734,18 +735,27 @@ export default {
         
     },
      pay() {
+            let sectId = cookie.get('sectId');
+            if(sectId == "" || sectId == 'null' || sectId == 0 || sectId == null) {
+                alert('您暂未绑定房屋，请前往“我是业主”进行操作，感谢！')
+                location.href=vm.basePageUrl+'wuye/index.html?'+vm.common.getoriApp()+'#/myhouse'
+                return false;
+            }
             if(vm.paying){
-                    alert("订单处理中，请勿重复提交！");
-                    return;
-                }
+                alert("订单处理中，请勿重复提交！");
+                return;
+            }
+            vm.paying=true;
+            vm.zzshow=true;   
             var order = {
-	        			orderType:vm.type,
+	        			orderType:'4', //特卖3，团购4
 	        			productId:vm.product.id,
 	        			ruleId:vm.rule.id,
 	        			count:vm.count,
 	        			serviceAddressId:vm.checkedAddress.id,
 	        			memo:vm.comment,
-	        			receiveTimeType:vm.receiveTimeType
+                        receiveTimeType:vm.receiveTimeType,
+                        payType:2,
                  }
                  if(vm.coupon != null) {
                     order.couponId=vm.coupon.id;
@@ -757,7 +767,6 @@ export default {
 	        	vm.createOrder(order);
      },
       createOrder(order) {
-         vm.paying=true;
     	if(vm.order!={}&&vm.order.id>0) {
             vm.requestPay();
             return;
@@ -768,14 +777,13 @@ export default {
         	        vm.requestPay();
                  }else {
                      alert(vm.n.message==null?"订单创建失败，请稍后重试！":vm.n.message);
-                     vm.paying=false
+                     vm.paying=false;
                  }
              }) 
 
               
         },  
       requestPay() {
-          vm.zzshow=true;
           vm.receiveData.getData(vm, "/requestPay/"+vm.order.id,'n',function(){
             if(vm.n.success) {
                 wx.config({
@@ -794,20 +802,27 @@ export default {
                     "signType":vm.n.result.signType,
                     "paySign":vm.n.result.signature,
                     success: function (res) {// 支付成功后的回调函数
+                        vm.zzshow=false;
                         alert("下单成功！");
                         //   location.href="https://test.e-shequ.com/weixin/group/success.html?orderId="+vm.order.id + "&type="+vm.type;
                         vm.$router.push({path:'/success',query:{'orderId':vm.order.id,'type':vm.type}})
                     },
                     fail:function(res) {
+                         vm.zzshow=false;
                         console.log(JSON.stringify(res))
                     },
                     cancel:function(res){
+                       alert('支付取消');
                        vm.zzshow=false;
+                       vm.paying=false;
                     }
                   });
             }else {
+                if(vm.n.message != null) {
+                    alert(vm.n.message);
                     vm.zzshow=false;
                     vm.paying=false;
+                }
             }
             
         });

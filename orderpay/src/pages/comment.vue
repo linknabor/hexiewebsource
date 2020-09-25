@@ -42,6 +42,7 @@
                 我要匿名评论
             </div>
             <div class="btn" style="margin-top:190px" @click="submit">发表评论</div>
+            <div class="box-bg" v-show="Mask"></div>
    </div>
 </template>
 
@@ -50,12 +51,14 @@ let vm;
 export default {
    data () {
        return {
+           Mask:false,
            order:{},
            score: 5,
            score1: 5,
            score2: 5,
            comments: '',
            anonymous:false,
+           faly:true,
        };
    },
    created() {
@@ -145,6 +148,12 @@ export default {
            
          },
          sendComment() {
+             vm.Mask=true;
+             if(vm.faly) {
+                 vm.faly = false;
+             }else {
+                 return
+             }
              var add= {
                 orderId:vm.order.id,
         		productId:vm.order.productId,
@@ -157,10 +166,16 @@ export default {
              }
              vm.receiveData.postData(vm,'/comment',add,'res',function() {
                  if(vm.res.success) {
+                     vm.Mask=false;
+                     vm.faly = true;
                       alert("评价成功！");
                     vm.$router.push({path:'/orders'})
                  }else {
-                     alert("评价失败，请稍后重试！");
+                     if(vm.res.message !=null) {
+                         alert(vm.res.message);
+                         vm.Mask=false;
+                         vm.faly = true;
+                     }
                  }
              })
          }
@@ -301,7 +316,8 @@ export default {
     background-size: 16px;
     vertical-align: sub;
 }
-
+.box-bg {width: 100%;opacity: .5;height: 100%;position: fixed;
+	    background-color: #666;top: 0;left: 0;z-index: 100;}
 .btn {
     display: block;
     margin: 15px;
@@ -316,4 +332,5 @@ export default {
     border: none;
     text-decoration: none;
 }
+
 </style>

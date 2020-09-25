@@ -10,14 +10,13 @@
 
     <div id="phoneErro"></div>
 
-    <!-- <div id="phoneAjax" class="hidden">
-			<img src="http://7xlem4.com2.z0.glb.qiniucdn.com/backed/images/load2.gif" style="width:40px;height40px;vertical-align: middle;">
-    </div>-->
-    <!-- load -->
-
+    <div class="headersp">
+        <div class="fl" :class="{'white':type == 1}" @click="goorder(1)"><span :class="{'spanborder':type == 1}">电商订单</span></div>
+        <div class="fl" :class="{'white':type == 2}"  @click="goorder(2)"><span :class="{'spanborder':type == 2}">优惠订单</span></div>
+        <div class="fl" :class="{'white':type == 3}"  @click="goorder(3)"><span :class="{'spanborder':type == 3}">团购订单</span></div>
+    </div>
     <div
       class="dropdown-wrap"
-      style="margin: 0 15px"
       :class="{dropdownCollapsed:dropdownCollapsed}"
       @click="toggleDropdown"
     >
@@ -28,6 +27,7 @@
           v-for="(item,i) in dropdowns"
           :class="{noborder:dropdowns.length-1==i}"
           @click="selectDropdown(i)"
+          :key="i"
         >{{item.name}}</div>
       </div>
     </div>
@@ -37,13 +37,13 @@
       <img :src="bgImage" alt="" class="center-bgs">
     </div>
 
-    <div class="order-item p15 divider" v-for="order in orders" :key="order.id">
-      <div @click="gotoDetail(order.id)">
+    <div class="order-item p15 divider" v-for="order in orders" :key="order.id"  @click.stop="gotoDetail(order.id)">
         <img class="fl order-picture" :src="order.productThumbPic" />
+      <div>
         <div class="ov pb10 fs14">{{order.productName}}</div>
         <div class="ov pb10" style="color: #3b3937">
           <span class="fl fs13">¥{{order.price}}</span>
-          <!--					<span style="color: #888">（共{{order.count}}件商品）</span>-->
+          					<!-- <span style="color: #888">（共{{order.count}}件商品）</span> -->
           <span class="fr fs13 highlight" v-show="order.orderStatus ==2">已取消支付</span>
           <span
             class="fr fs13 highlight"
@@ -62,19 +62,21 @@
       <div class="lite-divider" style="margin-top: 30px;margin-bottom: 2px;"></div>
       <div class="pt15 fs13" style="color: #a6937c; line-height: 23px">
         {{order.createDateStr}}
-        <div class="lite-btn fs13 fr" @click="orderPay(order)" v-show="order.status==0">付款</div>
 
-        <div class="btn-plain fr" @click="orderCancel(order)" v-show="order.status==0">取消订单</div>
+        <div class="lite-btn fr" @click.stop="orderCancel(order)" v-show="order.status==0">取消</div>
+        <div class="lite-btn fs13 fr" @click.stop="orderPay(order)" v-show="order.status==0" style="margin-right: 0.1rem;">付款</div>
+        <div class="lite-btn fs13 fr" @click.stop="gotoDetail(order.id)" v-show="order.status==2">查看订单</div>
         <!--unrecieved-->
+    
+        <div class="lite-btn fs13 fr" @click.stop="orderConfirm(order)" v-show="order.status==5">确认收货</div>
 
-        <div class="lite-btn fs13 fr" @click="orderConfirm(order)" v-show="order.status==5">确认收货</div>
-
-        <div class="btn-plain fr" v-show="order.status==5" @click="checkLogisics(order)">查看物流</div>
+        <!-- <div class="lite-btn fr" v-show="order.status==5" @click.stop="checkLogisics(order)" style="margin-right: 0.1rem;">查看物流</div> -->
         <span v-show="order.status==6&&order.pingjiaStatus!=1">
-          <div class="lite-btn fs13 fr" @click="comment(order)">评价商品</div>
+          <div class="lite-btn fs13 fr" @click.stop="comment(order)">评价商品</div>
         </span>
       </div>
     </div>
+    <div class="box-bg" v-show="Mask"></div>
   </div>
 </template>
 
@@ -85,9 +87,11 @@ import wx from "weixin-js-sdk";
 export default {
   data() {
     return {
+      Mask:false,//遮罩
       orders: [],
       groupsNum: 1,
       shows: true,
+      type:this.$route.query.type,
       dropdownCollapsed: false, //切换订单
       selectedName: "订单筛选",
       currentStatus: "ALL", //参数
@@ -104,15 +108,14 @@ export default {
           name: "已支付",
           value: "PAYED" //根据需要传给后台的查询参数修改这些value
         },
-        {
-          name: "配货中",
-          value: "PREPARE" //根据需要传给后台的查询参数修改这些value
-        },
-
-        {
-          name: "待收货订单",
-          value: "NEEDRECEIVE" //根据需要传给后台的查询参数修改这些value
-        },
+        // {
+        //   name: "配货中",
+        //   value: "PREPARE" //根据需要传给后台的查询参数修改这些value
+        // },
+        // {
+        //   name: "待收货订单",
+        //   value: "NEEDRECEIVE" //根据需要传给后台的查询参数修改这些value
+        // },
         {
           name: "已取消订单",
           value: "CANCELD" //根据需要传给后台的查询参数修改这些value
@@ -160,12 +163,23 @@ export default {
         vm.grouprders(vm.currentStatus);
       }
     },
+      //切换订单
+    goorder(ind) {
+            if(ind == 1) {
+                vm.$router.push({path:'/special',query:{'type':ind}});
+            }else if (ind == 2) {
+                vm.$router.push({path:'/cardorder',query:{'type':ind}});
+            }else {
+                vm.$router.push({path:'/grouporders',query:{'type':ind}})
+            }
+     },
     //点击跳转
     gotoDetail(id) {
       vm.$router.push({ path: "/orderdetail", query: { orderId: id } });
     },
     //付款
     orderPay(order) {
+      vm.Mask =true;
       vm.receiveData.getData(
         vm,
         "requestPay/" + order.id,
@@ -173,12 +187,12 @@ export default {
         function() {
           if (vm.n.success) {
             wx.config({
-             debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
-          appId: vm.n.result.appId, // 必填，公众号的唯一标识
-          timestamp: vm.n.result.timestamp, // 必填，生成签名的时间戳
-          nonceStr: vm.n.result.nonceStr, // 必填，生成签名的随机串
-          signature: vm.n.result.signature, // 必填，签名，见附录1
-          jsApiList: ["chooseWXPay"] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+            debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+            appId: vm.n.result.appId, // 必填，公众号的唯一标识
+            timestamp: vm.n.result.timestamp, // 必填，生成签名的时间戳
+            nonceStr: vm.n.result.nonceStr, // 必填，生成签名的随机串
+            signature: vm.n.result.signature, // 必填，签名，见附录1
+            jsApiList: ["chooseWXPay"] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
             });
             wx.chooseWXPay({
               timestamp: vm.n.result.timestamp,
@@ -187,15 +201,24 @@ export default {
               signType: vm.n.result.signType,
               paySign: vm.n.result.signature,
               success: function(res) {
+                vm.Mask =false;
                 vm.notifyPaySuccess(order.id);
                 order.status = 1;
+              },
+              fail:function(res) {
+                  vm.Mask =false;
+                  console.log(JSON.stringify(res))
+              },
+              cancel:function(res){
+                  alert('支付取消');
+                  vm.Mask =false;
               }
-            });
+              });
           } else {
-            alert("支付请求失败，请稍后重试！");
+            vm.Mask =false;
+            alert(vm.n.message==null?"下单失败，请稍后重试！":vm.n.message);
           }
         },
-        function() {}
       );
     },
     //通知
@@ -275,8 +298,13 @@ export default {
 
 <style  scoped>
 .group {
-  background-color: #fffff8;
-  padding-bottom: 1px;
+  background: white;
+  position:absolute;
+  left:0;
+  right:0;
+  top:0;
+  bottom:0;
+  overflow:auto;
 }
 .load6 {
   margin: 100px auto 0;
@@ -383,22 +411,41 @@ export default {
   -moz-border-radius: 15px;
   -webkit-border-radius: 15px;
 }
-
+/* --- */
+.headersp {
+    border-bottom: 1px solid #C8C4C4;
+    font-size: 14px;
+    background-color:#E8E8E8;
+    overflow: hidden;
+}
+.headersp div {
+    width:33.3%;
+    height: 45px;
+    line-height: 45px;
+    text-align: center;
+}
+.headersp div .spanborder{
+   padding-bottom:5px;
+   border-bottom:2px solid #F08500;
+}
+.headersp div.white {
+    background-color:white;
+}
+/* --- */
 .dropdown-wrap {
   position: relative;
-  padding: 15px 0;
+  padding: 15px 20px;
   border-bottom: 1px solid #d4cfc8;
   background: url(../assets/images/icon_bottom.png) no-repeat;
   background-size: 12px 7px;
-  /* background-position: center right; */
-  background-position: 70px;
-  font-size: 14px;
+  background-position: 95px;
+  color:#000;;
 }
 .dropdownCollapsed {
   background: url(../assets/images/icon_top.png) no-repeat;
   background-size: 12px 7px;
   /* background-position: center right; */
-  background-position: 70px;
+  background-position: 95px;
 }
 /* 筛选弹出框 */
 .dropdown {
@@ -428,7 +475,6 @@ export default {
 .rels {
   height:100%;
   width:100%;
-  position: fixed;
 }
 .ov {
   overflow: hidden;
@@ -442,10 +488,13 @@ export default {
 
 /* 订单样式 */
 .divider {
-  border-bottom: 10px solid #f7f7f2;
+  border-bottom: 1px solid #d4cfc8;
 }
 .p15 {
-  padding: 15px;
+  padding-top: 10px;
+  padding-bottom: 6px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 .order-picture {
   width: 75px;
@@ -469,10 +518,10 @@ export default {
 .highlight {
   color: #ff8a00;
 }
-.lite-divider {
+/* .lite-divider {
   border-bottom: 1px solid #d4cfc8;
   padding-left: 15px;
-}
+} */
 .lite-btn {
   display: inline-block;
   padding: 0 15px;
@@ -494,4 +543,6 @@ export default {
   border-radius: 3px;
   border: 1px solid #bfbfbf;
 }
+.box-bg {width: 100%;opacity: .5;height: 100%;position: fixed;
+	    background-color: #666;top: 0;left: 0;z-index: 100;}
 </style>
