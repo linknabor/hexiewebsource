@@ -265,7 +265,6 @@ export default {
     vm.qrCodePayService();
     // vm.oriApp();//判断我是业主地址
   },
-  components: {},
   methods: {
     //模仿线上用户信息
     // 105/747/384
@@ -368,7 +367,10 @@ export default {
       vm.oriapp=vm.common.getoriApp();
     }
   },
-  computed: {}
+  computed: {},
+  components: {
+
+  }
 };
 </script>
 
