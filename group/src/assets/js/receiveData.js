@@ -1,5 +1,4 @@
 
-// import {dealWithAjaxData} from '../js/import 
 import Vue from 'vue';
 let receiveData = {
     
@@ -76,7 +75,7 @@ let receiveData = {
             .then(function (res) {
 
                 let a = res.data;
-                 vm[backdataname] = JSON.parse(a)
+                 vm[backdataname] = JSON.parse(a);
                  Vue.prototype.dealWithAjaxData(null,a,function(){},function(){});
                 if (typeof (callback) == 'function') {//回调
                         callback()

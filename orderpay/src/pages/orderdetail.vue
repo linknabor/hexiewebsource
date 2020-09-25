@@ -59,7 +59,7 @@
         </div>
       </div>
 
-      <div class="p15 order-item" v-if="order.logisticName!=null&&order.logisticName!=''">
+      <div class="p15 order-item" v-if="order.status == 5">
         <div class="section-title">物流信息</div>
         <div class="ov fs14 ptb15">
           <div class="ov fs14">快递公司：{{order.logisticName}}</div>
@@ -255,9 +255,12 @@ export default {
 
 <style  scoped>
 .adorder {
+  position:absolute;
   width: 100%;
   height: 100%;
   background-color: #fff;
+  overflow:auto;
+  
 }
 /* 头部 */
 .fs13 {

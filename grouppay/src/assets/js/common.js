@@ -2,27 +2,27 @@ import $ from 'jquery'
 //开发环境
 var MasterConfig = function() {
     var t = {
-        baseUrl: /127|test/.test(location.origin)?'https://test.e-shequ.com/wechat/hexie/wechat/':
+        baseUrl: /127|test|192/.test(location.origin)?'https://test.e-shequ.com/wechat/hexie/wechat/':
         /uat/.test(location.origin)?'https://uat.e-shequ.com/wechat/hexie/wechat/':
         'https://www.e-shequ.cn/wechat/hexie/wechat/',
         
-        basePageUrl:/127|test/.test(location.origin)?'https://test.e-shequ.com/weixin/':
+        basePageUrl:/127|test|192/.test(location.origin)?'https://test.e-shequ.com/weixin/':
         /uat/.test(location.origin)?'https://uat.e-shequ.com/hexie/weixin/':
         'https://www.e-shequ.cn/weixin/',
         
-        basePageUrlpay:/127|test/.test(location.origin)?'https://test.e-shequ.com/weixin/pay/':
+        basePageUrlpay:/127|test|192/.test(location.origin)?'https://test.e-shequ.com/weixin/pay/':
         /uat/.test(location.origin)?'https://uat.e-shequ.com/pay/':
         'https://www.e-shequ.cn/weixin/',
 
-        payPageFolder:/127|test/.test(location.origin)?'https://test.e-shequ.com/pay/':
+        payPageFolder:/127|test|192/.test(location.origin)?'https://test.e-shequ.com/pay/':
         /uat/.test(location.origin)?'https://uat.e-shequ.com/pay/':
         'https://www.e-shequ.cn/pay/',
 
-        appId: /127|test/.test(location.origin)?'wx95f46f41ca5e570e':
+        appId: /127|test|192/.test(location.origin)?'wx95f46f41ca5e570e':
         /uat/.test(location.origin)?'wx9ffe0a2b5a64a285':
         'wxbd214f5765f346c1',
         
-        componentAppId: /127|test/.test(location.origin)?'wx4d706a1a7a139d1f':
+        componentAppId: /127|test|192/.test(location.origin)?'wx4d706a1a7a139d1f':
         /uat/.test(location.origin)?'wx4d706a1a7a139d1f':
         'wx0d408844b35d85e2',
         

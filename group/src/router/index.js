@@ -129,7 +129,39 @@ let router= new Router({
       meta:{
         title:''
       }
-    }
+    },
+    { 
+      path:'/classification',
+      name:'classification',
+      component:resolve=>require(['@/pages/purchase/classification'],resolve),
+      meta:{
+        title:'商城'
+      }
+    },
+    { 
+      path:'/commoditydetails',
+      name:'commoditydetails',
+      component:resolve=>require(['@/pages/purchase/commoditydetails'],resolve),
+      meta:{
+        title:'详情页'
+      }
+    },
+    { 
+      path:'/cart',
+      name:'cart',
+      component:resolve=>require(['@/pages/purchase/cart'],resolve),
+      meta:{
+        title:'购物车'
+      }
+    },
+    { 
+      path:'/cartsearch',
+      name:'cartsearch',
+      component:resolve=>require(['@/pages/purchase/cartsearch'],resolve),
+      meta:{
+        title:'商品'
+      }
+    },
   ]
 })
 
@@ -139,10 +171,10 @@ router.beforeEach((to, from, next) => {
   //动态改变title
   var flag;
   if(to.matched[0].name != "index"&& to.matched[0].name!='register'&& to.matched[0].name!='salesdetail'&&to.matched[0].name!='salescoupon'&& to.matched[0].name!='salesnabo'&& to.matched[0].name!='newsaledetail'&& to.matched[0].name!='salegoods'&& to.matched[0].name!='sassuccess'&& to.matched[0].name!='salespush'&& to.matched[0].name!='customerservice') {
-      flag=common.checkRegisterStatus()
-      if(!flag) {
-        return
-      }
+      // flag=common.checkRegisterStatus()
+      // if(!flag) {
+      //   return
+      // }
   }
   changeTitle(to.meta.title);
   next();

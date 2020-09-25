@@ -1,13 +1,5 @@
-import xml2js from'xml2js' 
-var xmlParser = new xml2js.Parser({explicitArray : false, ignoreAttrs : true})
-    //xml转json
-import wx from 'weixin-js-sdk';
-
-
+import Vue from 'vue';
 let receiveData = {
-
-
-
     /*
      * 微信配置提取的公共方法
      * @param  {objec} vm     [Vue实例]
@@ -96,8 +88,9 @@ let receiveData = {
                 params: params
             })
             .then(function (res){
-                let a = JSON.parse(res.data)
-                vm[backdataname] = a
+                let a = JSON.parse(res.data);
+                vm[backdataname] = a;
+                Vue.prototype.dealWithAjaxData(null,a,function(){},function(){});
                 if (typeof (callback) == 'function') {//回调
                     callback()
                 }
@@ -122,50 +115,15 @@ let receiveData = {
             .then(function (res) {
 
                 let a = res.data;
-                 vm[backdataname] = JSON.parse(a)
-                // xmlParser.parseString(a, function (err, result) {
-                // //将返回的结果赋值
-                //  vm[backdataname] = result.BaseResult
-                // });
+                vm[backdataname] = JSON.parse(a);
+                Vue.prototype.dealWithAjaxData(null,a,function(){},function(){});
                 if (typeof (callback) == 'function') {//回调
                         callback()
                 }
-
             })
             .catch(function (err) {         
                 console.log('fail', err);
             });
     },
-    //将字符串转为xml对象
-    toxml:function(xmlStr){
-        var root = document.createElement('XMLROOT');
-        root.innerHTML = xmlStr
-        return root
-    },
-
-    //字符串转为json对象
-    loadxml: function(xmlStr){
-        
-        var root = document.createElement('XMLROOT');
-        root.innerHTML = xmlStr;
-        return this.parse(root)
-    },
-    
-    //递归解析 将xml对象转为 json对象
-    parse: function(node){
-        var result = {};
-        for(var i = 0 ; i < node.childNodes.length ; ++i){
-            if(node.childNodes[i].nodeType == 1){//元素节点 继续递归解析
-                result[node.childNodes[i].nodeName.toLowerCase()] = this.parse(node.childNodes[i]);
-            }else if(node.childNodes[i].nodeType==3){//文本节点 返回
-                return node.childNodes[i].nodeValue;
-            }
-        }
-        return result;
-    } ,
-
-
-
 };
-
 export default receiveData;

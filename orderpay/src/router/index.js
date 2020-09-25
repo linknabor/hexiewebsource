@@ -137,7 +137,46 @@ let router= new Router({
         title:'商品订单'
       }
     },
-
+    {
+      path:'/special',
+      name:'special',
+      component:resolve=>require(['@/pages/special/special'],resolve),
+      meta:{
+        title:'商品订单'
+      }
+    },
+    {
+      path:'/clientdetail',
+      name:'clientdetail',
+      component:resolve=>require(['@/pages/special/clientdetail'],resolve),
+      meta:{
+        title:'订单详情'
+      }
+    },
+    {
+      path:'/specialdetail',
+      name:'specialdetail',
+      component:resolve=>require(['@/pages/special/specialdetail'],resolve),
+      meta:{
+        title:'订单详情'
+      }
+    },
+    {
+      path:'/delivery',
+      name:'delivery',
+      component:resolve=>require(['@/pages/special/delivery'],resolve),
+      meta:{
+        title:'订单发货'
+      }
+    },
+    {
+      path:'/consignment',
+      name:'consignment',
+      component:resolve=>require(['@/pages/special/consignment'],resolve),
+      meta:{
+        title:'订单详情'
+      }
+    },
   ]
 })
 
