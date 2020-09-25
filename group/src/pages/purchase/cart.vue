@@ -317,6 +317,7 @@ export default {
     /* overflow: scroll; */
 }
 .cart {
+    background-color:#F4F8F9; 
     overflow: hidden;
 }
 .head-border {

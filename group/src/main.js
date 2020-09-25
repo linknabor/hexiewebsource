@@ -27,7 +27,7 @@ import './assets/js/hidpi-canvas.min.js';
 import cookie from 'js-cookie'
 
 //本地使用
-import {common,MasterConfig,getUrlParam,dealWithAjaxData} from './assets/js/common';
+// import {common,MasterConfig,getUrlParam,dealWithAjaxData} from './assets/js/common';
 
 Vue.prototype.common = common;
 Vue.prototype.getUrlParam = getUrlParam;
