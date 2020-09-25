@@ -127,7 +127,15 @@ let router= new Router({
       name:'customerservice',
       component:resolve =>require(['@/pages/cardroll/customerservice'],resolve),
       meta:{
-        title:''
+        title:'欢迎加入'
+      }
+    },
+    {
+      path:'/salespush',
+      name:'salespush',
+      component:resolve=>require(['@/pages/cardroll/salespush'],resolve),
+      meta:{
+        title:'招募社区合伙人'
       }
     },
     { 
