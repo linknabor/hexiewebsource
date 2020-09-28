@@ -61,7 +61,6 @@
         class="input-wrap  lite-divider disb"
       >
         <span class="input-info lf30 fs16">全部订单</span>
-        <!-- <span class="fr fs16 left_color mrg5" >全部订单&nbsp;&nbsp;&nbsp;&nbsp;</span> -->
       </a>
     </div>
 
@@ -72,14 +71,6 @@
           <div class="module-title fs14">商城订单</div>
         </a>
       </div>
-      <!-- <div v-if="donghu" class="module-item-wrap" >
-        <a v-if="donghu" class="module-itemdh" :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/grouporders'">
-            <div class="module-logodh logo4" >
-                <div class="module-titledh fs14">团购订单</div>
-            </div>
-            <div></div>
-         </a>
-      </div> -->
       <div class="module-item-wrap module-newwidth">
         <!-- <a v-if="donghu" class="module-itemdh" :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/homeorders'">
             <div class="module-logodh logo5" >
@@ -92,12 +83,6 @@
         </router-link> 
       </div>
 
-      <!-- <div  class="module-item-wrap module-newwidth" >
-        <a class="module-item" :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/cardorder'">
-          <div class="module-logo logo6"></div>
-          <div class="module-title fs14">优惠订单</div>
-        </a>
-      </div> -->
        <div  class="module-item-wrap module-newwidth" >
         <router-link class="module-item" :to="{path:'/myrepair'}">
           <div class="module-logo logo7"></div>
@@ -128,21 +113,10 @@
     </div> -->
     <div>
       <div class="info-wrap" style="overflow:hidden; clear: both;">
-        <!-- <router-link
-            :to="{path:'/'}"
-            class="input-wrap menu-person-link lite-divider"
-          >
+        <div @click="business"   class="input-wrap menu-person-link lite-divider">
             <span class="input-info lf30 fs16">我是商家</span>
             <span class="fr fs14 left_color">查看记录&nbsp;&nbsp;&nbsp;&nbsp;</span>
-        </router-link> -->
-        <router-link
-          :to="{path:'/cardrollrecords'}"
-          class="input-wrap menu-person-link lite-divider"
-          v-show="evoucherOperator"
-        >
-          <span class="input-info lf30 fs16">我是核销人员</span>
-          <span class="fr fs14 left_color">查看记录&nbsp;&nbsp;&nbsp;&nbsp;</span>
-        </router-link>
+        </div>
         <router-link
           :to="{path:'/service'}"
           class="input-wrap menu-person-link lite-divider"
@@ -175,7 +149,7 @@
 
       <div class="info-wrap">
         <a
-          :href="this.basePageUrl+'wuye/index.html?'+oriapp+'#/Myhouse'"
+          :href="this.basePageUrl+'wuye/index.html?'+this.common.getoriApp()+'#/Myhouse'"
           class="input-wrap menu-person-link lite-divider"
         >
           <span class="input-info lf30 fs16">我是业主</span>
@@ -241,14 +215,13 @@ export default {
       },
       service_list:[],
       login:false,
-      oriapp:'', //我是业主
       cardService:'',
       qrCode:'',//二维码
       point:0,//积分
       cardStatus:'',//是否领卡激活的标记
       // donghu:false,//标识判断是不是东湖
       serviceOperator:false, //我是服务人员
-      evoucherOperator:false,//核销卡卷
+      evoucherOperator:'',//核销卡卷
       user_info: {
         avatar: img,
         nickname: "游客",
@@ -263,7 +236,6 @@ export default {
     // this.initSession4Test();
     this.User(); 
     vm.qrCodePayService();
-    // vm.oriApp();//判断我是业主地址
   },
   methods: {
     //模仿线上用户信息
@@ -317,7 +289,9 @@ export default {
         if (vm.res.success) {
             vm.service_list = vm.res.result.service_list;
         } else {
-          // alert(vm.res.message);
+          if(vm.res.message != null && vm.res.errorCode !=40001) {
+             alert(vm.res.message);
+          }
         }
       });
     },
@@ -362,9 +336,15 @@ export default {
     Notice() {
       vm.$router.push({path:'/notices'})
     },
-    //我是业主
-    oriApp() {
-      vm.oriapp=vm.common.getoriApp();
+    //我是商家 
+    business() {
+      var evoucherOperator = '';
+      if(this.evoucherOperator) {
+        evoucherOperator = 'true';
+      }else {
+        evoucherOperator = 'false';
+      }
+      vm.$router.push({path:'/specialorders',query:{'evoucherOperator':evoucherOperator,type:'1'}});
     }
   },
   computed: {},
