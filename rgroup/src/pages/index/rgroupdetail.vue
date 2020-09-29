@@ -99,7 +99,7 @@
 let vm;
 import {swiper,swiperSlide} from 'vue-awesome-swiper';
 import wx from 'weixin-js-sdk';
-// let Base64 = require('js-base64').Base64;
+let Base64 = require('js-base64').Base64;
 export default {
    data () {
        return {
@@ -116,6 +116,7 @@ export default {
            product: {
                 pictureList:[],
             },
+            showProduct: {},
             rule:{
                 currentNum:0,
             },
@@ -190,9 +191,9 @@ export default {
                 vm.receiveData.getData(vm,url,'res',function(){
                     if(vm.res.success) {
                         if(vm.res.result) {
-                            vm.product = vm.res.result;   
-                            vm.serviceDesc1 = Base64.decode(vm.product.serviceDesc);
-                            vm.serviceDescMore1 = Base64.decode(vm.product.serviceDescMore)
+                            vm.showProduct = vm.res.result
+                            vm.serviceDesc1 = Base64.decode(vm.showProduct.serviceDesc)
+                            vm.serviceDescMore1 = Base64.decode(vm.showProduct.serviceDescMore)
                         }
                     }else {
                         alert(vm.res.message==null ?"获取产品信息失败！":vm.res.message);
