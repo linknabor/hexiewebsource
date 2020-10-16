@@ -133,13 +133,8 @@ let receiveData = {
         };
         vm.axios.post(url, params)
             .then(function (res) {
-
                 let a = res.data;
-                 vm[backdataname] = JSON.parse(a).result
-                // xmlParser.parseString(a, function (err, result) {
-                // //将返回的结果赋值
-                //  vm[backdataname] = result.BaseResult
-                // });
+                 vm[backdataname] = JSON.parse(a);
                 if (typeof (callback) == 'function') {//回调
                         callback()
                 }

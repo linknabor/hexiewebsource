@@ -30,12 +30,12 @@
 			var requestUrl = wechat_url + "/param/recache/" + param + "?syscode=hexie";
 			console.log("requestUrl:" + requestUrl);
 			$.ajax({
-                        type: 'post',
+                        type: 'GET',
                         url: requestUrl,
                         dataType: "text",
                         data: {},
                         success: function (res) {
-                            if (res.success) {
+                            if (res == "success") {
                                 alert("刷新成功!");
                             } else {
                                 alert('请刷新重试');
@@ -272,6 +272,11 @@
 		<div style="text-align:center;padding-top: 10%" class="family">
             <div style="text-align:left;float:left;padding-left: 8%; width:40%">定位参数</div>
             <div style="text-align:left;float: left;padding-left:10px; width:40%"><button id="location" onclick="recache('location');">刷新</button></div>
+        </div>
+		<div class="line"></div>
+		<div style="text-align:center;padding-top: 10%" class="family">
+            <div style="text-align:left;float:left;padding-left: 8%;width:40%">合伙人缓存</div>
+            <div style="text-align:left;float: left;padding-left:10px;width:40%"><button id="logistics" onclick="recache('partner');">刷新</button></div>
         </div>
         <div class="line"></div>
 		<div style="text-align:center;padding-top: 10%" class="family">

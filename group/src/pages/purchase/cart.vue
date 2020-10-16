@@ -22,7 +22,6 @@
                 </div>
                 <div class="ov cart-content ">
                     <span class="fname marb4 littleBit color0">{{item.ruleName}}</span><br>
-                    <br>
                     <span class="marb4 free color">满{{item.freeShippingNum}}件免运费</span><br>
                     <del class="marb4">¥{{item.oriPrice}}</del><br>
                     <span class="color1">¥{{item.price}}</span><span></span>
@@ -287,8 +286,7 @@ export default {
     height: 100%;
     display: inline-block;
     padding: 0 10px;
-    line-height: 48px;
-    padding-top: 0.3rem;
+    line-height: 2.2rem;
     box-sizing: border-box;
 }
 .carts .mint-cell  {
@@ -314,7 +312,7 @@ export default {
     right: 0;
     bottom: 0;
     background-color:#F4F8F9; 
-    /* overflow: scroll; */
+    overflow: auto;
 }
 .cart {
     background-color:#F4F8F9; 

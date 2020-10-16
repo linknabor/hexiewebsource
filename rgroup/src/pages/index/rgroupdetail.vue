@@ -21,7 +21,6 @@
                 <swiper-slide  v-for="(picture,index) in  product.pictureList" :key="index">
                     <div class="ban1" >
                             <img :src="picture" alt="">
-                            <!-- <img src="../../assets/images/index/bg_index.png" alt=""> -->
                     </div> 
                 </swiper-slide>
                 <div class="swiper-pagination" slot="pagination"></div>       
@@ -36,7 +35,7 @@
                     <div class="ori-price2 three_div"  style="padding-top:8px">运费&nbsp;&nbsp;<span class="highlight">¥{{rule.postageFee}}</span></div>
                 </div>
                 <div style="width: 100%;height:20px">
-                    <div class="ori-price2 fl three_div">市场价<del>¥&nbsp;{{product.oriPrice}}</del></div>
+                    <div class="ori-price2 fl three_div">市场价<del>¥&nbsp;{{rule.oriPrice}}</del></div>
                     <div class="ori-price2 fl three_div">目标份数<span class="highlight" >{{rule.groupMinNum}}</span>份</div>
                     <div class="ori-price2 three_div" ms-visible="rule.freeShippingNum<999"><span class="highlight">{{rule.freeShippingNum}}</span>件包邮</div>
                 </div>
@@ -86,7 +85,7 @@
                 更多团购
             </span>
             <span  class="fl" 
-                style="height:40px;line-height:40px;width:64%;background-color:#ff8a00;text-align: center;font-size:15px;"  @click="buy" :class="{useless:rule.leftSeconds < 0}">
+                style="height:40px;line-height:40px;width:64%;background-color:#ff8a00;text-align: center;font-size:15px;"  @click="buy()" :class="{useless:rule.leftSeconds < 0}">
                 马上参团
             </span>
           
@@ -99,7 +98,7 @@
 let vm;
 import {swiper,swiperSlide} from 'vue-awesome-swiper';
 import wx from 'weixin-js-sdk';
-// let Base64 = require('js-base64').Base64;
+let Base64 = require('js-base64').Base64;
 export default {
    data () {
        return {
@@ -145,16 +144,12 @@ export default {
         vm.receiveData.wxconfig(vm,wx,['onMenuShareTimeline','onMenuShareAppMessage'],url);
         vm.read();
         window.addEventListener('scroll', this.handleScroll);
-        vm.setShare();
    },
    updated(){
        vm.drawP()
    },
 
    methods: {
-       setShare() {
-			 vm.common.initShareConfig(vm.rule.name,vm.basePageUrlpay+"hxrgroups.html?"+vm.common.getoriApp()+"#/rgroupdetail?ruleId="+vm.ruleId,vm.product.smallPicture,"快来参加"+vm.common.newname+"的优惠商品抢购吧",wx);
-       },
         handleScroll () {
             var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
             var offsetTop = document.querySelector('#searchBar').offsetTop
@@ -175,7 +170,7 @@ export default {
                     if(vm.Data.success) {
                          if(vm.Data.result) {
                             vm.load=false;
-                            vm.rule=vm.Data.result;                          
+                            vm.rule=vm.Data.result;     
                             vm.products(vm.rule.productId)
                            setInterval(vm.updateLeftTime,1000);//倒计时 
                          }
@@ -192,12 +187,16 @@ export default {
                         if(vm.res.result) {
                             vm.product = vm.res.result;   
                             vm.serviceDesc1 = Base64.decode(vm.product.serviceDesc);
-                            vm.serviceDescMore1 = Base64.decode(vm.product.serviceDescMore)
+                            vm.serviceDescMore1 = Base64.decode(vm.product.serviceDescMore);
+                            vm.setShare();
                         }
                     }else {
                         alert(vm.res.message==null ?"获取产品信息失败！":vm.res.message);
                     }
             });
+        },
+        setShare() {
+            vm.common.initShareConfig(vm.rule.name,vm.basePageUrlpay+"hxrgroups.html?"+vm.common.getoriApp()+"#/rgroupdetail?ruleId="+vm.ruleId,vm.product.smallPicture,"快来参加"+vm.common.newname+"的优惠商品抢购吧",wx);
         },
         //剩余时间
         updateLeftTime() {

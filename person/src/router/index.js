@@ -214,7 +214,7 @@ let router= new Router({
       name:'cardrollrecords',
       component:resolve =>require(['@/pages/Cardroll/cardrollrecords'],resolve),
       meta:{
-        title:'核销记录'
+        title:'我是商家'
       }
     },
     {
@@ -231,6 +231,22 @@ let router= new Router({
       component:resolve =>require(['@/pages/index/reset'],resolve),
       meta:{
         title:'重置密码'
+      }
+    },
+    {
+      path:'/grouporders',
+      name:'/grouporders',
+      component:resolve => require(['@/pages/business/grouporders'],resolve),
+      meta:{
+        title:'我是商家'
+      }
+    },
+    {
+      path:'/specialorders',
+      name:'/specialorders',
+      component:resolve => require(['@/pages/business/specialorders'],resolve),
+      meta:{
+        title:'我是商家'
       }
     },
   ]

@@ -33,16 +33,18 @@
                 <img class="icon-repair fl" :src="item.productThumbPic"/>
                 <div class="ov right-text not-used" >   
                     <div class="spot pbottom">{{item.productName}}</div>
-                    <div class="pbottom">¥{{item.price}}</div>
-                    <div class="ptop ov " >
-                        <span class="fl ">数量: {{item.count}}</span>
-                        <span class="p15 right-color used-r">{{item.statusStr}}</span>
+                    <div class="pbottom ov">
+                        <span class="fl">¥{{item.price}}</span>
+                        <span class="p15 right-color fr">{{item.statusStr}}</span>
+                    </div>
+                    <div class="ptop ov">
+                        <span class="fl">数量: {{item.count}}</span>
                     </div>    
                 </div>
             </div>
             <div class="mrg5">
                     <span class="fl marbottom">{{item.createDateStr}}</span>
-                    <span class="fr crrd-color card-jm" @click.stop="orderConfirm(item)" v-show="item.status==5">点击发货</span>
+                    <span class="fr crrd-color card-jm" @click.stop="orderConfirm(item)" v-show="item.status==9">点击发货</span>
             </div>
         </div>
         <div class="box-bg" v-show="Mask"></div>
@@ -260,11 +262,6 @@ export default {
 }
 .not-used {
     position: relative;
-}
-.used-r {
-    position: absolute;
-    right: 3px;
-    bottom: 30px;
 }
 .mrg5 {
     position: relative;

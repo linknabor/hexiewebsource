@@ -113,7 +113,7 @@
     </div> -->
     <div>
       <div class="info-wrap" style="overflow:hidden; clear: both;">
-        <div @click="business"   class="input-wrap menu-person-link lite-divider">
+        <div @click="business" v-show="merchant"  class="input-wrap menu-person-link lite-divider">
             <span class="input-info lf30 fs16">我是商家</span>
             <span class="fr fs14 left_color">查看记录&nbsp;&nbsp;&nbsp;&nbsp;</span>
         </div>
@@ -222,6 +222,7 @@ export default {
       // donghu:false,//标识判断是不是东湖
       serviceOperator:false, //我是服务人员
       evoucherOperator:'',//核销卡卷
+      merchant:false,//我是商家
       user_info: {
         avatar: img,
         nickname: "游客",
@@ -263,6 +264,7 @@ export default {
             vm.cardService=n.result.cardService;
             vm.serviceOperator = n.result.serviceOperator;//我是服务人员
             vm.evoucherOperator = n.result.evoucherOperator;//核销卡卷
+            vm.merchant = n.result.merchant;//我是商家
             if(vm.user.point<0){//小于0等于0
               vm.point=0;
             }else {

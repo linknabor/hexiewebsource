@@ -30,10 +30,12 @@
                 <img class="icon-repair fl" :src="item.productThumbPic"/>
                 <div class="ov right-text not-used" >   
                     <div class="spot pbottom">{{item.productName}}</div>
-                    <div class="pbottom">¥{{item.price}}</div>
+                    <div class="pbottom ov">
+                        <span class="fl">¥{{item.price}}</span>
+                        <span class="p15 right-color fr">{{item.statusStr}}</span>
+                    </div>
                     <div class="ptop ov " >
                         <span class="fl ">数量: {{item.count}}</span>
-                        <span class="p15 right-color used-r">{{item.statusStr}}</span>
                     </div>
                 </div>
             </div>
@@ -253,11 +255,7 @@ export default {
 .not-used {
     position: relative;
 }
-.used-r {
-    position: absolute;
-    right: 3px;
-    bottom: 30px;
-}
+
 .mrg5 {
     position: relative;
 }
