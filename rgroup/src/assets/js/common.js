@@ -2,23 +2,23 @@
 var MasterConfig = function() {
     var t = {
         baseUrl: /127|test|192/.test(location.origin)?'https://test.e-shequ.cn/wechat/hexie/wechat/':
-        /uat/.test(location.origin)?'https://uat.e-shequ.com/wechat/hexie/wechat/':
+        /uat/.test(location.origin)?'https://uat.e-shequ.cn/wechat/hexie/wechat/':
         'https://www.e-shequ.cn/wechat/hexie/wechat/',
         
         basePageUrl:/127|test|192/.test(location.origin)?'https://test.e-shequ.cn/weixin/':
-        /uat/.test(location.origin)?'https://uat.e-shequ.com/hexie/weixin/':
+        /uat/.test(location.origin)?'https://uat.e-shequ.cn/hexie/weixin/':
         'https://www.e-shequ.cn/weixin/',
         
         basedhzj3Url:/127|test|192/.test(location.origin)?'https://test.e-shequ.cn/weixin/':
-        /uat/.test(location.origin)?'https://uat.e-shequ.com/hexie/weixin/':
+        /uat/.test(location.origin)?'https://uat.e-shequ.cn/hexie/weixin/':
         'https://www.e-shequ.cn/dhzj3/weixin/',
 
         basePageUrlpay:/127|test|192/.test(location.origin)?'https://test.e-shequ.cn/weixin/':
-        /uat/.test(location.origin)?'https://uat.e-shequ.com/pay/':
+        /uat/.test(location.origin)?'https://uat.e-shequ.cn/pay/':
         'https://www.e-shequ.cn/weixin/',
 
         payPageFolder:/127|test|192/.test(location.origin)?'https://test.e-shequ.cn/pay/':
-        /uat/.test(location.origin)?'https://uat.e-shequ.com/pay/':
+        /uat/.test(location.origin)?'https://uat.e-shequ.cn/pay/':
         'https://www.e-shequ.cn/pay/',
 
         appId: /127|test|192/.test(location.origin)?'wx95f46f41ca5e570e':
