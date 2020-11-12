@@ -27,7 +27,8 @@
                     <span class="color1">¥{{item.price}}</span><span></span>
                     <div class="choose-num">
                         <span class="reducee" :class="{'reduceecolor':item.count >= 2}" @click="reducee(item,index)">-</span>
-                        <input type="number" class="numberr"  :value="item.count" readonly>
+                        <!-- <input type="number" class="numberr"  :value="item.count" readonly> -->
+                        <span class="numberr color0" >{{item.count}}</span>
                         <span class="addd" :class="{'adddcolor':item.ruleId == xiangou}" @click="add(item,index)">+</span>
                     </div>
                 </div>
@@ -92,7 +93,7 @@ export default {
             vm.receiveData.getData(vm,url,'res',function(){
                 if(vm.res.success) {
                     if(vm.res.result != null) {
-                        vm.cartlist = vm.res.result;  
+                        vm.cartlist = vm.res.result;
                         vm.cartlist.items.forEach(v=> {
                         vm.$set(v, 'selected', true);
                         })
@@ -137,10 +138,10 @@ export default {
         // 点击加
         add(item,index) {
             vm.addsetprice(item);
-            vm.addcount(item);
+            vm.addcount(item,index);
         },
         // 点击加
-        addcount(item) {
+        addcount(item,index) {
             let url ='/cart/add';
             var data = {
                 ruleId:item.ruleId,
@@ -149,6 +150,7 @@ export default {
             vm.receiveData.postData(vm,url,data,'res',function(){
                 if(vm.res.success) {
                     item.count++;
+                    // if(item.count)   
                 }else {
                     if(vm.res.message !=null) {
                         alert(vm.res.message)
@@ -391,15 +393,21 @@ del {
     text-align: center;
     border-right:1px solid #E6E6E6;
     color: #EDEDED;
+    vertical-align: bottom;
 }
 .reduceecolor {
     color: #000;
 }
 .numberr {
-    border:none;
+    /* border:0 none;
     outline: none;
-    width: 0.4rem;
+    width: 0.7rem;
+    text-align: center; */
+
+    padding:0 0.03rem;
+    line-height: 0.35rem;
     text-align: center;
+    vertical-align: bottom;
 }
 .addd {
     font-size: 0.3rem;
@@ -410,6 +418,7 @@ del {
     text-align: center;
     border-left:1px solid #E6E6E6;
     color:#000;
+    vertical-align: bottom;
 }
 .adddcolor {
     color: #EDEDED;

@@ -96,9 +96,11 @@ export default {
         //模仿线上用户信息
             // 105/747/384
         initSession4Test(){
-                let url ='/initSession4Test/8462';
-                    vm.receiveData.getData(vm,url,'Data',function(){
-                });
+            let url = "/login/8427?code=8427";
+            var data = {
+                'oriApp':'wx95f46f41ca5e570e'
+            }
+            vm.receiveData.postData(vm, url,data,"res",function () {});
         },
          User() {
         //获取页面数据

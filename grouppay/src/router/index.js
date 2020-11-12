@@ -88,6 +88,14 @@ var router= new Router({
         title:'确定订单'
       }
     },
+    {
+      path:'/coupon',
+      name:'coupon',
+      component:resolve=>require(['@/components/coupon/coupon'],resolve),
+      meta:{
+        title:'优惠券'
+      }
+    },
   ]
 })
 

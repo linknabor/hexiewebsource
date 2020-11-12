@@ -151,6 +151,8 @@ export default {
            commentImgUrlList:[],
            payTypeName:"微信支付",
            oTel:'#',
+           serviceId:'',
+           agentNo:''
        };
    },
    created() {
@@ -166,7 +168,9 @@ export default {
        querys() {
             vm.receiveData.getData(vm,'customService/order?orderId='+vm.$route.query.orderId,'res',function(){
             if(vm.res.success) {
-                var order=vm.res.result
+                var order=vm.res.result;
+                vm.serviceId = order.productId;
+                vm.agentNo = order.agentNo;
                 if(order.imgUrls){
                     vm.imgUrlList = order.imgUrls.split(',');
                 }
@@ -205,8 +209,7 @@ export default {
             if(vm.item.payDate == null){ //没支付以被接单
                MessageBox.confirm('确认完工后，进入付费操作').then(action => {
                 if(action== 'confirm') {
-                    window.location.href=vm.basePageUrlpay+'orderpay.html?'+vm.common.getoriApp()+'#/payment?orderId='+vm.item.id+'&status='+vm.item.status
-                }
+                    window.location.href=vm.basePageUrlpay+'orderpay.html?'+vm.common.getoriApp()+'#/payment?orderId='+vm.item.id+'&status='+vm.item.status+'&serviceId='+vm.serviceId+'&agentNo='+vm.agentNo;               }
                 }).catch(err => {
                     if(err == 'cancel') {
 

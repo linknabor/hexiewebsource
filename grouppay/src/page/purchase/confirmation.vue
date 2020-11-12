@@ -35,8 +35,13 @@
             </div>
         </div> 
         <div class="mian ov fs14">
-            <div><span class="fl">商品金额</span><span class="fr">¥{{totalamount}}</span></div>
-            <div><span class="fl">运费</span><span class="fr">¥{{totalShipFee}}</span></div>
+            <div class="p15"><span class="fl ">商品金额</span><span class="fr">¥{{totalAmount}}</span></div>
+            <div class="p15"><span class="fl ">运费</span><span class="fr">¥{{totalShipFee}}</span></div>
+            <div class="p15" @click="showCoupons">
+                <span class="fl">优惠券</span> 
+                <span class="fl baoyou_desc">{{couponNum}}张可用</span>
+                <span class="fr">{{couponDesc}}</span>
+            </div>
         </div>
         <div style="width:100%;height:70px"></div>
         <div class="foter fs14">
@@ -63,10 +68,17 @@ export default {
             cartlist:[],
             totalShipFee:0,
             totalPrice:0, //合计
-            totalamount:0, 
+            totalAmount:0, 
             Mask:false,//遮罩
             orderId:'',
             itemList:JSON.parse(window.localStorage.getItem('itemList')),
+            couponNum: 0,
+            coupon: null,
+            couponDesc: '不使用',
+            coupons:[],//优惠券
+            couponid:this.$route.query.couponid,
+            salePlanId : '',
+
         };
     },
     created() {
@@ -106,13 +118,86 @@ export default {
             vm.receiveData.postData(vm,url,data,'res',function(){
                 if(vm.res.success) {
                     vm.cartlist = vm.res.result.orderItems;
-                    vm.totalamount = vm.res.result.totalAmount;
+                    vm.totalAmount = vm.res.result.totalAmount;
                     vm.totalShipFee = vm.res.result.shipFee;
                     vm.totalPrice=vm.res.result.price;
+                    vm.queryCoupon();
+                    vm.computeAmount();
                 }else {
                     alert(vm.res.message);
                 }
             });
+        },
+        // 优惠券
+        queryCoupon() {
+            var data = {
+                salePlanType:'3',
+                itemList: vm.itemList
+            }
+            vm.receiveData.postData(vm,'/coupon/valid',data,'res',function() {
+                if(vm.res.success) {
+                    if(vm.res.result!=null){
+                        vm.coupons=vm.res.result;
+                        vm.couponNum=vm.coupons.length;//可有优惠券数量
+                       
+                        vm.computeAmount();
+                    }    
+                }else {
+                    alert(vm.res.message);
+                }
+            
+            })
+        },
+         //计算价格
+       computeAmount() {
+            var ta;
+            //使用优惠券计算金额
+            if(vm.couponid != undefined) {
+                for(var i=0;i<vm.coupons.length;i++){
+                    if(vm.couponid == vm.coupons[i].id) {
+                        vm.coupon = vm.coupons[i];
+                    }
+                }
+            }
+            if(vm.couponid == undefined) {
+                vm.coupon = vm.coupons[0];
+                vm.couponid = vm.coupon.id;
+            }
+            // console.log(111,vm.coupon);
+            if (vm.coupon != null) {
+                // console.log(vm.coupon.usageCondition > vm.amounts,vm.coupon.usageCondition,vm.amounts);
+                if(vm.coupon.usageCondition ==null || vm.coupon.usageCondition > vm.totalPrice) {
+                    alert('当前优惠券不可用');
+                    vm.coupon = null;
+                }else {
+                    vm.couponDesc = '-¥ '+vm.coupon.amount;
+                }
+            }
+          
+            if (vm.coupon == null) {
+                ta = vm.totalPrice;
+            }else if (vm.coupon.amount > 0) {
+                ta = vm.totalPrice - vm.coupon.amount;
+            }
+
+            if(ta>0) {
+                vm.totalPrice = ta.toFixed(2);
+            } else {
+                vm.totalPrice = "0.01";
+            }
+       },
+        //优惠券
+        showCoupons() {
+         if(vm.coupons.length != 0 && vm.coupons != null) {    
+            vm.$router.push({
+                path: "/coupon",
+                name:'coupon',
+                query: {
+                    type: '3',
+                    couponid:vm.couponid,
+                },
+            })
+        }
         },
         //支付
         pay() {
@@ -129,21 +214,25 @@ export default {
                 payType:2,
                 orderType:3,   //特卖3，团购4
                 itemList:[]
-              }
-              for(var i=0;i<vm.cartlist.length;i++) {
-                  data.itemList.push({
-                        ruleId:vm.cartlist[i].ruleId,
-                        count:vm.cartlist[i].count,
-                        orderType:vm.cartlist[i].orderType,
-                        productId:vm.cartlist[i].productId,
-                  })
-              }
+            }
+            if (vm.coupon != null) {
+                data.couponId = vm.coupon.id;
+            }  
+            for(var i=0;i<vm.cartlist.length;i++) {
+                data.itemList.push({
+                    ruleId:vm.cartlist[i].ruleId,
+                    count:vm.cartlist[i].count,
+                    orderType:vm.cartlist[i].orderType,
+                    productId:vm.cartlist[i].productId,
+                })
+            }
             vm.receiveData.postData(vm,url,data,'res',function(){
                 if(vm.res.success) {
                     vm.orderId = vm.res.result.id;
                     vm.requestPay();
                 }else {
-                    alert(vm.res.message)
+                    alert(vm.res.message);
+                    vm.Mask =false;
                 }
             });
         },
@@ -293,10 +382,25 @@ del {
 }
 .mian div{
     width:100%;
-    height: 40px;
-    line-height: 40px;
+    /* height: 40px; */
+    /* line-height: 40px; */
 
 }
+/* 现金卷 */
+.p15 {
+    padding: 15px 0px;
+    overflow: hidden;
+}
+.mian .baoyou_desc {
+    padding:1px 5px;
+    border: 1px solid #ff8a00;
+    border-radius: 2px;
+    margin-left: 10px;
+    margin-top: -2px;
+    font-size: 13px;
+    color: #ff8a00;
+}
+/* 现金卷 */
 .foter {
     position: fixed;
     bottom:0;

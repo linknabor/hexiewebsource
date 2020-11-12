@@ -177,6 +177,14 @@ let router= new Router({
         title:'订单详情'
       }
     },
+    {
+      path:'/coupon',
+      name:'coupon',
+      component:resolve=> require(['@/pages/service/coupon'],resolve),
+      meta:{
+        title:'优惠券'
+      }
+    },
   ]
 })
 

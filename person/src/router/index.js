@@ -33,14 +33,6 @@ let router= new Router({
       }
     },
     {
-      path:'/coupons',
-      name:'coupons',
-      component:resolve=> require(['@/pages/coupons'],resolve),
-      meta:{
-        title:'我的现金券'
-      }
-    }, 
-    {
       path:'/myrepair',
       name:'myrepair',
       component:resolve=> require(['@/pages/myRepair/myrepair'],resolve),
@@ -235,7 +227,7 @@ let router= new Router({
     },
     {
       path:'/grouporders',
-      name:'/grouporders',
+      name:'grouporders',
       component:resolve => require(['@/pages/business/grouporders'],resolve),
       meta:{
         title:'我是商家'
@@ -243,10 +235,34 @@ let router= new Router({
     },
     {
       path:'/specialorders',
-      name:'/specialorders',
+      name:'specialorders',
       component:resolve => require(['@/pages/business/specialorders'],resolve),
       meta:{
         title:'我是商家'
+      }
+    },
+    {
+      path:'/getcoupons',
+      name:'getcoupons',
+      component:resolve => require(['@/pages/coupon/getcoupons'],resolve),
+      meta:{
+        title:'领券中心'
+      }
+    },
+    {
+      path:'/coupon',
+      name:'coupon',
+      component:resolve => require(['@/pages/coupon/coupon'],resolve),
+      meta:{
+        title:'优惠券'
+      }
+    },
+    {
+      path:'/invalidcoupon',
+      name:'invalidcoupon',
+      component:resolve => require(['@/pages/coupon/invalidcoupon'],resolve),
+      meta:{
+        title:'优惠券'
       }
     },
   ]

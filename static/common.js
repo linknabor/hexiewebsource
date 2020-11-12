@@ -36,7 +36,9 @@ var MasterConfig = function() {
 		oauthUrlPostSilent:"&response_type=code&scope=snsapi_base&state=123#wechat_redirect",
         baidu_map_key:"RUWUgrEEF5VjoaWsstMMZwOD",
 
-        is_debug:true
+        is_debug:true,
+
+        kyappid:'wxa54bc90bdbc845a8',
     },
 
     e = {};

@@ -47,12 +47,9 @@ export default {
        
     },
     methods: {
-        Homepage(){
-            
-        },
         paybtn() {
             vm.$router.push({path:'/singlepage'})
-        }
+        },
     }
 };
 </script>
@@ -75,6 +72,8 @@ export default {
     font-size: 0.3rem;
     color: #ff8000;
 }
+
+
 .dtp-img  {
     width: 0.4rem;
     margin-right: 0.3rem;

@@ -31,8 +31,8 @@
                     <div class="ov">
                         <span class="fl">运费</span><span class="fr">¥{{shipFee}}</span>
                     </div>
-                    <div class="ov">
-                        <span class="fl">现金券</span><span class="fr">¥0</span>
+                    <div class="ov" v-show="couponAmount!=null">
+                        <span class="fl">优惠券</span><span class="fr">-¥{{couponAmount}}</span>
                     </div>
                     <div class="ov fs18">
                         <span class="fl">实付金额</span><span class="fr color2">¥{{price}}</span>
@@ -71,6 +71,7 @@ export default {
             totalAmount:0, //不含运费的货物价格
             price:0, //含运费总价
             shipFee:0, //运费
+            couponAmount:0,
         };
     },
     created() {
@@ -107,6 +108,7 @@ export default {
                     vm.shipFee = vm.res.result.shipFee;
                     vm.price = vm.res.result.price;
                     vm.totalCount = vm.res.result.count;  
+                    vm.couponAmount = vm.res.result.couponAmount
                 } else {
                      alert(vm.res.message);
                 }

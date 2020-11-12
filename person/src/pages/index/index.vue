@@ -31,7 +31,7 @@
           </div>
         </div>
         <div class="point-item-wrap">
-          <div class="point-item" @click="coupons">
+          <div class="point-item" @click="mycoupons">
             <div class="point-info fs16">{{user.couponCount}}</div>
             <div class="point-title fs14">我的现金劵</div>
           </div>
@@ -39,15 +39,16 @@
       </div>
       <div id="point-list" style="border-bottom: none;" class="div_bottom" v-show="cardService==true">
         <div class="point-item-wrap item-wraps">
-          <div class="point-item">
+          <div class="point-item " >
             <div class="point-info fs16">{{point}}</div>
             <div class="point-title fs14">积分</div>
           </div>
         </div>
+        
         <div class="point-item-wrap item-wraps">
-          <div class="point-item" @click="coupons">
+          <div class="point-item" @click="mycoupons">
             <div class="point-info fs16">{{user.couponCount}}</div>
-            <div class="point-title fs14">现金劵</div>
+            <div class="point-title fs14">我的优惠券</div>
           </div>
         </div>
       </div>
@@ -113,6 +114,14 @@
     </div> -->
     <div>
       <div class="info-wrap" style="overflow:hidden; clear: both;">
+        <router-link
+          :to="{path:'/getcoupons'}"
+          class="input-wrap menu-person-link lite-divider"
+        >
+          <span class="input-info lf30 fs16">领券中心</span>
+          <span class="fr fs14 left_color">点击领取&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        </router-link>
+        
         <div @click="business" v-show="merchant"  class="input-wrap menu-person-link lite-divider">
             <span class="input-info lf30 fs16">我是商家</span>
             <span class="fr fs14 left_color">查看记录&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -234,7 +243,7 @@ export default {
     vm = this;
   },
   mounted() {
-    // this.initSession4Test();
+    // this.initSession4Test(); 
     this.User(); 
     vm.qrCodePayService();
   },
@@ -242,8 +251,12 @@ export default {
     //模仿线上用户信息
     // 105/747/384
     initSession4Test() {
-      let url = "/initSession4Test/8427";
-      vm.receiveData.getData(vm, url, "Data", function() {});
+      var url ='login/8427?code=8427';
+      var data = {
+        "oriApp": "wx95f46f41ca5e570e"
+      }
+      vm.receiveData.postData(vm,url,data,'res',function(){
+      });
     },
     User() {
       //获取页面数据
@@ -289,7 +302,9 @@ export default {
      qrCodePayService() {
       vm.receiveData.getData(vm, "/qrCodePayService", "res", function() {
         if (vm.res.success) {
-            vm.service_list = vm.res.result.service_list;
+          if(vm.res.result.service_list != null) {
+             vm.service_list = vm.res.result.service_list;
+          }
         } else {
           if(vm.res.message != null && vm.res.errorCode !=40001) {
              alert(vm.res.message);
@@ -328,9 +343,9 @@ export default {
             vm.$router.push({ path: "/bindphone" });
         }      
     },
-    //现金券
-    coupons() {
-      vm.$router.push({ path: "/coupons" });
+    //我的优惠券
+    mycoupons() {
+      vm.$router.push({ path: "/coupon" });
     },
     gotoAddress() {
         vm.$router.push({ path: "/addresses" });
@@ -372,7 +387,7 @@ export default {
 }
 .ind {
   background-color: #fffff8;
-      overflow-x: hidden;
+  /* overflow-x: hidden; */
 }
 .avatar-wrap {
   background-color: #ff8a00;
