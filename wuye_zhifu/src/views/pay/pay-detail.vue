@@ -604,7 +604,7 @@
                 vm.version=this.$route.query.getversion;
 		},
 		mounted(){
-			vm.common.checkRegisterStatus();
+			// vm.common.checkRegisterStatus();
 			// this.initSession4Test();
 			this.getBillDetail();
 			if(vm.cardPayService == 'true'){

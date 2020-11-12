@@ -29,7 +29,8 @@
                                 <div class="carttext" v-show="item.totalCount <= item.count ">无货</div>
                                 <div class="choose-num" v-show="item.count > 0 && item.totalCount > item.count">
                                         <span class="reducee" :class="{'reduceecolor':item.count >= 2}" @click="reducee(item)">-</span>
-                                        <input type="number" class="numberr" v-model="item.count" readonly>
+                                        <!-- <input type="number" class="numberr" v-model="item.count" readonly> -->
+                                        <span  class="numberr reduceecolor"> {{item.count}}</span>
                                         <span class="addd" :class="{'adddcolor':item.ruleId == xiangou}" @click="add(item,index)">+</span>
                                 </div>
                             </div>
@@ -518,15 +519,21 @@ del {
     text-align: center;
     color: #EDEDED;
     border-right:1px solid #E6E6E6;
+    vertical-align: bottom;
 }
 .reduceecolor {
     color: #000;
 }
 .numberr {
-    border:none;
+    /* border:none;
     outline: none;
-    width: 0.4rem;
+    width: 0.55rem;
+    text-align: center; */
+
+    padding:0 0.03rem;
+    line-height: 0.35rem;
     text-align: center;
+    vertical-align: bottom;
 }
 .addd {
     font-size: 0.3rem;
@@ -537,6 +544,7 @@ del {
     text-align: center;
     color:#000;
     border-left:1px solid #E6E6E6;
+    vertical-align: bottom;
 }
 .adddcolor {
     color: #EDEDED;

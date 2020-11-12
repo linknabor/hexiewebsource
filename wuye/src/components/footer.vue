@@ -103,9 +103,7 @@ export default{
       vm=this;
     },
     mounted(){
-      // let url = '/initSession4Test/8427';
-      //           vm.receiveData.getData(vm,url,'Data',function(){
-      // });
+      // vm.initSession4Test()
       vm.initUserInfo();
       vm.geturl();
     },
@@ -113,6 +111,14 @@ export default{
       vm.getclass();
     },
     methods: {
+         initSession4Test() {
+            var url ='login/46?code=46';
+            var data = {
+              "oriApp": "wx95f46f41ca5e570e"
+            }
+            vm.receiveData.postData(vm,url,data,'res',function(){
+            });
+         },
          initUserInfo(){
             let n = "GET",
                 a = "userInfo?oriApp="+vm.getUrlParam('oriApp'),

@@ -16,13 +16,13 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0,minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">  
     <script>
 
-        var baseurl = /127|test/.test(location.origin)?'https://test.e-shequ.com/weixin/':
-            /uat/.test(location.origin)?'https://uat.e-shequ.com/hexie/weixin/' : 'https://www.e-shequ.cn/weixin/';
+        var baseurl = /127|test/.test(location.origin)?'https://test.e-shequ.cn/weixin/':
+            /uat/.test(location.origin)?'https://uat.e-shequ.cn/hexie/weixin/' : 'https://www.e-shequ.cn/weixin/';
 
         var requrl = baseurl + "otherPay.html"+window.location.search;
 
-        var wechat_url = /127|test/.test(location.origin)?'https://test.e-shequ.com/wechat/hexie/wechat':
-            /uat/.test(location.origin)?'https://uat.e-shequ.com/wechat/hexie/wechat' : 'https://www.e-shequ.cn/wechat/hexie/wechat/';
+        var wechat_url = /127|test/.test(location.origin)?'https://test.e-shequ.cn/wechat/hexie/wechat':
+            /uat/.test(location.origin)?'https://uat.e-shequ.cn/wechat/hexie/wechat' : 'https://www.e-shequ.cn/wechat/hexie/wechat/';
 
         var appId = "";
         function query() {
@@ -312,9 +312,10 @@
             list.sect_id = sect_id;
             list.fee_id = fee_id;
             list.qrcode_id = qrcode_id;
-            list.house_id = house_id;
+            list.mng_cell_id = house_id;
             if("Alipay" === checkclient) {
                 list.openid = user_id;
+				list.appid = appId;
             } else if("WeiXin" === checkclient) {
 				if($("#money").val() > 10000) {
                     alert("超出微信二维码支付单笔限额，请拆成多笔支付（单笔10000元及以下），或使用支付宝扫码");
@@ -322,8 +323,9 @@
                     return;
                 }
                 list.openid = openid;
+				list.appid = cull_appid;
             }
-            list.appid = appId;
+            list.real_appid = cull_appid;
             console.log(JSON.stringify(list));
 
             $.ajax({
