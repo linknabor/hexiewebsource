@@ -115,6 +115,7 @@ export default {
            product: {
                 pictureList:[],
             },
+            showProduct: {},
             rule:{
                 currentNum:0,
             },
