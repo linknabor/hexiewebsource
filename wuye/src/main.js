@@ -37,6 +37,7 @@ Vue.prototype.receiveData = receiveData;
 // import {common,MasterConfig,getUrlParam,dealWithAjaxData} from './assets/js/common';
 
 Vue.prototype.common = common;
+Vue.prototype.is_config = MasterConfig;
 Vue.prototype.baseUrl = MasterConfig.C('baseUrl');
 Vue.prototype.basePageUrl = MasterConfig.C('basePageUrl');
 Vue.prototype.basePageUrlpay = MasterConfig.C('basePageUrlpay');
@@ -62,7 +63,7 @@ var axiosInstance = axios.create({
 
     },
     baseURL:Vue.prototype.baseUrl,
-    // baseURL:'api',
+    // baseURL:'http://192.168.1.185:86',
    
     withCredentials:true,
     transformResponse: [function (data) {//数据转换

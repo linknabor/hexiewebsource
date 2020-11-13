@@ -31,7 +31,7 @@
           </div>
         </div>
         <div class="point-item-wrap">
-          <div class="point-item" @click="coupons">
+          <div class="point-item" @click="mycoupons">
             <div class="point-info fs16">{{user.couponCount}}</div>
             <div class="point-title fs14">我的现金劵</div>
           </div>
@@ -39,15 +39,16 @@
       </div>
       <div id="point-list" style="border-bottom: none;" class="div_bottom" v-show="cardService==true">
         <div class="point-item-wrap item-wraps">
-          <div class="point-item">
+          <div class="point-item " >
             <div class="point-info fs16">{{point}}</div>
             <div class="point-title fs14">积分</div>
           </div>
         </div>
+        
         <div class="point-item-wrap item-wraps">
-          <div class="point-item" @click="coupons">
+          <div class="point-item" @click="mycoupons">
             <div class="point-info fs16">{{user.couponCount}}</div>
-            <div class="point-title fs14">现金劵</div>
+            <div class="point-title fs14">我的优惠券</div>
           </div>
         </div>
       </div>
@@ -61,7 +62,6 @@
         class="input-wrap  lite-divider disb"
       >
         <span class="input-info lf30 fs16">全部订单</span>
-        <!-- <span class="fr fs16 left_color mrg5" >全部订单&nbsp;&nbsp;&nbsp;&nbsp;</span> -->
       </a>
     </div>
 
@@ -72,14 +72,6 @@
           <div class="module-title fs14">商城订单</div>
         </a>
       </div>
-      <!-- <div v-if="donghu" class="module-item-wrap" >
-        <a v-if="donghu" class="module-itemdh" :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/grouporders'">
-            <div class="module-logodh logo4" >
-                <div class="module-titledh fs14">团购订单</div>
-            </div>
-            <div></div>
-         </a>
-      </div> -->
       <div class="module-item-wrap module-newwidth">
         <!-- <a v-if="donghu" class="module-itemdh" :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/homeorders'">
             <div class="module-logodh logo5" >
@@ -92,12 +84,6 @@
         </router-link> 
       </div>
 
-      <!-- <div  class="module-item-wrap module-newwidth" >
-        <a class="module-item" :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/cardorder'">
-          <div class="module-logo logo6"></div>
-          <div class="module-title fs14">优惠订单</div>
-        </a>
-      </div> -->
        <div  class="module-item-wrap module-newwidth" >
         <router-link class="module-item" :to="{path:'/myrepair'}">
           <div class="module-logo logo7"></div>
@@ -128,21 +114,18 @@
     </div> -->
     <div>
       <div class="info-wrap" style="overflow:hidden; clear: both;">
-        <!-- <router-link
-            :to="{path:'/'}"
-            class="input-wrap menu-person-link lite-divider"
-          >
+        <div @click="business" v-show="merchant"  class="input-wrap menu-person-link lite-divider">
             <span class="input-info lf30 fs16">我是商家</span>
             <span class="fr fs14 left_color">查看记录&nbsp;&nbsp;&nbsp;&nbsp;</span>
-        </router-link> -->
+        </div>
         <router-link
-          :to="{path:'/cardrollrecords'}"
+          :to="{path:'/getcoupons'}"
           class="input-wrap menu-person-link lite-divider"
-          v-show="evoucherOperator"
         >
-          <span class="input-info lf30 fs16">我是核销人员</span>
-          <span class="fr fs14 left_color">查看记录&nbsp;&nbsp;&nbsp;&nbsp;</span>
+          <span class="input-info lf30 fs16">领券中心</span>
+          <span class="fr fs14 left_color">点击领取&nbsp;&nbsp;&nbsp;&nbsp;</span>
         </router-link>
+
         <router-link
           :to="{path:'/service'}"
           class="input-wrap menu-person-link lite-divider"
@@ -175,7 +158,7 @@
 
       <div class="info-wrap">
         <a
-          :href="this.basePageUrl+'wuye/index.html?'+oriapp+'#/Myhouse'"
+          :href="this.basePageUrl+'wuye/index.html?'+this.common.getoriApp()+'#/Myhouse'"
           class="input-wrap menu-person-link lite-divider"
         >
           <span class="input-info lf30 fs16">我是业主</span>
@@ -241,14 +224,14 @@ export default {
       },
       service_list:[],
       login:false,
-      oriapp:'', //我是业主
       cardService:'',
       qrCode:'',//二维码
       point:0,//积分
       cardStatus:'',//是否领卡激活的标记
       // donghu:false,//标识判断是不是东湖
       serviceOperator:false, //我是服务人员
-      evoucherOperator:false,//核销卡卷
+      evoucherOperator:'',//核销卡卷
+      merchant:false,//我是商家
       user_info: {
         avatar: img,
         nickname: "游客",
@@ -260,17 +243,20 @@ export default {
     vm = this;
   },
   mounted() {
-    // this.initSession4Test();
+    // this.initSession4Test(); 
     this.User(); 
     vm.qrCodePayService();
-    // vm.oriApp();//判断我是业主地址
   },
   methods: {
     //模仿线上用户信息
     // 105/747/384
     initSession4Test() {
-      let url = "/initSession4Test/8427";
-      vm.receiveData.getData(vm, url, "Data", function() {});
+      var url ='login/8427?code=8427';
+      var data = {
+        "oriApp": "wx95f46f41ca5e570e"
+      }
+      vm.receiveData.postData(vm,url,data,'res',function(){
+      });
     },
     User() {
       //获取页面数据
@@ -291,6 +277,7 @@ export default {
             vm.cardService=n.result.cardService;
             vm.serviceOperator = n.result.serviceOperator;//我是服务人员
             vm.evoucherOperator = n.result.evoucherOperator;//核销卡卷
+            vm.merchant = n.result.merchant;//我是商家
             if(vm.user.point<0){//小于0等于0
               vm.point=0;
             }else {
@@ -315,9 +302,13 @@ export default {
      qrCodePayService() {
       vm.receiveData.getData(vm, "/qrCodePayService", "res", function() {
         if (vm.res.success) {
-            vm.service_list = vm.res.result.service_list;
+          if(vm.res.result.service_list != null) {
+             vm.service_list = vm.res.result.service_list;
+          }
         } else {
-          // alert(vm.res.message);
+          if(vm.res.message != null && vm.res.errorCode !=40001) {
+             alert(vm.res.message);
+          }
         }
       });
     },
@@ -352,9 +343,9 @@ export default {
             vm.$router.push({ path: "/bindphone" });
         }      
     },
-    //现金券
-    coupons() {
-      vm.$router.push({ path: "/coupons" });
+    //我的优惠券
+    mycoupons() {
+      vm.$router.push({ path: "/coupon" });
     },
     gotoAddress() {
         vm.$router.push({ path: "/addresses" });
@@ -362,9 +353,15 @@ export default {
     Notice() {
       vm.$router.push({path:'/notices'})
     },
-    //我是业主
-    oriApp() {
-      vm.oriapp=vm.common.getoriApp();
+    //我是商家 
+    business() {
+      var evoucherOperator = '';
+      if(this.evoucherOperator) {
+        evoucherOperator = 'true';
+      }else {
+        evoucherOperator = 'false';
+      }
+      vm.$router.push({path:'/specialorders',query:{'evoucherOperator':evoucherOperator,type:'1'}});
     }
   },
   computed: {},
@@ -390,7 +387,7 @@ export default {
 }
 .ind {
   background-color: #fffff8;
-      overflow-x: hidden;
+  /* overflow-x: hidden; */
 }
 .avatar-wrap {
   background-color: #ff8a00;

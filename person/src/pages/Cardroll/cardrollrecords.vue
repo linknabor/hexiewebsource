@@ -1,5 +1,16 @@
 <template>
     <div class="records">
+        <div class="header ov" :class="{'header-width':evoucherOperator == 'true'}">
+            <div class="fl" :class="{'white':type == 1}" @click="goorder(1)">
+                <span :class="{'spanborder':type == 1}">电商订单</span>
+            </div>
+            <div class="fl writeshow " :class="{'white':type == 2,'writeoff':evoucherOperator == 'true' }" @click="goorder(2)">
+                <span :class="{'spanborder':type == 2}">核销记录</span>
+            </div>
+            <div class="fl" :class="{'white':type == 3}" @click="goorder(3)">
+                <span :class="{'spanborder':type == 3}">团购订单</span>
+            </div>
+        </div>
         <div >
             <div class="search">
                 <form  action="javascript:javascript:viod 0" class="fl">
@@ -31,6 +42,8 @@ export default {
             Operator:[],
             andios:'',
             faly:true,
+            type:this.$route.query.type,
+            evoucherOperator:this.$route.query.evoucherOperator,//核销卡卷
         };
     },
     created() {
@@ -82,8 +95,6 @@ export default {
                     vm.faly = true;
                 });
             }
-
-
         },
         //点击搜索
         search(){
@@ -98,23 +109,62 @@ export default {
                 vm.bycode();
             }
         },
+        //切换订单
+        goorder(ind) {
+            if(ind == 1) {
+                vm.$router.push({path:'/specialorders',query:{'evoucherOperator':vm.evoucherOperator,'type':ind}});
+            }else if (ind == 2) {
+                vm.$router.push({path:'/cardrollrecords',query:{'evoucherOperator':vm.evoucherOperator,'type':ind}});
+            }else {
+                vm.$router.push({path:'/grouporders',query:{'evoucherOperator':vm.evoucherOperator,'type':ind}})
+            }
+        },
     }
 };
 </script>
 
 <style scoped>
 .records {
-  background: #FFFFFF ;
+  background: #EEEEEE ;
   position:absolute;
   left:0;
   right:0;
   top:0;
   bottom:0;
+  overflow: auto;
 }
+.header {
+    font-size: 14px;
+    background-color:#E8E8E8;
+}
+.header div {
+    width:50%;
+    height: 45px;
+    line-height: 45px;
+    text-align: center;
+}
+.writeshow {
+    display: none;
+}
+.header-width  div{
+    width:33.3%;
+}
+.header .writeoff {
+    display: block;
+}
+.header div .spanborder{
+   padding-bottom:5px;
+   border-bottom:2px solid #F08500;
+}
+.header div.white {
+    background-color:white;
+}
+
 .search{
     padding:0.2rem 0.8rem;
     border-bottom: 1px solid rgba(187, 187, 187, 1);
     overflow: hidden;
+    background-color:#fff;
 }
 .search form {
     position:relative;

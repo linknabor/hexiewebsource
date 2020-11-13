@@ -983,10 +983,10 @@ export default {
         var oriapp=vm.common.getoriApp();
         var oriap = vm.getUrlParam('oriApp');
         if(oriap == 'wxe8dea53aad1a93b9') {
-          window.location.href =vm.basedhzj3Url +"wuyepay.html?"+oriapp+"?#/?billIds=" +bills + "&stmtId=" + vm.stmtId + 
+          window.location.href =vm.basedhzj3Url +"wuyepay.html?"+oriapp+"#/?billIds=" +bills + "&stmtId=" + vm.stmtId + 
          "&totalPrice=" +vm[allPrice] + "&reduceMode=" + vm.reduceMode + "&regionname=" +vm.regionname +"&getversion=" + "02"+"&cardPayService="+vm.cardPayService + "&payFeeType=01" + "&selected="+vm.selected;
         }else {
-         window.location.href =vm.basePageUrl +"wuyepay.html?"+oriapp+"?#/?billIds=" +bills + "&stmtId=" + vm.stmtId + 
+         window.location.href =vm.basePageUrl +"wuyepay.html?"+oriapp+"#/?billIds=" +bills + "&stmtId=" + vm.stmtId + 
          "&totalPrice=" +vm[allPrice] + "&reduceMode=" + vm.reduceMode + "&regionname=" +vm.regionname +"&getversion=" + "02"+"&cardPayService="+vm.cardPayService + "&payFeeType=01" + "&selected="+vm.selected;
         }
     },

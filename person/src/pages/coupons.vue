@@ -52,7 +52,7 @@
        <!-- 大优惠券  -->
     <div class="coupon-overlay" v-if="showdetail" @click="hideDetail">
 	
-     </div>
+    </div>
 
     <div class="coupon_detail" v-if="showdetail">
             <div class="coupon_detail_title">

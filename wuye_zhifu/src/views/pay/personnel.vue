@@ -79,7 +79,7 @@ export default {
                 vm.cycleArrs = vm.res.result.cycle_arrs;//账期
                 vm.image = 'data:image/png;base64,'+vm.res.result.image;
             }else {
-                alert(vm.res.messages)
+                alert(vm.res.message)
             }
             
         })

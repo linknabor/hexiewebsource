@@ -14,6 +14,12 @@ let router= new Router({
   // mode:'history',
   routes: [
     {
+      path: '/couponadd',
+      name: 'couponadd',
+      component: resolve=> require(['@/pages/index/coupon'],resolve),
+     
+    },
+    {
       path: '/',
       name: 'indesx',
       component: resolve=> require(['@/pages/index'],resolve),
@@ -60,7 +66,15 @@ let router= new Router({
       meta:{
         title:''
       }
-    }
+    },
+    {
+      path:'/coupon',
+      name:'coupon',
+      component:resolve=> require(['@/components/coupon/coupon'],resolve),
+      meta:{
+        title:'优惠券'
+      }
+    },
   ]
 })
 

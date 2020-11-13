@@ -20,7 +20,11 @@ a{color: #000;}
 .jgg_li a{    opacity: 1;
     color: rgba(16, 16, 16, 1);
     font-family: 'PingFangSC-regular';}
-.jgg_img{margin: 10px auto 10px;width: 28px;height: 30px;}
+.jgg_img{
+    margin: 10px auto 10px;
+    width: 40px;
+    /* height: 30px; */
+}
 .jgg_img img{width:100%;height: 100%;}
 /* 资讯 */
 .inner{
@@ -166,13 +170,14 @@ overflow: hidden; background-color: white;}
         <li class="jgg_li">
           <router-link to="/pay">
             <div class="jgg_img">
-              <img src="http://img.e-shequ.cn/Fhq2GvOWKsy9tG2IPvN_KouykRT5" alt="tt">
+              <img v-show="!kyappid" src="http://img.e-shequ.cn/Fhq2GvOWKsy9tG2IPvN_KouykRT5" alt="tt">
+              <img v-show="kyappid" src="http://img.e-shequ.com/Fpb22vqH_vRqrv4Cv93jku3wpblT" alt="tt">
             </div>
             <span>物业缴费</span>
           </router-link>
         </li>
 
-        <li class="jgg_li">
+        <li class="jgg_li" v-show="!kyappid">
           <router-link to="/paymentquery">
             <div class="jgg_img">
               <img src="http://img.e-shequ.cn/FpyFhyQVInnK_7miteFa-Xq5ndp5" alt="tt">
@@ -181,10 +186,20 @@ overflow: hidden; background-color: white;}
           </router-link>
         </li> 
 
+        <li class="jgg_li" v-show="kyappid">
+          <div @click="gotoThread()">
+            <div class="jgg_img">
+              <img src="http://img.e-shequ.com/FmBwFvjiR7rtIoV83JOcFF_UcuGt" alt="tt">
+            </div>
+            <span>社区互动</span>
+          </div>
+        </li>    
+
         <li class="jgg_li" >
           <router-link to="/myhouse">
             <div class="jgg_img">
-              <img src="http://img.e-shequ.cn/FoR1Saide9rMWK9nEBtbuxE5Vmh0" alt="tt">
+              <img v-show="!kyappid" src="http://img.e-shequ.cn/FoR1Saide9rMWK9nEBtbuxE5Vmh0" alt="tt">
+              <img v-show="kyappid" src="http://img.e-shequ.com/FvqDXOVlBl5JiFuULnSWbobLCoUJ" alt="tt">
             </div>
             <span>我是业主</span>
           </router-link>
@@ -193,7 +208,8 @@ overflow: hidden; background-color: white;}
         <li class="jgg_li" >
             <div class="link"  @click="gotorepair()">
                 <div class="jgg_img">
-                    <img src="http://img.e-shequ.cn/FvXta8SzetfBaBYyaB3fX-HQ1Vza" alt="tt">
+                    <img v-show="!kyappid" src="http://img.e-shequ.cn/FvXta8SzetfBaBYyaB3fX-HQ1Vza" alt="tt">
+                    <img v-show="kyappid" src="http://img.e-shequ.com/FvCBrn2fVvHqpvTy9T24vvCmTUwa" alt="tt">
                 </div>
                 <span class="jgg-span">便民维修</span>
             </div>
@@ -202,7 +218,8 @@ overflow: hidden; background-color: white;}
         <li class="jgg_li" >
           <div @click="Paystop">
             <div class="jgg_img">
-              <img src="http://img.e-shequ.cn/FuGXrSZLRWdYqydXGir48wipF2Fn" alt="tt">
+              <img v-show="!kyappid" src="http://img.e-shequ.cn/FuGXrSZLRWdYqydXGir48wipF2Fn" alt="tt">
+              <img v-show="kyappid" src="http://img.e-shequ.com/Fr9wzxp17jaOsu0WMgZfp-2_xVhV" alt="tt">
             </div>
             <span>社区电商</span>
           </div>
@@ -211,7 +228,8 @@ overflow: hidden; background-color: white;}
         <li class="jgg_li">
           <a :href="this.basePageUrlpay+'hxrgroups.html?'+this.common.getoriApp()">
             <div class="jgg_img">
-              <img src="http://img.e-shequ.cn/FkJWpnGhosNorRy4zPilU0kWZmG9" alt="tt">
+              <img v-show="!kyappid" src="http://img.e-shequ.cn/FkJWpnGhosNorRy4zPilU0kWZmG9" alt="tt">
+              <img v-show="kyappid" src="http://img.e-shequ.com/FhtqTqm5MyJRA8e7fSO8ptnPDP-Z" alt="tt">
             </div>
             <span>社区团购</span>
           </a>
@@ -220,16 +238,19 @@ overflow: hidden; background-color: white;}
         <li class="jgg_li">
           <a :href="this.basePageUrl+'home/index.html?'+this.common.getoriApp()">
             <div class="jgg_img">
-              <img src="http://img.e-shequ.cn/FqovzXqEh_kowBX9eXVVGtkwkivP" alt="tt">
+              <img v-show="!kyappid" src="http://img.e-shequ.cn/FqovzXqEh_kowBX9eXVVGtkwkivP" alt="tt">
+              <img v-show="kyappid" src="http://img.e-shequ.com/FgVwSOkHJzHD758K9m2px_fdnKW9" alt="tt">
             </div>
-            <span>周边服务</span>
+            <span v-show="!kyappid">周边服务</span>
+            <span v-show="kyappid">居民服务</span>
           </a>
         </li>
 
         <li class="jgg_li">
           <a :href="this.basePageUrl+'group/onsales.html?'+this.common.getoriApp()+'#/cardrollindex'">
             <div class="jgg_img">
-              <img src="http://img.e-shequ.cn/Frut5vg031RPFCfsfDmqEotlVXlg" alt="tt">
+              <img v-show="!kyappid" src="http://img.e-shequ.cn/Frut5vg031RPFCfsfDmqEotlVXlg" alt="tt">
+              <img v-show="kyappid" src="http://img.e-shequ.com/FtDdOHIIy_OtREne8Z98l3WsTjeo" alt="tt">
             </div>
             <span>周边优惠</span>
           </a>
@@ -307,6 +328,7 @@ export default {
     },
     data () {
         return {
+            kyappid:false,
             isloadPage:false,
             zixuns1:[],
             page : 0,
@@ -354,6 +376,7 @@ export default {
     },
     mounted(){
         Bus.$on("sends",this.getMsgFromZha);
+        vm.getky();
     },
     updated() {
         vm.$nextTick(()=> {
@@ -366,6 +389,12 @@ export default {
             Bus.$off();
 　　},
     methods: {
+        //判断昆亿公众号
+        getky() {
+            var urloriapp = vm.common.getoriApp();//url标识
+            var comappid ="oriApp="+vm.is_config.C('kyappid');//配置昆亿appid
+            vm.kyappid = comappid == urloriapp ? true:false;
+        },
         //模仿线上用户信息/105/747/384/
         initSession4Test(){
             let url = '/initSession4Test/1';
@@ -425,7 +454,33 @@ export default {
                         },
                     ]
                 }else {
+                    if(vm.cfgParam == null){
+                        return;
+                    }
                     if(vm.cfgParam.ONLINE_MESSAGE==1) {
+                        if(vm.kyappid) {
+                             vm.tabs=[ 
+                                {
+                                    name: '招聘信息发布',
+                                    type: 1,
+                                    active:true,
+                                    dhwidth:true,
+                                },
+                                {
+                                    name: '物业公告',
+                                    type: 0 ,
+                                    active:false,
+                                    dhwidth:true,
+                                },
+                                {
+                                    name: '闲置物品发布',
+                                    type: 2,
+                                    active:false,
+                                    dhwidth:true,
+                                },
+                            ] 
+                            
+                        }else {
                             vm.tabs=[ 
                                 {
                                     name: '社区生活',
@@ -448,7 +503,9 @@ export default {
                                     active:false,
                                     ali:true
                                 },
-                            ]
+                            ]  
+                        }
+
                     }else {
                         vm.tabs=[ 
                                 {
