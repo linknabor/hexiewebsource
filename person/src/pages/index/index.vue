@@ -114,13 +114,10 @@
     </div> -->
     <div>
       <div class="info-wrap" style="overflow:hidden; clear: both;">
-        <!-- <router-link
-            :to="{path:'/'}"
-            class="input-wrap menu-person-link lite-divider"
-          >
+        <div @click="business" v-show="merchant"  class="input-wrap menu-person-link lite-divider">
             <span class="input-info lf30 fs16">我是商家</span>
             <span class="fr fs14 left_color">查看记录&nbsp;&nbsp;&nbsp;&nbsp;</span>
-        </router-link> -->
+        </div>
         <router-link
           :to="{path:'/getcoupons'}"
           class="input-wrap menu-person-link lite-divider"

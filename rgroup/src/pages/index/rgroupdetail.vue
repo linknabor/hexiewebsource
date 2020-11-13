@@ -152,9 +152,6 @@ export default {
        window.removeEventListener('scroll', this.handleScroll);
    },
    methods: {
-       setShare() {
-			 vm.common.initShareConfig(vm.rule.name,vm.basePageUrlpay+"hxrgroups.html?"+vm.common.getoriApp()+"#/rgroupdetail?ruleId="+vm.ruleId,vm.product.smallPicture,"快来参加"+vm.common.newname+"的优惠商品抢购吧",wx);
-       },
         handleScroll () {
             var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
             var offsetTop = document.querySelector('#searchBar').offsetTop
