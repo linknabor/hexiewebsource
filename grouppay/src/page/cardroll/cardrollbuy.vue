@@ -147,9 +147,10 @@ export default {
             }
             if(vm.couponid == undefined) {
                 vm.coupon = vm.coupons[0];
-                vm.couponid = vm.coupon.id;
+                if(vm.coupon !=undefined){
+                    vm.couponid = vm.coupon.id;
+                }
             }
-            // console.log(111,vm.coupon);
             if (vm.coupon != null) {
                 // console.log(vm.coupon.usageCondition > vm.amounts,vm.coupon.usageCondition,pa);
                 if(vm.coupon.usageCondition ==null || vm.coupon.usageCondition > pa) {
