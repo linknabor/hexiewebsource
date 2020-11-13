@@ -19,6 +19,7 @@ var MasterConfig = function() {
 
         payPageFolder:/127|test|192/.test(location.origin)?'https://test.e-shequ.cn/pay/':
         /uat/.test(location.origin)?'https://uat.e-shequ.cn/pay/':
+
         'https://www.e-shequ.cn/pay/',
 
         appId: /127|test|192/.test(location.origin)?'wx95f46f41ca5e570e':

@@ -114,6 +114,13 @@
     </div> -->
     <div>
       <div class="info-wrap" style="overflow:hidden; clear: both;">
+        <!-- <router-link
+            :to="{path:'/'}"
+            class="input-wrap menu-person-link lite-divider"
+          >
+            <span class="input-info lf30 fs16">我是商家</span>
+            <span class="fr fs14 left_color">查看记录&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        </router-link> -->
         <router-link
           :to="{path:'/getcoupons'}"
           class="input-wrap menu-person-link lite-divider"
@@ -121,11 +128,7 @@
           <span class="input-info lf30 fs16">领券中心</span>
           <span class="fr fs14 left_color">点击领取&nbsp;&nbsp;&nbsp;&nbsp;</span>
         </router-link>
-        
-        <div @click="business" v-show="merchant"  class="input-wrap menu-person-link lite-divider">
-            <span class="input-info lf30 fs16">我是商家</span>
-            <span class="fr fs14 left_color">查看记录&nbsp;&nbsp;&nbsp;&nbsp;</span>
-        </div>
+
         <router-link
           :to="{path:'/service'}"
           class="input-wrap menu-person-link lite-divider"
