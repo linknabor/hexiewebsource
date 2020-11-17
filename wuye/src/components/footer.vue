@@ -112,7 +112,7 @@ export default{
     },
     methods: {
          initSession4Test() {
-            var url ='login/46?code=46';
+            var url ='login/8427?code=8427';
             var data = {
               "oriApp": "wx95f46f41ca5e570e"
             }
