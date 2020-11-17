@@ -211,7 +211,8 @@ overflow: hidden; background-color: white;}
                     <img v-show="!kyappid" src="http://img.e-shequ.cn/FvXta8SzetfBaBYyaB3fX-HQ1Vza" alt="tt">
                     <img v-show="kyappid" src="http://img.e-shequ.com/FvCBrn2fVvHqpvTy9T24vvCmTUwa" alt="tt">
                 </div>
-                <span class="jgg-span">便民维修</span>
+                <span class="jgg-span" v-show="!kyappid">便民维修</span>
+                <span class="jgg-span" v-show="kyappid">物业报修</span>
             </div>
         </li>
 
@@ -242,7 +243,7 @@ overflow: hidden; background-color: white;}
               <img v-show="kyappid" src="http://img.e-shequ.com/FgVwSOkHJzHD758K9m2px_fdnKW9" alt="tt">
             </div>
             <span v-show="!kyappid">周边服务</span>
-            <span v-show="kyappid">居民服务</span>
+            <span v-show="kyappid">家政服务</span>
           </a>
         </li>
 
