@@ -387,7 +387,6 @@ export default {
 .addr {
     background-color: #fffff8;
     padding-bottom: 1px;
-    padding:0 15px;
 }
 
 .address-wrap {

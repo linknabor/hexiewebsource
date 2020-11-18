@@ -1,9 +1,6 @@
 <template>
    <div >
-       <!-- <div id ="div11" v-show="rgoupscontent=='list'" style="margin:0 auto;border:0px solid #000;width:300px;height:100px;line-height: 450px;text-align: center;">
-           <span style='font-size: 18px;'>您的小区尚未开通报名，敬请期待！</span>
-       </div> -->
-       <div id="div12" v-show="rgoupscontent=='main'">
+       <div id="div12">
         <!-- load -->
 		<div class="load6" id="LoadingBar" v-show="load">
 			<div class="bounce1"></div>
@@ -22,36 +19,33 @@
 			<img src="../../assets/images/index/c3d7f369-4a5e-4c4a-9fb9-a4b9d274c7e1.gif" style="width:40px;height40px;vertical-align: middle;">
 		</div>
 	    <!-- load -->
-        <div class="mb_6" id="indexDiv" >
+        <div class="mb_6" id="indexDivs" @scroll="getscroll">
+        <div id="indexDiv">    
             <div class="banner">
                 <img alt="" src="http://img.e-shequ.com/Frjki5qYnDFQ3SxPoPKMJvWb36g8" style="width:100%">
             </div>
             <!-- 商品 -->
-            <div id="products" class="mlr1">
-                <div class="tuangou-item" v-for="(rgroup,index) in  rgroups" :key="index" style="padding-bottom:75px;width:100%" @click="Hrefs(rgroup.ruleId)" >
-                    <img alt="" class="product-image" :src="rgroup.productPic"/>
-                    <!-- <img alt="" class="product-image" src="http://img.e-shequ.com/FkcZqBr8qH41Ks7cUj4XeGVXFsSy"/> -->
-                    <div style="width:100%">
-                        <div class="fl pt5" style="height:70px;width: 100%;">
-                            <div class="product-name pl05 fs20 pt" style="margin-right: 75px;line-height: 15px;">{{rgroup.ruleName}}</div>
-                            <div class="mt1 ml1" >
-                                <span class="highlight fs20">¥&nbsp;{{rgroup.price}}&nbsp;</span>
-                                <span class="ori-price"><del>¥&nbsp;{{rgroup.oriPrice}}&nbsp;</del></span>
-                                <span class=" product-lefttime" >{{leftTimeStrs(index)}}</span>
-                            </div>
+            <div class="mlr5" >
+                <div style="width: 50%;float:left;" v-for="(product,index) in rgroups" :key="product.id" >
+                    <div class="product-item" :class="{pleft:index%2==1,pright:index%2==0}" @click="Hrefs(product.ruleId)">
+                        <div class="pic_container">
+                            <div class="pic_dummy"></div>
+                            <img alt="" class="product-image pic_content" :src="product.productPic"/>
+                            <img v-if="product.tagUrl!=null&&product.tagUrl!=''" class="product-tag" :src="product.tagUrl"/>
                         </div>
-                         <div class="fr process-left-border" id="processImg">
-                            <canvas ref="can" style="z-index:10; background-color: white;" width="70px" height="70px" ></canvas>
+                        <div class="product-name pl05">{{product.ruleName}}</div>
+                        <div class="mt1 pl05">
+                            <span class="highlight fs20">¥&nbsp;{{product.price}}&nbsp;</span>
+                            <span class="ori-price"><del>¥&nbsp;{{product.oriPrice}}&nbsp;</del></span>
+                            <span  class="product-discount">{{product.discount}}</span>
                         </div>
-                       
-			    	</div>
+                    </div>
                 </div>
-                <!-- <div class="text-b" v-show="rgroups.length == 0">
-                    <span>您所在的小区未开通当前服务</span>
-                </div>   -->
+                <div style="clear:both;"></div>
             </div>
         </div>
-        <div style="height:.5rem;clear:both">&nbsp;</div>
+        <div style="height:60px;clear:both">&nbsp;</div>
+        </div>
        </div>
    </div>
 </template>
@@ -69,29 +63,21 @@ export default {
            hidden:false,
            page:0,
            rgroups:[],//团购商品
-           rgoupscontent:'main'
+           sectId:'',
        };
    },
    created(){
        vm=this;
        },
    mounted() {
-
-         let url = location.href.split('#')[0];
+        let url = location.href.split('#')[0];
         vm.receiveData.wxconfig(vm,wx,['onMenuShareTimeline','onMenuShareAppMessage'],url);
 
         vm.initShareSetting();
-        
         // vm.initSession4Test();
-       vm.User();
-       vm.query();
-       vm.updateLeftTime();//计时器
-        
-       window.addEventListener('scroll',vm.getscroll);
-
+        vm.User();
    },
    updated(){
-       vm.drawP()     
    },
     
    components: {
@@ -110,9 +96,11 @@ export default {
         //模仿线上用户信息
             // 105/747/384
         initSession4Test(){
-                let url ='/initSession4Test/1';
-                    vm.receiveData.getData(vm,url,'Data',function(){
-                });
+            let url = "/login/8427?code=8427";
+            var data = {
+                'oriApp':'wx95f46f41ca5e570e'
+            }
+            vm.receiveData.postData(vm, url,data,"res",function () {});
         },
          User() {
         //获取页面数据
@@ -121,7 +109,11 @@ export default {
             i = null,
             d = function() {},
             e = function(n) {
-            But.$emit('sends',n.result.iconList)
+            vm.sectId = n.result.sectId;    
+            But.$emit('sends',n.result.iconList);
+            vm.query();
+            //存储cookie中
+            vm.common.updatecookie(n.result.cardStatus,n.result.cardService,n.result.id,n.result.appid,n.result.cspId,n.result.sectId,n.result.cardPayService,n.result.bgImageList,n.result.wuyeTabsList,n.result.qrCode,n.result);
             },
             r = function() {
             };
@@ -130,112 +122,39 @@ export default {
         },
        query() {
         let n = "GET",
-            a = "rgroups/"+vm.page,
+            a = "rgroups/v2/"+vm.page,
             i = null,
             d=function() { },
             e = function(n){
-                 vm.rgroups = n.result;
-                 vm.load=false;
-                 vm.page++;  
-                //  if(vm.rgroups.length==0) {
-                //      vm.rgoupscontent="list"
-                //  }
+                if(vm.sectId == "" || vm.sectId == 'null' || vm.sectId == 0 || vm.sectId == null) {
+                     vm.rgroups = n.result;
+                     vm.load=false;
+                     vm.page++;
+                }else {
+                    if(n.result.length == 0) {
+                        vm.load=false;
+                        alert("您所在小区暂未开通该功能，敬请期待");
+                        window.location.href = vm.basePageUrl+'wuye/index.html?'+vm.common.getoriApp()+'#/';
+                        return 
+                    }else {
+                        vm.rgroups = n.result;
+                        vm.load=false;
+                        vm.page++;
+                    }
+                 } 
+                  
             },
             r = function(){
                 vm.load=false;
             };
            this.common.invokeApi(n,a,i,d,e,r);
        },
-       //canvas 画板
-       drawP(){
-        //    console.log(vm.$refs.can)
-            for(var i=0;i<vm.rgroups.length;i++) {
-                vm.drawProcess($("#products canvas")[i],35,35,28,vm.rgroups[i].process,'#E5E2DD','#FF8A00','#FF8A00')
-           }
-           
-       },
-        drawProcess(canvas,x,y,radius,process,backColor,proColor,fontColor){
-                if(process == undefined || process == null) {
-                    return;
-                }
-                if (canvas.getContext) {
-                    var cts = canvas.getContext('2d');
-                }else{
-                    return;
-                }
-                //画圆
-                cts.beginPath();  
-                // 坐标移动到圆心  
-                cts.moveTo(x, y);  
-                // 画圆,圆心是24,24,半径24,从角度0开始,画到2PI结束,最后一个参数是方向顺时针还是逆时针  
-                cts.arc(x, y, radius, 0, Math.PI * 2, false);  
-                cts.closePath();  
-                cts.fillStyle = backColor;  
-                cts.fill();
-
-                //画扇形
-                cts.beginPath();  
-                // 画扇形的时候这步很重要,画笔不在圆心画出来的不是扇形  
-                cts.moveTo(x, y);  
-                // 跟上面的圆唯一的区别在这里,不画满圆,画个扇形  
-                cts.arc(x, y, radius, Math.PI * 1.5, Math.PI * 1.5 +  Math.PI * 2 * process / 100, false);  
-                cts.closePath();  
-                cts.fillStyle = proColor;  
-                cts.fill(); 
-                
-                //填充背景白色
-                cts.beginPath();  
-                cts.moveTo(x, y); 
-                cts.arc(x, y, radius - (radius * 0.04), 0, Math.PI * 2, true);  
-                cts.closePath();
-                cts.fillStyle = 'rgba(255,255,255,1)';  
-                cts.fill(); 
-
-                // 画一条线  
-                cts.beginPath();  
-                cts.arc(x, y, radius-(radius*0.04), 0, Math.PI * 2, true);  
-                cts.closePath();  
-                // 与画实心圆的区别,fill是填充,stroke是画线  
-                cts.strokeStyle = backColor;  
-                cts.stroke();  
-                
-                //在中间写字 
-                cts.font = "8pt Arial";  
-                cts.fillStyle = fontColor;  
-                cts.textAlign = 'center';  
-                cts.textBaseline = 'middle';  
-                cts.moveTo(x, y-7);  
-                cts.fillText(process+"%", x, y-7);  
-                
-                cts.moveTo(x, y+7);  
-                var statusStr = process<100?"进行中":"已成团";
-                cts.fillText(statusStr, x, y+7);  
-                
-                var circleX = x + Math.sin(Math.PI * 2 * process / 100) * (radius-1.6);
-                var circleY = y - Math.cos(Math.PI * 2 * process / 100) * (radius-1.6);
-                cts.beginPath();  
-                cts.moveTo(circleX, circleY); 
-                cts.arc(circleX, circleY, 3, 0, Math.PI * 2, true);  
-                cts.closePath();
-                cts.fillStyle = proColor;  
-                cts.fill(); 
-        }, 
-        //倒计时
-        updateLeftTime() {
-            setInterval(function (param) {
-                    for(var i=0;i<vm.rgroups.length; i++){
-                        if(vm.rgroups[i]!=null&&vm.rgroups[i].leftTime > 0){
-                            vm.rgroups[i].leftTime=vm.rgroups[i].leftTime-1;
-                        }
-                    }
-              },1000);
-        },
         //跳转
         Hrefs(id){
             vm.$router.push({path:'/rgroupdetail',query:{'ruleId':id}})
         },
-        getscroll() {
-            var st = $(window).scrollTop();
+        getscroll(e) {
+            var st = e.srcElement.scrollTop;
             let loadheight = $("#indexDiv").height();
             var hook=loadheight-st;
             if(hook<800&&hasNext&&!isloadPage){
@@ -246,7 +165,7 @@ export default {
           
         },
         loadNextPage(){
-            let url ="rgroups/"+vm.page;
+            let url ="rgroups/v2/"+vm.page;
                 vm.receiveData.getData(vm,url,'Data',function(){
                     if(vm.Data.success){
                         if(vm.Data.result==null||vm.Data.result.length==0) {
@@ -265,60 +184,13 @@ export default {
                     }else {
                         isloadPage = false;
                         vm.hidden=false;
-                        alert('加载团购信息失败')
+                        alert(vm.Data.message == null?'加载团购信息失败':vm.Data.message)
                     }
             });
         }
    },
    computed: {
-       leftTimeStrs() {
-           return function (i) {
-              if(vm.rgroups[i]!=null) {
-               var iRemain=vm.rgroups[i].leftTime;
-                    if(iRemain > 0){
-                    var iDay=parseInt(iRemain/86400);
-                    iRemain%=86400;
-                    
-                    var iHour=parseInt(iRemain/3600);
-                    iRemain%=3600;
-
-                    var iMin=parseInt(iRemain/60);
-                    iRemain%=60;
-
-                    var iSec=parseInt(iRemain);
-                    
-                    var resStr = "剩余  ";
-                    if(iDay>0) {
-                        resStr += iDay+"天 "
-                    }
-                    if(iDay<=0&&iHour<=0) {
-                    } else if(iHour<10){
-                        resStr += "0"+iHour+":"
-                    } else {
-                        resStr += iHour+":"
-                    }
-                    
-                    if(iMin<10){
-                        resStr += "0"+iMin+":"
-                    } else {
-                        resStr += iMin+":"
-                    }
-                    
-                    if(iSec<10){
-                        resStr += "0"+iSec;
-                    } else {
-                        resStr += iSec;
-                    }
-                    return resStr + " 结束";
-                }else{
-                    return "已结束";
-                }
-        	} else {
-        		return "";
-        	}
-           }
-       },
-
+  
    },
 }
 
@@ -414,63 +286,96 @@ export default {
     -moz-border-radius: 15px;
     -webkit-border-radius: 15px;
 }
- /* load */
- /* .text-b {
-    width: 100%;
-    text-align: center;
-    margin-top: 3rem;
-    font-size: 0.3rem;
-} */
- .mlr1 {
-    margin-left: .2rem;
-    margin-right: .2rem;
+#indexDivs {
+    position:absolute;
+    left: 0;
+    top:0;
+    right: 0;
+    bottom: 0;
+    overflow:auto;
 }
-.tuangou-item {
-    display: block;
+/*  */
+.mlr5 {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+.product-item {
     position: relative;
-    margin-top: 6px;
-    /* float: left; */
-    border: 1px solid #d4cfc8;
+    border: 1px solid #f4eff8;
 }
-.pt5 {
-    padding-top: 5px;
+.pic_container {
+    width: 100%;
+    position: relative;
+    display: inline-block;
+}
+.pic_dummy {
+    margin-top: 100%;
+}
+.pic_content {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+.product-image {
+    height: auto;
+}
+
+img {
+    width: 100%;
+    max-width: 100%;
+    
+}
+.product-name {
+    font-size: 12px;
+    height: 30px;
+    color: #000000;
+    line-height: 15px;
+    /* text-overflow: ellipsis;
+    overflow: hidden; */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.pl05 {
+    padding-left: 0.5rem;
+}
+.pright {
+    margin-right: 1px;
+}
+.pleft {
+    margin-left: 1px;
 }
 .fs20 {
     font-size: 20px;
 }
-.product-name {
-       font-size: 12px;
-    height: 30px;
-    color: #000000;
-    line-height: 15px;
-    text-overflow: ellipsis;
-    overflow: hidden
-}
-.pl05 {
-    padding-left: 0.2rem;
-}
-
-.ml1 {
-    margin-left: .3rem;
-    margin-top: .2rem;
-}
-
 .highlight {
     color: #ff8a00;
+}
+.pl05 {
+    padding-left: 0.1rem;
+}
+.mt1 {
+    margin-top: .05em;
 }
 .ori-price {
     font-size: 11px;
     color: #999999;
 }
-.product-lefttime {
-    color: #666666;
-    /* padding-left: 10px; */
-}
-
-.process-left-border {
-    border-left: #e5e2dd 1px solid;
-    z-index: 1;
-    position: absolute;
-    right: 0px;
+.product-discount {
+    background-color: #ff8a00;
+    padding-right: 4px;
+    margin-right: 4px;
+    height: 16px;
+    font-size: 12px;
+    line-height: 16px;
+    display: block;
+    color: white;
+    border: #ff8a00 1px solid;
+    border-radius: 4px;
+    padding-left: 4px;
+    float: right;
 }
 </style>

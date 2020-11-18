@@ -1,15 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-// import Orders from '@/pages/orders'
-// import Orderdetail from '@/pages/orderdetail'
-// import Onsaleorders from '@/pages/onsaleorders'
-// import Logistice from '@/pages/logistice'
-// import Comment from '@/pages/comment'
-// import Grouporders from '@/pages/grouporders'
-// import RepairPay from '@/pages/repairPay'
-// import Commentxiu from '@/pages/commentxiu'
-// import Homeorders from '@/pages/homeorders'
-// import Homeorderdetail from '@/pages/homeorderdetail'
 
 Vue.use(Router)
 
@@ -99,17 +89,102 @@ let router= new Router({
       }
 
     },
-    // {
-    //   path: '/success',
-    //   name: 'success',
-    //   component:resolve=>require(['@/pages/success'],resolve),
-    //   meta: {
-    //     title:'已开通'
-    //   }
-
-    // },
-    
-
+    {
+      path: '/detailspage',
+      name: 'detailspage',
+      component: resolve=>require(['@/pages/service/detailspage'],resolve),
+      meta:{
+        title:'服务'
+      }
+    },
+    {
+      path: '/singlepage',
+      name: 'singlepage',
+      component: resolve=>require(['@/pages/service/singlepage'],resolve),
+      meta:{
+        title:'服务'
+      }
+    },
+    {
+      path: '/payment',
+      name: 'payment',
+      component:resolve=>require(['@/pages/service/payment'],resolve),
+      meta:{
+        title:'社区'
+      }
+    },
+    {
+      path: '/appraise',
+      name: 'appraise',
+      component:resolve=>require(['@/pages/service/appraise'],resolve),
+      meta:{
+        title:''
+      }
+    },
+    {
+      path: '/checkoutsuccess',
+      name: 'checkoutsuccess',
+      component:resolve=>require(['@/pages/service/checkoutsuccess'],resolve) ,
+      meta:{
+        title:''
+      }
+    },
+    {
+      path:'/cardorder',
+      name:'cardorder',
+      component:resolve=>require(['@/pages/Cardroll/cardorder'],resolve),
+      meta:{
+        title:'商品订单'
+      }
+    },
+    {
+      path:'/special',
+      name:'special',
+      component:resolve=>require(['@/pages/special/special'],resolve),
+      meta:{
+        title:'商品订单'
+      }
+    },
+    {
+      path:'/clientdetail',
+      name:'clientdetail',
+      component:resolve=>require(['@/pages/special/clientdetail'],resolve),
+      meta:{
+        title:'订单详情'
+      }
+    },
+    {
+      path:'/specialdetail',
+      name:'specialdetail',
+      component:resolve=>require(['@/pages/special/specialdetail'],resolve),
+      meta:{
+        title:'订单详情'
+      }
+    },
+    {
+      path:'/delivery',
+      name:'delivery',
+      component:resolve=>require(['@/pages/special/delivery'],resolve),
+      meta:{
+        title:'订单发货'
+      }
+    },
+    {
+      path:'/consignment',
+      name:'consignment',
+      component:resolve=>require(['@/pages/special/consignment'],resolve),
+      meta:{
+        title:'订单详情'
+      }
+    },
+    {
+      path:'/coupon',
+      name:'coupon',
+      component:resolve=> require(['@/pages/service/coupon'],resolve),
+      meta:{
+        title:'优惠券'
+      }
+    },
   ]
 })
 

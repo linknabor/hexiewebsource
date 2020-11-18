@@ -10,17 +10,22 @@
 }
 .wuye{font-family: PingFangSC-Regular;width: 100%;
   margin-bottom: 60px;
-/* height: 800px; */
-      background-color:#ccc;font-size: 14px;
+  font-size: 14px;
      }
-a{color: #000;opacity: 0.7;}
+a{color: #000;}
 .ban1{width: 100%;}
 .ban1 img{width: 100%;}
-.jiugongge{width: 100%;height: 208px;background-color: white;}
-.jgg_li{float: left;width: 33%;height: 104px; text-align: center;letter-spacing: 1.31px;font-size: 16px;font-family:PingFangSC-Regular;}
-.jgg_img{margin: 15px auto 3px;}
-.jgg_img img{width: 54px;}
-.jgg-span{color: black;}
+.jiugongge{width: 100%;overflow: hidden;background-color: white;}
+.jgg_li{float: left;width: 25%;height: 80px; text-align: center;letter-spacing: 0.98px;font-size: 12px;}
+.jgg_li a{    opacity: 1;
+    color: rgba(16, 16, 16, 1);
+    font-family: 'PingFangSC-regular';}
+.jgg_img{
+    margin: 10px auto 10px;
+    width: 40px;
+    /* height: 30px; */
+}
+.jgg_img img{width:100%;height: 100%;}
 /* 资讯 */
 .inner{
 width: 100%;
@@ -59,7 +64,6 @@ overflow: hidden; background-color: white;}
 
 .tab .notice-tab-title.active {
     color: #47B3FF;
-    /* border-color: #47B3FF; */
     border-bottom: 1px solid #47B3FF;
 }  
  .tabadd {
@@ -80,52 +84,47 @@ overflow: hidden; background-color: white;}
     text-align: left
 }
 .section3_divider{
-    border-bottom: 1px solid #e5e2dd;
+    border-bottom: 1px solid #BBBBBB;
 }    
 
  .section3_zixuns{
-    /* padding: 10px 0px 10px 4%; */
-    height: 105px;
-    border-bottom: 1px solid #d4cfc8;
+    overflow: hidden;
+    border-bottom: 1px solid #BBBBBB;
+
 }
 .section3_sub_main_left{
-    height: 105px;
     float: left;
 }
         
 .section3_sub_main_right{
-    height: 105px;
-    float: left;
-    width: 60%;
-    margin-left: 6%;
+    /* float: left;
+    width: 60%; */
+    margin:0  10px;
     text-align:left;
 }  
 .section3_sub_img{
-    width: 100px;
-    height: 75px;
-    margin: 15px 0px 15px 0px;
+    width: 80px;
+    height: 60px;
+    margin: 10px;
+    margin-right:20px;
     float: left;
 }
  .section3_sub_title{
-
-    /* height: 16px; */
-    margin: 16px 0px 0px 0px;
-    font-size: 15px;
+    margin-top: 10px;
+    font-size: 13px;
     color: #000000;
     letter-spacing: 1.14px;
     line-height: 20px;
     display: -webkit-box;
     -webkit-line-clamp: 2;
-        /*! autoprefixer: off */
     -webkit-box-orient: vertical;
-    /* autoprefixer: on */
     overflow: hidden;   
 }
 .section3_sub_content{    
     /* height: 59px; */
     margin: 5px 0px 0px 0px;
-    font-size: 13px;
-    color: #a1a1a1;
+    font-size: 10px;
+    color: #C8C4C4;
     line-height: 20px;
     letter-spacing: 1.14px;
     display: -webkit-box;
@@ -166,68 +165,126 @@ overflow: hidden; background-color: white;}
             <!-- <div class="swiper-pagination" slot="pagination"></div>        -->
         </swiper>
         
-        <div class="jiugongge">
-            <ul>
-                <li class="jgg_li" >
-                    <router-link to="/pay" class="link">
-                        <div class="jgg_img">
-                            <img src="../../assets/images/index/wyjf1.png" alt="tt">
-                        </div>
-                        <span class="jgg-span">物业缴费</span>
-                    </router-link>
-                </li>
-                <li class="jgg_li" >    
-                    <div  class="link" @click="Paystop">
-                        <div class="jgg_img">
-                            <img src="../../assets/images/index/tcjf1.png" alt="tt">
-                        </div>
-                        <span class="jgg-span">停车缴费</span>
-                    </div>
-                </li>
-                <li class="jgg_li" >
-                    <router-link to="/paymentquery" class="link">
-                        <div class="jgg_img">
-                            <img src="../../assets/images/index/jfcx1.png" alt="tt">
-                        </div>
-                        <span class="jgg-span">缴费查询</span>
-                    </router-link>
-                </li>
-                <li class="jgg_li" >
-                    <router-link to="/myhouse" class="link">
-                        <div class="jgg_img">
-                            <img src="../../assets/images/index/wsyz1.png" alt="tt">
-                        </div>
-                        <span class="jgg-span">我是业主</span>
-                    </router-link>
-                </li>
-                <li class="jgg_li" v-show="coronaPy">
-                    <div class="link" @click="goepi()">
-                        <div class="jgg_img">
-                            <img src="../../assets/images/index/fangyi.png" alt="tt">
-                        </div>
-                        <span class="jgg-span">社区防疫</span>
-                    </div>
-                </li>
-                <li class="jgg_li" v-show="coronaPj">
-                    <div class="link" @click="gotoThread()">
-                        <div class="jgg_img">
-                            <img src="../../assets/images/index/yzyj1.png" alt="tt">
-                        </div>
-                        <span class="jgg-span">业主意见</span>
-                    </div>
-                </li>
-                <li class="jgg_li" >
-                    <div class="link"  @click="gotorepair()">
-                        <div class="jgg_img">
-                            <img src="../../assets/images/index/bmwx1.png" alt="tt">
-                        </div>
-                        <span class="jgg-span">便民维修</span>
-                    </div>
-                </li>
-            </ul>
-        </div> 
+    <div class="jiugongge">
+      <ul>
+        <li class="jgg_li">
+          <router-link to="/pay">
+            <div class="jgg_img">
+              <img v-show="!kyappid" src="http://img.e-shequ.cn/Fhq2GvOWKsy9tG2IPvN_KouykRT5" alt="tt">
+              <img v-show="kyappid" src="http://img.e-shequ.com/Fpb22vqH_vRqrv4Cv93jku3wpblT" alt="tt">
+            </div>
+            <span>物业缴费</span>
+          </router-link>
+        </li>
 
-        <div style="width:100%;height:7px;"></div>
+        <li class="jgg_li" v-show="!kyappid">
+          <router-link to="/paymentquery">
+            <div class="jgg_img">
+              <img src="http://img.e-shequ.cn/FpyFhyQVInnK_7miteFa-Xq5ndp5" alt="tt">
+            </div>
+            <span>缴费查询</span>
+          </router-link>
+        </li> 
+
+        <li class="jgg_li" v-show="kyappid">
+          <div @click="gotoThread()">
+            <div class="jgg_img">
+              <img src="http://img.e-shequ.com/FmBwFvjiR7rtIoV83JOcFF_UcuGt" alt="tt">
+            </div>
+            <span>社区互动</span>
+          </div>
+        </li>    
+
+        <li class="jgg_li" >
+          <router-link to="/myhouse">
+            <div class="jgg_img">
+              <img v-show="!kyappid" src="http://img.e-shequ.cn/FoR1Saide9rMWK9nEBtbuxE5Vmh0" alt="tt">
+              <img v-show="kyappid" src="http://img.e-shequ.com/FvqDXOVlBl5JiFuULnSWbobLCoUJ" alt="tt">
+            </div>
+            <span>我是业主</span>
+          </router-link>
+        </li> 
+        
+        <li class="jgg_li" >
+            <div class="link"  @click="gotorepair()">
+                <div class="jgg_img">
+                    <img v-show="!kyappid" src="http://img.e-shequ.cn/FvXta8SzetfBaBYyaB3fX-HQ1Vza" alt="tt">
+                    <img v-show="kyappid" src="http://img.e-shequ.com/FvCBrn2fVvHqpvTy9T24vvCmTUwa" alt="tt">
+                </div>
+                <span class="jgg-span" v-show="!kyappid">便民维修</span>
+                <span class="jgg-span" v-show="kyappid">物业报修</span>
+            </div>
+        </li>
+
+        <li class="jgg_li" >
+          <div @click="Paystop">
+            <div class="jgg_img">
+              <img v-show="!kyappid" src="http://img.e-shequ.cn/FuGXrSZLRWdYqydXGir48wipF2Fn" alt="tt">
+              <img v-show="kyappid" src="http://img.e-shequ.com/Fr9wzxp17jaOsu0WMgZfp-2_xVhV" alt="tt">
+            </div>
+            <span>社区电商</span>
+          </div>
+        </li>
+
+        <li class="jgg_li">
+          <a :href="this.basePageUrlpay+'hxrgroups.html?'+this.common.getoriApp()">
+            <div class="jgg_img">
+              <img v-show="!kyappid" src="http://img.e-shequ.cn/FkJWpnGhosNorRy4zPilU0kWZmG9" alt="tt">
+              <img v-show="kyappid" src="http://img.e-shequ.com/FhtqTqm5MyJRA8e7fSO8ptnPDP-Z" alt="tt">
+            </div>
+            <span>社区团购</span>
+          </a>
+        </li>
+        
+        <li class="jgg_li">
+          <a :href="this.basePageUrl+'home/index.html?'+this.common.getoriApp()">
+            <div class="jgg_img">
+              <img v-show="!kyappid" src="http://img.e-shequ.cn/FqovzXqEh_kowBX9eXVVGtkwkivP" alt="tt">
+              <img v-show="kyappid" src="http://img.e-shequ.com/FgVwSOkHJzHD758K9m2px_fdnKW9" alt="tt">
+            </div>
+            <span v-show="!kyappid">周边服务</span>
+            <span v-show="kyappid">家政服务</span>
+          </a>
+        </li>
+
+        <li class="jgg_li">
+          <a :href="this.basePageUrl+'group/onsales.html?'+this.common.getoriApp()+'#/cardrollindex'">
+            <div class="jgg_img">
+              <img v-show="!kyappid" src="http://img.e-shequ.cn/Frut5vg031RPFCfsfDmqEotlVXlg" alt="tt">
+              <img v-show="kyappid" src="http://img.e-shequ.com/FtDdOHIIy_OtREne8Z98l3WsTjeo" alt="tt">
+            </div>
+            <span>周边优惠</span>
+          </a>
+        </li>
+
+        <!-- <li class="jgg_li" v-show="coronaPy">
+          <div @click="goepi()">
+            <div class="jgg_img">
+              <img src="../../assets/img/snqx.png" alt="tt">
+            </div>
+            <span>社区防疫</span>
+          </div>
+        </li> -->
+        <!-- <li class="jgg_li" v-show="coronaPj">
+          <div @click="gotoThread()">
+            <div class="jgg_img">
+              <img src="http://img.e-shequ.cn/FvOdWYYKMdqshuLarpN0URwzk_x5" alt="tt">
+            </div>
+            <span>业主意见</span>
+          </div>
+        </li>  -->
+     <!--<li class="jgg_li" >
+          <a :href="this.basePageUrl+'wuye/index.html?'+this.common.getoriApp()+'#/mysteward?n=12'">
+            <div class="jgg_img">
+              <img src="http://img.e-shequ.cn/FokvKXxpY9__2_6FRzVe1Ay0mBkb" alt="tt">
+            </div>
+            <span>预约服务</span>
+          </a>
+        </li> -->
+
+      </ul>
+    </div>
+
       <div class="inner">
         <!-- <div class="section3_notice">通知及公告</div> -->
         <div class="section3_divider"></div>
@@ -272,6 +329,7 @@ export default {
     },
     data () {
         return {
+            kyappid:false,
             isloadPage:false,
             zixuns1:[],
             page : 0,
@@ -319,6 +377,7 @@ export default {
     },
     mounted(){
         Bus.$on("sends",this.getMsgFromZha);
+        vm.getky();
     },
     updated() {
         vm.$nextTick(()=> {
@@ -331,6 +390,12 @@ export default {
             Bus.$off();
 　　},
     methods: {
+        //判断昆亿公众号
+        getky() {
+            var urloriapp = vm.common.getoriApp();//url标识
+            var comappid ="oriApp="+vm.is_config.C('kyappid');//配置昆亿appid
+            vm.kyappid = comappid == urloriapp ? true:false;
+        },
         //模仿线上用户信息/105/747/384/
         initSession4Test(){
             let url = '/initSession4Test/1';
@@ -390,7 +455,33 @@ export default {
                         },
                     ]
                 }else {
+                    if(vm.cfgParam == null){
+                        return;
+                    }
                     if(vm.cfgParam.ONLINE_MESSAGE==1) {
+                        if(vm.kyappid) {
+                             vm.tabs=[ 
+                                {
+                                    name: '招聘信息发布',
+                                    type: 1,
+                                    active:true,
+                                    dhwidth:true,
+                                },
+                                {
+                                    name: '物业公告',
+                                    type: 0 ,
+                                    active:false,
+                                    dhwidth:true,
+                                },
+                                {
+                                    name: '闲置物品发布',
+                                    type: 2,
+                                    active:false,
+                                    dhwidth:true,
+                                },
+                            ] 
+                            
+                        }else {
                             vm.tabs=[ 
                                 {
                                     name: '社区生活',
@@ -413,7 +504,9 @@ export default {
                                     active:false,
                                     ali:true
                                 },
-                            ]
+                            ]  
+                        }
+
                     }else {
                         vm.tabs=[ 
                                 {
@@ -489,11 +582,12 @@ export default {
     	   }
         },
         Paystop(){//停车
-            if(vm.donghu){
-                alert("内容正在丰富中,敬请期待。")
-            }else {
-                vm.$router.push({path:'/paystop'});
-            }
+            // if(vm.donghu){
+            //     alert("内容正在丰富中,敬请期待。")
+            // }else {
+            //     vm.$router.push({path:'/paystop'});
+            // }
+            location.href=vm.basePageUrl+'/group/onsales.html?'+vm.common.getoriApp()+'#/classification';
         },
         gotoThread() {
             if(vm.sectId==0 || vm.sectId== null)

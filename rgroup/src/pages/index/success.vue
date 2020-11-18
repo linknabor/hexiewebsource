@@ -90,7 +90,7 @@ export default {
                                     if(vm.type==4){
                                         location.href=vm.basePageUrlpay+"hxrgroups.html?"+vm.common.getoriApp();        		
                                     }else if(vm.type==3){   
-                                        location.href=vm.basePageUrl+'/group/onsales.html?'+vm.common.getoriApp();
+                                        location.href=vm.basePageUrl+'/group/onsales.html?'+vm.common.getoriApp()+'#/classification';
                                     }else if(vm.type==5){
                                         location.href=vm.basePageUrl+"/home/index.html?"+vm.common.getoriApp();
                                     }else{
@@ -111,7 +111,7 @@ export default {
                                  if(vm.type==4){
                                         location.href=vm.basePageUrlpay+"hxrgroups.html?"+vm.common.getoriApp();        		
                                     }else if(vm.type==3){
-                                        location.href=vm.basePageUrl+'/group/onsales.html?'+vm.common.getoriApp();
+                                        location.href=vm.basePageUrl+'/group/onsales.html?'+vm.common.getoriApp()+'#/classification';
                                     }else if(vm.type==5){
                                         location.href=vm.basePageUrl+"/home/index.html?"+vm.common.getoriApp();
                                     }else{
@@ -161,7 +161,7 @@ export default {
              if(vm.type==4){
                     location.href=vm.basePageUrlpay+"hxrgroups.html?"+vm.common.getoriApp();        		
                 }else if(vm.type==3){
-                    location.href=vm.basePageUrl+'/group/onsales.html?'+vm.common.getoriApp();
+                    location.href=vm.basePageUrl+'/group/onsales.html?'+vm.common.getoriApp()+'#/classification';
                 }else if(vm.type==5){
                     location.href=vm.basePageUrl+"/home/index.html?"+vm.common.getoriApp();
                 }else{

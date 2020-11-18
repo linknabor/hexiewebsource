@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width,minimum-scale=1,maximum-scale=1,initial-scale=1,user-scalable=no"/>
+    <meta name="referrer" content="no-referrer"/>
+    <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="pragma" content="no-cache"/>
+    <meta http-equiv="expires" content="0"/>
+    <script src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script src="https://gw.alipayobjects.com/as/g/h5-lib/alipayjsapi/3.1.1/alipayjsapi.inc.min.js"></script>
+    <script src="./static/jquery.js"></script>
+    <script src="./static/js/base64.js"></script>
+    <title></title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0,minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">  
+    <script>
+
+        var baseurl = /127|test/.test(location.origin)?'https://test.e-shequ.cn/weixin/':
+            /uat/.test(location.origin)?'https://uat.e-shequ.cn/hexie/weixin/' : 'https://www.e-shequ.cn/weixin/';
+
+        var requrl = baseurl + "otherPay.html"+window.location.search;
+
+        var wechat_url = /127|test/.test(location.origin)?'https://test.e-shequ.cn/wechat/hexie/wechat':
+            /uat/.test(location.origin)?'https://uat.e-shequ.cn/wechat/hexie/wechat' : 'https://www.e-shequ.cn/wechat/hexie/wechat/';
+
+        var appId = "";
+        function query() {
+
+            let checkclient = IsWeixinOrAlipay();
+            if("Alipay" === checkclient) { //支付宝
+                alipayAuthorize();
+            } else if("WeiXin" === checkclient) { //微信
+                weixinAuthorize();
+            } else {
+                alert("请用微信或支付宝扫码支付");
+                return false;
+            }
+        }
+
+        function  alipayAuthorize() {
+            appId = /127|test/.test(location.origin)?'2021001163621308':
+                /uat/.test(location.origin)?'2021001163651280' : '2021001161682727';
+
+            let authorize_url = "https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=APPID&scope=SCOPE&redirect_uri=ENCODED_URL";
+            //
+            let o = gerAuthcode().auth_code;
+            if (o === undefined) {
+                let authorize = authorize_url.replace("APPID", appId).replace("SCOPE", "auth_base").replace("ENCODED_URL", encodeURIComponent(requrl))
+                console.log("author:" + authorize);
+                location.href = authorize;
+            } else {
+                let u_id = getParam(window.location.search, "user_id");
+                if(u_id == null) { //说明没拿过user_id
+                    let url = wechat_url + "/authorizeAlipay/" + o;
+                    $.ajax({
+                        type: 'post',
+                        url: url,
+                        dataType: "json",
+                        data: {},
+                        success: function (res) {
+                            if (res.success) {
+                                let user_id = res.result.userid;
+                                console.log("user_id:" + user_id);
+                                location.href = baseurl + "otherPay.html"+ window.location.search +"&user_id=" + user_id;
+                            } else {
+                                alert('请刷新重试');
+                            }
+                        },
+                        error: function (err) {
+                            console.log(err)
+                        }
+                    })
+                }
+            }
+        }
+
+        function weixinAuthorize() {
+            appId = /127|test/.test(location.origin)?'wx95f46f41ca5e570e':
+               /uat/.test(location.origin)?'wx9ffe0a2b5a64a285' : 'wxbd214f5765f346c1';
+
+            let componentAppId = /127|test/.test(location.origin)?'wx4d706a1a7a139d1f':
+                /uat/.test(location.origin)?'wxc65085912aca5444' : 'wx0d408844b35d85e2';
+
+            let authorize_url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=snsapi_base&state=123&component_appid=COMPONENT_APPID#wechat_redirect";
+
+            let o = gercode().code;
+            console.log("o:" + o);
+
+            if (o === undefined) {
+                let authorize = authorize_url.replace("APPID", appId).replace("REDIRECT_URI", encodeURIComponent(requrl)).replace("COMPONENT_APPID", componentAppId);
+                console.log("author:" + authorize);
+                location.href = authorize;
+            } else {
+                let oid = getParam(window.location.search, "openid");
+
+                if(oid == null) { //说明没拿过openid
+                    let url = wechat_url + "/authorize/" + o + "/"+ appId;
+                    $.ajax({
+                        type: 'post',
+                        url: url,
+                        dataType: "json",
+                        data: {},
+                        success: function (res) {
+                            if (res.success) {
+                                let openid = res.result.openid;
+                                console.log("openid:" + openid);
+                                location.href = baseurl + "otherPay.html"+ window.location.search +"&openid=" + openid;
+                            } else {
+                                alert('请刷新重试');
+                            }
+                        },
+                        error: function (err) {
+                            console.log(err)
+                        }
+                    })
+                }
+            }
+        }
+
+        function getParam(url, name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+            var r = url.match(reg);  //匹配目标参数
+            if (r != null) {
+                return unescape(r[2]);
+            } else {
+                return null;
+            }
+        }
+
+        var sect_id = "";
+        var fee_id = "";
+        var openid = "";
+        var user_id = "";
+        var sect_name = "";
+        var fee_name = "";
+        var qrcode_id = "";
+
+        var buildlist = []; //小区楼宇
+        var build_id = "";//楼宇id
+        var unitList = [];//门派
+        var unit_id = "";//门派id
+        var houseList = [];// 室号
+        var house_id = "";//室号id
+        var ischeckaddr = ""; //是否显示地址
+        var cull_appid = "";
+
+        function getUrlParam() {
+            let theRequest = {};
+            let paramUrl = window.location.search.substr(1);
+            console.log(paramUrl);
+            let param = getParam(paramUrl, "param");
+            console.log(param);
+
+            param = strAnsi2Unicode(decode64(param));
+            console.log(param);
+
+            let params = param.split("&");
+            for(var i = 0; i < params.length; i ++) {
+                theRequest[params[i].split("=")[0]]=unescape(params[i].split("=")[1]);
+            }
+            console.log(theRequest);
+            $("#sect_name").text(theRequest.sect_name);
+            $("#fee_name").text(theRequest.fee_name);
+
+            sect_id = theRequest.sect_id;
+            fee_id = theRequest.fee_id;
+            sect_name = theRequest.sect_name;
+            fee_name = theRequest.fee_name;
+            qrcode_id = theRequest.qrcode_id;
+            cull_appid = theRequest.appid
+            ischeckaddr = theRequest.is_check_addr;
+
+            openid = getParam(paramUrl, "openid");
+            user_id = getParam(paramUrl, "user_id");
+
+            if(ischeckaddr == '1') {
+                $('#showaddr').show();
+            }else {
+                $('#showaddr').hide();
+            }
+            
+            if(openid != null || user_id != null){
+               getall();
+            }
+        }
+
+        function getall() {
+            getCellMng(sect_id,"", "","03");
+            getCellMng(sect_id,"0","","02");
+            getCellMng(sect_id,"0","0","01","11");
+        }
+
+        function getCellMng(sect_id,build_id,house_id,data_type,show_type) {
+            var params = {
+                sect_id:sect_id,
+                build_id:build_id,
+                unit_id:unit_id,
+                data_type:data_type,
+                appid:cull_appid,
+            };
+            $.ajax({
+                type:'post',
+                contentType: "application/json;charset=UTF-8",
+                url:wechat_url+'/getHeXieCellById4Qrcode?regionname=',
+                data:JSON.stringify(params),
+                dataType : "json",
+                success:function(res) {
+                    if(res.success) {
+                        let InfoList = res.result;
+                        if (Array.isArray(InfoList) && InfoList.length <= 0) {
+                       
+                        } else {
+                            if ("03" == data_type) {
+                                buildList = InfoList.build_info;
+                                buildList.unshift({ id: "0", name: "请选择" });
+                                for(var i=0;i<buildList.length;i++){
+                                    $('#build').append('<option  value='+buildList[i].id+'>'+buildList[i].name+'</option>')
+                                }
+                            } else if ("02" == data_type) {
+                                $('#unit').empty();
+                                unitList = InfoList.unit_info;
+                                unitList.unshift({ id: "0", name: "请选择" });
+                                for(var i=0;i<unitList.length;i++){
+                                    $('#unit').append('<option  value='+unitList[i].id+'>'+unitList[i].name+'</option>')
+                                }
+                            } else if ("01" == data_type) {
+                                if(show_type == 11) {
+                                    // houseList = InfoList.house_info;
+                                    houseList.unshift({ id: "0", name: "请选择" });
+                                    for(var i=0;i<houseList.length;i++){
+                                        $('#house').append('<option  value='+houseList[i].id+'>'+houseList[i].name+'</option>')
+                                    }
+                                }else {
+                                    $('#house').empty();
+                                    houseList = InfoList.house_info;
+                                    houseList.unshift({ id: "0", name: "请选择" });
+                                    for(var i=0;i<houseList.length;i++){
+                                        $('#house').append('<option  value='+houseList[i].id+'>'+houseList[i].name+'</option>')
+                                    }
+                                }
+
+                            }
+                        }
+                    }else {
+                        if ("03" == data_type) {
+                            buildList =[];
+                            unitList = [];
+                            houseList = [];
+                        } else if ("02" == data_type) {
+                            unitList = [];
+                            houseList = [];
+                        } else if ("01" == data_type) {
+                            houseList = [];
+                        }
+                    }
+                },
+                error:function(res) {
+                    console.log(res.message);
+                }
+            })
+        }
+        
+
+        function gercode() {
+            var e = location.search,
+                o = {};
+
+            if ("" === e || void 0 === e) return o;
+            e = e.substr(1).split("&");
+            for (let n in e) {
+                let t = e[n].split("=");
+                o[t[0]] = t[1]
+            }
+            return o.from && delete o.code,o
+        }
+
+        function gerAuthcode() {
+            var e = location.search,
+                o = {};
+
+            if ("" === e || void 0 === e) return o;
+            e = e.substr(1).split("&");
+            for (let n in e) {
+                let t = e[n].split("=");
+                o[t[0]] = t[1]
+            }
+            return o.from && delete o.auth_code,o
+        }
+
+        window.onload = function(){
+            getUrlParam();
+        };
+
+        function pay() {
+
+            $("#phoneAjax").removeClass("hidden");
+
+            let checkclient = IsWeixinOrAlipay();
+            if("false" === checkclient) {
+                alert("请使用微信或支付宝扫码支付");
+                return;
+            }
+            if(ischeckaddr == '1' && (house_id == '' || house_id == 0)) {
+                alert('请选择房屋地址');
+                $("#phoneAjax").addClass("hidden");
+                return;
+            }
+            var list = {};
+            list.money = $("#money").val();
+            list.remark = $("#remark").val();
+            list.sect_id = sect_id;
+            list.fee_id = fee_id;
+            list.qrcode_id = qrcode_id;
+            list.mng_cell_id = house_id;
+            if("Alipay" === checkclient) {
+                list.openid = user_id;
+				list.appid = appId;
+            } else if("WeiXin" === checkclient) {
+				if($("#money").val() > 10000) {
+                    alert("超出微信二维码支付单笔限额，请拆成多笔支付（单笔10000元及以下），或使用支付宝扫码");
+                    $("#phoneAjax").addClass("hidden");
+                    return;
+                }
+                list.openid = openid;
+				list.appid = cull_appid;
+            }
+            list.real_appid = cull_appid;
+            console.log(JSON.stringify(list));
+
+            $.ajax({
+                type : "POST",
+                contentType: "application/json;charset=UTF-8",
+                url : wechat_url + "/requestOtherPay",
+                data : JSON.stringify(list),
+                dataType : "json",
+                success : function(n) {
+                    $("#phoneAjax").addClass("hidden");
+
+                    if("Alipay" === checkclient) {
+                        if(false == n.success) {
+                            alert(n.message);
+                            return;
+                        }
+                        let tranNo = n.result.packageId;
+                        ap.tradePay({
+                            tradeNO: tranNo
+                        }, function(res){
+                            if(res.resultCode === "9000") {
+                                ap.call("closeWebview");
+                            }
+
+                        });
+                    } else if("WeiXin" === checkclient) {
+                        if(false == n.success) {
+                            alert(n.message);
+                            return;
+                        }
+                        wx.config({
+                            appId: n.result.appid, // 必填，公众号的唯一标识
+                            timestamp: n.result.timestamp, // 必填，生成签名的时间戳
+                            nonceStr: n.result.noncestr, // 必填，生成签名的随机串
+                            signature: n.result.paysign,// 必填，签名，见附录1
+                            jsApiList: ['chooseWXPay'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+                        });
+                        wx.chooseWXPay({
+                            "timestamp":n.result.timestamp,
+                            "nonceStr":n.result.noncestr,
+                            "package":n.result.package,
+                            "signType":n.result.signtype,
+                            "paySign":n.result.paysign,
+                            "appId":n.result.appid,
+                            success: function (res) {
+                                wx.closeWindow();
+                            }
+                        });
+                    }
+                },
+                error : function(e){
+                    console.log(e.status);
+                    console.log(e.responseText);
+                    alert("支付请求失败，请稍后重试！");
+                    $("#phoneAjax").addClass("hidden");
+                }
+            });
+        }
+
+        function IsWeixinOrAlipay() {
+            var ua = window.navigator.userAgent.toLowerCase();
+            //判断是不是微信
+            if (ua.match(/MicroMessenger/i) == 'micromessenger') {
+                return "WeiXin";
+            }
+            //判断是不是支付宝
+            if (ua.match("alipayclient") == 'alipayclient') {
+                return "Alipay";
+            }
+            //哪个都不是
+            return "false";
+        }
+
+        $(function () {
+			// let theRequest = {};
+            // let paramUrl = window.location.search.substr(1);
+            // let param = getParam(paramUrl, "param");
+            // param = strAnsi2Unicode(decode64(param));
+
+            // let params = param.split("&");
+            // for(var i = 0; i < params.length; i ++) {
+            //     theRequest[params[i].split("=")[0]]=unescape(params[i].split("=")[1]);
+            // }
+			
+			// appId = theRequest.appid;
+			// if(undefined === appId) {
+			// 	appId = /127|test/.test(location.origin)?'wx95f46f41ca5e570e':
+            //     /uat/.test(location.origin)?'wx9ffe0a2b5a64a285' : 'wxbd214f5765f346c1';
+			// }
+			
+            query(); //执行
+
+            $("#money").click(function () {
+                $(".num_key").show();
+            });
+
+            $(".key_hide").click(function () {
+                $(".num_key").hide();
+            });
+
+            $(".nums").click(function () {
+                var key = $(this).text();
+                $("#money").val($("#money").val() + key);
+            });
+            $(".del").click(function () {
+                $("#money").val($("#money").val().substr(0,$("#money").val().length-1));
+            });
+
+            $("#remark").focus(function () {
+                $(".num_key").hide();
+            });
+
+            //点击楼宇
+            $('#build').change(function(){
+                build_id = $('#build option:selected').val();
+                unit_id ='';
+                house_id = '';
+                unitList = [];
+                houseList = [];
+                getCellMng(sect_id,build_id, "", "02");
+                getCellMng(sect_id,build_id, "0", "01");
+            })
+
+            //点击门牌
+            $('#unit').change(function(){
+                unit_id = $('#unit option:selected').val();
+                house_id = '';
+                houseList = [];
+                getCellMng(sect_id,build_id,unit_id , "01");
+            })
+
+            //点击室号
+            $('#house').change(function(){
+                house_id = $('#house option:selected').val();
+            })
+        });
+
+    </script>
+
+    <style type="text/css">
+        .card {
+            margin-bottom: 5px;
+            border: 1px solid #d4cfc8;
+            border-radius: 3px;
+            color: #363636;
+            background: #FFFFFF;
+            padding-bottom:15%;
+        }
+
+        .hidden {
+            visibility: hidden
+        }
+
+        .line{
+            margin-top: 15%;
+            margin-left: 8%;
+            margin-right: 0;
+            width: 84%;
+            border-bottom: 1px solid #FFA54F;
+
+        }
+
+        .logintxt{
+            border-right: #ffffff 0 solid;
+            border-top: #ffffff 0 solid;
+            font-size: 9pt; /*www.52css.com*/
+            border-left: #ffffff 0 solid;
+            border-bottom: #c0c0c0 1px solid;
+            background-color: #ffffff;
+            width: 80%;
+            height: 30px;
+        }
+
+        .line_context {
+            text-align:left;
+            width: 100%;
+            padding-left: 8%;
+        }
+
+        .family {
+            font-size: 15px;
+            font-weight: bold;
+            font-family: 微软雅黑,sans-serif;
+        }
+
+        ul, li {
+            list-style: none;
+        }
+
+        .num_key {
+            display: none;
+            width: 100%;
+            height: 40%;
+            position: fixed;
+            z-index: 999;
+            left: 0;
+            bottom: 0;
+        }
+
+        .key_hide {
+            width: 100%;
+            text-align: center;
+        }
+
+        .numb_box {
+            position: absolute;
+            z-index: 10;
+            overflow: hidden;
+            background: #f5f5f5;
+            width: 100%;
+            border-top-left-radius: 1.33333rem;
+            border-top-right-radius: 1.33333rem;
+        }
+
+        .nums {
+            width: 33%;
+            border-bottom: 1px solid #dadada;
+            float: left;
+            text-align: center;
+            font-size: 15px;
+        }
+
+        .nums a {
+            display: block;
+            color: #000;
+            height: 50px;
+            line-height: 50px;
+            overflow: hidden;
+            text-decoration:none
+        }
+
+        .nums a:active {
+            background: #e0e0e0;
+        }
+
+        .nums a.zj_x {
+            border-left: 1px solid #dadada;
+            border-right: 1px solid #dadada;
+        }
+
+        .del {
+            width: 33%;
+            border-bottom: 1px solid #dadada;
+            float: left;
+            text-align: center;
+            font-size: 15px;
+        }
+
+        .del a {
+            display: block;
+            color: #000;
+            height: 50px;
+            line-height: 50px;
+            overflow: hidden;
+            text-decoration:none
+        }
+
+		#phoneAjax {
+			position: fixed;
+			top: 20%;
+			left: 50%;
+			width: 60px;
+			height: 60px;
+			line-height: 60px;
+			margin-left: -30px;
+			text-align: center;
+			background-color: black;
+			-moz-opacity: .8;
+			opacity: .80;
+			filter: alpha(opacity=80);
+			z-index: 1998;
+			overflow: auto;
+			-moz-border-radius: 15px;
+			-webkit-border-radius: 15px
+		}
+
+        .input-row {
+            background-color: #ffffff;
+            width: 82%;
+            height: 30px;
+            line-height: 30px;
+            padding-top: 5%;
+            font-size: 13px;
+            font-family: 微软雅黑,sans-serif;
+        }
+        .input-row select {
+            width:80%;
+            height: 28px;
+            outline: none;
+        }
+    </style>
+</head>
+<body style="background: #F5F5F5">
+<div style="height: 100%; padding: 0 5% 0 5%;">
+    <div id="phoneAjax" class="hidden">
+        <img src="./static/images/common/loading.gif" style="width:40px;height:40px;vertical-align: middle;">
+    </div>
+
+    <div class="card">
+        <div style="text-align:center;padding-top: 10%" class="family">
+            <div style="text-align:left;float:left;padding-left: 8%;">项目名称：</div>
+            <div style="text-align:left;float: left;padding-left:10px;"><span id="sect_name"></span></div>
+        </div>
+
+        <div class="line"></div>
+
+        <div style="text-align:center;padding-top: 6%" class="family">
+            <div class="line_context"><span id="fee_name"></span></div>
+        </div>
+
+        <div id="showaddr">
+            <div class="line_context">
+                <div class="input-row">
+                    <label>楼宇：</label>
+                    <select class="virtual-input" name="builds" id="build">
+                    </select>
+                </div>
+                <div class="input-row">
+                    <label>门牌：</label>
+                    <select class="virtual-input" name="units" id="unit">
+                    </select>
+                </div>
+                <div class="input-row">
+                    <label>室号：</label>
+                    <select class="virtual-input" name="houses" id="house">
+                    </select>
+                </div>
+            </div>
+        </div> 
+
+        <div style="text-align:center;padding-top: 12%">
+            <div class="line_context"><input class="logintxt" type="text" id="money" name="money" value="" placeholder="￥请输入支付金额" onfocus="this.blur()"/></div>
+        </div>
+
+        <div style="text-align:center;padding-top: 12%">
+            <div class="line_context"><input class="logintxt" type="text" id="remark" name="remark" value="" placeholder="请输入备注（选填）"/></div>
+        </div>
+    </div>
+
+    <div style="text-align:center;padding-top: 5%">
+        <input style="background: #ff9834;border-radius: 10px;width: 100%;height:50px;font-size: 20px;color: white;cursor: pointer; -webkit-appearance: none;outline: none;border: none;" type="button" onclick="pay()" value="确认支付"/>
+    </div>
+
+
+    <div class="num_key">
+        <div class="numb_box">
+            <div class="key_hide"><img src="./static/images/common/a.jpg"></div>
+            <ul style="border: 1px solid #dadada;overflow: hidden;border-bottom: none;padding-left: 0px;margin-top: 0px;margin-bottom: 0px;">
+                <li class="nums"><a href="javascript:void(0);">1</a></li>
+                <li class="nums"><a href="javascript:void(0);" class="zj_x">2</a></li>
+                <li class="nums"><a href="javascript:void(0);">3</a></li>
+                <li class="nums"><a href="javascript:void(0);">4</a></li>
+                <li class="nums"><a href="javascript:void(0);" class="zj_x">5</a></li>
+                <li class="nums"><a href="javascript:void(0);">6</a></li>
+                <li class="nums"><a href="javascript:void(0);">7</a></li>
+                <li class="nums"><a href="javascript:void(0);" class="zj_x">8</a></li>
+                <li class="nums"><a href="javascript:void(0);">9</a></li>
+                <li class="nums"><a href="javascript:void(0);">.</a></li>
+                <li class="nums"><a href="javascript:void(0);" class="zj_x">0</a></li>
+                <li class="del"><a href="javascript:void(0);"><img src="./static/images/common/b.gif"></a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>

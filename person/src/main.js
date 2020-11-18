@@ -13,16 +13,18 @@ import VueAxios from 'vue-axios';
 import './assets/css/base.css';
 import './assets/css/normalize.css'
 import './assets/js/rem';
-import cookie from 'js-cookie'
+import cookie from 'js-cookie';
+import './assets/download/font_954185_gwiryn5z3ch/iconfont.css';
 
 
-// import {common,MasterConfig,getUrlParam} from './api/common';
+// import {common,MasterConfig,getUrlParam,dealWithAjaxData} from './api/common';
 
 Vue.prototype.common=common;
 Vue.prototype.getUrlParam=getUrlParam;
 Vue.prototype.baseUrl=MasterConfig.C('baseUrl');
 Vue.prototype.basePageUrl=MasterConfig.C('basePageUrl');
 Vue.prototype.basePageUrlpay=MasterConfig.C('basePageUrlpay');
+Vue.prototype.dealWithAjaxData=dealWithAjaxData;
 
 import receiveData from './api/receiveData'
 Vue.prototype.receiveData=receiveData
@@ -40,7 +42,8 @@ var axiosInstance = axios.create({
       'Content-Type':"application/json",
 
       // 'Accept': '*/*',
-      'Accept': 'application/json',
+      // 'Accept': 'application/json',
+      'Accept': 'application/json;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
 
   },
   baseURL: Vue.prototype.baseUrl,

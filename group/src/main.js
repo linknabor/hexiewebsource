@@ -17,23 +17,24 @@ Vue.use(VueAwesomeSwiper)
 import axios from 'axios';
 import VueAxios from 'vue-axios';
 
-
+import './assets/inconfont/iconfont.css'
+import './assets/icon2/iconfont.css'
 //引入一些初始化css 
 import './assets/css/base.css'
 import './assets/css/normalize.css'
 import './assets/js/rem';
-
+import './assets/js/hidpi-canvas.min.js';
 import cookie from 'js-cookie'
 
 //本地使用
-// import {common,MasterConfig,getUrlParam} from './assets/js/common';
+// import {common,MasterConfig,getUrlParam,dealWithAjaxData} from './assets/js/common';
 
 Vue.prototype.common = common;
 Vue.prototype.getUrlParam = getUrlParam;
+Vue.prototype.dealWithAjaxData = dealWithAjaxData;
 Vue.prototype.baseUrl = MasterConfig.C('baseUrl');
 Vue.prototype.basePageUrl = MasterConfig.C('basePageUrl');
 Vue.prototype.basePageUrlpay = MasterConfig.C('basePageUrlpay');
-
 
 import receiveData from './assets/js/receiveData'
 Vue.prototype.receiveData=receiveData

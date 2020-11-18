@@ -1,28 +1,32 @@
 //开发环境
 var MasterConfig = function() {
     var t = {
-        baseUrl: /127|test/.test(location.origin)?'https://test.e-shequ.com/wechat/hexie/wechat/':
-        /uat/.test(location.origin)?'https://uat.e-shequ.com/wechat/hexie/wechat/':
+        baseUrl: /127|test|192/.test(location.origin)?'https://test.e-shequ.cn/wechat/hexie/wechat/':
+        /uat/.test(location.origin)?'https://uat.e-shequ.cn/wechat/hexie/wechat/':
         'https://www.e-shequ.cn/wechat/hexie/wechat/',
         
-        basePageUrl:/127|test/.test(location.origin)?'https://test.e-shequ.com/weixin/':
-        /uat/.test(location.origin)?'https://uat.e-shequ.com/hexie/weixin/':
+        basePageUrl:/127|test|192/.test(location.origin)?'https://test.e-shequ.cn/weixin/':
+        /uat/.test(location.origin)?'https://uat.e-shequ.cn/hexie/weixin/':
         'https://www.e-shequ.cn/weixin/',
         
-        basePageUrlpay:/127|test/.test(location.origin)?'https://test.e-shequ.com/weixin/pay/':
-        /uat/.test(location.origin)?'https://uat.e-shequ.com/pay/':
+        basedhzj3Url:/127|test|192/.test(location.origin)?'https://test.e-shequ.cn/weixin/':
+        /uat/.test(location.origin)?'https://uat.e-shequ.cn/hexie/weixin/':
+        'https://www.e-shequ.cn/dhzj3/weixin/',
+
+        basePageUrlpay:/127|test|192/.test(location.origin)?'https://test.e-shequ.cn/weixin/':
+        /uat/.test(location.origin)?'https://uat.e-shequ.cn/pay/':
         'https://www.e-shequ.cn/weixin/',
 
-        payPageFolder:/127|test/.test(location.origin)?'https://test.e-shequ.com/pay/':
-        /uat/.test(location.origin)?'https://uat.e-shequ.com/pay/':
+        payPageFolder:/127|test|192/.test(location.origin)?'https://test.e-shequ.cn/pay/':
+        /uat/.test(location.origin)?'https://uat.e-shequ.cn/pay/':
         'https://www.e-shequ.cn/pay/',
 
-        appId: /127|test/.test(location.origin)?'wx95f46f41ca5e570e':
+        appId: /127|test|192/.test(location.origin)?'wx95f46f41ca5e570e':
         /uat/.test(location.origin)?'wx9ffe0a2b5a64a285':
         'wxbd214f5765f346c1',
         
-        componentAppId: /127|test/.test(location.origin)?'wx4d706a1a7a139d1f':
-        /uat/.test(location.origin)?'wx4d706a1a7a139d1f':
+        componentAppId: /127|test|192/.test(location.origin)?'wx4d706a1a7a139d1f':
+        /uat/.test(location.origin)?'wxc65085912aca5444':
         'wx0d408844b35d85e2',
         
 		oauthUrl: "https://open.weixin.qq.com/connect/oauth2/authorize?",
@@ -99,7 +103,7 @@ function dealWithAjaxData(o, e, i, r) {
 function reLogin() {
 	setTimeout(function(){
 		console.log("waiting 1s for relogin.")
-	},1000)
+	},500)
     setCookie("UID", "", 0),
     common.login(!0)
 }
@@ -168,12 +172,23 @@ function isRegisted(){
 function toRegisterAndBack(){
     var n = location.origin + common.removeParamFromUrl(["from", "bind", "code", "share_id", "isappinstalled", "state", "m", "c", "a"]);
     let appurl='';
+    //1未领卡  //2领卡未激活
+    var cardStatus=getCookie('cardStatus');
+    var cardService=getCookie('cardService');
     if(getUrlParam('oriApp')){
         appurl='oriApp='+getUrlParam('oriApp');
     }else {
         appurl='';
+    };
+    if(cardService=='true'){
+        if(cardStatus == '1'||cardStatus==null || cardStatus=='0' ){
+            location.href=MasterConfig.C('basePageUrl')+"person/index.html?"+appurl+"#/welfare"
+        }else {
+            location.href=MasterConfig.C('basePageUrl')+"person/index.html?"+appurl+"#/register?comeFrom="+encodeURIComponent(n)+common.addParamHsah();
+        }
+    }else {
+        location.href=MasterConfig.C('basePageUrl')+"person/index.html?"+appurl+"#/register?comeFrom="+encodeURIComponent(n)+common.addParamHsah();
     }
-    location.href=MasterConfig.C('basePageUrl')+"person/index.html?"+appurl+"#/register?comeFrom="+encodeURIComponent(n);
 }
 //判断当前是那个公众号
 function Getofficial() {
@@ -192,7 +207,7 @@ window.common = {
         return MasterConfig.C("baseUrl") + (o ? ":" + o: "") + "/" + e;
     },
     //定义请求方法
-    invokeApi: function(e, o, n, t, i, r) {
+    invokeApi: function(e, o, n, t, i, r,c) {
         if (common.alert("url: " + o), AJAXFlag) { (null === t || void 0 === t) && (t = function() {}),
             (null === i || void 0 === i) && (i = function() {}),
             (null === r || void 0 === r) && (r = function() {});
@@ -204,9 +219,11 @@ window.common = {
                 },
                 dataType: "json",
                 beforeSend: t,
+                complete: c,
                 success: function(e) {
                     common.alert("success data: " + JSON.stringify(e));
                     dealWithAjaxData(o, e, i, r);
+
                 },
                 error: function(e) {
                     common.alert("error data: " + JSON.stringify(e));
@@ -234,29 +251,35 @@ window.common = {
         };
         common.invokeApi(n, a, i, null, e, r);
     },
+    //存储到localstorage中
+    localSet:function (key, value) {
+        window.localStorage.setItem(key, value);
+    },
+    //获取localstoragge数据
     GetImages:function(type) {
-        let imgUrl=getCookie(type);
-        if(imgUrl == undefined ||imgUrl == ''){
+        let imgUrl=window.localStorage.getItem(type);
+        if(imgUrl == undefined ||imgUrl == '' ){
             let n = "GET",
             a = "userInfo?oriApp="+getUrlParam('oriApp'),
             i = null,
             e = function(n) {
                 var duration = new Date().getTime()/1000 + 3600*24*30;
                 for(var j=0;j<n.result.bgImageList.length;j++){
-                    setCookie(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl,duration)
+                    window.localStorage.setItem(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl,duration)
                 } 
-                location.reload();
+                imgUrl=window.localStorage.getItem(type)
             },
             r = function() { 
             };
             common.invokeApi(n, a, i, null, e, r);
         }else {
-            imgUrl=getCookie(type)
+            imgUrl=window.localStorage.getItem(type);
         }
         return imgUrl;
    },
    getoriApp:function() {
-        var oriapp=getUrlParam('oriApp')?'oriApp='+getUrlParam('oriApp'):'state=123';
+		var mainAppId = MasterConfig.C("appId");
+		var oriapp=getUrlParam('oriApp')?'oriApp='+getUrlParam('oriApp'):'oriApp='+mainAppId;
         return  oriapp;
    },
 
@@ -265,14 +288,18 @@ window.common = {
 		var timestamp="";
 		var o = this._GET().code;
 		var oriApp = getUrlParam("oriApp");
+		var mainAppId = MasterConfig.C("appId");
+		if(!oriApp){
+			oriApp = mainAppId;
+		}
 		var param = {"oriApp":oriApp};
         if (common.alert("code: " + o), void 0 === o) {
 			var n = location.origin + common.removeParamFromUrl(["from","bind", "code", "share_id", "isappinstalled", "state", "m", "c", "a"])+common.addParamHsah(),
 			t = MasterConfig.C("oauthUrl"),
 		    end = MasterConfig.C("oauthUrlPostFix");
 			var url = t + "appid=" ;
-			var mainAppId = MasterConfig.C("appId") ;
-			if(oriApp && oriApp!=mainAppId){
+			
+			if(oriApp){
 				url +=  oriApp + "&component_appid=" + MasterConfig.C("componentAppId"); 
 			}else{
 				url +=  mainAppId;
@@ -287,13 +314,17 @@ window.common = {
             AJAXFlag = !1
         },
         function(x) {
-            common.updateUserStatus(x.result);
+            if(x.result!=null){
+               common.updateUserStatus(x.result);
+            }
             AJAXFlag = !0;
 			
 		if(document.URL.indexOf('.html?t=') < 0) {
 			 timestamp= (new Date()).valueOf();
 		}
-		var url= location.origin +common.removeParamFromUrl(["code"]);
+
+		var url= location.origin +common.removeParamFromUrl(["code","appid","state"]);
+
 		if(url.indexOf('?')<0){
 			url+='?';
 		}else {
@@ -306,25 +337,47 @@ window.common = {
 		}
 		url+=common.addParamHsah();
         location.href =url;
+        },
+        function(e){
+            alert(e.message)
         })
     },
     /**变更才需要重设置*/
-updateUserStatus(user) {
-    var duration = new Date().getTime()/1000 + 3600*24*30;
-    setCookie("UID", user.uid,  duration);
-    setCookie("currentAddrId", user.currentAddrId, duration);
-    setCookie("tel", user.tel, duration);
-    setCookie("shareCode", user.shareCode, duration);
-	setCookie("appId", user.appId);
-},
+    updateUserStatus(user) {
+        var duration = new Date().getTime()/1000 + 3600*24*30;
+        setCookie("UID", user.uid,  duration);
+        setCookie("currentAddrId", user.currentAddrId, duration);
+        setCookie("tel", user.tel, duration);
+        setCookie("shareCode", user.shareCode, duration);
+        setCookie("appId", user.appId);
+    },
+    //存储公共userinfo中参数的cookie
+    updatecookie(cardStatus,cardService,userId,appid,cspId,sectId,cardPayService,bgImageList,wuyeTabsList){
+        var duration = new Date().getTime()/1000 + 3600*24*30;
+        setCookie("cardStatus", cardStatus,duration);
+        setCookie("cardService", cardService,duration);
+        setCookie('userId',userId,duration);
+        setCookie('appid',appid,duration);
+        setCookie('cspId',cspId,duration);
+        setCookie('sectId',sectId,duration);
+        setCookie('cardPayService',cardPayService,duration);
+
+        for(var j=0;j<bgImageList.length;j++){
+            common.localSet(bgImageList[j].type,bgImageList[j].imgUrl)
+        }
+
+        if(wuyeTabsList) {
+            common.localSet('wuyeTabsList',JSON.stringify(wuyeTabsList));
+        }
+    },
      //入口程序 检查状态
     checkRegisterStatus:function(){
         if(!getCookie("UID")){
             common.login();/**不应该出现*/
             return false;
         }
-        if(!isRegisted()){
-            alert("请先完成注册！");
+
+        if(!isRegisted()){              
             toRegisterAndBack();
             return false;
         }
@@ -422,4 +475,4 @@ updateUserStatus(user) {
 };
 Getofficial();
 checkCodeAndLogin();
-export {common,MasterConfig,getUrlParam} 
+export {common,MasterConfig,getUrlParam,dealWithAjaxData} 

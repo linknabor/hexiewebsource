@@ -1,24 +1,24 @@
 //开发环境
 var MasterConfig = function() {
     var t = {
-        baseUrl: /127|test/.test(location.origin)?'https://test.e-shequ.com/wechat/hexie/wechat/':
-        /uat/.test(location.origin)?'https://uat.e-shequ.com/wechat/hexie/wechat/':
+        baseUrl: /127|test/.test(location.origin)?'https://test.e-shequ.cn/wechat/hexie/wechat/':
+        /uat/.test(location.origin)?'https://uat.e-shequ.cn/wechat/hexie/wechat/':
         'https://www.e-shequ.cn/wechat/hexie/wechat/',
         
-        basePageUrl:/127|test/.test(location.origin)?'https://test.e-shequ.com/weixin/':
-        /uat/.test(location.origin)?'https://uat.e-shequ.com/hexie/weixin/':
+        basePageUrl:/127|test/.test(location.origin)?'https://test.e-shequ.cn/weixin/':
+        /uat/.test(location.origin)?'https://uat.e-shequ.cn/hexie/weixin/':
         'https://www.e-shequ.cn/weixin/',
         
-        basedhzj3Url:/127|test/.test(location.origin)?'https://test.e-shequ.com/weixin/':
-        /uat/.test(location.origin)?'https://uat.e-shequ.com/hexie/weixin/':
+        basedhzj3Url:/127|test/.test(location.origin)?'https://test.e-shequ.cn/weixin/':
+        /uat/.test(location.origin)?'https://uat.e-shequ.cn/hexie/weixin/':
         'https://www.e-shequ.cn/dhzj3/weixin/',
 
-        basePageUrlpay:/127|test/.test(location.origin)?'https://test.e-shequ.com/weixin/':
-        /uat/.test(location.origin)?'https://uat.e-shequ.com/pay/':
+        basePageUrlpay:/127|test/.test(location.origin)?'https://test.e-shequ.cn/weixin/':
+        /uat/.test(location.origin)?'https://uat.e-shequ.cn/pay/':
         'https://www.e-shequ.cn/weixin/',
 
-        payPageFolder:/127|test/.test(location.origin)?'https://test.e-shequ.com/pay/':
-        /uat/.test(location.origin)?'https://uat.e-shequ.com/pay/':
+        payPageFolder:/127|test/.test(location.origin)?'https://test.e-shequ.cn/pay/':
+        /uat/.test(location.origin)?'https://uat.e-shequ.cn/pay/':
         'https://www.e-shequ.cn/pay/',
 
         appId: /127|test/.test(location.origin)?'wx95f46f41ca5e570e':
@@ -26,7 +26,7 @@ var MasterConfig = function() {
         'wxbd214f5765f346c1',
         
         componentAppId: /127|test/.test(location.origin)?'wx4d706a1a7a139d1f':
-        /uat/.test(location.origin)?'wx4d706a1a7a139d1f':
+        /uat/.test(location.origin)?'wxc65085912aca5444':
         'wx0d408844b35d85e2',
         
 		oauthUrl: "https://open.weixin.qq.com/connect/oauth2/authorize?",
@@ -36,7 +36,9 @@ var MasterConfig = function() {
 		oauthUrlPostSilent:"&response_type=code&scope=snsapi_base&state=123#wechat_redirect",
         baidu_map_key:"RUWUgrEEF5VjoaWsstMMZwOD",
 
-        is_debug:true
+        is_debug:true,
+
+        kyappid:'wxa54bc90bdbc845a8',
     },
 
     e = {};
@@ -343,14 +345,34 @@ window.common = {
         })
     },
     /**变更才需要重设置*/
-updateUserStatus(user) {
-    var duration = new Date().getTime()/1000 + 3600*24*30;
-    setCookie("UID", user.uid,  duration);
-    setCookie("currentAddrId", user.currentAddrId, duration);
-    setCookie("tel", user.tel, duration);
-    setCookie("shareCode", user.shareCode, duration);
-    setCookie("appId", user.appId);
-},
+    updateUserStatus(user) {
+        var duration = new Date().getTime()/1000 + 3600*24*30;
+        setCookie("UID", user.uid,  duration);
+        setCookie("currentAddrId", user.currentAddrId, duration);
+        setCookie("tel", user.tel, duration);
+        setCookie("shareCode", user.shareCode, duration);
+        setCookie("appId", user.appId);
+    },
+    //存储公共userinfo中参数的cookie
+    updatecookie(cardStatus,cardService,userId,appid,cspId,sectId,cardPayService,bgImageList,wuyeTabsList,qrCode,result){
+            var duration = new Date().getTime()/1000 + 3600*24*30;
+            setCookie("cardStatus", cardStatus,duration);
+            setCookie("cardService", cardService,duration);
+            setCookie('userId',userId,duration);
+            setCookie('appid',appid,duration);
+            setCookie('cspId',cspId,duration);
+            setCookie('sectId',sectId,duration);
+            setCookie('cardPayService',cardPayService,duration);
+            setCookie('qrCode',qrCode,duration);
+            console.log(result);
+            for(var j=0;j<bgImageList.length;j++){
+                common.localSet(bgImageList[j].type,bgImageList[j].imgUrl)
+            }
+    
+            if(wuyeTabsList) {
+                common.localSet('wuyeTabsList',JSON.stringify(wuyeTabsList));
+            }
+    },
      //入口程序 检查状态
     checkRegisterStatus:function(){
         if(!getCookie("UID")){
@@ -433,9 +455,9 @@ updateUserStatus(user) {
                 link = link + "&";
             }
 
-            link = link + "shareCode="+getCookie("shareCode");
-			var appId = getCookie("appId");
-			link += "&oriApp=" + appId;
+            // link = link + "shareCode="+getCookie("shareCode");
+			// var appId = getCookie("appId");
+			// link += "&oriApp=" + appId;
         }
     
         wx.ready(function(){

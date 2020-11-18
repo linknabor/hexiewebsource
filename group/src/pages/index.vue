@@ -91,7 +91,7 @@
     methods:{
         //模仿线上用户信息/105/747/384/
       initSession4Test(){
-          let url = '/initSession4Test/79187';
+          let url = '/initSession4Test/46';
               vm.receiveData.getData(vm,url,'Data',function(){
           });
       },
@@ -106,8 +106,8 @@
                     if(n.result!=null) {
                         Bus.$emit('logins',false)
                         vm.list=n.result.iconList;
+                        vm.common.updatecookie(n.result.cardStatus,n.result.cardService,n.result.id,n.result.appid,n.result.cspId,n.result.sectId,n.result.cardPayService,n.result.bgImageList,n.result.wuyeTabsList,n.result.qrCode,n.result);
                     }
-                   
                 },
                 r = function() { 
                   

@@ -31,32 +31,24 @@
           </div>
         </div>
         <div class="point-item-wrap">
-          <div class="point-item" @click="coupons">
+          <div class="point-item" @click="mycoupons">
             <div class="point-info fs16">{{user.couponCount}}</div>
             <div class="point-title fs14">我的现金劵</div>
           </div>
         </div>
       </div>
-      <!-- <div class="huiyuan">
-        <div class="huiyuan-1">
-          <a :href="this.basePageUrlpay+'orderpay.html?start=123#/kaitong'">
-            <img v-if="isMember" src="../../assets/images/common/VIP已开通.png" />
-            <img v-else src="../../assets/images/common/VIP未开通(4).png" alt />
-          </a>
-        </div>
-      </div> -->
-
       <div id="point-list" style="border-bottom: none;" class="div_bottom" v-show="cardService==true">
         <div class="point-item-wrap item-wraps">
-          <div class="point-item">
+          <div class="point-item " >
             <div class="point-info fs16">{{point}}</div>
             <div class="point-title fs14">积分</div>
           </div>
         </div>
+        
         <div class="point-item-wrap item-wraps">
-          <div class="point-item" @click="coupons">
+          <div class="point-item" @click="mycoupons">
             <div class="point-info fs16">{{user.couponCount}}</div>
-            <div class="point-title fs14">现金劵</div>
+            <div class="point-title fs14">我的优惠券</div>
           </div>
         </div>
       </div>
@@ -64,51 +56,43 @@
 
     <div class="info-wrap" style="overflow:hidden; clear: both; border-bottom:none ;">
       <!-- 链接地址要换 -->
+      <!-- :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/orders'" -->
       <a
-        :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/orders'"
-        class="input-wrap menu-person-link lite-divider"
+        href="javascript:void(0);"
+        class="input-wrap  lite-divider disb"
       >
         <span class="input-info lf30 fs16">全部订单</span>
-        <span class="fr fs14 left_color">查看全部订单&nbsp;&nbsp;&nbsp;&nbsp;</span>
       </a>
     </div>
 
     <div id="module-list">
-      <div class="module-item-wrap" v-if="!donghu">
-        <!-- 链接地址要换 -->
-        <a :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/onsaleorders'" class="module-item">
-          <div class="module-logo logo1"></div>
-          <div class="module-title fs14">商品订单</div>
+      <div class="module-item-wrap module-newwidth" >
+        <a class="module-item" :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/special?type=1'">
+          <div class="module-logo logo6"></div>
+          <div class="module-title fs14">商城订单</div>
         </a>
       </div>
-      <div class="module-item-wrap" :class="{'moduledh':donghu}">
-        <a v-if="donghu" class="module-itemdh" :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/grouporders'">
-            <div class="module-logodh logo4" >
-                <div class="module-titledh fs14">团购订单</div>
-            </div>
-            <div></div>
-         </a>
-        <a v-else class="module-item" :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/grouporders'">
-          <div class="module-logo logo2"></div>
-          <div class="module-title fs14">团购订单</div>
-        </a>
-        
-      </div>
-      <div class="module-item-wrap" :class="{'moduledh':donghu}">
-        <a v-if="donghu" class="module-itemdh" :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/homeorders'">
+      <div class="module-item-wrap module-newwidth">
+        <!-- <a v-if="donghu" class="module-itemdh" :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/homeorders'">
             <div class="module-logodh logo5" >
                 <div class="module-titledh fs14">服务订单</div>
             </div>
-        </a> 
-        <a v-else class="module-item" :href="this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/homeorders'">
+        </a>  -->
+        <router-link  class="module-item" :to="{path:'/myservice'}">
           <div class="module-logo logo3"></div>
           <div class="module-title fs14">服务订单</div>
-        </a>
+        </router-link> 
+      </div>
 
+       <div  class="module-item-wrap module-newwidth" >
+        <router-link class="module-item" :to="{path:'/myrepair'}">
+          <div class="module-logo logo7"></div>
+          <div class="module-title fs14">维修订单</div>
+        </router-link>
       </div>
     </div>
 
-    <div class="info-wrap" v-if="donghu">
+    <!-- <div class="info-wrap" v-if="donghu">
         <a :href="this.basePageUrl+'wuye/index.html?'+this.common.getoriApp()+'#/mysteward?n=2'" class="input-wrap menu-person-link lite-divider">
           <span class="input-info lf30 fs16">报修</span>
           <span class="fr fs14 left_color">
@@ -127,14 +111,29 @@
             <span id="mypublic"></span>查看消息&nbsp;&nbsp;&nbsp;&nbsp;
           </span>
         </a>
-    </div>
-    <div v-else>
+    </div> -->
+    <div>
       <div class="info-wrap" style="overflow:hidden; clear: both;">
-        <router-link :to="{path:'/myrepair'}" class="input-wrap menu-person-link lite-divider">
-          <span class="input-info lf30 fs16">我的维修单</span>
-          <span class="fr fs14 left_color">查看维修单&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <div @click="business" v-show="merchant"  class="input-wrap menu-person-link lite-divider">
+            <span class="input-info lf30 fs16">我是商家</span>
+            <span class="fr fs14 left_color">查看记录&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        </div>
+        <router-link
+          :to="{path:'/getcoupons'}"
+          class="input-wrap menu-person-link lite-divider"
+        >
+          <span class="input-info lf30 fs16">领券中心</span>
+          <span class="fr fs14 left_color">点击领取&nbsp;&nbsp;&nbsp;&nbsp;</span>
         </router-link>
-        <!-- 我是维修工目前不隐藏 v-show="user.repairOperator" -->
+
+        <router-link
+          :to="{path:'/service'}"
+          class="input-wrap menu-person-link lite-divider"
+          v-show="serviceOperator || service_list.length > 0"
+        >
+          <span class="input-info lf30 fs16">我是服务人员</span>
+          <span class="fr fs14 left_color">查看订单&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        </router-link>
         <router-link
           :to="{path:'/operatorOrders'}"
           class="input-wrap menu-person-link lite-divider"
@@ -159,15 +158,15 @@
 
       <div class="info-wrap">
         <a
-          :href="this.basePageUrl+'wuye/index.html?'+oriapp+'#/Myhouse'"
+          :href="this.basePageUrl+'wuye/index.html?'+this.common.getoriApp()+'#/Myhouse'"
           class="input-wrap menu-person-link lite-divider"
         >
           <span class="input-info lf30 fs16">我是业主</span>
           <span class="fr fs14 left_color">绑定房屋&nbsp;&nbsp;&nbsp;&nbsp;</span>
         </a>
         <a @click="gotoAddress" class="input-wrap menu-person-link lite-divider">
-          <span class="input-info lf30 fs16">常用地址</span>
-          <span class="fr fs14 left_color">收货地址&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span class="input-info lf30 fs16">常用地址</span>
+            <span class="fr fs14 left_color">收货地址&nbsp;&nbsp;&nbsp;&nbsp;</span>
         </a>
       </div>
     </div>
@@ -186,9 +185,6 @@
         <span class="input-info lf30 fs16">客服电话</span>
         <span class="fr fs14 left_color">021-50876295</span>
       </a>
-      <!--<a href=" " class="input-wrap menu-person-link ">   
-                        <span class="input-info lf30 fs16">在线客服</span>
-      </a>-->
     </div>
 
     <div class="bottom-info divider" style="text-align: center; display: block;">
@@ -226,56 +222,41 @@ export default {
         lvdou: "0",
         couponCount: 0,
       },
-      login:true,
-      oriapp:'', //我是业主
+      service_list:[],
+      login:false,
       cardService:'',
       qrCode:'',//二维码
       point:0,//积分
       cardStatus:'',//是否领卡激活的标记
-      // 默认未开通会员
-      // isMember: false,
-      donghu:false,//标识判断是不是东湖
+      // donghu:false,//标识判断是不是东湖
+      serviceOperator:false, //我是服务人员
+      evoucherOperator:'',//核销卡卷
+      merchant:false,//我是商家
       user_info: {
         avatar: img,
         nickname: "游客",
         levelname: "普通会员"
       },
-      user_level: {
-        0: "普通会员",
-        1: "钻石会员",
-        2: "大楼VIP"
-      }
     };
   },
   created() {
     vm = this;
   },
   mounted() {
-    // this.initSession4Test();
+    // this.initSession4Test(); 
     this.User(); 
-    // this.panduan(); //先判断
-    vm.oriApp();//判断我是业主地址
+    vm.qrCodePayService();
   },
-  components: {},
   methods: {
-    //先判断是否为会员
-    // panduan() {
-    //   vm.receiveData.getData(vm, "/getMember", "res", function(res) {
-    //     if (vm.res[0].status == "0") {
-    //       // 已开通会员
-    //       // console.log(vm.res[0].enddate)
-    //       vm.isMember = true;
-    //       vm.enddate = vm.res[0].enddate;
-    //     }
-    //   });
-
-     
-    // },
     //模仿线上用户信息
     // 105/747/384
     initSession4Test() {
-      let url = "/initSession4Test/62";
-      vm.receiveData.getData(vm, url, "Data", function() {});
+      var url ='login/8427?code=8427';
+      var data = {
+        "oriApp": "wx95f46f41ca5e570e"
+      }
+      vm.receiveData.postData(vm,url,data,'res',function(){
+      });
     },
     User() {
       //获取页面数据
@@ -284,33 +265,30 @@ export default {
         i = null,
         d = function() {},
         e = function(n) {
-           if(n.success&&n.result==null) {
+          if(n.success&&n.result==null) {
                  reLogin();
                  return
-           }
-          vm.donghu=n.result.donghu;//东湖标识
-          vm.user = n.result;
-          vm.user.headimgurl = "" != n.result.name || n.result? n.result.headimgurl: vm.user_info.avatar;  
-          vm.user.name ="" != n.result.name ? n.result.name : vm.user_info.nickname;
-          
-          vm.qrCode=n.result.qrCode;
-          vm.cardService=n.result.cardService;
-          if(vm.user.point<0){//小于0等于0
-            vm.point=0;
           }else {
-            vm.point=vm.user.point;
-          }
-          vm.login=false;
-          Bus.$emit('sends',n.result.iconList);
-          
-          //保存图片
-          var duration = new Date().getTime()/1000 + 3600*24*30;
-          cookie.set('cardStatus',n.result.cardStatus,duration);
-          cookie.set('cardService',n.result.cardService,duration);
-
-          for(var j=0;j<n.result.bgImageList.length;j++){
-              vm.common.localSet(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl)
-          }
+            // vm.donghu=n.result.donghu;//东湖标识
+            vm.user = n.result;
+            vm.user.headimgurl = "" != n.result.name || n.result? n.result.headimgurl: vm.user_info.avatar;  
+            vm.user.name ="" != n.result.name ? n.result.name : vm.user_info.nickname;
+            vm.qrCode=n.result.qrCode;
+            vm.cardService=n.result.cardService;
+            vm.serviceOperator = n.result.serviceOperator;//我是服务人员
+            vm.evoucherOperator = n.result.evoucherOperator;//核销卡卷
+            vm.merchant = n.result.merchant;//我是商家
+            if(vm.user.point<0){//小于0等于0
+              vm.point=0;
+            }else {
+              vm.point=vm.user.point;
+            }
+            vm.login=false;
+            Bus.$emit('sends',n.result.iconList);
+            
+            //保存
+            vm.common.updatecookie(n.result.cardStatus,n.result.cardService,n.result.id,n.result.appid,n.result.cspId,n.result.sectId,n.result.cardPayService,n.result.bgImageList,n.result.wuyeTabsList,n.result.qrCode,n.result);
+         }
         },
         r = function() {
           vm.login=false;
@@ -319,8 +297,20 @@ export default {
             (vm.user.name = vm.user_info.nickname);
         };
       this.common.invokeApi(n, a, i, d, e, r);
-
-      // vm.receiveData.getData(vm, 'userInfo', "n", function() { vm.user = vm.n.result;});
+    },
+    //是否配置服务人员
+     qrCodePayService() {
+      vm.receiveData.getData(vm, "/qrCodePayService", "res", function() {
+        if (vm.res.success) {
+          if(vm.res.result.service_list != null) {
+             vm.service_list = vm.res.result.service_list;
+          }
+        } else {
+          if(vm.res.message != null && vm.res.errorCode !=40001) {
+             alert(vm.res.message);
+          }
+        }
+      });
     },
     //点击头像
     gotoEdit() {
@@ -353,9 +343,9 @@ export default {
             vm.$router.push({ path: "/bindphone" });
         }      
     },
-    //现金券
-    coupons() {
-      vm.$router.push({ path: "/coupons" });
+    //我的优惠券
+    mycoupons() {
+      vm.$router.push({ path: "/coupon" });
     },
     gotoAddress() {
         vm.$router.push({ path: "/addresses" });
@@ -363,17 +353,26 @@ export default {
     Notice() {
       vm.$router.push({path:'/notices'})
     },
-    //我是业主
-    oriApp() {
-      vm.oriapp=vm.common.getoriApp();
+    //我是商家 
+    business() {
+      var evoucherOperator = '';
+      if(this.evoucherOperator) {
+        evoucherOperator = 'true';
+      }else {
+        evoucherOperator = 'false';
+      }
+      vm.$router.push({path:'/specialorders',query:{'evoucherOperator':evoucherOperator,type:'1'}});
     }
   },
-  computed: {}
+  computed: {},
+  components: {
+
+  }
 };
 </script>
 
 <style  scoped>
- #login {
+  #login {
     position: fixed;
     top: 35%;
     left: 50%;
@@ -388,7 +387,7 @@ export default {
 }
 .ind {
   background-color: #fffff8;
-      overflow-x: hidden;
+  /* overflow-x: hidden; */
 }
 .avatar-wrap {
   background-color: #ff8a00;
@@ -445,11 +444,7 @@ export default {
   width: 100%;
   top: 1.4rem;
 }
-.huiyuan-1 img {
-  border-style: none;
-  width: 100%;
-  height: 0.8rem;
-}
+
 .div_bottom {
   position: absolute;
   /* bottom: 0; */
@@ -488,15 +483,15 @@ export default {
 .info-wrap {
   color: #3b3937;
   padding-bottom: 0;
-  border-bottom: 10px solid #eeeeee;
-  padding: 0 4px;
   font-size: 12px;
 
 }
-
+.mrg5 {
+  margin-right: 0.5rem;
+}
 .section-title,
 .lite-divider {
-  border-bottom: 1px solid #f2f2f2;
+  border-bottom: 1px solid #d4cfc8;
 }
 .menu-person-link {
   padding-right: 1rem;
@@ -515,26 +510,35 @@ export default {
   display: block;
   background: url(../../assets/images/person/icon_arrow.png) no-repeat;
   background-size: 7px 14px;
-  background-position: right center;
+  background-position: 98% center;
   padding-right: 15px;
+}
+.disb {
+  display:block;
+  color: #3b3937;
 }
 /* 订单服务 */
 #module-list {
   width: 100%;
   overflow: hidden;
+  border-bottom: 1px solid #d4cfc8;
 }
 #module-list .module-item-wrap {
   margin-top: 8px;
-  width: 33.3%;
+  width: 50%;
   float: left;
-  border-bottom: 10px solid #eeeeee;
+  /* border-bottom: 10px solid #d4cfc8; */
   position: relative;
 }
+#module-list .module-newwidth {
+  width: 33%;
+} 
 #module-list .module-item-wrap .module-item {
   margin-top: 10px;
   display: block;
   width: 100%;
-  height: 1.5rem;
+  /* height: 1.5rem; */
+  padding: 0.2rem;
   background-position: 50% 0;
   background-size: 42px;
   background-repeat: no-repeat;
@@ -550,12 +554,12 @@ export default {
 .module-logo {
   margin-top: 4px;
   display: block;
-  height: 43px;
+  /* height: 43px; */
+  height: 0.7rem;
   background-position: 50% 0;
   background-size: 0.6rem;
   background-repeat: no-repeat;
 }
-
 .module-title {
   text-align: center;
   /* margin-top: 10px; */
@@ -569,6 +573,12 @@ export default {
 }
 .logo3 {
   background-image: url("../../assets/images/person/icon_person_yuyue.png");
+}
+.logo6 {
+  background-image: url(http://img.e-shequ.cn/Ftfh6I1VTTeiMW-Cj8TUe8o5ONc5);
+}
+.logo7 {
+  background-image: url(http://img.e-shequ.cn/FlyfitH09IfIP9RiTgUddHa25auM);
 }
 .logo4 {
   background-image: url("../../assets/images/person/icon_person_tuangoudh.png");
@@ -590,30 +600,35 @@ export default {
   padding-right: 0;
   background: none;
 }
-/* 开通会员 */
-.huiyuan {
-  width: 101%;
-  height: 1rem;
-  /* background: #cfba1b; */
-  position: relative;
-  visibility: middle;
-  text-align: center;
-  top: 0.57rem;
-  margin: 0.9rem -0.2%;
+
+#module-list .moduledh {
+  width: 50%;
 }
-.huiyuan-left {
-  float: left;
-  margin-left: 10px;
-  color: white;
+.module-itemdh {
+    margin-top: 10px;
+    display: block;
+    width: 100%;
+    background-position: 50% 0;
+    background-size: 42px;
+    background-repeat: no-repeat;
+    font-size: 16px;
+    color: #3b3937;
+    -webkit-border-radius: 2px;
 }
-.huiyuan-right {
-  float: right;
-  border: 1px solid #ccc;
-  background: black;
-  color: white;
-  border-radius: 5px;
-  margin-top: 10px;
-  margin-right: 10px;
+.module-logodh{
+    margin-top: -5px;
+    display: block;
+    height: 1.2rem;
+    background-position: 25% 0;
+    background-size: .7rem;
+    background-repeat: no-repeat;
+}
+.module-titledh {
+    text-align: center;
+    margin-top: 10px;
+    margin-left: 27%;
+    padding-top: 7%;
+    color: #3b3937;
 }
 #module-list .moduledh {
   width: 50%;

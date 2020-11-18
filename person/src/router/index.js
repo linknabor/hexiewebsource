@@ -1,21 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-// import Index from '@/pages/index'
-// import index from '@/pages/index/index'//首页
-// import Bindphone from '@/pages/bindphone'//个人信息
-// import Register from '@/pages/register'//手机注册页
-// import Coupons from '@/pages/coupons'//我的优惠券
-// import Myrepair from '@/pages/myRepair/myrepair'//我的维修
-// import OrdersDetail from '@/pages/myRepair/ordersDetail'//维修详情
-// import cancelOrders from '@/pages/myRepair/cancelOrders'//取消维修
-// import OperatorOrders from '@/pages/myRepair/operatorOrders'//我的维修单
-// import OperatorOrdersDetail from '@/pages/myRepair/operatorOrdersDetail'//我的维修我要抢单
-// import OperatorRepairSuccess from '@/pages/myRepair/operatorRepairSuccess'//我要抢单 公共页面
-// import Notices from '@/pages/notices'//我的消息
-// import MyPublish from '@/pages/communities/myPublish'//我的发布
-// import ThreadDetail from '@/pages/communities/threadDetail'//发布回复
-// import Addresses from '@/pages/addresses'//常用地址
-
 Vue.use(Router)
 
 let router= new Router({
@@ -48,14 +32,6 @@ let router= new Router({
         title:'编辑个人信息'
       }
     },
-    {
-      path:'/coupons',
-      name:'coupons',
-      component:resolve=> require(['@/pages/coupons'],resolve),
-      meta:{
-        title:'我的现金券'
-      }
-    }, 
     {
       path:'/myrepair',
       name:'myrepair',
@@ -137,6 +113,158 @@ let router= new Router({
         title:''
       }
     },
+    {
+      path:'/service',
+      name:'service',
+      component:resolve=> require(['@/pages/service/service'],resolve),
+      meta: {
+        title:'服务'
+      }
+    },
+    {
+      path:'/codeimg',
+      name:'codeimg',
+      component:resolve=> require(['@/pages/service/codeimg'],resolve),
+      meta: {
+        title:''
+      }
+    },
+    {
+      path:'/ordermation',
+      name:'ordermation',
+      component:resolve=> require(['@/pages/service/ordermation'],resolve),
+      meta: {
+        title:'订单信息'
+      }
+    },
+    {
+      path:'/canReceiveorders',
+      name:'canReceiveorders',
+      component:resolve=>require(['@/pages/service/CanReceiveOrders'],resolve),
+      meta:{
+        title:''
+      }
+    },
+    {
+      path:'/openServiceDetail',
+      name:'openServiceDetail',
+      component:resolve=>require(['@/pages/service/openServiceDetail'],resolve),
+      meta:{
+        title:''
+      }
+    },
+    {
+      path:'/openServicesuccess',
+      name:'openServicesuccess',
+      component:resolve=>require(['@/pages/service/openServicesuccess'],resolve),
+      meta:{
+        title:''
+      }
+    },
+    {
+      path:'/myservice',
+      name:'myservice',
+      component:resolve=>require(['@/pages/service/myservice'],resolve),
+      meta:{
+        title:'我的服务单'
+      }
+    },
+    {
+      path:'/myserviceDetail',
+      name:'myserviceDetail',
+      component:resolve=>require(['@/pages/service/myserviceDetail'],resolve),
+      meta:{
+        title:'订单详情'
+      }
+    },
+    {
+      path:'/cancelservice',
+      name:'cancelservice',
+      component:resolve=>require(['@/pages/service/cancelservice'],resolve),
+      meta:{
+        title:'取消订单'
+      }
+    },
+    {
+      path:'/cardrolldetail',
+      name:'cardrolldetail',
+      component:resolve => require(['@/pages/Cardroll/cardrollDetail'],resolve),
+      meta:{
+        title:'商品订单'
+      }
+    },
+    {
+      path:'/cardrollgoods',
+      name:'cardrollgoods',
+      component:resolve =>require(['@/pages/Cardroll/cardrollgoods'],resolve),
+      meta:{
+        title:'商品核销'
+      }
+    },
+    {
+      path:'/cardrollrecords',
+      name:'cardrollrecords',
+      component:resolve =>require(['@/pages/Cardroll/cardrollrecords'],resolve),
+      meta:{
+        title:'我是商家'
+      }
+    },
+    {
+      path:'/keyboard',
+      name:'keyboard',
+      component:resolve =>require(['@/pages/Cardroll/keyboard'],resolve),
+      meta:{
+        title:''
+      }
+    },
+    {
+      path:'/reset',
+      name:'reset',
+      component:resolve =>require(['@/pages/index/reset'],resolve),
+      meta:{
+        title:'重置密码'
+      }
+    },
+    {
+      path:'/grouporders',
+      name:'grouporders',
+      component:resolve => require(['@/pages/business/grouporders'],resolve),
+      meta:{
+        title:'我是商家'
+      }
+    },
+    {
+      path:'/specialorders',
+      name:'specialorders',
+      component:resolve => require(['@/pages/business/specialorders'],resolve),
+      meta:{
+        title:'我是商家'
+      }
+    },
+    {
+      path:'/getcoupons',
+      name:'getcoupons',
+      component:resolve => require(['@/pages/coupon/getcoupons'],resolve),
+      meta:{
+        title:'领券中心'
+      }
+    },
+    {
+      path:'/coupon',
+      name:'coupon',
+      component:resolve => require(['@/pages/coupon/coupon'],resolve),
+      meta:{
+        title:'优惠券'
+      }
+    },
+    {
+      path:'/invalidcoupon',
+      name:'invalidcoupon',
+      component:resolve => require(['@/pages/coupon/invalidcoupon'],resolve),
+      meta:{
+        title:'优惠券'
+      }
+    },
   ]
 })
 
@@ -146,7 +274,7 @@ let router= new Router({
 router.beforeEach((to, from, next) => {
   //动态改变title
   var flag;
-  if(to.matched[0].name != "index"&& to.matched[0].name!='register'&&to.matched[0].name!='welfare') {
+  if(to.matched[0].name != "index"&& to.matched[0].name!='register'&&to.matched[0].name!='welfare'&&to.matched[0].name!='ageess'&&to.matched[0].name!='reset') {
      flag=common.checkRegisterStatus()
      if(!flag) {
        return

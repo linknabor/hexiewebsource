@@ -37,6 +37,8 @@ body {
     -webkit-tap-highlight-color: transparent;
     font-family: "微软雅黑";
     background: #ffffff;
+    -webkit-overflow-scrolling: touch;
+	 -webkit-overflow-scrolling: touch;
 }
 
 </style>

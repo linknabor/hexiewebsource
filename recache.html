@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width,minimum-scale=1,maximum-scale=1,initial-scale=1,user-scalable=no"/>
+    <meta name="referrer" content="no-referrer"/>
+    <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="pragma" content="no-cache"/>
+    <meta http-equiv="expires" content="0"/>
+    <script src="./static/jquery.js"></script>
+    <title></title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0,minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">  
+    <script>
+
+        var baseurl = /127|test/.test(location.origin)?'https://test.e-shequ.cn/weixin/':
+            /uat/.test(location.origin)?'https://uat.e-shequ.cn/hexie/weixin/' : 'https://www.e-shequ.cn/weixin/';
+
+        var requrl = baseurl + "otherPay.html"+window.location.search;
+
+        var wechat_url = /127|test/.test(location.origin)?'https://test.e-shequ.cn/wechat/hexie/wechat':
+            /uat/.test(location.origin)?'https://uat.e-shequ.cn/wechat/hexie/wechat' : 'https://www.e-shequ.cn/wechat/hexie/wechat/';
+
+		function recache(param){
+		
+			if('wuye'==param){
+				alert("当前功能暂未实现!");
+				return false;
+			}
+			var requestUrl = wechat_url + "/param/recache/" + param + "?syscode=hexie";
+			console.log("requestUrl:" + requestUrl);
+			$.ajax({
+                        type: 'GET',
+                        url: requestUrl,
+                        dataType: "text",
+                        data: {},
+                        success: function (res) {
+                            if (res == "success") {
+                                alert("刷新成功!");
+                            } else {
+                                alert('请刷新重试');
+                            }
+                        },
+                        error: function (err) {
+                            console.log(err)
+                        }
+                    })
+		}
+		
+
+        function  alipayAuthorize() {
+            appId = /127|test/.test(location.origin)?'2021001163621308':
+                /uat/.test(location.origin)?'2021001163651280' : '2021001161682727';
+
+            let authorize_url = "https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=APPID&scope=SCOPE&redirect_uri=ENCODED_URL";
+            //
+            let o = gerAuthcode().auth_code;
+            if (o === undefined) {
+                let authorize = authorize_url.replace("APPID", appId).replace("SCOPE", "auth_base").replace("ENCODED_URL", encodeURIComponent(requrl))
+                console.log("author:" + authorize);
+                location.href = authorize;
+            } else {
+                let u_id = getParam(window.location.search, "user_id");
+                if(u_id == null) { //说明没拿过user_id
+                    let url = wechat_url + "/authorizeAlipay/" + o;
+                    $.ajax({
+                        type: 'post',
+                        url: url,
+                        dataType: "json",
+                        data: {},
+                        success: function (res) {
+                            if (res.success) {
+                                let user_id = res.result.userid;
+                                console.log("user_id:" + user_id);
+                                location.href = baseurl + "otherPay.html"+ window.location.search +"&user_id=" + user_id;
+                            } else {
+                                alert('请刷新重试');
+                            }
+                        },
+                        error: function (err) {
+                            console.log(err)
+                        }
+                    })
+                }
+            }
+        }
+
+        
+
+    </script>
+
+    <style type="text/css">
+        .card {
+            margin-bottom: 5px;
+            border: 1px solid #d4cfc8;
+            border-radius: 3px;
+            color: #363636;
+            background: #FFFFFF;
+            padding-bottom:15%;
+        }
+
+        .hidden {
+            visibility: hidden
+        }
+
+        .line{
+            margin-top: 15%;
+            margin-left: 8%;
+            margin-right: 0;
+            width: 84%;
+            border-bottom: 1px solid #FFA54F;
+
+        }
+
+        .logintxt{
+            border-right: #ffffff 0 solid;
+            border-top: #ffffff 0 solid;
+            font-size: 9pt; /*www.52css.com*/
+            border-left: #ffffff 0 solid;
+            border-bottom: #c0c0c0 1px solid;
+            background-color: #ffffff;
+            width: 80%;
+            height: 30px;
+        }
+
+        .line_context {
+            text-align:left;
+            width: 100%;
+            padding-left: 8%;
+        }
+
+        .family {
+            font-size: 15px;
+            font-weight: bold;
+            font-family: 微软雅黑,sans-serif;
+        }
+
+        ul, li {
+            list-style: none;
+        }
+
+        .num_key {
+            display: none;
+            width: 100%;
+            height: 40%;
+            position: fixed;
+            z-index: 999;
+            left: 0;
+            bottom: 0;
+        }
+
+        .key_hide {
+            width: 100%;
+            text-align: center;
+        }
+
+        .numb_box {
+            position: absolute;
+            z-index: 10;
+            overflow: hidden;
+            background: #f5f5f5;
+            width: 100%;
+            border-top-left-radius: 1.33333rem;
+            border-top-right-radius: 1.33333rem;
+        }
+
+        .nums {
+            width: 33%;
+            border-bottom: 1px solid #dadada;
+            float: left;
+            text-align: center;
+            font-size: 15px;
+        }
+
+        .nums a {
+            display: block;
+            color: #000;
+            height: 50px;
+            line-height: 50px;
+            overflow: hidden;
+            text-decoration:none
+        }
+
+        .nums a:active {
+            background: #e0e0e0;
+        }
+
+        .nums a.zj_x {
+            border-left: 1px solid #dadada;
+            border-right: 1px solid #dadada;
+        }
+
+        .del {
+            width: 33%;
+            border-bottom: 1px solid #dadada;
+            float: left;
+            text-align: center;
+            font-size: 15px;
+        }
+
+        .del a {
+            display: block;
+            color: #000;
+            height: 50px;
+            line-height: 50px;
+            overflow: hidden;
+            text-decoration:none
+        }
+
+		#phoneAjax {
+			position: fixed;
+			top: 20%;
+			left: 50%;
+			width: 60px;
+			height: 60px;
+			line-height: 60px;
+			margin-left: -30px;
+			text-align: center;
+			background-color: black;
+			-moz-opacity: .8;
+			opacity: .80;
+			filter: alpha(opacity=80);
+			z-index: 1998;
+			overflow: auto;
+			-moz-border-radius: 15px;
+			-webkit-border-radius: 15px
+		}
+
+        .input-row {
+            background-color: #ffffff;
+            width: 82%;
+            height: 30px;
+            line-height: 30px;
+            padding-top: 5%;
+            font-size: 13px;
+            font-family: 微软雅黑,sans-serif;
+        }
+        .input-row select {
+            width:80%;
+            height: 28px;
+            outline: none;
+        }
+    </style>
+</head>
+<body style="background: #F5F5F5">
+<div style="height: 100%; padding: 0 5% 0 5%;">
+    <div id="phoneAjax" class="hidden">
+        <img src="./static/images/common/loading.gif" style="width:40px;height:40px;vertical-align: middle;">
+    </div>
+
+    <div class="card">
+        <div style="text-align:center;padding-top: 10%" class="family">
+            <div style="text-align:left;float:left;padding-left: 8%; width:40%">物业参数</div>
+            <div style="text-align:left;float: left;padding-left:10px; width:40%"><button id="wuye" onclick="recache('wuye');">刷新</button></div>
+        </div>
+        <div class="line"></div>
+		<div style="text-align:center;padding-top: 10%" class="family">
+				<div style="text-align:left;float:left;padding-left: 8%;width:40%"> 系统参数</div>
+            <div style="text-align:left;float: left;padding-left:10px;width:40%"><button id="sys" onclick="recache('sys');">刷新</button></div>
+        </div>
+        <div class="line"></div>
+		<div style="text-align:center;padding-top: 10%" class="family">
+            <div style="text-align:left;float:left;padding-left: 8%;width:40%;">页面配置参数</div>
+            <div style="text-align:left;float: left;padding-left:10px;width:40%"><button id="page" onclick="recache('page');">刷新</button></div>
+        </div>
+        <div class="line"></div>
+		<div style="text-align:center;padding-top: 10%" class="family">
+            <div style="text-align:left;float:left;padding-left: 8%;width:40%">模板消息参数</div>
+            <div style="text-align:left;float: left;padding-left:10px;width:40%"><button id="msg" onclick="recache('msg');">刷新</button></div>
+        </div>
+        <div class="line"></div>
+		<div style="text-align:center;padding-top: 10%" class="family">
+            <div style="text-align:left;float:left;padding-left: 8%; width:40%">定位参数</div>
+            <div style="text-align:left;float: left;padding-left:10px; width:40%"><button id="location" onclick="recache('location');">刷新</button></div>
+        </div>
+		<div class="line"></div>
+		<div style="text-align:center;padding-top: 10%" class="family">
+            <div style="text-align:left;float:left;padding-left: 8%;width:40%">合伙人缓存</div>
+            <div style="text-align:left;float: left;padding-left:10px;width:40%"><button id="logistics" onclick="recache('partner');">刷新</button></div>
+        </div>
+        <div class="line"></div>
+		<div style="text-align:center;padding-top: 10%" class="family">
+            <div style="text-align:left;float:left;padding-left: 8%;width:40%">物流公司参数</div>
+            <div style="text-align:left;float: left;padding-left:10px;width:40%"><button id="logistics" onclick="recache('logistics');">刷新</button></div>
+        </div>
+        <div class="line"></div>
+        
+</div>
+</body>
+</html>

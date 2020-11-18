@@ -1,5 +1,6 @@
 <template>
-   <div class="reg">
+<div :class="{wapcontent:cvertion == 'conv'}">
+   <div class="reg" v-show="cvertion == 'sale'">
        <div id="zzmb" class="zzmb" v-show="zzmb"></div>
        <div id="phoneAjax" class="hidden"  v-show="zzmb">
              <img src="../assets/images/img/7f1b3b58-c5b6-4022-b1ed-dc4188c43a3a.gif" style="vertical-align: middle;">
@@ -24,19 +25,33 @@
                             &nbsp;
                     </div>
                     <div class="btn-fixed">
+                            <div class="btn-agree">
+                                <label class="chendad" :class="{'addse adds':agree == true}" for="checkbox_a6">
+                                </label>
+                                <input type="checkbox" v-model="agree" id="checkbox_a6">
+                                <span>已阅读并同意</span>
+                                <!-- <router-link :to="{path:'/ageess'}" class="ageecolor">
+                                       《用户注册须知》
+                                </router-link> -->
+                                <span @click="aggver" class="ageecolor">《用户服务须知》</span>
+                             </div>
                             <div class="submit-btn ov fs16" @click="save">保存</div>
                     </div> 
 		    </div>
    </div>
+   <ageess v-show="cvertion == 'conv'" @fromChild="getChild"></ageess>
+</div>   
 </template>
 
 <script>
 let vm;
 let Token;
 import axios from 'axios';
+import ageess from './ageess';
 export default {
    data () {
        return {
+           cvertion:'sale',
             omeFrom:"",
             user:{},
             yzmtime : 60,
@@ -45,7 +60,8 @@ export default {
             zzmb:false,
             isClick: false,
             comeFrom:'',
-            message:""
+            message:"",
+            agree:true,//是否同意
        };
    },
    created() {
@@ -55,7 +71,7 @@ export default {
        vm.getUserInfo();
        vm.getComeFrom()
    },
-
+    
    methods: {
         getUserInfo() {
             var n = "GET",
@@ -88,6 +104,15 @@ export default {
 	       		vm.yzmstr="获取中";
 	       		vm.yzmreq();
 	       	}
+        },
+        //协议
+        aggver() {
+           vm.cvertion = 'conv';
+        },
+        getChild(v) {
+            console.log(v);
+            vm.cvertion = v.name;
+            vm.agree = v.agr;
         },
         yzmreq() {
             var n = "POST",
@@ -123,8 +148,13 @@ export default {
             };
             vm.common.invokeApi(n, a, i, b, e, r)
         },
+
         //保存
         save() {
+            if(!vm.agree) {
+                alert('请勾选同意下方的《用户服务须知》');
+                return;
+            }
             if(!(/^1[3-9][0-9]\d{8}$/.test(vm.user.tel))) {
         		alert("请填写正确的手机号！");
         		return;
@@ -132,6 +162,9 @@ export default {
         	if(vm.captcha=='') {
     			alert('请输入验证码！');
     			return;
+            }
+            if(!vm.agree) {
+                return;
             }
             vm. zzmb=true;
             if(vm.isClick == true) {
@@ -166,14 +199,31 @@ export default {
             if (r != null) return unescape(r[2]); return ""; //返回参数值
         },
          getComeFrom(){
-                vm.comeFrom=vm.getUrlParam("comeFrom") || vm.$route.query.comeFrom;
-            }
+                let comeFrom=vm.getUrlParam("comeFrom") || vm.$route.query.comeFrom;
+                var url = location.href;
+                var idx = url.lastIndexOf('#');
+                var hash=url.substring(idx);
+                vm.comeFrom =comeFrom +''+hash;
+                console.log(hash)
+        }
    },
+   components: {
+         ageess
+   }
 
 }
 </script>
 
 <style  scoped>
+.wapcontent {
+    position: absolute;
+    padding: 5%;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
 .reg {
     background-color: #fffff8;
     padding-bottom: 1px;
@@ -276,5 +326,49 @@ export default {
     padding:15px;
     color:red;
     font-size: 15px;
+}
+.btn-agree span {
+    color:#000;
+}
+.btn-agree {
+    height: 0.58rem;
+    line-height: 0.58rem;
+    font-size: 0.3rem;
+    margin-bottom: 0.14rem;
+}
+.btn-agree input{
+    width: 0.339rem;
+    height: 0.339rem;
+    top: 0.04rem;
+    display: none;
+}
+.chendad {
+   display: inline-block;
+   width: 0.339rem;
+   height: 0.339rem;
+   line-height: 0.339rem;    
+   border:1px solid #ccc; 
+   border-radius: 0.05rem;
+   background-color: #fff;
+   vertical-align: sub;
+}
+.btn-agree .adds {
+   vertical-align: baseline;
+}
+.addse:after {
+   width: 0.339rem;
+   height: 0.339rem;
+   line-height: 0.339rem;    
+   border-radius: 0.05rem;
+   background-color: #fff;
+	content: '\2713';
+	font-size: 0.3rem;
+    color: #fff;
+    text-align: center;
+    background-color:#F08500;
+    display: inline-block;
+}
+.btn-agree .ageecolor {
+    color:#F08500;
 }
 </style>

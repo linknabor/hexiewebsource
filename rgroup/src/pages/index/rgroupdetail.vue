@@ -21,7 +21,6 @@
                 <swiper-slide  v-for="(picture,index) in  product.pictureList" :key="index">
                     <div class="ban1" >
                             <img :src="picture" alt="">
-                            <!-- <img src="../../assets/images/index/bg_index.png" alt=""> -->
                     </div> 
                 </swiper-slide>
                 <div class="swiper-pagination" slot="pagination"></div>       
@@ -36,7 +35,7 @@
                     <div class="ori-price2 three_div"  style="padding-top:8px">运费&nbsp;&nbsp;<span class="highlight">¥{{rule.postageFee}}</span></div>
                 </div>
                 <div style="width: 100%;height:20px">
-                    <div class="ori-price2 fl three_div">市场价<del>¥&nbsp;{{product.oriPrice}}</del></div>
+                    <div class="ori-price2 fl three_div">市场价<del>¥&nbsp;{{rule.oriPrice}}</del></div>
                     <div class="ori-price2 fl three_div">目标份数<span class="highlight" >{{rule.groupMinNum}}</span>份</div>
                     <div class="ori-price2 three_div" ms-visible="rule.freeShippingNum<999"><span class="highlight">{{rule.freeShippingNum}}</span>件包邮</div>
                 </div>
@@ -56,23 +55,23 @@
 	    </div>
 
         <div class="rgroup-info bb3" id="products">
-            <div class="fl " style="margin-top:23px;margin-left:15px;color:#999;font-size: 14px;">报名进度</div>
+            <div class="fl " style="margin-top:23px;margin-left:15px;color:#999;font-size: 14px;">成团进度</div>
             <div class="fr plr10" style="border-left:#d5d59d 1px solid ;"  id="processImg">
               <canvas width="70px" height="70px" ></canvas>
             </div>
-            <div class="fr" style="margin-top:23px;color:#333;font-size: 15px;margin-right: 15px;">已报名人数<span style="color:#FF9933;font-size:15px;margin-left: 5px;">{{rule.currentNum}}</span></div>
+            <div class="fr" style="margin-top:23px;color:#333;font-size: 15px;margin-right: 15px;">已参团人数<span style="color:#FF9933;font-size:15px;margin-left: 5px;">{{rule.currentNum}}</span></div>
 	    </div>
 
         <div class="p15 mb15">
             <div class="section-title" style="padding-left:0px;padding-top:0px;"  @click="toggleDetail">
-                报名规则
+                商品详情
                 <i class="icon more-icon align-right fr" :class={topIcon:showDetail}></i>
             </div>
             <ul class="" style="padding-top: 3px;">
-                <li class="detail-item" v-html="product.serviceDesc"></li>
+                <li class="detail-item" v-html="serviceDesc1"></li>
             </ul>
             <ul class=""  v-if="showDetail" style="padding-top: 3px">
-                <li class="detail-item" v-html="product.serviceDescMore"></li>
+                <li class="detail-item" v-html="serviceDescMore1"></li>
             </ul>
 	    </div> 
 
@@ -86,7 +85,7 @@
                 更多团购
             </span>
             <span  class="fl" 
-                style="height:40px;line-height:40px;width:64%;background-color:#ff8a00;text-align: center;font-size:15px;"  @click="buy" :class="{useless:rule.leftSeconds < 0}">
+                style="height:40px;line-height:40px;width:64%;background-color:#ff8a00;text-align: center;font-size:15px;"  @click="buy()" :class="{useless:rule.leftSeconds < 0}">
                 马上参团
             </span>
           
@@ -99,6 +98,7 @@
 let vm;
 import {swiper,swiperSlide} from 'vue-awesome-swiper';
 import wx from 'weixin-js-sdk';
+let Base64 = require('js-base64').Base64;
 export default {
    data () {
        return {
@@ -115,6 +115,7 @@ export default {
            product: {
                 pictureList:[],
             },
+            showProduct: {},
             rule:{
                 currentNum:0,
             },
@@ -131,6 +132,8 @@ export default {
                 },
                 loop: true,
             },
+            serviceDesc1:'',
+            serviceDescMore1:'',
        };
    },
    created(){
@@ -141,12 +144,14 @@ export default {
          let url = location.href.split('#')[0];
         vm.receiveData.wxconfig(vm,wx,['onMenuShareTimeline','onMenuShareAppMessage'],url);
         vm.read();
-        window.addEventListener('scroll', this.handleScroll)
+        window.addEventListener('scroll', this.handleScroll);
    },
    updated(){
        vm.drawP()
    },
-
+   beforeDestroy() {
+       window.removeEventListener('scroll', this.handleScroll);
+   },
    methods: {
         handleScroll () {
             var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
@@ -167,8 +172,8 @@ export default {
                 vm.receiveData.getData(vm,url,'Data',function(){
                     if(vm.Data.success) {
                          if(vm.Data.result) {
-                             vm.load=false;
-                            vm.rule=vm.Data.result;                          
+                            vm.load=false;
+                            vm.rule=vm.Data.result;     
                             vm.products(vm.rule.productId)
                            setInterval(vm.updateLeftTime,1000);//倒计时 
                          }
@@ -184,12 +189,17 @@ export default {
                     if(vm.res.success) {
                         if(vm.res.result) {
                             vm.product = vm.res.result;   
-			                vm.common.initShareConfig(vm.rule.name,vm.basePageUrlpay+"hxrgroups.html?"+vm.common.getoriApp()+"#/rgroupdetail?ruleId="+vm.ruleId,vm.product.smallPicture,"快来参加"+vm.common.newname+"的优惠商品抢购吧",wx);
+                            vm.serviceDesc1 = Base64.decode(vm.product.serviceDesc);
+                            vm.serviceDescMore1 = Base64.decode(vm.product.serviceDescMore);
+                            vm.setShare();
                         }
                     }else {
                         alert(vm.res.message==null ?"获取产品信息失败！":vm.res.message);
                     }
             });
+        },
+        setShare() {
+            vm.common.initShareConfig(vm.rule.name,vm.basePageUrlpay+"hxrgroups.html?"+vm.common.getoriApp()+"#/rgroupdetail?ruleId="+vm.ruleId,vm.product.smallPicture,"快来参加"+vm.common.newname+"的优惠商品抢购吧",wx);
         },
         //剩余时间
         updateLeftTime() {
@@ -293,7 +303,8 @@ export default {
         },
         //更多商品
         goclassify() {
-            location.href=vm.basePageUrlpay+"hxrgroups.html?"+vm.common.getoriApp()+"&type="+vm.rule.productType;
+            // location.href=vm.basePageUrlpay+"hxrgroups.html?"+vm.common.getoriApp()+"&type="+vm.rule.productType;
+            vm.$router.push({path:'/',query:{'type':vm.rule.productType}});
         },
          //马上参团
         buy() {

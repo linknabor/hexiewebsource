@@ -626,6 +626,7 @@ export default {
             }
           })
         }else {
+            vm.uploadPicId = "";
             alert(vm.res.message);
             $("#zzmb").hide();
         }

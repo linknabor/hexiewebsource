@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width,minimum-scale=1,maximum-scale=1,initial-scale=1,user-scalable=no"/>
+    <meta name="referrer" content="no-referrer"/>
+    <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="pragma" content="no-cache"/>
+    <meta http-equiv="expires" content="0"/>
+    <script src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script src="https://gw.alipayobjects.com/as/g/h5-lib/alipayjsapi/3.1.1/alipayjsapi.inc.min.js"></script>
+
+    <title></title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0,minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">  
+    <script>
+
+        var baseurl = /127|test/.test(location.origin)?'https://test.e-shequ.cn/weixin/':
+            /uat/.test(location.origin)?'https://uat.e-shequ.cn/hexie/weixin/' : 'https://www.e-shequ.cn/weixin/';
+     
+		function getUrlParam() {
+            let theRequest = {};
+            let paramUrl = window.location.search.substr(1);
+            console.log(paramUrl);
+            let param = getParam(paramUrl, "param");
+            console.log(param);
+			location.href=baseurl + "otherPay.html?param="+param;
+		}
+
+		function getParam(url, name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+            var r = url.match(reg);  //匹配目标参数
+            if (r != null) {
+                return unescape(r[2]);
+            } else {
+                return null;
+            }
+        }
+
+		getUrlParam();
+      </script>
+</body>
+</html>

@@ -10,13 +10,6 @@ Vue.use(Router)
 let router= new Router({
   // mode:'history',
   routes: [
-    // {
-    //   path: '/',
-    //   component: resolve=>require(['@/pages/index'],resolve),
-    //   children:[
-
-    //   ]
-    // },
     { 
       path:'/',
       name:'index',
@@ -56,9 +49,127 @@ let router= new Router({
       meta:{
           title:''
       }  
-    }
-    
-
+    },
+    {
+      path:'/cardrollindex',
+      name:'cardrollindex',
+      component:resolve=>require(['@/pages/Cardroll/cardrollindex'],resolve),
+      meta:{
+        title:'优惠'
+      }
+    },
+    {
+      path:'/cardrolldetail',
+      name:'cardrolldetail',
+      component:resolve=>require(['@/pages/Cardroll/cardrolldetail'],resolve),
+      meta:{
+        title:'优惠'
+      }
+    },
+    {
+      path:'/salesdetail',
+      name:'salesdetail',
+      component:resolve=>require(['@/pages/Cardroll/salesdetail'],resolve),
+      meta:{
+        title:'招募社区合伙人'
+      }
+    },
+    {
+      path:'/salescoupon',
+      name:'salescoupon',
+      component:resolve=>require(['@/pages/cardroll/salescoupon'],resolve),
+      meta:{
+        title:''
+      }
+    },
+    {
+      path:'/salesnabo',
+      name:'salesnabo',
+      component:resolve=>require(['@/pages/cardroll/salesnabo'],resolve),
+      meta:{
+        title:''
+      }
+    },
+    {
+      path:'/salegoods',
+      name:'salegoods',
+      component:resolve=>require(['@/pages/cardroll/salegoods'],resolve),
+      meta:{
+        title:'合伙人专属福利'
+      }
+    },
+    {
+      path:'/newsaledetail',
+      name:'newsaledetail',
+      component:resolve=>require(['@/pages/cardroll/newsaledetail'],resolve),
+      meta:{
+        title:'合伙人专属福利'
+      }
+    },
+    {
+      path:'/sassuccess',
+      name:'sassuccess',
+      component:resolve=>require(['@/pages/cardroll/sassuccess'],resolve),
+      meta:{
+        title:'欢迎加入'
+      }
+    },
+    {
+      path:'/salespush',
+      name:'salespush',
+      component:resolve=>require(['@/pages/cardroll/salespush'],resolve),
+      meta:{
+        title:'招募社区合伙人'
+      }
+    },
+    {
+      path:'/customerservice',
+      name:'customerservice',
+      component:resolve =>require(['@/pages/cardroll/customerservice'],resolve),
+      meta:{
+        title:'欢迎加入'
+      }
+    },
+    {
+      path:'/salespush',
+      name:'salespush',
+      component:resolve=>require(['@/pages/cardroll/salespush'],resolve),
+      meta:{
+        title:'招募社区合伙人'
+      }
+    },
+    { 
+      path:'/classification',
+      name:'classification',
+      component:resolve=>require(['@/pages/purchase/classification'],resolve),
+      meta:{
+        title:'商城'
+      }
+    },
+    { 
+      path:'/commoditydetails',
+      name:'commoditydetails',
+      component:resolve=>require(['@/pages/purchase/commoditydetails'],resolve),
+      meta:{
+        title:'详情页'
+      }
+    },
+    { 
+      path:'/cart',
+      name:'cart',
+      component:resolve=>require(['@/pages/purchase/cart'],resolve),
+      meta:{
+        title:'购物车'
+      }
+    },
+    { 
+      path:'/cartsearch',
+      name:'cartsearch',
+      component:resolve=>require(['@/pages/purchase/cartsearch'],resolve),
+      meta:{
+        title:'商品'
+      }
+    },
   ]
 })
 
@@ -67,13 +178,12 @@ let router= new Router({
 router.beforeEach((to, from, next) => {
   //动态改变title
   var flag;
-  if(to.matched[0].name != "index"&& to.matched[0].name!='register') {
+  if(to.matched[0].name != "index"&& to.matched[0].name!='register'&& to.matched[0].name!='salesdetail'&&to.matched[0].name!='salescoupon'&& to.matched[0].name!='salesnabo'&& to.matched[0].name!='newsaledetail'&& to.matched[0].name!='salegoods'&& to.matched[0].name!='sassuccess'&& to.matched[0].name!='salespush'&& to.matched[0].name!='customerservice') {
       flag=common.checkRegisterStatus()
       if(!flag) {
         return
       }
   }
-
   changeTitle(to.meta.title);
   next();
 });

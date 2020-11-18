@@ -24,10 +24,19 @@
   width: 48%;
   float: left;
   margin: 1%;
+  border-radius: 0.1rem;
+  background-color:#fff;
+  padding: 0.3rem 0;
+  text-align: center;
+  font-size: 0.3rem;;
 }
-.featured > img {
-  border-radius: 6px;
-  width: 100%;
+.fd-img {
+  margin: 0.2rem 0;
+}
+.featured img {
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 0.7rem
 }
 .contain_weixiu {
   margin: 5px;
@@ -89,13 +98,13 @@
     </div>
 
     <div v-else style="margin:5px;overflow: hidden;" >
-      <div
-        @click="gotoPage(item.url)"
-        v-for="(item,index) in jingxuans"
-        :key="index"
-        class="featured"
-      >
-        <img :src="item.picture">
+      <div v-for="(item,index) in serviceContent" :key="item.service_id" class="featured" @click="gotoPages(index,item.price,item.context)">
+          <div class="fd-img"> 
+              <img :src="item.image" alt="">
+          </div>
+          <div>
+             <span>{{item.service_title}}</span>
+          </div>
       </div>
     </div>
   </div>
@@ -106,7 +115,9 @@
 import { swiper, swiperSlide } from "vue-awesome-swiper";
 import "../assets/css/swiper.min.css";
 import Footer from '../components/footer.vue';
-import Bus from '../api/bus.js'
+import Bus from '../api/bus.js';
+import cookie from 'js-cookie';
+let vm;
 export default {
   components: {
     swiper,
@@ -130,24 +141,27 @@ export default {
         loop: true
       },
       swiperData: [],
-      jingxuans:[],
       data1:'',
 			data2:'',
       data3:'',
-      donghu:false,
+      donghu:false,//是否是东湖
+      cfgParam:{},//用户绑定的小区是否有服务功能
+      serviceContent:[],//首页数据
+      sectId:'',
     };
   },
   beforeCreate() {
     //刷新页面
   },
-  created() {},
+  created() {
+    vm = this;
+  },
   watch: {},
   mounted() {
-       Bus.$on("sends",this.getMsgFromZha);
-       this.initData();
+      Bus.$on("sends",this.getMsgFromZha);
   },
   beforeDestroy() {
-            Bus.$off();
+      Bus.$off();
 　},
   methods: {
     initData() {
@@ -157,7 +171,6 @@ export default {
         let res = _this.res;
         if (res.success) {
           _this.swiperData = res.result.banners;
-          _this.jingxuans = res.result.modules;
           _this.data1 = res.result.jingxuan1;
 					_this.data2 = res.result.jingxuan2;
 					_this.data3 = res.result.jingxuan3;
@@ -171,26 +184,63 @@ export default {
       });
     },
     getMsgFromZha(result) {
-      this.donghu=result.donghu;
+      vm.donghu=result.donghu;//东湖标识
+      vm.cfgParam=result.cfgParam;
+      vm.sectId = result.sectId;
+      cookie.set('sectId',result.sectId);
+      if(!vm.donghu) {
+         vm.query();
+      }
+         vm.initData();
     },
-    gotoPage(ele) {
-      location.href = ele;
+    query(){
+      let url="/customService/service";
+      vm.receiveData.getData(vm,url,'res',function(){
+        if(vm.res.success) {
+          if(vm.sectId == "" || vm.sectId == 'null' || vm.sectId == 0 || vm.sectId == null) {
+             vm.serviceContent = vm.res.result;
+          }else {
+            if(vm.res.result.length == 0) {
+              alert("您所在小区暂未开通该功能，敬请期待");
+              window.location.href = vm.basePageUrl+'wuye/index.html?'+vm.common.getoriApp()+'#/';
+              return 
+            }else {
+              vm.serviceContent = vm.res.result;
+            }
+          }  
+        }else {
+          alert(vm.res.message)
+        }
+      })
     },
+    gotoPages(index,Price,details) { // Price一口价 details 详情页 
+           window.localStorage.setItem('service_order',JSON.stringify(vm.serviceContent[index]));
+         if(Price == 0  && details == '') { //无一口价 无详情 
+            window.location.href = vm.basePageUrlpay+'orderpay.html?'+vm.common.getoriApp()+'#/singlepage';
+         }else if(Price != 0  && details == '') { //有一口价 无详情
+            window.location.href = vm.basePageUrlpay+'orderpay.html?'+vm.common.getoriApp()+'#/singlepage';
+         }else if (Price == 0  && details != '') {  // 无一口价  有详情页
+            window.location.href = vm.basePageUrlpay+'orderpay.html?'+vm.common.getoriApp()+'#/detailspage';
+         }else if (Price != 0  && details != '') { //有一口价 有详情页
+            window.location.href = vm.basePageUrlpay+'orderpay.html?'+vm.common.getoriApp()+'#/detailspage'
+         }
+    },
+    //东湖点击调整
     gotoPaged(ele){
       if(ele == ''){
-        this.$router.push({path:'/build'})
+        vm.$router.push({path:'/build'})
       }else{
         location.href = ele;
       }
     },
     gotoProject(type){
 				if(type=="2"){
-	        		this.$router.push({path:'hotel'})
+	        		vm.$router.push({path:'hotel'})
           }else if(type=="3"){
-            location.href=this.basePageUrl+'wuye/index.html?'+this.common.getoriApp()+'#/message';
+            location.href=vm.basePageUrl+'wuye/index.html?'+vm.common.getoriApp()+'#/message';
             // console.log(this.basePageUrl+'wuye/index.html?'+this.common.getoriApp()+'#/message')
           }else{
-            this.$router.push({path:'/build'})
+            vm.$router.push({path:'/build'})
           }
 		}
   }

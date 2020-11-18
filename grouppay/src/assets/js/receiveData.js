@@ -1,9 +1,4 @@
-import xml2js from'xml2js' 
-var xmlParser = new xml2js.Parser({explicitArray : false, ignoreAttrs : true})
-    //xml转json
-import wx from 'weixin-js-sdk';
-
-
+import Vue from 'vue';
 let receiveData = {
     
     /*
@@ -53,7 +48,8 @@ let receiveData = {
                 params: params
             })
             .then(function (res){
-                let a = JSON.parse(res.data)
+                let a = JSON.parse(res.data);
+                Vue.prototype.dealWithAjaxData(null,a,function(){},function(){});
                 vm[backdataname] = a
                 if (typeof (callback) == 'function') {//回调
                     callback()
@@ -81,11 +77,8 @@ let receiveData = {
             .then(function (res) {
 
                 let a = res.data;
-                 vm[backdataname] = JSON.parse(a)
-                // xmlParser.parseString(a, function (err, result) {
-                // //将返回的结果赋值
-                //  vm[backdataname] = result.BaseResult
-                // });
+                Vue.prototype.dealWithAjaxData(null,a,function(){},function(){});
+                 vm[backdataname] = JSON.parse(a);
                 if (typeof (callback) == 'function') {//回调
                         callback()
                 }
