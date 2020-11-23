@@ -60,13 +60,18 @@ export default {
        vm=this;
    },
    mounted() {
-    //    let url = '/initSession4Test/79187';
-    //             vm.receiveData.getData(vm,url,'Data',function(){
-    //         });
-       vm.query();
+    vm.initSession4Test();
+    vm.query();
    },
    methods: {
-       
+    initSession4Test() {
+        var url ='login/8427?code=8427';
+        var data = {
+            "oriApp": "wx95f46f41ca5e570e"
+        }
+        vm.receiveData.postData(vm,url,data,'res',function(){
+        });
+    },   
     query() {
         let url="/banner/12";
         vm.receiveData.getData(vm,url,'res',function(){
