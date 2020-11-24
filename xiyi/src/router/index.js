@@ -77,10 +77,10 @@ let router= new Router({
 router.beforeEach((to, from, next) => {
   var flag;
   if(to.name != "index"&& to.name!='register') {
-     flag=common.checkRegisterStatus()
-     if(!flag) {
-       return
-     }
+    //  flag=common.checkRegisterStatus()
+    //  if(!flag) {
+    //    return
+    //  }
   }
   //动态改变title
   changeTitle(to.meta.title);

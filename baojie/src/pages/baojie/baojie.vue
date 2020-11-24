@@ -60,7 +60,7 @@ export default {
        vm=this;
    },
    mounted() {
-    vm.initSession4Test();
+    // vm.initSession4Test();
     vm.query();
    },
    methods: {
