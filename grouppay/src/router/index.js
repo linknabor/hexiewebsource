@@ -105,10 +105,10 @@ router.beforeEach((to, from, next) => {
   //动态改变title
   var flag;
   if(to.matched[0].name != "index"&& to.matched[0].name!='register'&& to.matched[0].name!='salespage'&& to.matched[0].name!='salessuccess'&& to.matched[0].name!='conventions') {
-     flag= common.checkRegisterStatus()
-      if(!flag) {
-          return
-      }
+    //  flag= common.checkRegisterStatus()
+    //   if(!flag) {
+    //       return
+    //   }
     }
   changeTitle(to.meta.title);
   next();
