@@ -181,9 +181,9 @@
         <span class="fr fs14 left_color">{{user.officeTel}}</span>
       </a>
 
-      <a href="tel:021-50876295" class="input-wrap menu-person-link lite-divider special-link">
+      <a href="tel:021-50876295" v-show="user.csHotline!=null && user.csHotline!=''" class="input-wrap menu-person-link lite-divider special-link">
         <span class="input-info lf30 fs16">客服电话</span>
-        <span class="fr fs14 left_color">021-50876295</span>
+        <span class="fr fs14 left_color">{{user.csHotline}}</span>
       </a>
     </div>
 
