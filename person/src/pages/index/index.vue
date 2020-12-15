@@ -597,7 +597,7 @@ export default {
   border-bottom: 10px solid #f7f7f2;
 }
 .special-link {
-  padding-right: 0;
+  padding-right: 15px;
   background: none;
 }
 
