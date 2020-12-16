@@ -186,7 +186,7 @@
 			
 		   },
 		   house(){
-			   	if(vm.query.sect==''||vm.query.house==''){
+			   	if(vm.query.sect==''||vm.query.house==''||vm.query.house=='0'){
            			MessageBox.alert('请输入完整信息');
            			return;
            		}else{
@@ -270,38 +270,33 @@
 		},
 		add() {
 			vm.getCellMng(vm.query.sectID,'','','03');
-			vm.getCellMng(vm.query.sectID,vm.query.build,'','02');
-			vm.getCellMng(vm.query.sectID,vm.query.build,vm.query.unit,'01');
+			vm.getCellMng(vm.query.sectID,'0','','02');
+			vm.getCellMng(vm.query.sectID,'0','0','01');
 		},
 		//楼宇选中
 		getCouponSelected() {
-			// sectList:[],//小区列表
-	  		// buildList:[],//楼宇列表
-	  		// unitList:[],//门牌列表
-	  		// houseList:[],//室号列表
-			  
+			vm.unitList = [];
+     		vm.houseList = [];
 			vm.getCellMng(vm.query.sectID,vm.query.build,'','02');
-				
+			vm.getCellMng(vm.query.sectID,vm.query.build,'0','01');
 		},
 		//门牌选中
 		getCoupon(){
-			
+			vm.houseList = [];
+			if(this.query.build=="") {
+				this.query.build="0";
+			}
 			vm.getCellMng(vm.query.sectID,vm.query.build,vm.query.unit,'01');
-			
 		},
 		//室号选中
 		getCoupons(event) {
-			
-				//获取用户数据
+			//获取用户数据
 			//重置
-		  		vm.queryBillInfo= [];//清空查询账单列表
-    			vm.queryBillPage = 1;//页码重置
-    			vm.queryisLastPage=false;//是否最后一页重置
-    			vm.choosehouse=event.target.value;
-    			
+			vm.queryBillInfo= [];//清空查询账单列表
+			vm.queryBillPage = 1;//页码重置
+			vm.queryisLastPage=false;//是否最后一页重置
+			vm.choosehouse=event.target.value;
 		},
-		
-		
 	  	//请求 楼宇 门牌 室号 数据
 	  	// 参数1： 小区id 参数2： 楼宇id 参数3： 室号id 参数4： 数据类型（03：楼宇；02：门牌；01：房屋）
 	  	getCellMng(sect_id,build_id,unit_id,data_type){
@@ -318,20 +313,16 @@
 				vm.queryBillInfo  = [];//清空查询账单列表
 				if ("03"==data_type) {
 					 vm.buildList = InfoList.build_info;
-					 // vm.buildList.unshift({id:'0',name:'请选择'})
+					 vm.buildList.unshift({id:'0',name:'请选择'})
 					// vm.unitList = [];
 					// vm.houseList = [];
 				}else if("02"==data_type){
 					vm.unitList= InfoList.unit_info;
-					// vm.unitList.unshift({id:'0',name:'请选择'})
-					// vm.unitList=[];
+					vm.unitList.unshift({id:'0',name:'请选择'})
 					// vm.houseList = [];
-						if(vm.unitList.length==1) {
-							vm.getCellMng(vm.query.sectID,vm.query.build,vm.query.unit,'01');
-					}
 				}else if("01"==data_type){
 					vm.houseList = InfoList.house_info;
-
+					vm.houseList.unshift({id:'0',name:'请选择'})
 				}
 				vm.showp=false;
 			
@@ -434,5 +425,6 @@
 		background-color:#ff8a00;         
 		color:white;letter-spacing: 2px;
 		width: 100%;line-height: 49px;text-align: center;
+		border:none;
 	}
 </style>
