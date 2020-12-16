@@ -98,6 +98,7 @@
 	font-size:0.3rem;
 }
 
+
 /*发票*/
 .invoice{
 	border:1px solid #cecdc9;
