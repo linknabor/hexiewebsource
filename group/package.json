@@ -13,7 +13,7 @@
     "axios": "^0.18.0",
     "better-scroll": "^2.0.5",
     "crypto-js": "^4.0.0",
-    "jquery": "^3.3.1",
+    "jquery": "^3.5.0",
     "js-base64": "^3.3.1",
     "js-cookie": "^2.2.0",
     "mint-ui": "^2.2.13",
