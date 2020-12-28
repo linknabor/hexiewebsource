@@ -43,7 +43,8 @@ $(document).ready(function() {
 				if(invoice_title_type=='01') {
 					tempSelfTitle = n.result.invoice_title
 				}else if(invoice_title_type=='02'){
-					tempCspTitle = n.result.invoice_title
+					tempCspTitle = n.result.invoice_title//公司抬头
+					tempSelfTitle = n.result.person_invoice_title//个人
 				}
 				telInput.val(n.result.mobile);  //手机号
 				
@@ -94,7 +95,7 @@ $(document).ready(function() {
 			invoiceTitle.attr('readonly','readonly');
 		} 
 	});
-	
+
 	//点击申请开票 判断input框是否为空
 	$("#submit").click(function(){
 		var a = $('.input');
