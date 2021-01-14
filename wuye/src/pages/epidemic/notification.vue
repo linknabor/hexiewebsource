@@ -1,18 +1,20 @@
 <template>
 <div class="not">
-    <div>
-        <div v-if="falg">
-            <div style="padding:0.3rem 0 0; overflow: hidden;">
-                <div class="ov pl15 pb15 fs13 adds">{{thread.content}}</div>
-                <div class="ov pl17 pb15 fs13 fl" style="color: #a6937c;">
-                    <img style="width: 0.35rem; height: 0.35rem; position: relative;top: 0.02rem;" src="../../assets/images/common/icon_time_gray.png"/>&nbsp;{{thread.date_time}}
+        <div v-if="falg" class="ov">
+            <div class="fl namelogo">
+                <img src="../../assets/images/index/hxlogo.png" alt="">
+            </div>
+            <div class="fl content">
+                <div class="adds">{{thread.content}}</div>
+                <div class="datetime">
+                    <img  src="../../assets/images/common/icon_time_gray.png"/>
+                    &nbsp;{{thread.date_time}}
                 </div>
             </div>
         </div>
-         <div v-else> 
+        <div v-else> 
            <img :src="bgImage" alt="" class="adimg">
-       </div>
-    </div>
+        </div>
 </div>
 </template>
 
@@ -71,44 +73,49 @@ export default {
     left: 0;
     right: 0;
     bottom: 0;
-    background: #ffffff;;
+    background: #EEEEEE;;
+    padding:0.6rem 0.3rem 0;
     overflow:auto;
 }
 .ov {
     overflow: hidden;
     padding: 1px;
 }
-.pb15 {
-    padding-bottom: 0.17rem;
+.namelogo img{
+    width:1rem;
+    border-radius: 50%;
+    margin-right: 0.2rem;
 }
-.pl15 {
-    padding-left: 0.24rem;
-}
-.pl17 {
-    padding-left: 0.31rem;
-}
-.fs14 {
-    font-size: 0.22rem;
+.content {
+    background-color: #fff;
+    border-radius: 0.3rem;
+    width:73%;
+    padding:0.3rem;
+    margin-top:0.4rem;
+    font-size: 0.41rem;
 }
 
 .fl {
     float: left;
-}
-.fs13 {
-    font-size: 0.41rem;
-}
-.pt15 {
-    padding-top: 0.24rem;
-}
-.pr15 {
-    padding-right: 0.4rem;
 }
 .adds {
     color: #3b3937;
     word-wrap:break-word;
     overflow:hidden;
     text-indent: 2em;
-    letter-spacing: 0.03rem;
+    letter-spacing: 0.04rem;
+    margin-bottom: 0.17rem;
+}
+.datetime {
+    font-size: 0.35rem;
+    text-align: right;
+    color: #a6937c;
+}
+.datetime img{
+    width: 0.35rem;
+    height: 0.35rem;
+    position: relative;
+    top: 0.02rem;
 }
 .adimg {
         width: 100%;
