@@ -39,6 +39,15 @@ const router= new Router({
       meta:{
         title:''
       },
+    },
+    //电子交易明细
+    {
+      path:'/dealdetailed',
+      name:'dealdetailed',
+      component:resolve=> require(['@/views/pay/dealdetailed'],resolve),
+      meta:{
+        title:'',
+      }
     }
   ]
 });
