@@ -2,10 +2,13 @@
 <div class="not">
         <div v-if="falg" class="ov">
             <div class="fl namelogo">
-                <img src="../../assets/images/index/hxlogo.png" alt="">
+                <img src="../../assets/images/index/logo.jpg" alt="">
             </div>
             <div class="fl content">
-                <div class="adds">{{thread.content}}</div>
+                <div class="adds">
+                    {{thread.content}}
+                    <img v-if="thread.img_urls != null" :src="thread.img_urls" alt="" >
+                </div>
                 <div class="datetime">
                     <img  src="../../assets/images/common/icon_time_gray.png"/>
                     &nbsp;{{thread.date_time}}
@@ -24,7 +27,7 @@ export default {
    data () {
        return {
            thread :{},
-           messageId:this.$route.query.messageId,
+           messageId:this.$route.query.messageId,//获取id
            falg:false,
            bgImage:this.common.GetImages('7')
        };
@@ -43,7 +46,7 @@ export default {
            let url= "servplat/hexiemessage/get?messageId="+vm.messageId;
            vm.receiveData.postData( vm, url,
             {
-                messageId:vm.messageId,
+                
             },
             'data',
             function(){
@@ -56,10 +59,7 @@ export default {
                        alert(vm.data.message==null?"获取信息失败，请重试！":vm.data.message);
                 }
             })
-       },
-       delThread(){
-           
-       },
+       }
    },
 
    computed: {},
@@ -94,7 +94,9 @@ export default {
     margin-top:0.4rem;
     font-size: 0.41rem;
 }
-
+.content img{
+    width:2rem;
+}
 .fl {
     float: left;
 }

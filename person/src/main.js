@@ -17,7 +17,7 @@ import cookie from 'js-cookie';
 import './assets/download/font_954185_gwiryn5z3ch/iconfont.css';
 
 
-// import {common,MasterConfig,getUrlParam,dealWithAjaxData} from './api/common';
+import {common,MasterConfig,getUrlParam,dealWithAjaxData} from './api/common';
 
 Vue.prototype.common=common;
 Vue.prototype.getUrlParam=getUrlParam;
@@ -41,8 +41,7 @@ var axiosInstance = axios.create({
       // 'Content-Type':'application/json;charset=utf-8',
       'Content-Type':"application/json",
 
-      // 'Accept': '*/*',
-      // 'Accept': 'application/json',
+      //  "Content-Type": "multipart/form-data",
       'Accept': 'application/json;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
 
   },
