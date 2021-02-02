@@ -213,15 +213,15 @@ overflow: hidden; background-color: white;}
     <div class="jiugongge">
       <ul>
         <li class="jgg_li">
-          <!-- <router-link to="/pay"> -->
-          <div @click="Publicjump('/pay')">
+          <router-link to="/pay">
+          <!-- <div @click="Publicjump('/pay')"> -->
             <div class="jgg_img">
               <img v-show="!kyappid" src="http://img.e-shequ.cn/Fhq2GvOWKsy9tG2IPvN_KouykRT5" alt="tt">
               <img v-show="kyappid" src="http://img.e-shequ.com/Fpb22vqH_vRqrv4Cv93jku3wpblT" alt="tt">
             </div>
             <span>物业缴费</span>
-          </div> 
-          <!-- </router-link> -->
+          <!-- </div>  -->
+          </router-link>
         </li>
 
         <li class="jgg_li" v-show="!kyappid">
@@ -243,15 +243,15 @@ overflow: hidden; background-color: white;}
         </li>    
 
         <li class="jgg_li" >
-          <!-- <router-link to="/myhouse"> -->
-          <div @click="Publicjump('/myhouse')">
+          <router-link to="/myhouse">
+          <!-- <div @click="Publicjump('/myhouse')"> -->
             <div class="jgg_img">
               <img v-show="!kyappid" src="http://img.e-shequ.cn/FoR1Saide9rMWK9nEBtbuxE5Vmh0" alt="tt">
               <img v-show="kyappid" src="http://img.e-shequ.com/FvqDXOVlBl5JiFuULnSWbobLCoUJ" alt="tt">
             </div>
             <span>我是业主</span>
-          </div>  
-          <!-- </router-link> -->
+          <!-- </div>   -->
+          </router-link>
         </li> 
         
         <li class="jgg_li" >
@@ -356,7 +356,7 @@ overflow: hidden; background-color: white;}
 						<div class="section3_sub_content">{{zixun.summary}}</div>
 					</div>
 			</div>
-            <div class="avatar-wraps " v-show="zixuns1.length == 0">
+            <div class="avatar-wraps " v-show="zixuns1.length == 0">    
         	    <div class="center-bgs" ></div>
     	    </div>
         </div>
@@ -409,7 +409,7 @@ export default {
             coronaPy: false,//疫情防控
             coronaPj: true,//业主意见
             qrCode:'',//二维码
-            subscribe:'',//是否订阅公众号标识，0代表用户没有关注，拉取不到信息
+            // subscribe:'',//是否订阅公众号标识，0代表用户没有关注，拉取不到信息
             donghu:false,//东湖标记
             //swiper参数配置
             swiperOption:{
@@ -464,8 +464,9 @@ export default {
         //判断昆亿公众号
         getky() {
             var urloriapp = vm.common.getoriApp();//url标识
-            var comappid ="oriApp="+vm.is_config.C('kyappid');//配置昆亿appid
-            vm.kyappid = comappid == urloriapp ? true:false;
+            var comappid ="oriApp="+vm.is_config.C('kyappid');//配置appid
+            var dcappid ="oriApp="+vm.is_config.C('dcappid');//配置appid
+            vm.kyappid = comappid == urloriapp || urloriapp == dcappid ? true:false; // true显示最新图片
         },
         //模仿线上用户信息/105/747/384/
         initSession4Test(){
@@ -484,7 +485,7 @@ export default {
             vm.cfgParam=result.cfgParam;
             vm.sectId=result.sectId;
             vm.qrCode=result.qrCode;//公众号二维码
-            vm.subscribe=result.subscribe;//是否关注标记 0没有关注
+            // vm.subscribe=result.subscribe;//是否关注标记 0没有关注
             vm.donghu=result.donghu;//东湖标识
             if(result.coronaPrevention){
                 if(vm.cfgParam){
@@ -656,10 +657,10 @@ export default {
         },
 
         //强制关注  物业缴费，我是业主
-        Publicjump(baseurl) {
-            // alert(vm.subscribe);
-            vm.subscribe != 0 ? vm.$router.push({path:baseurl}) : vm.isconcern = true;
-        },
+        // Publicjump(baseurl) {
+        //     // alert(vm.subscribe); 
+        //     vm.subscribe != 0 ? vm.$router.push({path:baseurl}) : vm.isconcern = true;
+        // },
 
         //便民维修
         gotorepair() {
