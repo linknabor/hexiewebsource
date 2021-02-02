@@ -314,12 +314,20 @@
 <template>
 	<div>
 		<div  class="pay-detail" v-if = request_siccess>
-		<!-- 用户信息 -->
-			<div class="user-info">
+		<!-- 用户信息 专业版-->
+			<div class="user-info" v-if="version=='02' || version=='03'">
 				<!-- <div class="number">户号&nbsp;{{verNumber}}</div> -->
 				<div class="addr ov" v-for="(item,index) in pay_cell" :key="index">
 					<p class="fl">{{item.cell_addr}}</p>
 					<p class="fr">{{item.cnst_area}} m<sup style="font-size:0.2rem">2</sup></p>
+				</div>
+			</div>
+			<!-- 用户信息 标准版-->
+			<div class="user-info" v-else>
+				<div class="number">户号&nbsp;{{verNumber}}</div>
+				<div class="addr ov">
+					<p class="fl">{{addr}}</p>
+					<p class="fr">{{area}} m<sup style="font-size:0.2rem">2</sup></p>
 				</div>
 			</div>
 			
