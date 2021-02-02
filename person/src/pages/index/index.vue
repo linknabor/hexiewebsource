@@ -254,7 +254,7 @@ export default {
   },
   mounted() {
     // this.initSession4Test(); 
-    this.User(); 
+    this.User();  
   },
   methods: {
     //模仿线上用户信息

@@ -35,10 +35,11 @@
             width:73%;
             padding:0.3rem;
             margin-top:0.4rem;
-            font-size: 0.41rem;
+            font-size: 0.3rem;
         }
         .content img{
             width:2rem;
+            margin-top: .15rem;
         }
         .fl {
             float: left;
@@ -49,12 +50,12 @@
             overflow:hidden;
             text-indent: 2em;
             letter-spacing: 0.04rem;
-            margin-bottom: 0.17rem;
+            margin-top: 0.12rem;
         }
         .datetime {
-            font-size: 0.35rem;
             text-align: right;
             color: #a6937c;
+            margin-top: .05rem;
         }
         .datetime img{
             width: 0.35rem;
@@ -87,6 +88,7 @@
                         sms = res.result;
                         $('.showhide').show();
                         $('.adds span').text(sms.content);
+                        $('.content .sectname').text(sms.sect_name);
                         if(sms.img_urls !=null) {
                              $('.adds img').attr('src',sms.img_urls);
                         }
@@ -160,8 +162,11 @@
             <img src="./static/images/common/hxlogo.png" alt="">
         </div>
         <div class="fl content">
+            <span class="sectname"></span><span>小区业主：</span>
             <div class="adds">
-                <span></span>
+                <div>
+                    <span></span>
+                </div>
                 <img  src="" alt="">
             </div>
             <div class="datetime">

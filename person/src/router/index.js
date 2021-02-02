@@ -265,33 +265,43 @@ let router= new Router({
         title:'优惠券'
       }
     },
+    //群发手机端授权页面
+    {
+      path:'/operAuth',
+      name:'operAuth',
+      component:resolve=> require(['@/pages/mass_notice/operAuth'],resolve),
+      meta:{
+        title:''
+      }
+    },
     //群发消息选小区
     {
-          path:'/mass-notice',
-          name:'mass-notice',
-          component:resolve=> require(['@/pages/mass_notice/mass-notice'],resolve),
-          meta:{
-            title:''
-          }
+      path:'/mass-notice',
+      name:'mass-notice',
+      component:resolve=> require(['@/pages/mass_notice/mass-notice'],resolve),
+      meta:{
+        title:''
+      }
     },
     //群发消息内容
     {
-            path:'/mass-content',
-            name:'mass-content',
-            component:resolve=> require(['@/pages/mass_notice/mass-content'],resolve),
-            meta:{
-              title:''
-            }
+      path:'/mass-content',
+      name:'mass-content',
+      component:resolve=> require(['@/pages/mass_notice/mass-content'],resolve),
+      meta:{
+        title:''
+      }
     },
-    //群发手机端授权页面
+    //群发消息记录
     {
-          path:'/operAuth',
-          name:'operAuth',
-          component:resolve=> require(['@/pages/mass_notice/operAuth'],resolve),
-          meta:{
-            title:''
-          }
-    }
+      path:'/mass-record',
+      name:'mass-record',
+      component:resolve=> require(['@/pages/mass_notice/mass-record'],resolve),
+      meta:{
+        title:''
+      }
+    },
+
   ]
 })
 
@@ -302,10 +312,10 @@ router.beforeEach((to, from, next) => {
   //动态改变title
   var flag;
   if(to.matched[0].name != "index"&& to.matched[0].name!='register'&&to.matched[0].name!='welfare'&&to.matched[0].name!='ageess'&&to.matched[0].name!='reset'&&to.matched[0].name!='operAuth') {
-    //  flag=common.checkRegisterStatus()
-    //  if(!flag) {
-    //    return
-    //  }
+     flag=common.checkRegisterStatus()
+     if(!flag) {
+       return
+     }
   }
 
   changeTitle(to.meta.title);

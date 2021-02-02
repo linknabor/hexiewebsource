@@ -464,8 +464,9 @@ export default {
         //判断昆亿公众号
         getky() {
             var urloriapp = vm.common.getoriApp();//url标识
-            var comappid ="oriApp="+vm.is_config.C('kyappid');//配置昆亿appid
-            vm.kyappid = comappid == urloriapp ? true:false;
+            var comappid ="oriApp="+vm.is_config.C('kyappid');//配置appid
+            var dcappid ="oriApp="+vm.is_config.C('dcappid');//配置appid
+            vm.kyappid = comappid == urloriapp || urloriapp == dcappid ? true:false; // true显示最新图片
         },
         //模仿线上用户信息/105/747/384/
         initSession4Test(){

@@ -38,7 +38,8 @@ var MasterConfig = function() {
 
         is_debug:true,
 
-        kyappid:'wxa54bc90bdbc845a8',
+        kyappid:'wxa54bc90bdbc845a8',//昆亿
+        dcappid:'wxcfa72801fc101382'//东城
     },
 
     e = {};

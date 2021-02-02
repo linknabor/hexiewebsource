@@ -55,16 +55,15 @@
             class="reply_content"
             cols="30"
             rows="5"
-            v_empty="0"
-            v_min="1"
-            v_max="120"
-            v-model="content"
+            v-model.trim="content"
+            maxlength="60"
           ></textarea>
+          <span class="grey">(60字)</span>
         </li>
         <li>
           <div class="avatar">
             <div class="imgtext">
-                <span>上传照片</span>
+                <span>上传照片</span><span style="color:red; font-size:0.26rem;">(图片大小不大于5M)</span>
             </div> 
             <div>
                <img :src="avatar" @click="setAvatar">
@@ -72,7 +71,7 @@
             </div>
           </div>  
           <div style="height:1.3rem"></div>
-          <div class="btn-fixed">
+          <div class="btn-fixed" v-show="isOriginHei">
             <div class="btn" @click="submit">确定</div>
           </div>
         </li>
@@ -102,6 +101,9 @@ export default {
         avatar: require('../../assets/images/community/bg.png'),
         sect_id : this.$route.query.sect_id,//小区id
         sect_addr : this.$route.query.sect_addr,//小区地址
+        isOriginHei: true,//底部按钮顶起问题
+        screenHeight: document.documentElement.clientHeight,//当前屏幕高度      
+        originHeight: document.documentElement.clientHeight,//当前屏幕高度 
     };
   },
   created() {
@@ -109,7 +111,23 @@ export default {
   },
   components: {},
   computed: {},
-  mounted() {},
+  mounted() {
+      window.onresize = function() {//底部按钮顶起问题
+            return (function(){
+                vm.screenHeight = document.documentElement.clientHeight;
+            })()
+      }
+  },
+  watch:{
+      screenHeight (val) {//底部按钮顶起问题
+          if(this.originHeight > val + 100) {        //加100为了兼容华为的返回键
+              this.isOriginHei = false;
+          }else{
+              this.isOriginHei = true;
+          }
+
+      }
+  },
   methods: {
     //点击图片会触发setAvatar函数，该函数会触发input的click事件
     setAvatar() {
@@ -118,7 +136,17 @@ export default {
     //弹出文件选择框，当我们选择了一张图片后，触发chageImage函数,预览你上传的图片
     changeImage(e) {
       var file = e.target.files[0];
-      // console.log(file);
+      //图片大小
+      var size = file.size;
+      var maxSize =(1024 * 1024)*5;
+      // console.log(maxSize);
+      var isAllow = false;
+      isAllow = size > maxSize; //是否小于5M
+      if(isAllow) {
+         alert('图片大小超过5M'); 
+         e.target.value= '';
+         return;
+      }
       var reader = new FileReader();
       // console.log(reader);
       var that = this;
@@ -127,9 +155,14 @@ export default {
         that.avatar = this.result;//返回的base64
         vm.image = this.result;
       }
+      e.target.value= '';
     },
     //确定
     submit() {
+      if(vm.content == "") {
+        alert('内容不能为空')
+        return;
+      }
       // console.log(vm.means,vm.range,vm.content,vm.image);
       vm.flay = true;//展示遮住
       let url = '/hexiemessage';
@@ -138,11 +171,14 @@ export default {
           range:vm.range,
           content:vm.content,
           imgUrls:vm.image,
-          sect_id:vm.sect_id
+          sect_id:vm.sect_id,
       };
       vm.receiveData.postData(vm,url,data,'res',function(){
           if(vm.res.success) {
             vm.flay = false;//取消遮住
+            alert('发起成功，消息或短信将陆续送达');
+            //记录页面
+            vm.$router.push({path:'/mass-record'});
           }else {
             alert(vm.res.message);
           }
@@ -170,7 +206,6 @@ export default {
     position:relative;
 }
 .content {
-    /* padding: 0.4rem 0.3rem 0 0.3rem; */
     padding-top:0.4rem;
     font-size: 0.3rem;
 }
@@ -191,19 +226,21 @@ export default {
 }
 ul li {
     margin-bottom: 0.22rem;
-    padding-left: 0.3rem;
-    padding-right: 0.3rem;
+    padding-left: 0.24rem;
+    padding-right: 0.24rem;
     background-color: #fff;
 }
 
 .reply_content {
     margin-left:1px;
-    width:97%;
+    width:82%;
     border:1px solid #f69c05;
     background-color:#fff;
     border-radius: 0.03rem;
 }
-
+.grey {
+  color: rgb(128, 128, 128);
+}
 /* ------------ */
 .choose {
     position: relative;
@@ -265,7 +302,6 @@ ul li {
   margin-top:15px;
   width:100%;
   margin-bottom: 0.3rem;
-  font-size: 14px;
   color: #666
 }
 .avatar img {
