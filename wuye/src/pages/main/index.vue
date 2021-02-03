@@ -214,7 +214,8 @@ overflow: hidden; background-color: white;}
       <ul>
         <li class="jgg_li">
           <router-link to="/pay">
-          <!-- <div @click="Publicjump('/pay')"> -->
+          <!-- <div @click="
+          ('/pay')"> -->
             <div class="jgg_img">
               <img v-show="!kyappid" src="http://img.e-shequ.cn/Fhq2GvOWKsy9tG2IPvN_KouykRT5" alt="tt">
               <img v-show="kyappid" src="http://img.e-shequ.com/Fpb22vqH_vRqrv4Cv93jku3wpblT" alt="tt">
@@ -410,6 +411,7 @@ export default {
             coronaPj: true,//业主意见
             qrCode:'',//二维码
             // subscribe:'',//是否订阅公众号标识，0代表用户没有关注，拉取不到信息
+
             donghu:false,//东湖标记
             //swiper参数配置
             swiperOption:{
