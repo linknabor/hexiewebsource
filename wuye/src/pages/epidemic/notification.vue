@@ -1,13 +1,19 @@
 <template>
 <div class="not">
         <div v-if="falg" class="ov">
-            <div class="fl namelogo">
-                <img src="../../assets/images/index/hxlogo.png" alt="">
+            <div class="fl namelogo" >
+                <img src="../../assets/images/index/logo.jpg" alt="">
             </div>
             <div class="fl content">
-                <div class="adds">{{thread.content}}</div>
+                <span>{{thread.sect_name}}小区业主：</span>
+                <div class="adds">
+                    <div>
+                         <span>{{thread.content}}</span>
+                    </div>
+                    <img v-if="thread.img_urls != null" :src="thread.img_urls" alt="" @click="getSignatureInfo1()">
+                </div>
                 <div class="datetime">
-                    <img  src="../../assets/images/common/icon_time_gray.png"/>
+                    <img  src="../../assets/images/common/icon_time_gray.png" />
                     &nbsp;{{thread.date_time}}
                 </div>
             </div>
@@ -20,11 +26,12 @@
 
 <script>
 let vm;
+import wx from 'weixin-js-sdk';
 export default {
    data () {
        return {
            thread :{},
-           messageId:this.$route.query.messageId,
+           messageId:this.$route.query.messageId,//获取id
            falg:false,
            bgImage:this.common.GetImages('7')
        };
@@ -43,7 +50,7 @@ export default {
            let url= "servplat/hexiemessage/get?messageId="+vm.messageId;
            vm.receiveData.postData( vm, url,
             {
-                messageId:vm.messageId,
+                
             },
             'data',
             function(){
@@ -57,9 +64,21 @@ export default {
                 }
             })
        },
-       delThread(){
-           
-       },
+       getSignatureInfo1() {
+            let url = location.href.split('#')[0];
+            vm.receiveData.wxconfig(vm,wx,['chooseImage','uploadImage','previewImage'],url);
+            wx.ready(function(){ //调用拍照
+                wx.previewImage({
+                    current: vm.thread.img_urls, // 当前显示图片的http链接
+                    urls: [vm.thread.img_urls], // 所有图片
+                    success: function (res) {
+                    },
+                    fail: function(res){
+                       
+                    }
+                });
+            });
+       }
    },
 
    computed: {},
@@ -83,6 +102,7 @@ export default {
 }
 .namelogo img{
     width:1rem;
+    height: 1rem;
     border-radius: 50%;
     margin-right: 0.2rem;
 }
@@ -92,9 +112,12 @@ export default {
     width:73%;
     padding:0.3rem;
     margin-top:0.4rem;
-    font-size: 0.41rem;
+    font-size: 0.3rem;
 }
-
+.content .adds img{
+    width:2rem;
+    margin-top:0.15rem;
+}
 .fl {
     float: left;
 }
@@ -104,16 +127,16 @@ export default {
     overflow:hidden;
     text-indent: 2em;
     letter-spacing: 0.04rem;
-    margin-bottom: 0.17rem;
+    margin-top: 0.12rem;
 }
 .datetime {
-    font-size: 0.35rem;
     text-align: right;
     color: #a6937c;
+    margin-top: 0.05rem;
 }
 .datetime img{
-    width: 0.35rem;
-    height: 0.35rem;
+    width: 0.32rem;
+    height: 0.32rem;
     position: relative;
     top: 0.02rem;
 }
