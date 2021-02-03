@@ -137,17 +137,25 @@
         <router-link
           :to="{path:'/operatorOrders'}"
           class="input-wrap menu-person-link lite-divider"
-          v-show="user.repairOperator"
+          v-show="repairOperator"
         >
           <span class="input-info lf30 fs16">我是维修工</span>
           <span class="fr fs14 left_color">查看维修单&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        </router-link>
+        
+        <router-link
+          :to="{path:'/mass-notice'}"
+          class="input-wrap menu-person-link lite-divider"
+          v-show="msgSender"
+        >
+          <span class="input-info lf30 fs16">消息推送</span>
+          <span class="fr fs14 left_color">消息推送&nbsp;&nbsp;&nbsp;&nbsp;</span>
         </router-link>
 
         <div class="input-wrap menu-person-link lite-divider" @click="Notice">
           <span class="input-info lf30 fs16">我的消息</span>
           <span class="fr fs14 left_color">查看消息&nbsp;&nbsp;&nbsp;&nbsp;</span>
         </div>
-
         <router-link :to="{path:'/myPublish'}" class="input-wrap menu-person-link lite-divider">
           <span class="input-info lf30 fs16">我的发布</span>
           <span class="fr fs14 left_color">
@@ -232,6 +240,8 @@ export default {
       serviceOperator:false, //我是服务人员
       evoucherOperator:'',//核销卡卷
       merchant:false,//我是商家
+      repairOperator:false,//我是维修工
+      msgSender:false,//消息推送
       user_info: {
         avatar: img,
         nickname: "游客",
@@ -244,8 +254,7 @@ export default {
   },
   mounted() {
     // this.initSession4Test(); 
-    this.User(); 
-    vm.qrCodePayService();
+    this.User();  
   },
   methods: {
     //模仿线上用户信息
@@ -275,9 +284,11 @@ export default {
             vm.user.name ="" != n.result.name ? n.result.name : vm.user_info.nickname;
             vm.qrCode=n.result.qrCode;
             vm.cardService=n.result.cardService;
-            vm.serviceOperator = n.result.serviceOperator;//我是服务人员
-            vm.evoucherOperator = n.result.evoucherOperator;//核销卡卷
-            vm.merchant = n.result.merchant;//我是商家
+            vm.repairOperator =  n.result.serveRole.repairOperator;
+            vm.serviceOperator = n.result.serveRole.serviceOperator;//我是服务人员
+            vm.evoucherOperator = n.result.serveRole.evoucherOperator;//核销卡卷
+            vm.merchant = n.result.serveRole.merchant;//我是商家
+            vm.msgSender = n.result.serveRole.msgSender;//消息推送
             if(vm.user.point<0){//小于0等于0
               vm.point=0;
             }else {
@@ -285,7 +296,8 @@ export default {
             }
             vm.login=false;
             Bus.$emit('sends',n.result.iconList);
-            
+            //是否配置服务人员
+            vm.qrCodePayService();
             //保存
             vm.common.updatecookie(n.result.cardStatus,n.result.cardService,n.result.id,n.result.appid,n.result.cspId,n.result.sectId,n.result.cardPayService,n.result.bgImageList,n.result.wuyeTabsList,n.result.qrCode,n.result);
          }

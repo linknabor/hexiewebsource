@@ -313,9 +313,17 @@
 </style>
 <template>
 	<div>
-		<div  class="pay-detail" v-show="feeList.length > 0">
-		<!-- 用户信息 -->
-			<div class="user-info">
+		<div  class="pay-detail" v-if = request_siccess>
+		<!-- 用户信息 专业版-->
+			<div class="user-info" v-if="version=='02' || version=='03'">
+				<!-- <div class="number">户号&nbsp;{{verNumber}}</div> -->
+				<div class="addr ov" v-for="(item,index) in pay_cell" :key="index">
+					<p class="fl">{{item.cell_addr}}</p>
+					<p class="fr">{{item.cnst_area}} m<sup style="font-size:0.2rem">2</sup></p>
+				</div>
+			</div>
+			<!-- 用户信息 标准版-->
+			<div class="user-info" v-else>
 				<div class="number">户号&nbsp;{{verNumber}}</div>
 				<div class="addr ov">
 					<p class="fl">{{addr}}</p>
@@ -324,36 +332,34 @@
 			</div>
 			
 		<!-- 费用列表 -->
-			<dl v-for="item in feeList" class="fee-list" v-if="version=='02'">
-				<dt class="ov name-color">
-					<p class="fee-name  fl" >{{item.service_fee_name}}</p>
-					<p class="fee-price fr" >￥{{item.totalFee.toFixed(2)}}</p>
-				</dt>
-				<dd class="ov" v-for="i in item.fee_detail">
-					<p class="detail-date fl">{{i.service_fee_cycle}}</p>
-					<p class="detail-price fr">{{i.fee_price}}</p>
-				</dd>
-			</dl>
-			<dl v-for="item in feeList" class="fee-list" v-if="version=='01'">
-				<dt class="ov name-color">
-					<p class="fee-name fl" >{{item.fee_type_show_name}}</p>
-					<p class="fee-price fr" >￥{{item.fee_price}}</p>
-				</dt>
-				<dd class="ov">
-					<p class="detail-date fl">{{item.start_date | moment("YYYY年MM月DD日")}}-{{item.end_date | moment("YYYY年MM月DD日")}}</p>
-					<p class="detail-price fr">{{item.fee_price}}</p>
-				</dd>
-			</dl>
-			 <dl v-for="item in feeList" class="fee-list" v-if="version=='03'">
-				<dt class="ov name-color">
-					<p class="fee-name fl">{{item.service_fee_name}}</p>
-					<p class="fee-price fr">￥{{item.totalFee.toFixed(2)}}</p>
-				</dt>
-				<dd class="ov" v-for="i in item.fee_detail">
-					<p class="detail-date fl">{{i.service_fee_cycle}}</p>
-					<p class="detail-price fr">{{i.fee_price}}</p>
-				</dd>
-			</dl>
+			<div v-if="version=='02' || version=='03'">
+				<div v-for="(item,index) in feeList" :key="index">
+				<div v-for="(fee_item,index) in item.fee_name" :key="index">
+				<dl class="fee-list">
+					<dt class="ov name-color">
+						<p class="fee-name  fl" >{{fee_item.service_fee_name}}</p>
+						<p class="fee-price fr" >￥{{fee_item.totalFee.toFixed(2)}}</p>
+					</dt>
+					<dd class="ov" v-for="(i,index) in fee_item.fee_detail"  :key="index">
+						<p class="detail-date fl">{{i.service_fee_cycle}}</p>
+						<p class="detail-price fr">{{i.fee_price}}</p>
+					</dd>
+				</dl>
+				</div>
+				</div>
+			</div>
+			<div v-if="version=='01'">
+				<dl v-for="(item,index) in feeList" class="fee-list" :key="index">
+					<dt class="ov name-color">
+						<p class="fee-name fl" >{{item.fee_type_show_name}}</p>
+						<p class="fee-price fr" >￥{{item.fee_price}}</p>
+					</dt>
+					<dd class="ov">
+						<p class="detail-date fl">{{item.start_date | moment("YYYY年MM月DD日")}}-{{item.end_date | moment("YYYY年MM月DD日")}}</p>
+						<p class="detail-price fr">{{item.fee_price}}</p>
+					</dd>
+				</dl>
+			</div>
 			
 			<!-- 支付金额 -->
 			<div class="payCount">
@@ -420,19 +426,6 @@
 				</div>
 				<div v-for="(item,i) in bankCards" :key="item.id" >
 					<div class="Manner-handm ov   " style= "height: 0.61rem;line-height: 0.61rem;    font-size: 0.36rem;">
-						<!-- <div class="Manner-img fl Mt15">
-							<img src="../../assets/image/zhifu.png" alt="">
-						</div>
-						<span class="Mt1 fs3">银行卡 ({{item.acctNo.substring(item.acctNo.length-4)}})</span> -->
-						<!-- <span class="Mt1 fs3" v-show="item.cardType==1">贵州银行借记卡 ({{item.acctNo.substring(item.acctNo.length-4)}})</span> -->
-						<!-- <span class="Mt1 fs3" v-show="item.cardType==2">贵州银行贷记卡 ({{item.acctNo.substring(item.acctNo.length-4)}})</span> -->
-						<!-- <br>
-						<span class="Mtext Mtextl">贵州银行缴费，享减免折扣</span> -->
-						<!-- <div class="fr Manner-bottom">
-							<label class="chendadm " :class="{addsem:payType == i+2}" :for="'checkbox_a'+(i+7)" @click="btncard(item)"></label>
-							<input type="radio" :id="'checkbox_a'+(i+7)" :value="i+2" v-model="payType" class="chk_1"  />
-						</div> -->
-
 						<div class="Manner-img fl">
 							<img src="../../assets/image/zhifu.png" alt="">
 						</div>
@@ -546,7 +539,8 @@
 				verNumber:'',//户号
 				addr:'',//地址
 				area:'',//面积
-				feeList:'',//费用列表
+				feeList:[],//费用列表
+				pay_cell:[],//房屋
 				show_invoice_flag:'0',
 				show_com_flag:'0',//是否允许开具公司发票
 				show_invoice:'',//是否显示发票
@@ -582,6 +576,7 @@
 				bankCards:[],
 				cardId:'',//记录卡的id
 				bindhouse:true,
+				request_siccess:false,//判断是否请求成功
 			}
 		},
 		filters:{
@@ -719,6 +714,7 @@
 					
 					vm.receiveData.getData(
 						vm,url,'data',function(){
+							vm.request_siccess = true;//判断是否请求成功显示
 							vm.show_com_flag=vm.data.result.other_bill_info[0].show_com_flag;
 							vm.show_invoice_flag = vm.data.result.other_bill_info[0].show_invoice_flag;
 							vm.is_create_qrcode = vm.data.result.other_bill_info[0].is_create_qrcode;
@@ -749,6 +745,7 @@
 						url,
 						'data',
 						function(){
+							vm.request_siccess = true;//判断是否请求成功显示
 							vm.show_com_flag=vm.data.result.show_com_flag;
 							vm.show_invoice_flag = vm.data.result.show_invoice_flag;
 							vm.is_create_qrcode = vm.data.result.is_create_qrcode;
@@ -760,15 +757,15 @@
 							}
 							vm.bindhouses();
 							vm.support_card_pay = vm.data.result.support_card_pay;
-							let useDate = vm.data.result.fee_data[0];
-							//户号
-							vm.verNumber = useDate.ver_no;
-							//地址
-							vm.addr = useDate.cell_addr;
-							//面积
-							vm.area = useDate.cnst_area;
+
+							// let useDate = vm.data.result.fee_data[0];
+							// //户号
+							// vm.verNumber = useDate.ver_no;
+							
+							// 房屋 地址 面积
+							vm.pay_cell = vm.data.result.pay_cell;
 							//费用列表
-							vm.feeList = useDate.fee_name;
+							vm.feeList = vm.data.result.fee_data;
 							vm.cardpaySer();
 						},
 						{

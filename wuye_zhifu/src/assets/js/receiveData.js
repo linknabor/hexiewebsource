@@ -1,5 +1,5 @@
 import wx from 'weixin-js-sdk';
-
+import Vue from 'vue';
 
 let receiveData = {
 
@@ -107,8 +107,9 @@ let receiveData = {
                 params: params
             })
             .then(function (res){
-                let a = JSON.parse(res.data)
-                vm[backdataname] = a
+                let a = JSON.parse(res.data);
+                Vue.prototype.dealWithAjaxData(null,a,function(){},function(){});
+                vm[backdataname] = a;
                 if (typeof (callback) == 'function') {//回调
                     callback()
                    
@@ -135,6 +136,7 @@ let receiveData = {
             .then(function (res) {
                 let a = res.data;
                  vm[backdataname] = JSON.parse(a);
+                Vue.prototype.dealWithAjaxData(null,a,function(){},function(){});
                 if (typeof (callback) == 'function') {//回调
                         callback()
                 }

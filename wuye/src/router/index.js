@@ -68,20 +68,20 @@ const router= new VueRouter({
         },
         //查找
         {
-          path:'/fontUnit',
-          name:'fontUnit',
-          component:resolve=>require(['@/pages/pay/font-unit'],resolve),
-          meta:{
-            title:'查询缴费'
-          }
+            path:'/fontUnit',
+            name:'fontUnit',
+            component:resolve=>require(['@/pages/pay/font-unit'],resolve),
+            meta:{
+              title:'查询缴费'
+            }
         },
         {
-          path:'/location',
-          name:'location',
-          component:resolve=>require(['@/pages/pay/location'],resolve),
-          meta:{
-            title:'查询缴费'
-          }
+            path:'/location',
+            name:'location',
+            component:resolve=>require(['@/pages/pay/location'],resolve),
+            meta:{
+              title:'查询缴费'
+            }
         },
         {
             path:'/paymentquery',
@@ -96,88 +96,89 @@ const router= new VueRouter({
             name:'checkPay',
             component:resolve=> require(['@/pages/pay/check-pay'],resolve),
             meta:{
-            title:'绑定房子'
+              title:'绑定房子'
             }
         },
         {
-        path:'/repair',
-        name:'repair',
-        component:resolve=> require(['@/pages/repair/repair'],resolve),
-        meta:{
-        title:''
-        }
+            path:'/repair',
+            name:'repair',
+            component:resolve=> require(['@/pages/repair/repair'],resolve),
+            meta:{
+              title:''
+            }
       }, 
       {
-        path:'/submitSuccess',
-        name:'submitSuccess',
-        component:resolve=> require(['@/pages/repair/submitSuccess'],resolve),
-        meta:{
-        title:''
-        }
+            path:'/submitSuccess',
+            name:'submitSuccess',
+            component:resolve=> require(['@/pages/repair/submitSuccess'],resolve),
+            meta:{
+              title:''
+            }
       },
       {
-        path:'/mysteward',
-        name:'mysteward',
-        component:resolve=> require(['@/pages/suggest/mysteward'],resolve),
-        meta:{
-        title:''
-        }
+            path:'/mysteward',
+            name:'mysteward',
+            component:resolve=> require(['@/pages/suggest/mysteward'],resolve),
+            meta:{
+              title:''
+            }
       },
       {
-        path:'/threadDetail',
-        name:'threadDetail',
-        component:resolve=> require(['@/pages/suggest/threadDetail'],resolve),
-        meta:{
-        title:''
-        }
+            path:'/threadDetail',
+            name:'threadDetail',
+            component:resolve=> require(['@/pages/suggest/threadDetail'],resolve),
+            meta:{
+              title:''
+            }
       },
       {
-        path:'/maintain',
-        name:'maintain',
-        component:resolve=> require(['@/pages/suggest/maintain'],resolve),
-        meta:{
-        title:''
-        }
+            path:'/maintain',
+            name:'maintain',
+            component:resolve=> require(['@/pages/suggest/maintain'],resolve),
+            meta:{
+              title:''
+            }
       },
       {
-        path:'/catalog',
-        name:'catalogs',
-        component:resolve=> require(['@/pages/epidemic/catalog'],resolve),
-        meta:{
-        title:''
-        }
+            path:'/catalog',
+            name:'catalogs',
+            component:resolve=> require(['@/pages/epidemic/catalog'],resolve),
+            meta:{
+              title:''
+            }
       },
       {
-        path:'/registration',
-        name:'registrations',
-        component:resolve=> require(['@/pages/epidemic/registration'],resolve),
-        meta:{
-        title:''
-        }
+            path:'/registration',
+            name:'registrations',
+            component:resolve=> require(['@/pages/epidemic/registration'],resolve),
+            meta:{
+              title:''
+            }
       },
       {
-        path:'/mask',
-        name:'masks',
-        component:resolve=> require(['@/pages/epidemic/mask'],resolve),
-        meta:{
-        title:'口罩登记预约'
-        },
+            path:'/mask',
+            name:'masks',
+            component:resolve=> require(['@/pages/epidemic/mask'],resolve),
+            meta:{
+              title:'口罩登记预约'
+            },
       },
       {
-        path:'/delivery',
-        name:'deliverys',
-        component:resolve=> require(['@/pages/epidemic/delivery'],resolve),
-        meta:{
-        title:'到货通知'
-        }
+            path:'/delivery',
+            name:'deliverys',
+            component:resolve=> require(['@/pages/epidemic/delivery'],resolve),
+            meta:{
+              title:'到货通知'
+            }
       },
+      //通知
       {
-        path:'/notification',
-        name:'notificatios',
-        component:resolve=> require(['@/pages/epidemic/notification'],resolve),
-        meta:{
-        title:''
-        }
+            path:'/notification',
+            name:'notificatios',
+            component:resolve=> require(['@/pages/epidemic/notification'],resolve),
+            meta:{
+              title:''
+            }
       },
     ]
 });

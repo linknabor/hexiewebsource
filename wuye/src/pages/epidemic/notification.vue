@@ -1,28 +1,37 @@
 <template>
 <div class="not">
-    <div>
-        <div v-if="falg">
-            <div style="padding:0.3rem 0 0; overflow: hidden;">
-                <div class="ov pl15 pb15 fs13 adds">{{thread.content}}</div>
-                <div class="ov pl17 pb15 fs13 fl" style="color: #a6937c;">
-                    <img style="width: 0.35rem; height: 0.35rem; position: relative;top: 0.02rem;" src="../../assets/images/common/icon_time_gray.png"/>&nbsp;{{thread.date_time}}
+        <div v-if="falg" class="ov">
+            <div class="fl namelogo" >
+                <img src="../../assets/images/index/logo.jpg" alt="">
+            </div>
+            <div class="fl content">
+                <span>{{thread.sect_name}}小区业主：</span>
+                <div class="adds">
+                    <div>
+                         <span>{{thread.content}}</span>
+                    </div>
+                    <img v-if="thread.img_urls != null" :src="thread.img_urls" alt="" @click="getSignatureInfo1()">
+                </div>
+                <div class="datetime">
+                    <img  src="../../assets/images/common/icon_time_gray.png" />
+                    &nbsp;{{thread.date_time}}
                 </div>
             </div>
         </div>
-         <div v-else> 
+        <div v-else> 
            <img :src="bgImage" alt="" class="adimg">
-       </div>
-    </div>
+        </div>
 </div>
 </template>
 
 <script>
 let vm;
+import wx from 'weixin-js-sdk';
 export default {
    data () {
        return {
            thread :{},
-           messageId:this.$route.query.messageId,
+           messageId:this.$route.query.messageId,//获取id
            falg:false,
            bgImage:this.common.GetImages('7')
        };
@@ -41,7 +50,7 @@ export default {
            let url= "servplat/hexiemessage/get?messageId="+vm.messageId;
            vm.receiveData.postData( vm, url,
             {
-                messageId:vm.messageId,
+                
             },
             'data',
             function(){
@@ -55,9 +64,21 @@ export default {
                 }
             })
        },
-       delThread(){
-           
-       },
+       getSignatureInfo1() {
+            let url = location.href.split('#')[0];
+            vm.receiveData.wxconfig(vm,wx,['chooseImage','uploadImage','previewImage'],url);
+            wx.ready(function(){ //调用拍照
+                wx.previewImage({
+                    current: vm.thread.img_urls, // 当前显示图片的http链接
+                    urls: [vm.thread.img_urls], // 所有图片
+                    success: function (res) {
+                    },
+                    fail: function(res){
+                       
+                    }
+                });
+            });
+       }
    },
 
    computed: {},
@@ -71,44 +92,53 @@ export default {
     left: 0;
     right: 0;
     bottom: 0;
-    background: #ffffff;;
+    background: #EEEEEE;;
+    padding:0.6rem 0.3rem 0;
     overflow:auto;
 }
 .ov {
     overflow: hidden;
     padding: 1px;
 }
-.pb15 {
-    padding-bottom: 0.17rem;
+.namelogo img{
+    width:1rem;
+    height: 1rem;
+    border-radius: 50%;
+    margin-right: 0.2rem;
 }
-.pl15 {
-    padding-left: 0.24rem;
+.content {
+    background-color: #fff;
+    border-radius: 0.3rem;
+    width:73%;
+    padding:0.3rem;
+    margin-top:0.4rem;
+    font-size: 0.3rem;
 }
-.pl17 {
-    padding-left: 0.31rem;
+.content .adds img{
+    width:2rem;
+    margin-top:0.15rem;
 }
-.fs14 {
-    font-size: 0.22rem;
-}
-
 .fl {
     float: left;
-}
-.fs13 {
-    font-size: 0.41rem;
-}
-.pt15 {
-    padding-top: 0.24rem;
-}
-.pr15 {
-    padding-right: 0.4rem;
 }
 .adds {
     color: #3b3937;
     word-wrap:break-word;
     overflow:hidden;
     text-indent: 2em;
-    letter-spacing: 0.03rem;
+    letter-spacing: 0.04rem;
+    margin-top: 0.12rem;
+}
+.datetime {
+    text-align: right;
+    color: #a6937c;
+    margin-top: 0.05rem;
+}
+.datetime img{
+    width: 0.32rem;
+    height: 0.32rem;
+    position: relative;
+    top: 0.02rem;
 }
 .adimg {
         width: 100%;

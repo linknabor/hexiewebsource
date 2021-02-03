@@ -150,6 +150,51 @@ overflow: hidden; background-color: white;}
     background-size: cover;
     background-position: 50%;
 }    
+
+/* 强制订阅 */
+.subscribe-shede {
+    position:fixed;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    background-color:#E8E8E8;
+    z-index: 999;
+    letter-spacing: 2px;
+    background-color: rgba(232, 232, 232, 0.61);
+}
+.subscribe-shede .subscribe-content {
+    position:absolute;
+    bottom: 60px;
+    width:100%;
+    color:#F08500;
+    background-color:#fff;
+    padding: 0.3rem 0;
+    z-index: 10000;
+}
+.subscribe-title {
+    text-align: center;
+    margin-bottom:0.2rem;
+}
+.subscribe-title h6 {
+   font-size: 16px;
+}
+.subscribe-title img {
+   width:160px;
+}
+.subscribe-title p {
+   font-size: 14px;
+}
+.subscribe-footer {
+    margin:0 0.5rem;
+    background-color:#EEEEEE;
+    font-size:14px;
+    padding: 3px;
+}
+.subscribe-step {
+    text-indent: 3em;
+    line-height:0.47rem;
+}
 </style>
 <template>
 <div id="divwuye" @scroll="getscroll">
@@ -169,11 +214,13 @@ overflow: hidden; background-color: white;}
       <ul>
         <li class="jgg_li">
           <router-link to="/pay">
+          <!-- <div @click="Publicjump('/pay')"> -->
             <div class="jgg_img">
               <img v-show="!kyappid" src="http://img.e-shequ.cn/Fhq2GvOWKsy9tG2IPvN_KouykRT5" alt="tt">
               <img v-show="kyappid" src="http://img.e-shequ.com/Fpb22vqH_vRqrv4Cv93jku3wpblT" alt="tt">
             </div>
             <span>物业缴费</span>
+          <!-- </div>  -->
           </router-link>
         </li>
 
@@ -197,11 +244,13 @@ overflow: hidden; background-color: white;}
 
         <li class="jgg_li" >
           <router-link to="/myhouse">
+          <!-- <div @click="Publicjump('/myhouse')"> -->
             <div class="jgg_img">
               <img v-show="!kyappid" src="http://img.e-shequ.cn/FoR1Saide9rMWK9nEBtbuxE5Vmh0" alt="tt">
               <img v-show="kyappid" src="http://img.e-shequ.com/FvqDXOVlBl5JiFuULnSWbobLCoUJ" alt="tt">
             </div>
             <span>我是业主</span>
+          <!-- </div>   -->
           </router-link>
         </li> 
         
@@ -307,11 +356,30 @@ overflow: hidden; background-color: white;}
 						<div class="section3_sub_content">{{zixun.summary}}</div>
 					</div>
 			</div>
-            <div class="avatar-wraps " v-show="zixuns1.length == 0">
+            <div class="avatar-wraps " v-show="zixuns1.length == 0">    
         	    <div class="center-bgs" ></div>
     	    </div>
         </div>
     </div>   
+    </div>
+
+    <div class="subscribe-shede" v-if="isconcern"> 
+        <div class="subscribe-content">
+            <div class="subscribe-title">
+                <h6>关注公众号</h6>
+                <img :src="qrCode" alt="">
+                <p>
+                    长按图片「识别二维码」关注公众号
+                </p>
+            </div>
+            <div class="subscribe-footer">
+                <p>若无法识别，您还可以</p>
+                <p class="subscribe-step">1.打开微信，点击「添加朋友」\</p>
+                <p class="subscribe-step">2.点击「公众号」搜索微信号：e-shequ<br></p>
+                <p class="subscribe-step">3.点击「关注」即可<br></p>
+            </div>
+            
+        </div>
     </div>
 </div>    
 </template>
@@ -325,12 +393,13 @@ export default {
     name: 'index',
     components: {
         swiper,
-        swiperSlide
+        swiperSlide,
     },
     data () {
         return {
             kyappid:false,
             isloadPage:false,
+            isconcern:false,//是否关注
             zixuns1:[],
             page : 0,
             banners :[],
@@ -339,6 +408,8 @@ export default {
             messtype:'',
             coronaPy: false,//疫情防控
             coronaPj: true,//业主意见
+            qrCode:'',//二维码
+            // subscribe:'',//是否订阅公众号标识，0代表用户没有关注，拉取不到信息
             donghu:false,//东湖标记
             //swiper参数配置
             swiperOption:{
@@ -393,8 +464,9 @@ export default {
         //判断昆亿公众号
         getky() {
             var urloriapp = vm.common.getoriApp();//url标识
-            var comappid ="oriApp="+vm.is_config.C('kyappid');//配置昆亿appid
-            vm.kyappid = comappid == urloriapp ? true:false;
+            var comappid ="oriApp="+vm.is_config.C('kyappid');//配置appid
+            var dcappid ="oriApp="+vm.is_config.C('dcappid');//配置appid
+            vm.kyappid = comappid == urloriapp || urloriapp == dcappid ? true:false; // true显示最新图片
         },
         //模仿线上用户信息/105/747/384/
         initSession4Test(){
@@ -412,6 +484,8 @@ export default {
         getMsgFromZha(result) {
             vm.cfgParam=result.cfgParam;
             vm.sectId=result.sectId;
+            vm.qrCode=result.qrCode;//公众号二维码
+            // vm.subscribe=result.subscribe;//是否关注标记 0没有关注
             vm.donghu=result.donghu;//东湖标识
             if(result.coronaPrevention){
                 if(vm.cfgParam){
@@ -581,31 +655,14 @@ export default {
     		   vm.$router.push({path:'/message',query:{'messageId':mid}})
     	   }
         },
-        Paystop(){//停车
-            // if(vm.donghu){
-            //     alert("内容正在丰富中,敬请期待。")
-            // }else {
-            //     vm.$router.push({path:'/paystop'});
-            // }
-            location.href=vm.basePageUrl+'/group/onsales.html?'+vm.common.getoriApp()+'#/classification';
-        },
-        gotoThread() {
-            if(vm.sectId==0 || vm.sectId== null)
-        	{
-        		alert("您暂未绑定房屋，请前往“我是业主”\r\n进行操作，感谢！");
-        		return;
-        	}else  if(vm.cfgParam==null || vm.cfgParam.ONLINE_SUGGESTION == undefined||vm.cfgParam.ONLINE_SUGGESTION==0) {
-                alert("当前所在的小区未开启当前业务");
-                return  
-            } else {
-                if(vm.donghu) {
-                    vm.$router.push({path:'/mysteward',query:{'n':'2'}})
-                }else {
-                    vm.$router.push({path:'/mysteward',query:{'n':'9'}})
-                }
-             	
-            }
-        },
+
+        //强制关注  物业缴费，我是业主
+        // Publicjump(baseurl) {
+        //     // alert(vm.subscribe); 
+        //     vm.subscribe != 0 ? vm.$router.push({path:baseurl}) : vm.isconcern = true;
+        // },
+
+        //便民维修
         gotorepair() {
                 if(vm.sectId==0|| vm.sectId== null)
                 {
@@ -623,6 +680,29 @@ export default {
                 }
 
         },
+        //社区电商
+        Paystop(){
+            location.href=vm.basePageUrl+'/group/onsales.html?'+vm.common.getoriApp()+'#/classification';
+        },
+        //业主意见
+        gotoThread() {
+            if(vm.sectId==0 || vm.sectId== null)
+        	{
+        		alert("您暂未绑定房屋，请前往“我是业主”\r\n进行操作，感谢！");
+        		return;
+        	}else  if(vm.cfgParam==null || vm.cfgParam.ONLINE_SUGGESTION == undefined||vm.cfgParam.ONLINE_SUGGESTION==0) {
+                alert("当前所在的小区未开启当前业务");
+                return  
+            } else {
+                if(vm.donghu) {
+                    vm.$router.push({path:'/mysteward',query:{'n':'2'}})
+                }else {
+                    vm.$router.push({path:'/mysteward',query:{'n':'9'}})
+                }
+             	
+            }
+        },
+
         //左右滑动
        personScroll() {
                 if(vm.tabs.length>3) {
