@@ -1,19 +1,20 @@
 <template>
-    <div>
-        <div>
-            <wx-open-subscribe style="width: 40px;"  :template="subTemplateId" id="subscribe-btn" >
-                <script type="text/wxtag-template" @success="success" @error="subError">
-                    <style>
-                        .subscribe-btn {
-                            color: #fff;
-                            background-color: #07c160;
-                        }
-                    </style>
-                    <button class="subscribe-btn">授权</button>
-                </script>
-            </wx-open-subscribe>
-        </div>
-    </div>
+    <wx-open-subscribe style="width: 100px; height:50px;"  :template="subTemplateId" id="subscribe-btn" >
+        <script type="text/wxtag-template" @success="success" @error="subError">
+            <style>
+                .subscribe-btn {
+                    color: #fff;
+                    background-color: #07c160;
+                    opacity: 0;
+                    width: 100%;
+                    overflow: hidden;
+                    text-overflow:ellipsis;
+                    white-space: nowrap;
+                }
+            </style>
+            <button class="subscribe-btn">授权</button>
+        </script>
+    </wx-open-subscribe>
 </template>
 <script>
 import WxSDK from 'weixin-js-sdk'
