@@ -44,8 +44,9 @@ Vue.prototype.basePageUrlpay = MasterConfig.C('basePageUrlpay');
 Vue.prototype.basedhzj3Url = MasterConfig.C('basedhzj3Url');
 Vue.prototype.getUrlParam = getUrlParam;
 Vue.prototype.dealWithAjaxData = dealWithAjaxData;
-Vue.prototype.$axios = axios;
+
 //创建axios 实例
+Vue.prototype.$axios = axios;
 
 var axiosInstance = axios.create({
     transformRequest: [function (data) {
@@ -93,6 +94,8 @@ Vue.use(VueAxios, axiosInstance);
 Vue.config.productionTip = false
 // 开启debug模式
 Vue.config.debug = true;
+//忽略标签
+Vue.config.ignoredElements = ['wx-open-subscribe']
 
 /* eslint-disable no-new */
 new Vue({

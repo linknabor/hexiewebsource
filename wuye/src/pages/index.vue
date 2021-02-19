@@ -15,17 +15,20 @@
   <div id="divs">
     <wuye></wuye>
     <foot></foot>
+    <wx-open-subsc></wx-open-subsc>
   </div>
 </template>
 
 <script>
 import wuye from '../pages/main/index'
 import foot from '../components/footer.vue'
+import WxOpenSubsc from '../components/WxOpenSubsc.vue'
 import cookie from "js-cookie";
 export default {
   components:{
     foot,
-    wuye
+    wuye,
+    WxOpenSubsc
   },
   mounted() {
 

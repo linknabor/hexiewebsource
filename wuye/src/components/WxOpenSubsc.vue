@@ -1,0 +1,94 @@
+<template>
+    <div>
+        <div>
+            <wx-open-subscribe style="width: 40vw;"  :template="subTemplateId" id="subscribe-btn" >
+                <script type="text/wxtag-template" @success="success" @error="subError">
+                    <style>
+                        .btn2 {
+                            width: 100%;
+                            border: none;
+                            padding: 15px 0;
+                            background: #ff4444;
+                            color: #fff;
+                        }
+                    </style>
+                    <button class="btn2">授权</button>
+                </script>
+            </wx-open-subscribe>
+        </div>
+    </div>
+</template>
+<script>
+
+import wx from "weixin-js-sdk";
+
+export default {
+    data(){
+        return{
+            msg:'测试组件',
+            subTemplateId: ["i99T0JABYLqtca0h4P0d2qzRmoRyAeWPnSnwizpxlp4"]
+        }
+    },
+    mounted(){
+        console.log("init wxopen component");
+        this.initSubscButton();
+    },
+    methods: {
+
+        initSubscButton() {
+            var data = {
+                vm:this,
+                wx:wx,
+                apiList:[],
+                openTagList:['wx-open-subscribe'],
+                url:''
+            }
+            this.receiveData.wxconfig(data);
+        },
+        // 错误提示
+        subError(e) {
+            console.log(e.errMsg)
+        },
+        // 我这里判断是必须把复数模板全部订阅
+        success(e) {
+            let attend = false;
+            let subscribeDetails = JSON.parse(e.detail.subscribeDetails); // 全部的模板
+            for(let i in this.subTemplateId) {
+                let subKey = subscribeDetails[this.subTemplateId[i]]; // 获取每个模板的状态
+                let status = JSON.parse(subKey);
+                let type = false;
+                switch(status.status){
+                    case "reject":
+                        this.$toast(`用户拒绝订阅全部消息`);
+                        type = false;
+                        break;
+                    case "cancel":
+                        this.$toast(`用户取消订阅全部消息`);
+                        type = false;
+                        break;
+                    case "filter":
+                        this.$toast(`第${i}条消息应该标题同名被后台过滤`);
+                        type = false;
+                        break;
+                    default:
+                        type = true;
+                        break;
+                };
+                if(!type) { // 如果其中有一个模板没有订阅，则全部不通过过
+                    attend = false;
+                    break;
+                } else {
+                    attend = true;
+                };
+            };
+            if(!attend) {
+                this.$toast("订阅消息才能参与")
+                console.log("订阅消息才能参与")
+                return
+            };
+            console.log("参与成功")
+        }
+
+    }
+}
+</script>

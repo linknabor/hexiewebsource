@@ -57,7 +57,13 @@
 			vm = this; 
 			// 请求接口获取 后台返回的 微信配置项
 			let url = location.href.split('#')[0];
-    		vm.receiveData.wxconfig(vm,wx,['scanQRCode'],url);
+			var data = {
+                vm:vm,
+                wx:wx,
+                apiList:['scanQRCode'],
+                url:url
+            }
+    		vm.receiveData.wxconfig(data);
 		},
 	  data(){
 		  return {

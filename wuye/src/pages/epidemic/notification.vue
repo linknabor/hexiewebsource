@@ -66,7 +66,13 @@ export default {
        },
        getSignatureInfo1() {
             let url = location.href.split('#')[0];
-            vm.receiveData.wxconfig(vm,wx,['chooseImage','uploadImage','previewImage'],url);
+            var data = {
+                vm:vm,
+                wx:wx,
+                apiList:['chooseImage','uploadImage','previewImage'],
+                url:url
+            }
+            vm.receiveData.wxconfig(data);
             wx.ready(function(){ //调用拍照
                 wx.previewImage({
                     current: vm.thread.img_urls, // 当前显示图片的http链接
