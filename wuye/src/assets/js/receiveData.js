@@ -10,7 +10,6 @@ let receiveData = {
      * @param  {string} url     [url地址]
      */
     wxconfig(obj){
-        window.console.log(obj);
         let vm = obj.vm;
         let wx = obj.wx;
         let url = obj.url===undefined?'':obj.url;
