@@ -45,6 +45,9 @@ Vue.prototype.basedhzj3Url = MasterConfig.C('basedhzj3Url');
 Vue.prototype.getUrlParam = getUrlParam;
 Vue.prototype.dealWithAjaxData = dealWithAjaxData;
 
+import Vconsole from 'vconsole';
+Vue.prototype.$vConsole = new Vconsole();
+
 //创建axios 实例
 Vue.prototype.$axios = axios;
 

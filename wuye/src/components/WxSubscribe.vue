@@ -1,18 +1,15 @@
 <template>
     <div>
         <div>
-            <wx-open-subscribe style="width: 40vw;"  :template="subTemplateId" id="subscribe-btn" >
+            <wx-open-subscribe style="width: 40px;"  :template="subTemplateId" id="subscribe-btn" >
                 <script type="text/wxtag-template" @success="success" @error="subError">
                     <style>
-                        .btn2 {
-                            width: 100%;
-                            border: none;
-                            padding: 15px 0;
-                            background: #ff4444;
+                        .subscribe-btn {
                             color: #fff;
+                            background-color: #07c160;
                         }
                     </style>
-                    <button class="btn2">授权</button>
+                    <button class="subscribe-btn">授权</button>
                 </script>
             </wx-open-subscribe>
         </div>
@@ -52,6 +49,7 @@ export default {
         },
         // 我这里判断是必须把复数模板全部订阅
         success(e) {
+            console.log(e)
             let attend = false;
             let subscribeDetails = JSON.parse(e.detail.subscribeDetails); // 全部的模板
             for(let i in this.subTemplateId) {
