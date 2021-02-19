@@ -49,7 +49,7 @@ export default {
         },
         // 我这里判断是必须把复数模板全部订阅
         success(e) {
-            $vConsole.log(e)
+            console.log(e)
             let attend = false;
             let subscribeDetails = JSON.parse(e.detail.subscribeDetails); // 全部的模板
             for(let i in this.subTemplateId) {
