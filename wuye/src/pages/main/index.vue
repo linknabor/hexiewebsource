@@ -198,6 +198,7 @@ overflow: hidden; background-color: white;}
 </style>
 <template>
 <div id="divwuye" @scroll="getscroll">
+    <wxsubscribe></wxsubscribe>
     <div class="wuye">
         <swiper :options="swiperOption" ref="mySwiper" v-if="banners.length>0">
             <swiper-slide v-for="item in banners" :key="item.id">
@@ -389,12 +390,14 @@ overflow: hidden; background-color: white;}
 let vm;
 import {swiper,swiperSlide} from 'vue-awesome-swiper';
 import BScroll from 'better-scroll';
-import Bus from '../../api/bus.js'
+import Bus from '../../api/bus.js';
+import WxSubscribe from '../../components/WxSubscribe.vue';
 export default {
     name: 'index',
     components: {
         swiper,
         swiperSlide,
+        'wxsubscribe':WxSubscribe
     },
     data () {
         return {
@@ -434,15 +437,6 @@ export default {
                 // }
              ],
         };
-    },
-
-    components: {
-        swiper,
-        swiperSlide
-    },
-
-    computed: {
-        
     },
     created(){
         vm = this;  

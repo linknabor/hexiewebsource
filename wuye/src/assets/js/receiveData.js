@@ -2,15 +2,15 @@ import Vue from 'vue';
 let receiveData = {
     /*
      * 微信配置提取的公共方法
-     obj可以含有以下属性，vm和wx对象必填，其余可空
+     obj须含有以下属性,apilist跟openTagList必须要有一项
      * @param  {objec} vm     [Vue实例]
      * @param  {objec} wx     [微信实例]
      * @param  {array} apilist    [要调用的微信接口]
-     * @param  {array} apilist    [微信开放标签]
+     * @param  {array} openTagList    [微信开放标签]
      * @param  {string} url     [url地址]
      */
     wxconfig(obj){
-        
+        window.console.log(obj);
         let vm = obj.vm;
         let wx = obj.wx;
         let url = obj.url===undefined?'':obj.url;
