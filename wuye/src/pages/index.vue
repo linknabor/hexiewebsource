@@ -14,21 +14,18 @@
 <template>
   <div id="divs">
     <wuye></wuye>
-    <foot></foot>
-    <wx-open-subsc></wx-open-subsc>
+    <footer></footer>
   </div>
 </template>
 
 <script>
-import wuye from '../pages/main/index'
-import foot from '../components/footer.vue'
-import WxOpenSubsc from '../components/WxOpenSubsc.vue'
-import cookie from "js-cookie";
+import Wuye from '../pages/main/index.vue'
+import Footer from '../components/footer.vue'
+
 export default {
   components:{
-    foot,
-    wuye,
-    WxOpenSubsc
+    'footer':Footer,
+    'wuye':Wuye
   },
   mounted() {
 

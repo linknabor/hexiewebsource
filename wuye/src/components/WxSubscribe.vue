@@ -19,29 +19,30 @@
     </div>
 </template>
 <script>
-
-import wx from "weixin-js-sdk";
-
+import WxSDK from 'weixin-js-sdk'
 export default {
+
     data(){
         return{
-            msg:'测试组件',
             subTemplateId: ["i99T0JABYLqtca0h4P0d2qzRmoRyAeWPnSnwizpxlp4"]
         }
+    },
+    created(){
+
     },
     mounted(){
         console.log("init wxopen component");
         this.initSubscButton();
     },
     methods: {
-
         initSubscButton() {
+            var url = location.href.split("#")[0];
             var data = {
                 vm:this,
-                wx:wx,
+                wx:WxSDK,
                 apiList:[],
                 openTagList:['wx-open-subscribe'],
-                url:''
+                url:url
             }
             this.receiveData.wxconfig(data);
         },
