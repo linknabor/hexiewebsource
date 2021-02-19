@@ -17,6 +17,9 @@ import MintUI from 'mint-ui'
 import 'mint-ui/lib/style.css'
 Vue.use(MintUI)
 
+import { Popup } from 'vant';
+Vue.use(Popup);
+
 import $ from 'jquery'
 import axios from 'axios';
 import cookie from 'js-cookie'

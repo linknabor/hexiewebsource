@@ -1,26 +1,29 @@
 <template>
-    <wx-open-subscribe style="width: 100vw; height:50vh;"  :template="subTemplateId" id="subscribe-btn" >
-        <script type="text/wxtag-template" @success="success" @error="subError">
-            <style>
-                .subscribe-btn {
-                    color: #fff;
-                    background-color: #07c160;
-                    width: 100vw;
-                    height: 50vh;
-                    overflow: hidden;
-                    text-overflow:ellipsis;
-                    white-space: nowrap;
-                }
-            </style>
-            <button class="subscribe-btn">授权</button>
-        </script>
-    </wx-open-subscribe>
+    <van-popup v-model="show" position="bottom" :style="{ height: '30%' }" round>
+        <wx-open-subscribe style="width: 100vw; height:100vh;"  :template="subTemplateId" id="subscribe-btn" >
+            <script type="text/wxtag-template" @success="success" @error="subError">
+                <style>
+                    .subscribe-btn {
+                        color: #fff;
+                        background-color: #07c160;
+                        width: 100vw;
+                        height: 100vh;
+                        overflow: hidden;
+                        text-overflow:ellipsis;
+                        white-space: nowrap;
+                    }
+                </style>
+                <button class="subscribe-btn">授权</button>
+            </script>
+        </wx-open-subscribe>
+    </van-popup>
 </template>
 <script>
 import WxSDK from 'weixin-js-sdk'
 let wx = WxSDK;
 wx.ready(function () {
     console.log("btn is ready.")
+    this.show = true
 });
 wx.error(function (res) {
     console.log("btn load failed! " + JSON.parse(res))
@@ -30,7 +33,8 @@ export default {
 
     data(){
         return{
-            subTemplateId: ["i99T0JABYLqtca0h4P0d2qzRmoRyAeWPnSnwizpxlp4"]
+            subTemplateId: ["i99T0JABYLqtca0h4P0d2qzRmoRyAeWPnSnwizpxlp4"],
+            show: false
         }
     },
     created(){
