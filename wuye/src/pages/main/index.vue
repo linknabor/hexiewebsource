@@ -198,7 +198,6 @@ overflow: hidden; background-color: white;}
 </style>
 <template>
 <div id="divwuye" @scroll="getscroll">
-    <wxsubscribe></wxsubscribe>
     <div class="wuye">
         <swiper :options="swiperOption" ref="mySwiper" v-if="banners.length>0">
             <swiper-slide v-for="item in banners" :key="item.id">
@@ -335,7 +334,7 @@ overflow: hidden; background-color: white;}
 
       </ul>
     </div>
-
+    <wxsubscribe></wxsubscribe>
       <div class="inner">
         <!-- <div class="section3_notice">通知及公告</div> -->
         <div class="section3_divider"></div>
@@ -443,6 +442,7 @@ export default {
  
     },
     mounted(){
+        this.initSession4Test();
         Bus.$on("sends",this.getMsgFromZha);
         vm.getky();
     },
