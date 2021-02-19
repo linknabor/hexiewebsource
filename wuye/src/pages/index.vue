@@ -13,18 +13,18 @@
 
 <template>
   <div id="divs">
-    <foot></foot>
     <wuye></wuye>
+    <foot></foot>
   </div>
 </template>
 
 <script>
 import Wuye from '../pages/main/index.vue'
-import Footer from '../components/footer.vue'
+import Foot from '../components/footer.vue'
 
 export default {
   components:{
-    'foot':Footer,
+    'foot':Foot,
     'wuye':Wuye
   },
   mounted() {
