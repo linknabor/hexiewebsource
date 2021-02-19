@@ -134,9 +134,16 @@ body {
           vm = this;
         },
         mounted(){
-         vm.city();    //触发获取城市方法
-         let url2 = location.href.split('#')[0];
-         vm.receiveData.wxconfig(vm,wx,['getLocation'],url2);
+          vm.city();    //触发获取城市方法
+          let url2 = location.href.split('#')[0];
+          var data = {
+                vm:vm,
+                wx:wx,
+                apiList:['getLocation'],
+                url:url2
+            }
+          vm.receiveData.wxconfig(data);
+
         },
         methods: {
           dj(item){

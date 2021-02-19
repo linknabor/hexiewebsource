@@ -214,10 +214,11 @@ overflow: hidden; background-color: white;}
       <ul>
         <li class="jgg_li">
           <router-link to="/pay">
-          <!-- <div @click="Publicjump('/pay')"> -->
+          <!-- <div @click="
+          ('/pay')"> -->
             <div class="jgg_img">
               <img v-show="!kyappid" src="http://img.e-shequ.cn/Fhq2GvOWKsy9tG2IPvN_KouykRT5" alt="tt">
-              <img v-show="kyappid" src="http://img.e-shequ.com/Fpb22vqH_vRqrv4Cv93jku3wpblT" alt="tt">
+              <img v-show="kyappid" src="http://img.e-shequ.cn/Fpb22vqH_vRqrv4Cv93jku3wpblT" alt="tt">
             </div>
             <span>物业缴费</span>
           <!-- </div>  -->
@@ -236,7 +237,7 @@ overflow: hidden; background-color: white;}
         <li class="jgg_li" v-show="kyappid">
           <div @click="gotoThread()">
             <div class="jgg_img">
-              <img src="http://img.e-shequ.com/FmBwFvjiR7rtIoV83JOcFF_UcuGt" alt="tt">
+              <img src="http://img.e-shequ.cn/FmBwFvjiR7rtIoV83JOcFF_UcuGt" alt="tt">
             </div>
             <span>社区互动</span>
           </div>
@@ -247,7 +248,7 @@ overflow: hidden; background-color: white;}
           <!-- <div @click="Publicjump('/myhouse')"> -->
             <div class="jgg_img">
               <img v-show="!kyappid" src="http://img.e-shequ.cn/FoR1Saide9rMWK9nEBtbuxE5Vmh0" alt="tt">
-              <img v-show="kyappid" src="http://img.e-shequ.com/FvqDXOVlBl5JiFuULnSWbobLCoUJ" alt="tt">
+              <img v-show="kyappid" src="http://img.e-shequ.cn/FvqDXOVlBl5JiFuULnSWbobLCoUJ" alt="tt">
             </div>
             <span>我是业主</span>
           <!-- </div>   -->
@@ -258,7 +259,7 @@ overflow: hidden; background-color: white;}
             <div class="link"  @click="gotorepair()">
                 <div class="jgg_img">
                     <img v-show="!kyappid" src="http://img.e-shequ.cn/FvXta8SzetfBaBYyaB3fX-HQ1Vza" alt="tt">
-                    <img v-show="kyappid" src="http://img.e-shequ.com/FvCBrn2fVvHqpvTy9T24vvCmTUwa" alt="tt">
+                    <img v-show="kyappid" src="http://img.e-shequ.cn/FvCBrn2fVvHqpvTy9T24vvCmTUwa" alt="tt">
                 </div>
                 <span class="jgg-span" v-show="!kyappid">便民维修</span>
                 <span class="jgg-span" v-show="kyappid">物业报修</span>
@@ -269,7 +270,7 @@ overflow: hidden; background-color: white;}
           <div @click="Paystop">
             <div class="jgg_img">
               <img v-show="!kyappid" src="http://img.e-shequ.cn/FuGXrSZLRWdYqydXGir48wipF2Fn" alt="tt">
-              <img v-show="kyappid" src="http://img.e-shequ.com/Fr9wzxp17jaOsu0WMgZfp-2_xVhV" alt="tt">
+              <img v-show="kyappid" src="http://img.e-shequ.cn/Fr9wzxp17jaOsu0WMgZfp-2_xVhV" alt="tt">
             </div>
             <span>社区电商</span>
           </div>
@@ -279,7 +280,7 @@ overflow: hidden; background-color: white;}
           <a :href="this.basePageUrlpay+'hxrgroups.html?'+this.common.getoriApp()">
             <div class="jgg_img">
               <img v-show="!kyappid" src="http://img.e-shequ.cn/FkJWpnGhosNorRy4zPilU0kWZmG9" alt="tt">
-              <img v-show="kyappid" src="http://img.e-shequ.com/FhtqTqm5MyJRA8e7fSO8ptnPDP-Z" alt="tt">
+              <img v-show="kyappid" src="http://img.e-shequ.cn/FhtqTqm5MyJRA8e7fSO8ptnPDP-Z" alt="tt">
             </div>
             <span>社区团购</span>
           </a>
@@ -289,7 +290,7 @@ overflow: hidden; background-color: white;}
           <a :href="this.basePageUrl+'home/index.html?'+this.common.getoriApp()">
             <div class="jgg_img">
               <img v-show="!kyappid" src="http://img.e-shequ.cn/FqovzXqEh_kowBX9eXVVGtkwkivP" alt="tt">
-              <img v-show="kyappid" src="http://img.e-shequ.com/FgVwSOkHJzHD758K9m2px_fdnKW9" alt="tt">
+              <img v-show="kyappid" src="http://img.e-shequ.cn/FgVwSOkHJzHD758K9m2px_fdnKW9" alt="tt">
             </div>
             <span v-show="!kyappid">周边服务</span>
             <span v-show="kyappid">家政服务</span>
@@ -300,7 +301,7 @@ overflow: hidden; background-color: white;}
           <a :href="this.basePageUrl+'group/onsales.html?'+this.common.getoriApp()+'#/cardrollindex'">
             <div class="jgg_img">
               <img v-show="!kyappid" src="http://img.e-shequ.cn/Frut5vg031RPFCfsfDmqEotlVXlg" alt="tt">
-              <img v-show="kyappid" src="http://img.e-shequ.com/FtDdOHIIy_OtREne8Z98l3WsTjeo" alt="tt">
+              <img v-show="kyappid" src="http://img.e-shequ.cn/FtDdOHIIy_OtREne8Z98l3WsTjeo" alt="tt">
             </div>
             <span>周边优惠</span>
           </a>
@@ -410,6 +411,7 @@ export default {
             coronaPj: true,//业主意见
             qrCode:'',//二维码
             // subscribe:'',//是否订阅公众号标识，0代表用户没有关注，拉取不到信息
+
             donghu:false,//东湖标记
             //swiper参数配置
             swiperOption:{
@@ -470,8 +472,11 @@ export default {
         },
         //模仿线上用户信息/105/747/384/
         initSession4Test(){
-            let url = '/initSession4Test/1';
-                vm.receiveData.getData(vm,url,'Data',function(){
+            var url ='login/8441?code=8441';
+            var data = {
+                "oriApp": "wx95f46f41ca5e570e"
+            }
+            vm.receiveData.postData(vm,url,data,'res',()=>{
             });
         },
         //轮播图

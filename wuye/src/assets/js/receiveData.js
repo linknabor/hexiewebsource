@@ -2,12 +2,21 @@ import Vue from 'vue';
 let receiveData = {
     /*
      * 微信配置提取的公共方法
+     obj可以含有以下属性，vm和wx对象必填，其余可空
      * @param  {objec} vm     [Vue实例]
      * @param  {objec} wx     [微信实例]
-     * @param  {string} url     [url地址]
      * @param  {array} apilist    [要调用的微信接口]
+     * @param  {array} apilist    [微信开放标签]
+     * @param  {string} url     [url地址]
      */
-    wxconfig(vm,wx,apilist,url){
+    wxconfig(obj){
+        
+        let vm = obj.vm;
+        let wx = obj.wx;
+        let url = obj.url===undefined?'':obj.url;
+        let apilist = obj.apilist===undefined?[]:obj.apilist;
+        let openTagList = obj.openTagList===undefined?[]:obj.openTagList;
+
         vm.axios.post('/getUrlJsSign', {url : url })
             .then(function (res) {
                 let a = JSON.parse(res.data)
@@ -18,7 +27,8 @@ let receiveData = {
                     timestamp: wd.timestamp, // 必填，生成签名的时间戳
                     nonceStr: wd.nonceStr, // 必填，生成签名的随机串
                     signature: wd.signature,// 必填，签名，见附录1
-                    jsApiList: apilist // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+                    jsApiList: apilist, // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+                    openTagList:openTagList
                 });
             })
             .catch(function (err) {
