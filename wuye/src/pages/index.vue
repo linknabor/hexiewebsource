@@ -13,8 +13,8 @@
 
 <template>
   <div id="divs">
+    <foot></foot>
     <wuye></wuye>
-    <footer></footer>
   </div>
 </template>
 
@@ -24,7 +24,7 @@ import Footer from '../components/footer.vue'
 
 export default {
   components:{
-    'footer':Footer,
+    'foot':Footer,
     'wuye':Wuye
   },
   mounted() {
