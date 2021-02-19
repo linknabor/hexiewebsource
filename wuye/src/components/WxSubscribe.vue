@@ -1,25 +1,31 @@
 <template>
-    <div style="width: 100%; height:100px;" >
-        <wx-open-subscribe style="width: 100%; height:100px;"  :template="subTemplateId" id="subscribe-btn" >
-            <script type="text/wxtag-template" @success="success" @error="subError">
-                <style>
-                    .subscribe-btn {
-                        color: #fff;
-                        background-color: #07c160;
-                        width: 100%;
-                        height: 40px;
-                        overflow: hidden;
-                        text-overflow:ellipsis;
-                        white-space: nowrap;
-                    }
-                </style>
-                <button class="subscribe-btn">授权</button>
-            </script>
-        </wx-open-subscribe>
-    </div>
+    <wx-open-subscribe style="width: 100vw; height:50vh;"  :template="subTemplateId" id="subscribe-btn" >
+        <script type="text/wxtag-template" @success="success" @error="subError">
+            <style>
+                .subscribe-btn {
+                    color: #fff;
+                    background-color: #07c160;
+                    width: 100vw;
+                    height: 50vh;
+                    overflow: hidden;
+                    text-overflow:ellipsis;
+                    white-space: nowrap;
+                }
+            </style>
+            <button class="subscribe-btn">授权</button>
+        </script>
+    </wx-open-subscribe>
 </template>
 <script>
 import WxSDK from 'weixin-js-sdk'
+let wx = WxSDK;
+wx.ready(function () {
+    console.log("btn is ready.")
+});
+wx.error(function (res) {
+    console.log("btn load failed! " + JSON.parse(res))
+});
+
 export default {
 
     data(){
@@ -39,7 +45,7 @@ export default {
             var url = location.href.split("#")[0];
             var data = {
                 vm:this,
-                wx:WxSDK,
+                wx:wx,
                 apiList:[],
                 openTagList:['wx-open-subscribe'],
                 url:url
@@ -52,7 +58,7 @@ export default {
         },
         // 我这里判断是必须把复数模板全部订阅
         success(e) {
-            console.log(e)
+            console.log("~~~~~~~~~~~~~~~~~~"+JSON.parse(e))
             let attend = false;
             let subscribeDetails = JSON.parse(e.detail.subscribeDetails); // 全部的模板
             for(let i in this.subTemplateId) {
