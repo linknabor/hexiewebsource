@@ -13,7 +13,7 @@ let receiveData = {
         let vm = obj.vm;
         let wx = obj.wx;
         let url = obj.url===undefined?'':obj.url;
-        let apilist = obj.apilist===undefined?[]:obj.apilist;
+        let apilist = obj.apilist===undefined?['scanQRCode']:obj.apilist;
         let openTagList = obj.openTagList===undefined?[]:obj.openTagList;
 
         vm.axios.post('/getUrlJsSign', {url : url })
