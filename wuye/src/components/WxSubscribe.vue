@@ -1,19 +1,9 @@
 <template>
-    <van-popup v-model="show" position="bottom" :style="{ height: '30%' }" round>
+    <van-popup v-model="show" position="bottom" duration='0.3' :style="{ height: '30%'}" overlay='true' >
         <wx-open-subscribe style="width: 100vw; height:100vh;"  :template="subTemplateId" id="subscribe-btn" >
             <script type="text/wxtag-template" @success="success" @error="subError">
-                <style>
-                    .subscribe-btn {
-                        color: #fff;
-                        background-color: #07c160;
-                        width: 100vw;
-                        height: 100vh;
-                        overflow: hidden;
-                        text-overflow:ellipsis;
-                        white-space: nowrap;
-                    }
-                </style>
                 <button class="subscribe-btn">授权</button>
+                <van-button type="primary"  block='true' class="subscribe-btn">用户通知订阅授权</van-button>
             </script>
         </wx-open-subscribe>
     </van-popup>
@@ -24,6 +14,7 @@ let wx = WxSDK;
 wx.ready(function () {
     console.log("btn is ready.")
     this.show = true
+    console.log("show value : " + this.show)
 });
 wx.error(function (res) {
     console.log("btn load failed! " + JSON.parse(res))
@@ -43,6 +34,9 @@ export default {
     mounted(){
         console.log("init wxopen component");
         this.initSubscButton();
+        this.timer = setTimeout(()=>{   //设置延迟执行
+            this.show = true;
+        },1500);
     },
     methods: {
         initSubscButton() {
@@ -106,13 +100,12 @@ export default {
 </script>
 <style scoped>
     .subscribe-btn {
-        color: #fff;
-        background-color: #07c160;
-        /* opacity: 0; */
         width: 100%;
-        height: 40px;
-        overflow: hidden;
+        height: 5vh;
+        margin-top: 0.9rem;
+        color: "#07C106";
+        /* overflow: hidden;
         text-overflow:ellipsis;
-        white-space: nowrap;
+        white-space: nowrap; */
     }
 </style>
