@@ -37,7 +37,7 @@ let receiveData = {
             })
             .catch(function (err) {
                 //alert('暂放-微信config失败')
-                console.log('fail', err);
+                console.log(err);
         });
     },
 
