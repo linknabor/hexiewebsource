@@ -5,20 +5,22 @@
                 <style>
                     .subscribe-btn {
                         width: 80%;
-                        height: 20%;
+                        height: 200%;
                         margin: 20% 10% 0 10%;
                         padding:5px;
                         color: #fff;
                         background-color: #07c160;
                         border-radius:25px;
                         border-style: none;
-                        font-size: 105%;
+                        font-size: 100%;
                     }
                 </style>
                 <button class="subscribe-btn">用户通知订阅授权</button>
             </script>
         </wx-open-subscribe>
+        <!-- <div style="width:100%; height:19.2px;">
             <button class="subscribe-btn">用户通知授权设置</button>
+        </div> -->
     </van-popup>
 </template>
 <script>
@@ -125,13 +127,13 @@ export default {
 <style scoped>
     .subscribe-btn {
         width: 80%;
-        height: 20%;
+        height: 200%;
         margin: 20% 10% 0 10%;
         padding:5px;
         color: #fff;
         background-color: #07c160;
         border-radius:25px;
         border-style: none;
-        font-size: 105%;
+        font-size: 100%;
     }
 </style>
