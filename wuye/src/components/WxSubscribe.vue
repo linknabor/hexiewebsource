@@ -4,9 +4,10 @@
             <script type="text/wxtag-template" >
                 <style>
                     .subscribe-btn {
-                        width: 70%;
-                        height: 80%;
-                        margin: 5% 2% 0 2%;
+                        width: 80%;
+                        height: 100px;
+                        margin: 30% 20% 0 20%;
+                        padding:5px;
                         color: #fff;
                         background-color: #07c160;
                         border-radius:25px;
