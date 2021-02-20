@@ -1,6 +1,6 @@
 <template>
     <van-popup v-model="show" position="bottom" duration='0.3' :style="{ height: '30%'}"  overlay>
-        <wx-open-subscribe default  :template="subTemplateId" id="subscribe-btn" @success="success" @error="subError">
+        <wx-open-subscribe style="width:100%"  :template="subTemplateId" id="subscribe-btn" @success="success" @error="subError">
             <script type="text/wxtag-template" >
                 <style>
                     .subscribe-btn {
@@ -18,7 +18,7 @@
                 <button class="subscribe-btn">用户通知订阅授权</button>
             </script>
         </wx-open-subscribe>
-            <!-- <button class="subscribe-btn">用户通知授权设置</button> -->
+            <button class="subscribe-btn">用户通知授权设置</button>
     </van-popup>
 </template>
 <script>
