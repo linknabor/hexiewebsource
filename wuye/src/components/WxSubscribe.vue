@@ -1,12 +1,12 @@
 <template>
     <van-popup v-model="show" position="bottom" duration='0.3' :style="{ height: '30%'}"  overlay>
-        <wx-open-subscribe style="width: 100vw; height:20rem;"  :template="subTemplateId" id="subscribe-btn" @success="success" @error="subError">
+        <wx-open-subscribe style="width: 100vw; height:20%;"  :template="subTemplateId" id="subscribe-btn" @success="success" @error="subError">
             <script type="text/wxtag-template" >
                 <style>
                     .subscribe-btn {
                         width: 70%;
                         height: 80%;
-                        margin: 1rem 1rem 0rem 1rem;
+                        margin: 5% 2% 0 2%;
                         color: #fff;
                         background-color: #07c160;
                         border-radius:25px;
