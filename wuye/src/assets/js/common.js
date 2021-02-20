@@ -209,6 +209,9 @@ window.common = {
         var o = parseInt(getCookie("BackendPort"));
         return MasterConfig.C("baseUrl") + (o ? ":" + o: "") + "/" + e;
     },
+    getUserCookie :function(e) {
+        return getCookie(e);
+    },
     //定义请求方法
     invokeApi: function(e, o, n, t, i, r,c) {
         if (common.alert("url: " + o), AJAXFlag) { (null === t || void 0 === t) && (t = function() {}),
@@ -365,7 +368,6 @@ window.common = {
         setCookie('sectId',sectId,duration);
         setCookie('cardPayService',cardPayService,duration);
         setCookie('qrCode',qrCode,duration);
-        // console.log(result);
         for(var j=0;j<bgImageList.length;j++){
             common.localSet(bgImageList[j].type,bgImageList[j].imgUrl)
         }
