@@ -1,9 +1,18 @@
 <template>
     <van-popup v-model="show" position="bottom" duration='0.3' :style="{ height: '30%'}" overlay='true' >
-        <wx-open-subscribe style="width: 100vw; height:100vh;"  :template="subTemplateId" id="subscribe-btn" >
-            <script type="text/wxtag-template" @success="success" @error="subError">
-                <button class="subscribe-btn">授权</button>
-                <van-button type="primary"  block='true' class="subscribe-btn">用户通知订阅授权</van-button>
+        <wx-open-subscribe :template="subTemplateId" id="subscribe-btn" @success="success" @error="subError">
+            <script type="text/wxtag-template" >
+                <style>
+                    .subscribe-btn {
+                        width: 100%;
+                        height: 5vh;
+                        margin-top: 0.9rem;
+                        color: #fff;
+                        background-color: #07c160;
+                    }
+                </style>
+                <button class="subscribe-btn">用户通知订阅授权</button>
+                <!-- <van-button type="primary"  block='true' class="subscribe-btn">用户通知订阅授权</van-button> -->
             </script>
         </wx-open-subscribe>
     </van-popup>
