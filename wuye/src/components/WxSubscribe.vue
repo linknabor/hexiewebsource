@@ -1,5 +1,5 @@
 <template>
-    <van-popup v-model="show" position="bottom" duration='0.3' :style="{ height: '30%'}"  overlay>
+    <van-popup v-model="show" position="bottom" duration='0.3' :style="{ height: '30%'}"  overlay round>
         <wx-open-subscribe style="width:100vw"  :template="subTemplateId" id="subscribe-btn" @success="success" @error="subError">
             <script type="text/wxtag-template" >
                 <style>
@@ -31,7 +31,7 @@ export default {
 
     data(){
         return{
-            subTemplateId: ["KUjDXVF_BuNrDMPQvPYW1iH1w494684wX4leETDa_30"],
+            subTemplateId: ["nFQNN0gCejjQBGG8ZyB5uF5zcG8Bu7wd2_QPrAY0FA4"],
             show: false
         }
     },

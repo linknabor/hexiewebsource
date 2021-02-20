@@ -442,7 +442,7 @@ export default {
  
     },
     mounted(){
-        this.initSession4Test();
+        // this.initSession4Test();
        Bus.$on("sends",this.getMsgFromZha);
        vm.getky();
     },
