@@ -15,7 +15,7 @@
                         font-size: 100%;
                     }
                 </style>
-                <button class="subscribe-btn">用户通知订阅授权</button>
+                <button class="subscribe-btn">授权订阅通知</button>
             </script>
         </wx-open-subscribe>
         <!-- <div style="width:100vw; height:19.2px;">
@@ -26,14 +26,6 @@
 <script>
 import WxSDK from 'weixin-js-sdk'
 let wx = WxSDK;
-wx.ready(function () {
-    console.log("btn is ready.")
-    
-});
-wx.error(function (res) {
-    console.log("btn load failed! ")
-    console.log(res);
-});
 
 export default {
 
@@ -49,7 +41,8 @@ export default {
     mounted(){
         console.log("init wxopen component");
         this.initSubscButton();
-        this.showSubsribeSetting();
+        this.wxInitReady();
+        // this.wxInitFailed();
     },
     methods: {
         initSubscButton() {
@@ -91,15 +84,13 @@ export default {
                 let type = false;
                 switch(status.status){
                     case "reject":
-                        this.$toast(`用户拒绝订阅全部消息`);
                         type = false;
                         break;
                     case "cancel":
-                        this.$toast(`用户取消订阅全部消息`);
                         type = false;
                         break;
                     case "filter":
-                        this.$toast(`第${i}条消息应该标题同名被后台过滤`);
+                        // this.$toast(`第${i}条消息应该标题同名被后台过滤`);
                         type = false;
                         break;
                     default:
@@ -114,11 +105,23 @@ export default {
                 };
             };
             if(!attend) {
-                this.$toast("订阅消息才能参与")
-                console.log("订阅消息才能参与")
+                this.$toast("未进行任何消息订阅")
                 return
             };
-            console.log("参与成功")
+            this.$toast("订阅成功")
+        },
+        //wx的初始化成功回调
+        wxInitReady(){
+            wx.ready(()=>{
+                console.log("btn is ready.")
+                this.showSubsribeSetting();
+            });
+        },
+        //wx初始化失败回调
+        wxInitFailed(){
+            wx.error((res)=>{
+                console.log("btn load failed! ")
+            });
         }
 
     }
