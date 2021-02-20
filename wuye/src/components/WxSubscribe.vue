@@ -26,7 +26,7 @@ import WxSDK from 'weixin-js-sdk'
 let wx = WxSDK;
 wx.ready(function () {
     console.log("btn is ready.")
-    this.show = true
+    this.showSubsribeSetting();
 });
 wx.error(function (res) {
     console.log("btn load failed! " + JSON.parse(res))
@@ -46,8 +46,6 @@ export default {
     mounted(){
         console.log("init wxopen component");
         this.initSubscButton();
-        this.showSubsribeSetting();
-        
     },
     methods: {
         initSubscButton() {
