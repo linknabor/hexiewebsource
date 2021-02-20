@@ -106,9 +106,10 @@ export default {
             };
             if(!attend) {
                 this.$toast("未进行任何消息订阅")
-                return
-            };
-            this.$toast("订阅成功")
+            } else {
+                this.$toast("订阅成功")
+            }
+            
         },
         //wx的初始化成功回调
         wxInitReady(){
