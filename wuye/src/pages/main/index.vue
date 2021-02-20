@@ -334,7 +334,6 @@ overflow: hidden; background-color: white;}
 
       </ul>
     </div>
-    <wxsubscribe></wxsubscribe>
       <div class="inner">
         <!-- <div class="section3_notice">通知及公告</div> -->
         <div class="section3_divider"></div>
@@ -361,6 +360,7 @@ overflow: hidden; background-color: white;}
         	    <div class="center-bgs" ></div>
     	    </div>
         </div>
+        <wxsubscribe></wxsubscribe>
     </div>   
     </div>
 
