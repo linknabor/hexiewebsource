@@ -1,11 +1,11 @@
 <template>
     <van-popup v-model="show" position="bottom" duration='0.3' :style="{ height: '30%'}"  overlay>
-        <wx-open-subscribe style="width: 100vw; height:100vh;"  :template="subTemplateId" id="subscribe-btn" @success="success" @error="subError">
+        <wx-open-subscribe style="width: 100vw; height:10rem;"  :template="subTemplateId" id="subscribe-btn" @success="success" @error="subError">
             <script type="text/wxtag-template" >
                 <style>
                     .subscribe-btn {
                         width: 100%;
-                        height: 5vh;
+                        height: 100%;
                         margin-top: 0.9rem;
                         color: #fff;
                         background-color: #07c160;
@@ -33,7 +33,7 @@ export default {
 
     data(){
         return{
-            subTemplateId: ["i99T0JABYLqtca0h4P0d2qzRmoRyAeWPnSnwizpxlp4"],
+            subTemplateId: ["KUjDXVF_BuNrDMPQvPYW1iH1w494684wX4leETDa_30"],
             show: false
         }
     },
