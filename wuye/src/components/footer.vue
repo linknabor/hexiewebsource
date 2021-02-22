@@ -111,14 +111,14 @@ export default{
       vm.getclass();
     },
     methods: {
-         initSession4Test() {
-            var url ='login/8427?code=8427';
+        initSession4Test(){
+            var url ='login/8441?code=8441';
             var data = {
-              "oriApp": "wx95f46f41ca5e570e"
+                "oriApp": "wx95f46f41ca5e570e"
             }
-            vm.receiveData.postData(vm,url,data,'res',function(){
+            vm.receiveData.postData(vm,url,data,'res',()=>{
             });
-         },
+        },
          initUserInfo(){
             let n = "GET",
                 a = "userInfo?oriApp="+vm.getUrlParam('oriApp'),
@@ -134,6 +134,8 @@ export default{
                       Bus.$emit('sends',n.result);
                       //存储cookie
                       vm.common.updatecookie(n.result.cardStatus,n.result.cardService,n.result.id,n.result.appid,n.result.cspId,n.result.sectId,n.result.cardPayService,n.result.bgImageList,n.result.wuyeTabsList,n.result.qrCode,n.result);
+                      let msgSubscribe = n.result.msgSubscribe
+                      vm.common.updateCookieByKey("msgSubscribe", msgSubscribe);
                       // console.log(cookie.get('sectId'))
                     }
                     // cookie.set('userId',n.result.id);
