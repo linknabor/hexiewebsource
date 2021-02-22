@@ -25,6 +25,7 @@
 </template>
 <script>
 import WxSDK from 'weixin-js-sdk'
+import { Toast } from 'vant'
 
 export default {
 
@@ -72,7 +73,7 @@ export default {
         showSubsribeSetting(){
             this.timer = setTimeout(()=>{   //设置延迟执行
                 this.show = true;
-            },1500);
+            },1000);
             
             // let tel = this.common.getUserCookie("tel");
             // if(tel){
@@ -97,9 +98,10 @@ export default {
                 let subKey = subscribeDetails[this.subTemplateId[i]]; // 获取每个模板的状态
                 // let status = JSON.parse(subKey);
                 let status = subKey.status;
+                console.log("status:" + status)
                 let flag = false;
                 if(status){
-                    switch(status.status){
+                    switch(status){
                         case "accept":
                             flag = true;
                             break;
@@ -125,9 +127,9 @@ export default {
                 }
             };
             if(!attend) {
-                this.$toast("未进行任何消息订阅")
+                Toast("未进行任何消息订阅")
             } else {
-                this.$toast("订阅成功")
+                Toast("订阅成功")
             }
             
         },
