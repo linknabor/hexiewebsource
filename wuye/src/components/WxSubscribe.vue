@@ -1,5 +1,5 @@
 <template>
-    <van-popup v-model="show" position="bottom" duration='0.3' :style="{ height: '30%'}"  overlay round>
+    <van-popup v-model="show" position="bottom" duration='0.3' :style="{ height: '20%'}"  overlay round>
         <wx-open-subscribe style="width:100vw"  :template="subTemplateId" id="subscribe-btn" @success="success" @error="subError">
             <script type="text/wxtag-template" >
                 <style>
