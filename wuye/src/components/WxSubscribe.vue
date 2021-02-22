@@ -25,20 +25,21 @@
 </template>
 <script>
 import WxSDK from 'weixin-js-sdk'
-let wx = WxSDK;
 
 export default {
 
     data(){
         return{
             subTemplateId: ["nFQNN0gCejjQBGG8ZyB5uF5zcG8Bu7wd2_QPrAY0FA4"],
-            show: false
+            show: false,
+            wx:{}
         }
     },
     created(){
-
+        this.wx = WxSDK;
     },
     mounted(){
+        console.log(this.wx);
         console.log("init wxopen component");
         this.initSubscButton();
         this.wxInitReady();
@@ -49,7 +50,7 @@ export default {
             var url = location.href.split("#")[0];
             var data = {
                 vm:this,
-                wx:wx,
+                wx:this.wx,
                 apiList:[],
                 openTagList:['wx-open-subscribe'],
                 url:url
@@ -76,6 +77,7 @@ export default {
         },
         // 我这里判断是必须把复数模板全部订阅
         success(e) {
+            console.log(e);
             let attend = false;
             let subscribeDetails = JSON.parse(e.detail.subscribeDetails); // 全部的模板
             for(let i in this.subTemplateId) {
@@ -113,14 +115,14 @@ export default {
         },
         //wx的初始化成功回调
         wxInitReady(){
-            wx.ready(()=>{
+            this.wx.ready(()=>{
                 console.log("btn is ready.")
                 this.showSubsribeSetting();
             });
         },
         //wx初始化失败回调
         wxInitFailed(){
-            wx.error((res)=>{
+            this.wx.error((res)=>{
                 console.log("btn load failed! ")
             });
         }
