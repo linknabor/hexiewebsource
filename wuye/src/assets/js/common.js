@@ -214,7 +214,6 @@ window.common = {
     },
     updateCookieByKey(key, value){
         if(value && value!=undefined){
-            alert(value)
             setCookie(key, value);
         }
     },
