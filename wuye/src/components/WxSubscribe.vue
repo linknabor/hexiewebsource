@@ -25,6 +25,7 @@
 </template>
 <script>
 import WxSDK from 'weixin-js-sdk'
+import Bus from '../api/bus.js';
 import { Toast } from 'vant'
 
 export default {
@@ -40,13 +41,15 @@ export default {
         this.wx = WxSDK;
     },
     mounted(){
-        console.log(this.wx);
-        console.log("init wxopen component");
         this.initSubscButton();
-        this.wxInitReady();
+        Bus.$on("sends",this.wxInitReady);
+        // Bus.$on("sends",this.showSubscribeSetting);
         // this.wxInitFailed();
         // this.test();
     },
+    beforeDestroy() {
+            Bus.$off();
+　　},
     methods: {
         test(){
                          
@@ -56,6 +59,9 @@ export default {
             let subscribeDetails = details.subscribeDetails;
             let subKey = subscribeDetails[templateId];
             console.log(subKey)
+            this.common.updateCookieByKey("test","12345");
+            let a = this.common.getUserCookie("test");
+            console.log("a:"+a)
         },
         initSubscButton() {
             var url = location.href.split("#")[0];
@@ -68,9 +74,13 @@ export default {
             }
             this.receiveData.wxconfig(data);
         },
-        showSubscribeSetting(){
-            let subscribed = this.common.getUserCookie("msgSubscribe"); //accept, reject,以及off，无论什么结果，什么操作过了，都不弹窗
-            if(!subscribed){
+        showSubscribeSetting(result){
+            let cookieSubscribed = this.common.getUserCookie("msgSubscribe"); //accept, reject,以及off，无论什么结果，什么操作过了，都不弹窗
+            let serverSubscribed = result.msgSubscribe;
+            console.log("cookieSubscribed :" + cookieSubscribed);
+            console.log("serverSubscribed :" + serverSubscribed);
+            if((cookieSubscribed&&cookieSubscribed!=undefined) || (serverSubscribed&&serverSubscribed!=undefined)){
+                alert(234);
                 return false;
             }
             this.timer = setTimeout(()=>{   //设置延迟执行
@@ -138,10 +148,10 @@ export default {
             
         },
         //wx的初始化成功回调
-        wxInitReady(){
+        wxInitReady(result){
             this.wx.ready(()=>{
                 console.log("btn is ready.")
-                this.showSubscribeSetting();
+                this.showSubscribeSetting(result);
             });
         },
         //wx初始化失败回调

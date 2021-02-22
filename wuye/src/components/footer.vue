@@ -103,7 +103,6 @@ export default{
       vm=this;
     },
     mounted(){
-      // vm.initSession4Test()
       vm.initUserInfo();
       vm.geturl();
     },

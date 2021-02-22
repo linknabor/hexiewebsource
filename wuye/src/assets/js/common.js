@@ -209,8 +209,14 @@ window.common = {
         var o = parseInt(getCookie("BackendPort"));
         return MasterConfig.C("baseUrl") + (o ? ":" + o: "") + "/" + e;
     },
-    getUserCookie :function(e) {
+    getUserCookie(e) {
         return getCookie(e);
+    },
+    updateCookieByKey(key, value){
+        if(value && value!=undefined){
+            alert(value)
+            setCookie(key, value);
+        }
     },
     //定义请求方法
     invokeApi: function(e, o, n, t, i, r,c) {
@@ -374,11 +380,6 @@ window.common = {
 
         if(wuyeTabsList) {
             common.localSet('wuyeTabsList',JSON.stringify(wuyeTabsList));
-        }
-    },
-    updateCookieByKey(key, value){
-        if(!value){
-            setCookie(key, value);
         }
     },
      //入口程序 检查状态
