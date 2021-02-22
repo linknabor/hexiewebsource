@@ -1,5 +1,5 @@
 <template>
-    <van-popup v-model="show" position="bottom" duration='0.3' :style="{ height: '30%'}"  overlay round>
+    <van-popup v-model="show" position="bottom" duration='0.3' :style="{ height: '20%'}"  overlay round>
         <wx-open-subscribe style="width:100vw"  :template="subTemplateId" id="subscribe-btn" @success="success" @error="subError">
             <script type="text/wxtag-template" >
                 <style>
@@ -50,14 +50,12 @@ export default {
     methods: {
         test(){
                          
-          let templateId = 'TenvU22BA1jCp4YHfYEpRuESXYReQyDuhs4vbdWA99I';                         
-          let errorMsg = "{\"subscribeDetails\":{\"nFQNN0gCejjQBGG8ZyB5uF5zcG8Bu7wd2_QPrAY0FA4\":{\"status\":\"accept\"}, \"TenvU22BA1jCp4YHfYEpRuESXYReQyDuhs4vbdWA99I\":{}}}";
-          let details = JSON.parse(errorMsg);
-          let subscribeDetails = details.subscribeDetails;
-          let subKey = subscribeDetails[templateId];
-          console.log(subKey)
-          let status = subKey.status;
-          console.log(status);
+            let templateId = 'TenvU22BA1jCp4YHfYEpRuESXYReQyDuhs4vbdWA99I';                         
+            let errorMsg = "{\"subscribeDetails\":{\"nFQNN0gCejjQBGG8ZyB5uF5zcG8Bu7wd2_QPrAY0FA4\":{\"status\":\"accept\"}, \"TenvU22BA1jCp4YHfYEpRuESXYReQyDuhs4vbdWA99I\":{}}}";
+            let details = JSON.parse(errorMsg);
+            let subscribeDetails = details.subscribeDetails;
+            let subKey = subscribeDetails[templateId];
+            console.log(subKey)
         },
         initSubscButton() {
             var url = location.href.split("#")[0];
@@ -70,7 +68,11 @@ export default {
             }
             this.receiveData.wxconfig(data);
         },
-        showSubsribeSetting(){
+        showSubscribeSetting(){
+            let subscribed = this.common.getUserCookie("msgSubscribe"); //accept, reject,以及off，无论什么结果，什么操作过了，都不弹窗
+            if(!subscribed){
+                return false;
+            }
             this.timer = setTimeout(()=>{   //设置延迟执行
                 this.show = true;
             },1000);
@@ -98,7 +100,8 @@ export default {
                 let subKey = subscribeDetails[this.subTemplateId[i]]; // 获取每个模板的状态
                 // let status = JSON.parse(subKey);
                 let status = subKey.status;
-                console.log("status:" + status)
+                console.log(subKey);
+                console.log("status:" + status);
                 let flag = false;
                 if(status){
                     switch(status){
@@ -127,9 +130,10 @@ export default {
                 }
             };
             if(!attend) {
-                Toast("未进行任何消息订阅")
+                Toast("未进行任何消息订阅");
             } else {
-                Toast("订阅成功")
+                this.common.updateCookieByKey("msgSubscribe", "accept");
+                Toast("订阅成功");
             }
             
         },
@@ -137,7 +141,7 @@ export default {
         wxInitReady(){
             this.wx.ready(()=>{
                 console.log("btn is ready.")
-                this.showSubsribeSetting();
+                this.showSubscribeSetting();
             });
         },
         //wx初始化失败回调

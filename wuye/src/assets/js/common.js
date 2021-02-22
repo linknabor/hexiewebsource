@@ -376,6 +376,11 @@ window.common = {
             common.localSet('wuyeTabsList',JSON.stringify(wuyeTabsList));
         }
     },
+    updateCookieByKey(key, value){
+        if(!value){
+            setCookie(key, value);
+        }
+    },
      //入口程序 检查状态
     checkRegisterStatus:function(){
         if(!getCookie("UID")){
