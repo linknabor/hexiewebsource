@@ -6,7 +6,7 @@
                     .subscribe-btn {
                         width: 80%;
                         height: 200%;
-                        margin: 20% 10% 0 10%;
+                        margin: 15% 10% 0 10%;
                         padding:5px;
                         color: #fff;
                         background-color: #07c160;
@@ -80,7 +80,6 @@ export default {
             console.log("cookieSubscribed :" + cookieSubscribed);
             console.log("serverSubscribed :" + serverSubscribed);
             if((cookieSubscribed&&cookieSubscribed!=undefined) || (serverSubscribed&&serverSubscribed!=undefined)){
-                alert(234);
                 return false;
             }
             this.timer = setTimeout(()=>{   //设置延迟执行
@@ -108,13 +107,15 @@ export default {
             console.log(subscribeDetails);
             for(let i in this.subTemplateId) {
                 let subKey = subscribeDetails[this.subTemplateId[i]]; // 获取每个模板的状态
-                // let status = JSON.parse(subKey);
                 let status = subKey.status;
                 console.log(subKey);
+                console.log(subKey.status);
                 console.log("status:" + status);
+                let statusJson = JSON.parse(subKey);
+                console.log(statusJson.status);
                 let flag = false;
-                if(status){
-                    switch(status){
+                if(statusJson.status){
+                    switch(statusJson.status){
                         case "accept":
                             flag = true;
                             break;
@@ -168,7 +169,7 @@ export default {
     .subscribe-btn {
         width: 80%;
         height: 200%;
-        margin: 20% 10% 0 10%;
+        margin: 15% 10% 0 10%;
         padding:5px;
         color: #fff;
         background-color: #07c160;
