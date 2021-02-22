@@ -13,17 +13,14 @@ require('es6-promise/auto');
 
 
 /*自己添加的开始  引入mint-ui 和 axios*/
-// import MintUI from 'mint-ui'
-// import 'mint-ui/lib/style.css'
-// Vue.use(MintUI)
+import MintUI from 'mint-ui';
+Vue.use(MintUI);
 
-import { Popup, Button, Toast  } from 'vant';
-Vue.use(Popup);
-Vue.use(Button);
-Vue.use(Toast);
+import { Popup as vPopup, Button as vButton} from 'vant';
+Vue.use(vPopup);
+Vue.use(vButton);
 
-import $ from 'jquery'
-import axios from 'axios';
+import axios from 'axios'
 import cookie from 'js-cookie'
 
 import VueAxios from 'vue-axios';
