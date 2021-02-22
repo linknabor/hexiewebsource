@@ -21,7 +21,7 @@ let receiveData = {
                 let a = JSON.parse(res.data)
                 let success = a.success;
                 if(success===false){
-                    vm.$toast(a.errorCode);
+                    // vm.$toast(a.errorCode);
                     return false;
                 }
                 let wd = a.result  //接口返回的嵌入数据

@@ -80,8 +80,10 @@ export default {
             console.log(e);
             let attend = false;
             let subscribeDetails = JSON.parse(e.detail.subscribeDetails); // 全部的模板
+            console.log(subscribeDetails);
             for(let i in this.subTemplateId) {
                 let subKey = subscribeDetails[this.subTemplateId[i]]; // 获取每个模板的状态
+                console.log(subKey)
                 let status = JSON.parse(subKey);
                 let type = false;
                 switch(status.status){
@@ -101,7 +103,6 @@ export default {
                 };
                 if(!type) { // 如果其中有一个模板没有订阅，则全部不通过过
                     attend = false;
-                    break;
                 } else {
                     attend = true;
                 };
