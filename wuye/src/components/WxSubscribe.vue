@@ -44,8 +44,20 @@ export default {
         this.initSubscButton();
         this.wxInitReady();
         // this.wxInitFailed();
+        // this.test();
     },
     methods: {
+        test(){
+                         
+          let templateId = 'TenvU22BA1jCp4YHfYEpRuESXYReQyDuhs4vbdWA99I';                         
+          let errorMsg = "{\"subscribeDetails\":{\"nFQNN0gCejjQBGG8ZyB5uF5zcG8Bu7wd2_QPrAY0FA4\":{\"status\":\"accept\"}, \"TenvU22BA1jCp4YHfYEpRuESXYReQyDuhs4vbdWA99I\":{}}}";
+          let details = JSON.parse(errorMsg);
+          let subscribeDetails = details.subscribeDetails;
+          let subKey = subscribeDetails[templateId];
+          console.log(subKey)
+          let status = subKey.status;
+          console.log(status);
+        },
         initSubscButton() {
             var url = location.href.split("#")[0];
             var data = {
@@ -83,29 +95,34 @@ export default {
             console.log(subscribeDetails);
             for(let i in this.subTemplateId) {
                 let subKey = subscribeDetails[this.subTemplateId[i]]; // 获取每个模板的状态
-                console.log(subKey)
-                let status = JSON.parse(subKey);
-                let type = false;
-                switch(status.status){
-                    case "reject":
-                        type = false;
-                        break;
-                    case "cancel":
-                        type = false;
-                        break;
-                    case "filter":
-                        // this.$toast(`第${i}条消息应该标题同名被后台过滤`);
-                        type = false;
-                        break;
-                    default:
-                        type = true;
-                        break;
-                };
-                if(!type) { // 如果其中有一个模板没有订阅，则全部不通过过
-                    attend = false;
-                } else {
-                    attend = true;
-                };
+                // let status = JSON.parse(subKey);
+                let status = subKey.status;
+                let flag = false;
+                if(status){
+                    switch(status.status){
+                        case "accept":
+                            flag = true;
+                            break;
+                        case "reject":
+                            flag = false;
+                            break;
+                        case "cancel":
+                            flag = false;
+                            break;
+                        case "filter":
+                            // this.$toast(`第${i}条消息应该标题同名被后台过滤`);
+                            flag = false;
+                            break;
+                        default:
+                            flag = false;
+                            break;
+                    };
+                    if(!flag) { // 如果其中有一个模板没有订阅，则全部不通过过
+                        attend = false;
+                    } else {
+                        attend = true;
+                    };
+                }
             };
             if(!attend) {
                 this.$toast("未进行任何消息订阅")
