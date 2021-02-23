@@ -89,8 +89,8 @@
 
 <script>
 let vm;
-import Bus from '../api/bus.js'
-import cookie  from 'js-cookie';
+import Bus from '../api/bus.js';
+import Storage from '../assets/js/storage.js';
 export default{
     data(){
       return {
@@ -111,9 +111,13 @@ export default{
     },
     methods: {
         initSession4Test(){
-            var url ='login/8441?code=8441';
+            // var url ='login/8441?code=8441';
+            // var data = {
+            //     "oriApp": "wx95f46f41ca5e570e"
+            // }
+            var url ='login/125417?code=125417';
             var data = {
-                "oriApp": "wx95f46f41ca5e570e"
+                "oriApp": "wxbd214f5765f346c1"
             }
             vm.receiveData.postData(vm,url,data,'res',()=>{
             });
@@ -133,8 +137,9 @@ export default{
                       Bus.$emit('sends',n.result);
                       //存储cookie
                       vm.common.updatecookie(n.result.cardStatus,n.result.cardService,n.result.id,n.result.appid,n.result.cspId,n.result.sectId,n.result.cardPayService,n.result.bgImageList,n.result.wuyeTabsList,n.result.qrCode,n.result);
-                      let msgSubscribe = n.result.msgSubscribe
-                      vm.common.updateCookieByKey("msgSubscribe", msgSubscribe);
+                      let subscribeTemplateIds = n.result.subscribeTemplateIds
+                      Storage.set("subscribeTemplateIds", subscribeTemplateIds);
+                      Bus.$emit('wxSubscribe', subscribeTemplateIds);
                       // console.log(cookie.get('sectId'))
                     }
                     // cookie.set('userId',n.result.id);

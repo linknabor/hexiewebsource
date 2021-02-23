@@ -4,7 +4,7 @@ var MasterConfig = function() {
         baseUrl: /127|test|192/.test(location.origin)?'https://test.e-shequ.cn/wechat/hexie/wechat/':
         /uat/.test(location.origin)?'https://uat.e-shequ.cn/wechat/hexie/wechat/':
         'https://www.e-shequ.cn/wechat/hexie/wechat/',
-        
+
         basePageUrl:/127|test|192/.test(location.origin)?'https://test.e-shequ.cn/weixin/':
         /uat/.test(location.origin)?'https://uat.e-shequ.cn/hexie/weixin/':
         'https://www.e-shequ.cn/weixin/',
@@ -209,13 +209,12 @@ window.common = {
         var o = parseInt(getCookie("BackendPort"));
         return MasterConfig.C("baseUrl") + (o ? ":" + o: "") + "/" + e;
     },
-    getUserCookie(e) {
-        return getCookie(e);
-    },
-    updateCookieByKey(key, value){
-        if(value && value!=undefined){
-            setCookie(key, value);
-        }
+    reLogin() {
+        setTimeout(function(){
+            console.log("waiting 1s for relogin.")
+        },500)
+        setCookie("UID", "", 0),
+        common.login(!0)
     },
     //定义请求方法
     invokeApi: function(e, o, n, t, i, r,c) {

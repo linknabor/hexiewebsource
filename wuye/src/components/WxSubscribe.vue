@@ -26,7 +26,8 @@
 <script>
 import WxSDK from 'weixin-js-sdk'
 import Bus from '../api/bus.js';
-import { Toast } from 'vant'
+import { Toast } from 'vant';
+import Storage from '../assets/js/storage.js';
 
 export default {
 
@@ -34,7 +35,7 @@ export default {
         return{
             subTemplateId: ["nFQNN0gCejjQBGG8ZyB5uF5zcG8Bu7wd2_QPrAY0FA4"],
             show: false,
-            wx:{}
+            wx:{},
         }
     },
     created(){
@@ -42,26 +43,28 @@ export default {
     },
     mounted(){
         this.initSubscButton();
-        Bus.$on("sends",this.wxInitReady);
-        // Bus.$on("sends",this.showSubscribeSetting);
-        // this.wxInitFailed();
+        Bus.$on("wxSubscribe",this.wxInitReady);
+        // Bus.$on("wxSubscribe",this.showSubscribeSetting);
+        this.wxInitFailed();
         // this.test();
     },
     beforeDestroy() {
             Bus.$off();
 　　},
     methods: {
+        
         test(){
                          
-            let templateId = 'TenvU22BA1jCp4YHfYEpRuESXYReQyDuhs4vbdWA99I';                         
+            let templateId = 'nFQNN0gCejjQBGG8ZyB5uF5zcG8Bu7wd2_QPrAY0FA4';                         
             let errorMsg = "{\"subscribeDetails\":{\"nFQNN0gCejjQBGG8ZyB5uF5zcG8Bu7wd2_QPrAY0FA4\":{\"status\":\"accept\"}, \"TenvU22BA1jCp4YHfYEpRuESXYReQyDuhs4vbdWA99I\":{}}}";
-            let details = JSON.parse(errorMsg);
-            let subscribeDetails = details.subscribeDetails;
-            let subKey = subscribeDetails[templateId];
-            console.log(subKey)
-            this.common.updateCookieByKey("test","12345");
-            let a = this.common.getUserCookie("test");
-            console.log("a:"+a)
+            // let details = JSON.parse(errorMsg);
+            // let subscribeDetails = details.subscribeDetails;
+            // let subKey = subscribeDetails[templateId];
+            // console.log(subKey)
+            // let json = JSON.parse(subKey);
+            // console.log(json.status);
+
+            console.log(errorMsg.indexOf(templateId));
         },
         initSubscButton() {
             var url = location.href.split("#")[0];
@@ -74,12 +77,12 @@ export default {
             }
             this.receiveData.wxconfig(data);
         },
-        showSubscribeSetting(result){
-            let cookieSubscribed = this.common.getUserCookie("msgSubscribe"); //accept, reject,以及off，无论什么结果，什么操作过了，都不弹窗
-            let serverSubscribed = result.msgSubscribe;
-            console.log("cookieSubscribed :" + cookieSubscribed);
-            console.log("serverSubscribed :" + serverSubscribed);
-            if((cookieSubscribed&&cookieSubscribed!=undefined) || (serverSubscribed&&serverSubscribed!=undefined)){
+        showSubscribeSetting(data){
+            let clientTemplateIds = Storage.get('subscribeTemplateIds');
+            let serverTemplateIds = data;
+            console.log("clientTemplateIds :" + clientTemplateIds);
+            console.log("serverTemplateIds :" + serverTemplateIds);
+            if((clientTemplateIds&&clientTemplateIds.length>0) || (serverTemplateIds&&serverTemplateIds>0)){
                 return false;
             }
             this.timer = setTimeout(()=>{   //设置延迟执行
@@ -133,6 +136,16 @@ export default {
                             flag = false;
                             break;
                     };
+                    if(statusJson.status!='cancel'){
+                        let templateIds = Storage.get("subscribeTemplateIds");
+                        if(templateIds === undefined){
+                            templateIds = [];
+                        }
+                        if(!templateIds.indexOf(this.subTemplateId[i])>-1){
+                            templateIds.push(this.subTemplateId[i]);
+                        }
+                       Storage.set("subscribeTemplateIds", templateIds);
+                    }
                     if(!flag) { // 如果其中有一个模板没有订阅，则全部不通过过
                         attend = false;
                     } else {
@@ -143,7 +156,6 @@ export default {
             if(!attend) {
                 Toast("未进行任何消息订阅");
             } else {
-                this.common.updateCookieByKey("msgSubscribe", "accept");
                 Toast("订阅成功");
             }
             
