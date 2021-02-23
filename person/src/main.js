@@ -7,6 +7,11 @@ import router from './router'
 import Mint from 'mint-ui';
 import 'mint-ui/lib/style.css';
 Vue.use(Mint);
+
+import { Popup as vPopup, Button as vButton} from 'vant';
+Vue.use(vPopup);
+Vue.use(vButton);
+
 import axios from 'axios';
 import VueAxios from 'vue-axios';
 //引入一些初始化css 
@@ -25,6 +30,9 @@ Vue.prototype.baseUrl=MasterConfig.C('baseUrl');
 Vue.prototype.basePageUrl=MasterConfig.C('basePageUrl');
 Vue.prototype.basePageUrlpay=MasterConfig.C('basePageUrlpay');
 Vue.prototype.dealWithAjaxData=dealWithAjaxData;
+
+import Vconsole from 'vconsole';
+Vue.prototype.$vConsole = new Vconsole();
 
 import receiveData from './api/receiveData'
 Vue.prototype.receiveData=receiveData

@@ -160,9 +160,15 @@ export default {
    },
    mounted() {
        let url = location.href.split('#')[0];
-        vm.receiveData.wxconfig(vm,wx,['previewImage'],url);
-
-       vm.querys();
+       var data = {
+            vm:this,
+            wx:this.wx,
+            apiList:[],
+            openTagList:['previewImage'],
+            url:url
+        }
+        this.receiveData.wxconfig(data);
+        vm.querys();
    },
    methods: {
        querys() {
