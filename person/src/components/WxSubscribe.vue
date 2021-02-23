@@ -85,7 +85,7 @@ export default {
             if((clientTemplateIds&&clientTemplateIds.length>0) || (serverTemplateIds&&serverTemplateIds>0)){
                 return false;
             }
-            this.subTemplateId = data;
+            // this.subTemplateId = data;
             console.log("subTemplateId:"+ this.subTemplateId);
             this.timer = setTimeout(()=>{   //设置延迟执行
                 this.show = true;
