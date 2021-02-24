@@ -66,6 +66,7 @@ export default {
       // openid: "o_3Dlwdy4btrm8kiyWHkmvyQO_ls",
       nubmer1:'',
       nubmer2:'',
+      subscribeTemplateIds:this.$route.query.subscribeTemplateIds
     };
   },
   created() {
@@ -73,7 +74,7 @@ export default {
   },
   mounted() {
     vm.qrCodePayService();
-    Bus.$emit("wxSubscribe","");
+    Bus.$emit("wxSubscribe", this.subscribeTemplateIds);
   },
 
   components: {
