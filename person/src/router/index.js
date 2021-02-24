@@ -8,13 +8,10 @@ let router= new Router({
     {
       path: '/',
       name: 'index',
-      component: resolve=> require(['@/pages/index'],resolve),
-      children:[
-        {path:'',component:resolve=>require(['@/pages/index/index'],resolve),
-        meta: {
-          title:'个人中心'
-        }}
-      ]
+      component: resolve=> require(['@/pages/index/index'],resolve),
+      meta: {
+        title:'个人中心'
+      }
     },
     {
       path:'/register',

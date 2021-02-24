@@ -6,7 +6,7 @@
                     .subscribe-btn {
                         width: 80%;
                         height: 200%;
-                        margin: 15% 10% 0 10%;
+                        margin: 12% 10% 0 10%;
                         padding:5px;
                         color: #fff;
                         background-color: #07c160;
@@ -35,7 +35,7 @@ export default {
         return{
             subTemplateId: ["nFQNN0gCejjQBGG8ZyB5uF5zcG8Bu7wd2_QPrAY0FA4"],
             show: false,
-            wx:{},
+            wx:{}
         }
     },
     created(){
@@ -183,7 +183,7 @@ export default {
     .subscribe-btn {
         width: 80%;
         height: 200%;
-        margin: 15% 10% 0 10%;
+        margin: 12% 10% 0 10%;
         padding:5px;
         color: #fff;
         background-color: #07c160;
