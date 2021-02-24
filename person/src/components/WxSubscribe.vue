@@ -33,7 +33,8 @@ export default {
 
     data(){
         return{
-            subTemplateId: ["nFQNN0gCejjQBGG8ZyB5uF5zcG8Bu7wd2_QPrAY0FA4"],
+            // subTemplateId: ["nFQNN0gCejjQBGG8ZyB5uF5zcG8Bu7wd2_QPrAY0FA4"],
+            subTemplateId: ["YyNjMnr48mG8rkrSdX_HghWeKPMyiBrBuuZ57g1NaOE"],
             show: false,
             wx:{}
         }
@@ -112,10 +113,6 @@ export default {
             console.log(subscribeDetails);
             for(let i in this.subTemplateId) {
                 let subKey = subscribeDetails[this.subTemplateId[i]]; // 获取每个模板的状态
-                let status = subKey.status;
-                console.log(subKey);
-                console.log(subKey.status);
-                console.log("status:" + status);
                 let statusJson = JSON.parse(subKey);
                 console.log(statusJson.status);
                 let flag = false;
