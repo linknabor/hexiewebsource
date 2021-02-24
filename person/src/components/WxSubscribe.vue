@@ -136,14 +136,15 @@ export default {
                             break;
                     };
                     if(statusJson.status!='cancel'){
-                        let templateIds = Storage.get("subscribeTemplateIds");
-                        if(templateIds === undefined){
-                            templateIds = [];
-                        }
-                        if(!templateIds.indexOf(this.subTemplateId[i])>-1){
-                            templateIds.push(this.subTemplateId[i]);
-                        }
-                       Storage.set("subscribeTemplateIds", templateIds);
+
+                    //     let templateIds = Storage.get("subscribeTemplateIds");
+                    //     if(templateIds === undefined){
+                    //         templateIds = [];
+                    //     }
+                    //     if(!templateIds.indexOf(this.subTemplateId[i])>-1){
+                    //         templateIds.push(this.subTemplateId[i]);
+                    //     }
+                    //    Storage.set("subscribeTemplateIds", templateIds);
                     }
                     if(!flag) { // 如果其中有一个模板没有订阅，则全部不通过过
                         attend = false;
@@ -155,7 +156,7 @@ export default {
             if(!attend) {
                 Toast("未进行任何消息订阅");
             } else {
-                Toast("订阅成功");
+                Toast("已成功订阅");
             }
             
         },
