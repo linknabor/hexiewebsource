@@ -27,14 +27,12 @@
 import WxSDK from 'weixin-js-sdk'
 import Bus from '../api/bus.js';
 import { Toast } from 'vant';
-import Storage from '../assets/js/storage.js';
 
 export default {
 
     data(){
         return{
-            // subTemplateId: ["nFQNN0gCejjQBGG8ZyB5uF5zcG8Bu7wd2_QPrAY0FA4"],
-            subTemplateId: ["YyNjMnr48mG8rkrSdX_HghWeKPMyiBrBuuZ57g1NaOE"],
+            subTemplateId: [],
             show: false,
             wx:{}
         }
@@ -50,7 +48,7 @@ export default {
         // this.test();
     },
     beforeDestroy() {
-            Bus.$off();
+        Bus.$off();
 　　},
     methods: {
         
@@ -79,27 +77,14 @@ export default {
             this.receiveData.wxconfig(data);
         },
         showSubscribeSetting(data){
-            let clientTemplateIds = Storage.get('subscribeTemplateIds');
-            let serverTemplateIds = data;
-            console.log("clientTemplateIds :" + clientTemplateIds);
-            console.log("serverTemplateIds :" + serverTemplateIds);
-            if((clientTemplateIds&&clientTemplateIds.length>0) || (serverTemplateIds&&serverTemplateIds>0)){
+            console.log(data);
+            if(!data){
                 return false;
             }
-            // this.subTemplateId = data;
-            console.log("subTemplateId:"+ this.subTemplateId);
+            this.subTemplateId = data;
             this.timer = setTimeout(()=>{   //设置延迟执行
                 this.show = true;
             },1000);
-            
-            // let tel = this.common.getUserCookie("tel");
-            // if(tel){
-            //     console.log("user not registered !");
-            // }else {
-            //     this.timer = setTimeout(()=>{   //设置延迟执行
-            //         this.show = true;
-            //     },1500);
-            // }
         },
         // 错误提示
         subError(e) {
@@ -135,17 +120,6 @@ export default {
                             flag = false;
                             break;
                     };
-                    if(statusJson.status!='cancel'){
-
-                    //     let templateIds = Storage.get("subscribeTemplateIds");
-                    //     if(templateIds === undefined){
-                    //         templateIds = [];
-                    //     }
-                    //     if(!templateIds.indexOf(this.subTemplateId[i])>-1){
-                    //         templateIds.push(this.subTemplateId[i]);
-                    //     }
-                    //    Storage.set("subscribeTemplateIds", templateIds);
-                    }
                     if(!flag) { // 如果其中有一个模板没有订阅，则全部不通过过
                         attend = false;
                     } else {

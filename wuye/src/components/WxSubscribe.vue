@@ -27,15 +27,14 @@
 import WxSDK from 'weixin-js-sdk'
 import Bus from '../api/bus.js';
 import { Toast } from 'vant';
-import Storage from '../assets/js/storage.js';
 
 export default {
 
     data(){
         return{
-            subTemplateId: ["nFQNN0gCejjQBGG8ZyB5uF5zcG8Bu7wd2_QPrAY0FA4"],
+            subTemplateId: [],
             show: false,
-            wx:{},
+            wx:{}
         }
     },
     created(){
@@ -49,7 +48,7 @@ export default {
         // this.test();
     },
     beforeDestroy() {
-            Bus.$off();
+        Bus.$off();
 　　},
     methods: {
         
@@ -78,25 +77,14 @@ export default {
             this.receiveData.wxconfig(data);
         },
         showSubscribeSetting(data){
-            let clientTemplateIds = Storage.get('subscribeTemplateIds');
-            let serverTemplateIds = data;
-            console.log("clientTemplateIds :" + clientTemplateIds);
-            console.log("serverTemplateIds :" + serverTemplateIds);
-            if((clientTemplateIds&&clientTemplateIds.length>0) || (serverTemplateIds&&serverTemplateIds>0)){
+            console.log(data);
+            if(!data){
                 return false;
             }
+            this.subTemplateId = data;
             this.timer = setTimeout(()=>{   //设置延迟执行
                 this.show = true;
             },1000);
-            
-            // let tel = this.common.getUserCookie("tel");
-            // if(tel){
-            //     console.log("user not registered !");
-            // }else {
-            //     this.timer = setTimeout(()=>{   //设置延迟执行
-            //         this.show = true;
-            //     },1500);
-            // }
         },
         // 错误提示
         subError(e) {
@@ -110,10 +98,6 @@ export default {
             console.log(subscribeDetails);
             for(let i in this.subTemplateId) {
                 let subKey = subscribeDetails[this.subTemplateId[i]]; // 获取每个模板的状态
-                let status = subKey.status;
-                console.log(subKey);
-                console.log(subKey.status);
-                console.log("status:" + status);
                 let statusJson = JSON.parse(subKey);
                 console.log(statusJson.status);
                 let flag = false;
@@ -136,16 +120,6 @@ export default {
                             flag = false;
                             break;
                     };
-                    if(statusJson.status!='cancel'){
-                        let templateIds = Storage.get("subscribeTemplateIds");
-                        if(templateIds === undefined){
-                            templateIds = [];
-                        }
-                        if(!templateIds.indexOf(this.subTemplateId[i])>-1){
-                            templateIds.push(this.subTemplateId[i]);
-                        }
-                       Storage.set("subscribeTemplateIds", templateIds);
-                    }
                     if(!flag) { // 如果其中有一个模板没有订阅，则全部不通过过
                         attend = false;
                     } else {
@@ -156,7 +130,7 @@ export default {
             if(!attend) {
                 Toast("未进行任何消息订阅");
             } else {
-                Toast("订阅成功");
+                Toast("已成功订阅");
             }
             
         },
