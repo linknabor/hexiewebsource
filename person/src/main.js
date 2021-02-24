@@ -82,8 +82,10 @@ axiosInstance.interceptors.request.use(
 Vue.use(VueAxios, axiosInstance);
 
 
-Vue.config.productionTip = false
-Vue.config.debug=true;
+Vue.config.productionTip = false;
+Vue.config.debug = true;
+Vue.config.ignoredElements = ['wx-open-subscribe'];
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
