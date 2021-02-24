@@ -33,7 +33,8 @@ export default {
 
     data(){
         return{
-            subTemplateId: ["nFQNN0gCejjQBGG8ZyB5uF5zcG8Bu7wd2_QPrAY0FA4"],
+            // subTemplateId: ["nFQNN0gCejjQBGG8ZyB5uF5zcG8Bu7wd2_QPrAY0FA4"],
+            subTemplateId: ["YyNjMnr48mG8rkrSdX_HghWeKPMyiBrBuuZ57g1NaOE"],
             show: false,
             wx:{}
         }
@@ -112,10 +113,6 @@ export default {
             console.log(subscribeDetails);
             for(let i in this.subTemplateId) {
                 let subKey = subscribeDetails[this.subTemplateId[i]]; // 获取每个模板的状态
-                let status = subKey.status;
-                console.log(subKey);
-                console.log(subKey.status);
-                console.log("status:" + status);
                 let statusJson = JSON.parse(subKey);
                 console.log(statusJson.status);
                 let flag = false;
@@ -139,14 +136,15 @@ export default {
                             break;
                     };
                     if(statusJson.status!='cancel'){
-                        let templateIds = Storage.get("subscribeTemplateIds");
-                        if(templateIds === undefined){
-                            templateIds = [];
-                        }
-                        if(!templateIds.indexOf(this.subTemplateId[i])>-1){
-                            templateIds.push(this.subTemplateId[i]);
-                        }
-                       Storage.set("subscribeTemplateIds", templateIds);
+
+                    //     let templateIds = Storage.get("subscribeTemplateIds");
+                    //     if(templateIds === undefined){
+                    //         templateIds = [];
+                    //     }
+                    //     if(!templateIds.indexOf(this.subTemplateId[i])>-1){
+                    //         templateIds.push(this.subTemplateId[i]);
+                    //     }
+                    //    Storage.set("subscribeTemplateIds", templateIds);
                     }
                     if(!flag) { // 如果其中有一个模板没有订阅，则全部不通过过
                         attend = false;
@@ -158,7 +156,7 @@ export default {
             if(!attend) {
                 Toast("未进行任何消息订阅");
             } else {
-                Toast("订阅成功");
+                Toast("已成功订阅");
             }
             
         },
