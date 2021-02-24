@@ -6,7 +6,7 @@
                     .subscribe-btn {
                         width: 80%;
                         height: 200%;
-                        margin: 15% 10% 0 10%;
+                        margin: 12% 10% 0 10%;
                         padding:5px;
                         color: #fff;
                         background-color: #07c160;
@@ -181,7 +181,7 @@ export default {
     .subscribe-btn {
         width: 80%;
         height: 200%;
-        margin: 15% 10% 0 10%;
+        margin: 12% 10% 0 10%;
         padding:5px;
         color: #fff;
         background-color: #07c160;
