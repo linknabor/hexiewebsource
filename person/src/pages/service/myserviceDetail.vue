@@ -169,6 +169,7 @@ export default {
         }
         this.receiveData.wxconfig(data);
         vm.querys();
+
    },
    methods: {
        querys() {

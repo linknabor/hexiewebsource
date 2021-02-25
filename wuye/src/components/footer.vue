@@ -121,6 +121,7 @@ export default{
             vm.receiveData.postData(vm,url,data,'res',()=>{
             });
         },
+
          initUserInfo(){
             let n = "GET",
                 a = "userInfo?oriApp="+vm.getUrlParam('oriApp'),

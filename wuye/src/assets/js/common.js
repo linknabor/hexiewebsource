@@ -5,7 +5,7 @@ var MasterConfig = function() {
         /uat/.test(location.origin)?'https://uat.e-shequ.cn/wechat/hexie/wechat/':
         'https://www.e-shequ.cn/wechat/hexie/wechat/',
 
-        basePageUrl:/127|test|192/.test(location.origin)?'https://test.e-shequ.cn/weixin/':
+      basePageUrl:/127|test|192/.test(location.origin)?'https://test.e-shequ.cn/weixin/':
         /uat/.test(location.origin)?'https://uat.e-shequ.cn/hexie/weixin/':
         'https://www.e-shequ.cn/weixin/',
         
@@ -372,6 +372,7 @@ window.common = {
         setCookie('sectId',sectId,duration);
         setCookie('cardPayService',cardPayService,duration);
         setCookie('qrCode',qrCode,duration);
+
         for(var j=0;j<bgImageList.length;j++){
             common.localSet(bgImageList[j].type,bgImageList[j].imgUrl)
         }
