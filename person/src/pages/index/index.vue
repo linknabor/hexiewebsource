@@ -135,7 +135,7 @@
           <span class="fr fs14 left_color">查看订单&nbsp;&nbsp;&nbsp;&nbsp;</span>
         </router-link>
         <router-link
-          :to="{path:'/operatorOrders'}"
+          :to="{path:'/operatorOrders', query:{subscribeTemplateIds:this.subscribeTemplateIds}}"
           class="input-wrap menu-person-link lite-divider"
           v-show="repairOperator"
         >
@@ -248,6 +248,7 @@ export default {
         levelname: "普通会员"
       },
       subscribeTemplateIds:[] //工作人远用的订阅消息模板id列表
+
     };
   },
   created() {
@@ -292,6 +293,7 @@ export default {
             vm.merchant = n.result.serveRole.merchant;//我是商家
             vm.msgSender = n.result.serveRole.msgSender;//消息推送
             vm.subscribeTemplateIds = n.result.subscribeTemplateIds;
+
             if(vm.user.point<0){//小于0等于0
               vm.point=0;
             }else {

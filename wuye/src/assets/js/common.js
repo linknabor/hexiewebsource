@@ -372,6 +372,7 @@ window.common = {
         setCookie('sectId',sectId,duration);
         setCookie('cardPayService',cardPayService,duration);
         setCookie('qrCode',qrCode,duration);
+
         for(var j=0;j<bgImageList.length;j++){
             common.localSet(bgImageList[j].type,bgImageList[j].imgUrl)
         }

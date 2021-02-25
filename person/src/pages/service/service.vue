@@ -34,6 +34,7 @@
       </div>  
     </div>
     <wxsubscribe></wxsubscribe>
+
   </div>
   
 </template>
@@ -43,6 +44,7 @@ let vm;
 import cookie from 'js-cookie';
 import WxSubscribe from '../../components/WxSubscribe.vue';
 import Bus from '../../api/bus.js';
+
 export default {
   data() {
     return {
@@ -67,6 +69,7 @@ export default {
       nubmer1:'',
       nubmer2:'',
       subscribeTemplateIds:this.$route.query.subscribeTemplateIds
+
     };
   },
   created() {
@@ -76,10 +79,10 @@ export default {
     vm.qrCodePayService();
     Bus.$emit("wxSubscribe", this.subscribeTemplateIds);
   },
-
   components: {
     'wxsubscribe':WxSubscribe
   },
+
 
   methods: {
     //是否配置服务人员

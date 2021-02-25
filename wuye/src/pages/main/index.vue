@@ -413,7 +413,6 @@ export default {
             coronaPj: true,//业主意见
             qrCode:'',//二维码
             // subscribe:'',//是否订阅公众号标识，0代表用户没有关注，拉取不到信息
-
             donghu:false,//东湖标记
             //swiper参数配置
             swiperOption:{
