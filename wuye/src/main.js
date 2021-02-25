@@ -13,12 +13,15 @@ require('es6-promise/auto');
 
 
 /*自己添加的开始  引入mint-ui 和 axios*/
-import MintUI from 'mint-ui'
-import 'mint-ui/lib/style.css'
-Vue.use(MintUI)
+import MintUI from 'mint-ui';
+Vue.use(MintUI);
+import 'mint-ui/lib/style.css';
 
-import $ from 'jquery'
-import axios from 'axios';
+import { Popup as vPopup, Button as vButton} from 'vant';
+Vue.use(vPopup);
+Vue.use(vButton);
+
+import axios from 'axios'
 import cookie from 'js-cookie'
 
 import VueAxios from 'vue-axios';
@@ -44,8 +47,11 @@ Vue.prototype.basePageUrlpay = MasterConfig.C('basePageUrlpay');
 Vue.prototype.basedhzj3Url = MasterConfig.C('basedhzj3Url');
 Vue.prototype.getUrlParam = getUrlParam;
 Vue.prototype.dealWithAjaxData = dealWithAjaxData;
-Vue.prototype.$axios = axios;
+// import Vconsole from 'vconsole';
+// Vue.prototype.$vConsole = new Vconsole();
+
 //创建axios 实例
+Vue.prototype.$axios = axios;
 
 var axiosInstance = axios.create({
     transformRequest: [function (data) {
@@ -93,6 +99,8 @@ Vue.use(VueAxios, axiosInstance);
 Vue.config.productionTip = false
 // 开启debug模式
 Vue.config.debug = true;
+//忽略标签
+Vue.config.ignoredElements = ['wx-open-subscribe'];
 
 /* eslint-disable no-new */
 new Vue({

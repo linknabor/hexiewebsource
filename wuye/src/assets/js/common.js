@@ -4,8 +4,8 @@ var MasterConfig = function() {
         baseUrl: /127|test|192/.test(location.origin)?'https://test.e-shequ.cn/wechat/hexie/wechat/':
         /uat/.test(location.origin)?'https://uat.e-shequ.cn/wechat/hexie/wechat/':
         'https://www.e-shequ.cn/wechat/hexie/wechat/',
-        
-        basePageUrl:/127|test|192/.test(location.origin)?'https://test.e-shequ.cn/weixin/':
+
+      basePageUrl:/127|test|192/.test(location.origin)?'https://test.e-shequ.cn/weixin/':
         /uat/.test(location.origin)?'https://uat.e-shequ.cn/hexie/weixin/':
         'https://www.e-shequ.cn/weixin/',
         
@@ -209,6 +209,13 @@ window.common = {
         var o = parseInt(getCookie("BackendPort"));
         return MasterConfig.C("baseUrl") + (o ? ":" + o: "") + "/" + e;
     },
+    reLogin() {
+        setTimeout(function(){
+            console.log("waiting 1s for relogin.")
+        },500)
+        setCookie("UID", "", 0),
+        common.login(!0)
+    },
     //定义请求方法
     invokeApi: function(e, o, n, t, i, r,c) {
         if (common.alert("url: " + o), AJAXFlag) { (null === t || void 0 === t) && (t = function() {}),
@@ -365,7 +372,7 @@ window.common = {
         setCookie('sectId',sectId,duration);
         setCookie('cardPayService',cardPayService,duration);
         setCookie('qrCode',qrCode,duration);
-        // console.log(result);
+
         for(var j=0;j<bgImageList.length;j++){
             common.localSet(bgImageList[j].type,bgImageList[j].imgUrl)
         }
