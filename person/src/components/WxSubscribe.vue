@@ -120,9 +120,7 @@ export default {
                             flag = false;
                             break;
                     };
-                    if(!flag) { // 如果其中有一个模板没有订阅，则全部不通过过
-                        attend = false;
-                    } else {
+                    if(flag) {
                         attend = true;
                     };
                 }
