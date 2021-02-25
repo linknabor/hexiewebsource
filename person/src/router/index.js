@@ -7,11 +7,13 @@ let router= new Router({
   routes: [
     {
       path: '/',
-      name: 'index',
-      component: resolve=> require(['@/pages/index/index'],resolve),
-      meta: {
-        title:'个人中心'
-      }
+      component: resolve=> require(['@/pages/index'],resolve),
+      children:[
+        {path:'',component:resolve=>require(['@/pages/index/index'],resolve),
+        meta: {
+          title:'个人中心'
+        }}
+      ]
     },
     {
       path:'/register',
@@ -312,7 +314,6 @@ router.beforeEach((to, from, next) => {
      flag=common.checkRegisterStatus()
      if(!flag) {
        return
-     }
   }
 
   changeTitle(to.meta.title);
