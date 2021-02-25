@@ -135,7 +135,7 @@
           <span class="fr fs14 left_color">查看订单&nbsp;&nbsp;&nbsp;&nbsp;</span>
         </router-link>
         <router-link
-          :to="{path:'/operatorOrders'}"
+          :to="{path:'/operatorOrders', query:{subscribeTemplateIds:this.subscribeTemplateIds}}"
           class="input-wrap menu-person-link lite-divider"
           v-show="repairOperator"
         >

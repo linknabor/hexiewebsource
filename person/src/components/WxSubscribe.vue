@@ -1,5 +1,5 @@
 <template>
-    <van-popup v-model="show" position="bottom" duration='0.3' :style="{ height: '20%'}"  overlay round>
+    <van-popup v-model="show" position="bottom" duration='0.3' :style="{ height: '20%'}"  overlay round closeable>
         <wx-open-subscribe style="width:100vw"  :template="subTemplateId" id="subscribe-btn" @success="success" @error="subError">
             <script type="text/wxtag-template" >
                 <style>
@@ -128,7 +128,7 @@ export default {
             if(!attend) {
                 Toast("未进行任何消息订阅");
             } else {
-                Toast("已成功订阅");
+                Toast("操作成功");
             }
             
         },
