@@ -307,13 +307,14 @@ let router= new Router({
 ////路由的钩子函数，
 //在每一次路由跳转之前会进入这个方法 to：到哪去  from：从哪来 next() 调用这个方法来完成这个钩子函数
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, from, next)=>{
   //动态改变title
   var flag;
   if(to.matched[0].name != "index"&& to.matched[0].name!='register'&&to.matched[0].name!='welfare'&&to.matched[0].name!='ageess'&&to.matched[0].name!='reset'&&to.matched[0].name!='operAuth') {
      flag=common.checkRegisterStatus()
      if(!flag) {
        return
+     }
   }
 
   changeTitle(to.meta.title);
