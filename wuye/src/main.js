@@ -48,8 +48,8 @@ Vue.prototype.basedhzj3Url = MasterConfig.C('basedhzj3Url');
 Vue.prototype.getUrlParam = getUrlParam;
 Vue.prototype.dealWithAjaxData = dealWithAjaxData;
 
-import Vconsole from 'vconsole';
-Vue.prototype.$vConsole = new Vconsole();
+// import Vconsole from 'vconsole';
+// Vue.prototype.$vConsole = new Vconsole();
 
 //创建axios 实例
 Vue.prototype.$axios = axios;
@@ -101,7 +101,7 @@ Vue.config.productionTip = false
 // 开启debug模式
 Vue.config.debug = true;
 //忽略标签
-Vue.config.ignoredElements = ['wx-open-subscribe']
+Vue.config.ignoredElements = ['wx-open-subscribe'];
 
 /* eslint-disable no-new */
 new Vue({

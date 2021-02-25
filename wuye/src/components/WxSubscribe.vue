@@ -137,7 +137,8 @@ export default {
         //wx的初始化成功回调
         wxInitReady(result){
             this.wx.ready(()=>{
-                console.log("btn is ready.")
+                console.log("btn is ready.");
+                console.log(result);
                 this.showSubscribeSetting(result);
             });
         },
