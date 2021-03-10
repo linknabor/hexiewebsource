@@ -360,7 +360,8 @@ overflow: hidden; background-color: white;}
         	    <div class="center-bgs" ></div>
     	    </div>
         </div>
-        <wxsubscribe></wxsubscribe>
+        <wxsubscribe v-if="showWxSubscribe"></wxsubscribe>
+        <init-user v-if="testMode"></init-user>
     </div>   
     </div>
 
@@ -391,15 +392,19 @@ import {swiper,swiperSlide} from 'vue-awesome-swiper';
 import BScroll from 'better-scroll';
 import Bus from '../../api/bus.js';
 import WxSubscribe from '../../components/WxSubscribe.vue';
+import InitUser from '@/components/InitUser.vue'
 export default {
     name: 'index',
     components: {
         swiper,
         swiperSlide,
-        'wxsubscribe':WxSubscribe
+        'wxsubscribe':WxSubscribe,
+        'init-user': InitUser
     },
     data () {
         return {
+            testMode: false,
+            showWxSubscribe: false,
             kyappid:false,
             isloadPage:false,
             isconcern:false,//是否关注
