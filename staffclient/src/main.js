@@ -2,8 +2,8 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 
-import Vconsole from 'vconsole';
-Vue.prototype.$vConsole = new Vconsole();
+// import Vconsole from 'vconsole';
+// Vue.prototype.$vConsole = new Vconsole();
 
 Vue.config.productionTip = false
 Vue.config.ignoredElements = ['wx-open-subscribe'];

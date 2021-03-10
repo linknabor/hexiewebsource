@@ -3,9 +3,15 @@
     <div class="user-poster bg-img">
       <van-row>
         <van-col>
-          <van-image round class="user-header" :src="userInfo.headimgurl" />
+          <van-image
+            round
+            class="user-header"
+            :src="userInfo.headimgurl"
+            style="border: 2px solid white"
+          />
         </van-col>
         <van-col class="user-name">{{ userInfo.name }}</van-col>
+        <van-col class="user-title">工作人员</van-col>
       </van-row>
     </div>
     <van-row class="user-links">
@@ -14,21 +20,21 @@
         订阅设置
       </van-col>
       <van-col span="6">
-        <van-icon name="records" size="2rem" />
+        <van-icon name="records" size="2rem" @click="getRepairOrder" />
         维修订单
       </van-col>
       <van-col span="6">
-        <van-icon name="todo-list-o" size="2rem" />
+        <van-icon name="todo-list-o" size="2rem" @click="patrol" />
         巡更
       </van-col>
       <van-col span="6">
-        <van-icon name="cash-back-record" size="2rem" />
+        <van-icon name="cash-back-record" size="2rem" @click="qrcodePay" />
         二维码收费
       </van-col>
     </van-row>
-    <!-- <user-init></user-init> -->
     <user-info @getUserInfo="getUserInfo"></user-info>
     <nav-footer></nav-footer>
+    <!-- <user-init></user-init> -->
   </div>
 </template>
 
@@ -42,6 +48,7 @@ import {
   Image as VanImage,
   Tabbar,
   TabbarItem,
+  Toast,
 } from "vant";
 // import UserInit from "@/components/UserInit";
 import UserInfo from "@/components/UserInfo";
@@ -59,9 +66,21 @@ export default {
     getUserInfo(result) {
       this.userInfo = result;
     },
-    setSubscribe(){
-      this.$router.push({path: '/subscribeSetting', query: {subscribeTemplateIds: this.userInfo.subscribeTemplateIds}});
-    }
+    setSubscribe() {
+      this.$router.push({
+        path: "/subscribeSetting",
+        query: { subscribeTemplateIds: this.userInfo.subscribeTemplateIds },
+      });
+    },
+    getRepairOrder() {
+      Toast("当前功能尚未开通");
+    },
+    patrol() {
+      Toast("当前功能尚未开通");
+    },
+    qrcodePay() {
+      Toast("当前功能尚未开通");
+    },
   },
   components: {
     // 'user-init': UserInit,
@@ -91,15 +110,23 @@ export default {
     width: 5rem;
     height: 5rem;
     margin-top: 2rem;
-    margin-left: 3rem;
+    margin-left: 2rem;
+  }
+  &-name {
+    width: 45vw;
+    height: 4vh;
+    margin-top: 3.5rem;
+    margin-left: 2rem;
+    color: #646464;
+    // color:blanchedalmond;
+    font-weight: bolder;
   }
 
-  &-name {
-    width: 5rem;
-    height: 5rem;
-    margin-top: 5rem;
-    margin-left: 4rem;
+  &-title {
+    margin-top: 0.2rem;
+    margin-left: 2rem;
     color: #646464;
+    // color:blanchedalmond;
     font-weight: bolder;
   }
 
@@ -122,8 +149,9 @@ export default {
 }
 
 .bg-img {
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
-  background-image: url("http://img.e-shequ.cn/FkTC8W9xrXHTLWYmCxWSpmvexdXQ");
+  // background-size: 100% 100%;
+  // background-repeat: no-repeat;
+  // background-image: url("http://img.e-shequ.cn/FkTC8W9xrXHTLWYmCxWSpmvexdXQ");
+  background: linear-gradient(#faf0e6, #fdf5e6, #d2b48c);
 }
 </style>

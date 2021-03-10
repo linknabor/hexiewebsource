@@ -1,26 +1,41 @@
 <template>
-  <div></div>
+  <div>
+    <van-overlay :show="showOverlay">
+      <div class="overlay-loading">
+        <van-loading type="spinner" color="#1989fa" vertical
+          >加载中...</van-loading
+        >
+      </div>
+    </van-overlay>
+  </div>
 </template>
 <script>
-import common from "@/util/common.js";
-import config from "@/util/config.js";
-import api from "@/api/api.js";
+import Common from "@/util/common.js"
+import Config from "@/util/config.js"
+import Storage from "@/util/storage.js"
+import Api from "@/api/api.js"
+import { Toast, Overlay, Loading } from "vant"
 
 export default {
   name: "UserLogin",
   data() {
-    return {};
+    return {
+      showOverlay: false
+    };
   },
   mounted() {},
-
+  components: {
+    [Overlay.name]: Overlay,
+    [Loading.name]: Loading,
+  },
   methods: {
     /**
      * 微信授权
      */
     login() {
-      var o = common.getCallBackParams().code;
-      var oriApp = common.getUrlParam("oriApp");
-      var mainAppId = config.appId;
+      var o = Common.getCallBackParams().code;
+      var oriApp = Common.getUrlParam("oriApp");
+      var mainAppId = Config.appId;
       if (!oriApp) {
         oriApp = mainAppId;
       }
@@ -28,7 +43,7 @@ export default {
       if (void 0 === o) {
         var n =
             location.origin +
-            common.removeParamFromUrl([
+            Common.removeParamFromUrl([
               "from",
               "bind",
               "code",
@@ -39,12 +54,12 @@ export default {
               "c",
               "a",
             ]) +
-            common.addParamHsah(),
-          t = config.oauthUrl,
-          end = config.oauthUrlPostFix;
+            Common.addParamHsah(),
+          t = Config.oauthUrl,
+          end = Config.oauthUrlPostFix;
         var url = t + "appid=";
         if (oriApp) {
-          url += oriApp + "&component_appid=" + config.componentAppId;
+          url += oriApp + "&component_appid=" + Config.componentAppId;
         } else {
           url += mainAppId;
         }
@@ -53,12 +68,17 @@ export default {
         location.href = url;
       } else {
         console.log("start api login");
-        api.login(o, param).then((response) => {
+        Api.login(o, param).then((response) => {
           let data = response.data;
+          if (!data.success) {
+            Common.removeParamFromUrl(["code"]);
+            Toast("请刷新重试。");
+          }
           if (data.success && data.result == null) {
             this.reLogin();
           } else {
-            console.log("$emit ....")
+            console.log("$emit ....");
+            Storage.set("userInfo", data.result)
             this.$emit("getLoginUser", data);
           }
         });
@@ -68,10 +88,15 @@ export default {
     reLogin() {
       this.timer = setTimeout(() => {
         //设置延迟执行
-        common.setCookie("SESSION", "", -1);
+        Common.setCookie("SESSION", "", -1);
       }, 500);
       this.login(!0);
     },
   },
 };
 </script>
+<style lang="less" scoped>
+.overlay-loading {
+  margin-top: 20rem;
+}
+</style>

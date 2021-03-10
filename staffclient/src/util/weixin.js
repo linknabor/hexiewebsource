@@ -31,6 +31,13 @@ const weixin = {
                 jsApiList: apilist, // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
                 openTagList: openTagList
             })
+            wx.ready(()=>{
+                console.log('weixin init ready.')
+            });
+            wx.error((res)=>{
+                console.log('weixin init failed! ' + res)
+            });
+
         }).catch((error) => {
             console.log(error);
         })

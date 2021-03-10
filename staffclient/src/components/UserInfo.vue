@@ -1,32 +1,47 @@
 <template>
   <div>
+    <van-overlay :show="showOverlay">
+      <div class="overlay-loading">
+        <van-loading type="spinner" color="#1989fa" vertical
+          >加载中...</van-loading
+        >
+      </div>
+    </van-overlay>
     <user-login ref="userLogin" @getLoginUser="getLoginUser"></user-login>
   </div>
 </template>
 <script>
-import api from "@/api/api.js";
-import UserLogin from "@/components/UserLogin";
-import { Toast } from "vant";
+import Api from "@/api/api.js";
+import Storage from "@/util/storage.js"
+import UserLogin from "@/components/UserLogin"
+import { Overlay, Loading, Toast } from "vant"
 
 export default {
   data() {
-    return {};
+    return {
+      showOverlay: false
+    };
   },
   components: {
     "user-login": UserLogin,
+    [Overlay.name]: Overlay,
+    [Loading.name]: Loading,
   },
   mounted() {
     this.getUserInfo();
   },
   methods: {
     getUserInfo() {
-      api
-        .getUserInfo()
+      this.showOverlay = true
+      Api.getUserInfo()
         .then((response) => {
           let data = response.data;
           if (data.success && data.result != null) {
-            this.$emit("getUserInfo", data.result);
+            Storage.set("userInfo", data.result)
+            this.$emit("getUserInfo", data.result)
+            this.showOverlay = false
           } else {
+            this.showOverlay = false
             this.$refs.userLogin.login();
           }
         })
@@ -35,7 +50,6 @@ export default {
         });
     },
     getLoginUser(data) {
-      console.log("$emit2 ...");
       if (data) {
         this.$emit("getUserInfo", data.result);
       }
@@ -43,5 +57,8 @@ export default {
   },
 };
 </script>
-<style scoped>
+<style lang="less" scoped>
+.overlay-loading {
+  margin-top: 20rem;
+}
 </style>

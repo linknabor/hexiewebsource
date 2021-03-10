@@ -4,7 +4,7 @@ const common = {
     getUrlParam(name) {
         var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
         var r = window.location.search.substr(1).match(reg);  //匹配目标参数
-        if (r != null) {
+        if (r !== null) {
             return unescape(r[2]);
         }
         return ""; //返回参数值
@@ -41,7 +41,7 @@ const common = {
     },
     buildUrlParamString(e) {
         var o = "";
-        for (var n in e) o += n + "=" + e[n] + "&";
+        for (var n in e) {o += n + "=" + e[n] + "&";}
         o = o.slice(0, o.length - 1);
         var t = "" === o || void 0 === o
         return t ? "" : "?" + o

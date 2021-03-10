@@ -2,15 +2,15 @@
   <div class="msgsub-outer">
     <van-row class="msgsub-title">
       <van-col class="msgsub-align"
-        ><van-image round :src="imgHint" /> 授权订阅消息</van-col
+        ><van-image round :src="imgHint" /> 设置订阅消息</van-col
       >
     </van-row>
     <van-row class="msgsub-hint1">
-      <van-col>点击 [去授权] ，选择</van-col>
+      <van-col>点击 [去设置] ，选择</van-col>
     </van-row>
     <van-row class="msgsub-hint2">
       <van-col class="msgsub-align">
-        <van-image round :src="imgCheck" />总是保持以上选择，不再询问
+        <van-image round :src="imgCheck" style="margin-right:0.5rem"/>总是保持以上选择，不再询问
       </van-col>
       <van-col class="msgsub-hint3">并[允许]</van-col>
     </van-row>
@@ -19,13 +19,7 @@
     </van-row>
     <van-row class="msgsub-btn">
       <van-col>
-        <wx-subscribe ref="wxSubscribe" ></wx-subscribe>
-        <van-button
-          style="width: 85vw"
-          type="primary"
-          size="normal"
-          color="linear-gradient(to right, #DEB887, #DAA520)">
-        </van-button>
+        <wx-subscribe ref="wxSubscribe"></wx-subscribe>
       </van-col>
     </van-row>
     <nav-footer></nav-footer>
@@ -33,11 +27,11 @@
 </template>
 
 <script>
-import NavFooter from "@/components/Footer.vue";
-import WxSubscribe from "@/components/WxSubscribe.vue";
-import { Col, Row, Icon, Image as VanImage, Button } from "vant";
-import check from "@/assets/check.png";
-import hint from "@/assets/hint32.png";
+import NavFooter from "@/components/Footer.vue"
+import WxSubscribe from "@/components/WxSubscribe.vue"
+import { Col, Row, Icon, Image as VanImage, Button } from "vant"
+import check from "@/assets/check.png"
+import hint from "@/assets/hint32.png"
 import Bus from "@/util/bus.js"
 
 export default {
@@ -50,7 +44,7 @@ export default {
     };
   },
   mounted() {
-    //   this.$refs.wxSubscribe.subTemplateId = this.subscribeTemplateIds
+      // this.$refs.wxSubscribe.subTemplateId = this.subscribeTemplateIds
     Bus.$emit("subscribe", this.subscribeTemplateIds)
   },
   components: {
@@ -70,7 +64,7 @@ export default {
 <style scoped lang="less">
 .msgsub {
   &-outer {
-    margin: 0 1rem;
+    margin: 0 0 0 0.75rem;
   }
   &-title {
     margin: 2rem 1rem 1.5rem 1rem;

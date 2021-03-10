@@ -1,24 +1,28 @@
 <template>
     <div>
-        <wx-open-subscribe style="width:85vw; height:44px;"  :template="subTemplateId" id="subscribe-btn" @success="success" @error="subError">
+        <wx-open-subscribe style="width:85vw;" :template="subTemplateId" id="subscribe-btn" @success="success" @error="subError">
             <script type="text/wxtag-template" >
                 <style>
                     .subscribe-btn {
-                        <!-- background-color:transparent;
-                        border-style:none; -->
-                        width: 100vw
+                        background:linear-gradient(to right, #DEB887, #DAA520);
+                        width: 100vw;
+                        color: white;
+                        margin-top:0.2rem;
+                        height:44px;
+                        border-style: none;
+                        font-size: 80%;
                     }
                 </style>
-                <button class="subscribe-btn">去授权</button>
+                <button class="subscribe-btn">去设置</button>
             </script>
         </wx-open-subscribe>
     </div>
-    <!-- <button class="subscribe-btn"></button> -->
 </template>
 <script>
 import WxSDK from 'weixin-js-sdk'
-import weixin from '@/util/weixin.js'
+import Weixin from '@/util/weixin.js'
 import Bus from "@/util/bus.js"
+// import Storage from "@/util/storage.js"
 import { Toast, Popup, Button } from 'vant'
 
 export default {
@@ -31,13 +35,18 @@ export default {
     },
     components:{
         [Popup.name]: Popup,
-        [Button.name]: Button
+        [Button.name]: Button,
     },
     created(){
         this.wx = WxSDK;
     },
     mounted(){
+        this.initWxConfig()
+        // this.subTemplateId = Storage.get("userInfo").subscribeTemplateIds
         Bus.$on("subscribe", this.initSubscButton)
+    },
+    beforeDestroy(){
+        Bus.$off("subscribe");
     },
     methods: {
         
@@ -53,9 +62,7 @@ export default {
 
             console.log(errorMsg.indexOf(templateId));
         },
-        initSubscButton(templateIds) {
-            this.subTemplateId = templateIds
-            console.log(this.subTemplateId)
+        initWxConfig(){
             var url = location.href.split("#")[0];
             var data = {
                 wx:this.wx,
@@ -63,13 +70,16 @@ export default {
                 openTagList:['wx-open-subscribe'],
                 url:url
             }
-            weixin.config(data)
-            this.wxInitReady()
-            this.wxInitFailed()
+            Weixin.config(data)
+        },
+        initSubscButton(templateIds) {
+            this.subTemplateId = templateIds
+            console.log(this.subTemplateId)
         },
         // 错误提示
         subError(e) {
             console.log(e)
+            location.reload()
         },
         // 我这里判断是必须把复数模板全部订阅
         success(e) {
@@ -112,20 +122,7 @@ export default {
                 Toast("操作成功");
             }
             
-        },
-        //wx的初始化成功回调
-        wxInitReady(){
-            this.wx.ready(()=>{
-                console.log("btn is ready.");
-            });
-        },
-        //wx初始化失败回调
-        wxInitFailed(){
-            this.wx.error((res)=>{
-                console.log("btn load failed! " + res)
-            });
         }
-
     }
 }
 </script>

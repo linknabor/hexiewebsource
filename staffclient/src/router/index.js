@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import index from '@/views/index.vue'
 import SubscribeSetting from '@/views/SubscribeSetting.vue'
+import StaffAuthorize from '@/views/StaffAuthorize.vue'
 
 Vue.use(VueRouter)
 
@@ -20,6 +21,14 @@ const routes = [
     component: SubscribeSetting,
     meta: {
       title: '订阅设置'
+    }
+  },
+  {
+    path: '/staffAuthorize',
+    name: 'staffAuthorize',
+    component: StaffAuthorize,
+    meta: {
+      title: '工作人员授权'
     }
   }
 
