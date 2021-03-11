@@ -17,13 +17,20 @@
 						  <option v-for="item in sectList" :value="item.id" >{{item.name}}</option>   v-tap="{fn:alertFN,name:item.name}""
 			  		</select> -->
 					<ul class="input-uis" v-show="shows" >
-						<li :data-idd="item.id" v-for="item in sectList" :key="item.id"  v-tap="{fn:alertFN,name:item.name,id:item.id,params:item.params}">{{item.name}}</li>
+						<li :data-idd="item.id" v-for="item in sectList" :key="item.id"  v-tap="{fn:alertFN,name:item.name,id:item.id,params:item.params, tel:item.tel}">{{item.name}}</li>
 					</ul>
 			  	</div>
-
-				<div class="input-row" v-show="verSion=='1'">  
-					户号： <input type="text" class="virtual-input" value=""  placeholder="请输入户号" @input="toTrim" v-model="huhao" >
-				</div>	
+				<div v-show="verSion=='1'">
+					<div class="input-row last" >  
+						房屋户号： <input type="text" class="virtual-input" value=""  placeholder="请输入户号" @input="toTrim" v-model="huhao" >
+					</div>
+					<div class="input-row hint">
+			  			户号可咨询小区所在物业获得
+					</div>
+					<div class="input-row last" >  
+						物业电话：  <a :href="'tel:'+officeTel">{{officeTel}}</a>
+					</div>
+			  	</div>
 				<div v-show="verSion=='0'">
 			  	<div class="input-row last">
 			  		房屋地址：
@@ -62,7 +69,7 @@
 	let timer;
 	import '../../tap.js'
 	import Api from '@/api/api.js'
-	import { Toast, Overlay, Loading, Dialog } from 'vant';
+	import {Overlay, Loading, Dialog} from 'vant'
 
 	export default{
 		data(){
@@ -104,7 +111,8 @@
 				cellAddr: '',
 				cellShow: false,
 				selectShow: false,
-				showOverlay: false	//遮罩
+				showOverlay: false,	//遮罩
+				officeTel: ''	//物业管理处电话
 			}
 		},
 		created(){
@@ -115,9 +123,8 @@
 		},
 		components:{
 			[Overlay.name]: Overlay,
-			[Loading.name]: Loading
+			[Loading.name]: Loading,
 		},
-		
 		methods:{
 			sousuo(name){
 				if (timer) {
@@ -198,28 +205,36 @@
 					Dialog({message: '请选择小区或者房屋'})
            			return false
            		}
-				this.showOverlay = true
-				let url='/addhexiehouse2?area='+vm.query.area+'&houseId='+vm.query.house;	
-				vm.receiveData.postData(vm,url,null,'res',function(){
-					if(vm.res.success) {
-						if(vm.res.result!=null){
+				Dialog.confirm({
+					message: this.cellAddr + ', 确认要绑定吗？'
+				}).then(()=>{
+					this.showOverlay = true
+					let url='/addhexiehouse2?area='+vm.query.area+'&houseId='+vm.query.house;	
+					vm.receiveData.postData(vm,url,null,'res',function(){
+						if(vm.res.success) {
+							if(vm.res.result!=null){
+								Dialog.alert({
+									message: '绑定房屋成功'
+								}).then(() => {
+									vm.$router.push("/myhouse")
+								}).catch((error)=>{
+									console.log(error)
+								})
+							}
+						}else {
 							Dialog.alert({
-								message: '绑定房屋成功'
-							}).then(() => {
-								vm.$router.push("/myhouse")
-							}).catch((error)=>{
-								console.log(error)
+								message: vm.res.message
+							}).then(() =>{
+								vm.showOverlay = false
 							})
+							
 						}
-					}else {
-						Dialog.alert({
-							message: vm.res.message
-						}).then(() =>{
-							vm.showOverlay = false
-						})
-						
-					}
-				})	
+					})
+				}).catch(()=>{
+					return false
+				})
+				return false
+					
 		   },
 	 
 	   //ios留白问题，点击事件无效
@@ -231,7 +246,6 @@
 			}
 		},
 		selectCell(s){
-			console.log(s)
 			vm.$nextTick(()=>{
 				this.cellAddr = s.name
 				this.cellShow = false
@@ -253,6 +267,7 @@
 				vm.query.sectID=s.id;
 				vm.verSion=s.params.WECHAT_HOUSE_SEL_MODE;
 				vm.shows=false;
+				vm.officeTel = s.tel
 			})
 		},
 		queryAddr(){
@@ -457,7 +472,6 @@
 		color: #ff1a1a;
 		margin:-0.2rem 0 0.2rem 0.8rem;
 		height: 0.2rem;
-		
 	}
 	.btn-fixed{
 		position: fixed;
