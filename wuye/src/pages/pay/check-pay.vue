@@ -17,7 +17,7 @@
 						  <option v-for="item in sectList" :value="item.id" >{{item.name}}</option>   v-tap="{fn:alertFN,name:item.name}""
 			  		</select> -->
 					<ul class="input-uis" v-show="shows" >
-						<li :data-idd="item.id" v-for="item in sectList" :key="item.id"  v-tap="{fn:alertFN,name:item.name,id:item.id,params:item.params}">{{item.name}}</li>
+						<li :data-idd="item.id" v-for="item in sectList" :key="item.id"  v-tap="{fn:alertFN,name:item.name,id:item.id,params:item.params, tel:item.tel}">{{item.name}}</li>
 					</ul>
 			  	</div>
 				<div v-show="verSion=='1'">
@@ -246,7 +246,6 @@
 			}
 		},
 		selectCell(s){
-			console.log(s)
 			vm.$nextTick(()=>{
 				this.cellAddr = s.name
 				this.cellShow = false
@@ -268,6 +267,7 @@
 				vm.query.sectID=s.id;
 				vm.verSion=s.params.WECHAT_HOUSE_SEL_MODE;
 				vm.shows=false;
+				vm.officeTel = s.tel
 			})
 		},
 		queryAddr(){
