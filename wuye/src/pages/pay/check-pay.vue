@@ -477,14 +477,14 @@
 	}
 	.hint{
 		color: #ff1a1a;
-		margin:-0.2rem 0 0 0.8rem;
+		margin:-0.2rem 0 0rem 0.9rem;
 		height: 0.2rem;
-		font-size: 0.26rem;
+		font-size: 0.28rem;
 	}
 	.hint2{
 		color: #ff1a1a;
-		margin:0rem 0 0.2rem 0.8rem;
-		font-size: 0.26rem;
+		margin:0rem 0 0.2rem 0.9rem;
+		font-size: 0.28rem;
 	}
 	.link-tel{
 		color: #0000EE;	
