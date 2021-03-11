@@ -17,7 +17,7 @@
 						  <option v-for="item in sectList" :value="item.id" >{{item.name}}</option>   v-tap="{fn:alertFN,name:item.name}""
 			  		</select> -->
 					<ul class="input-uis" v-show="shows" >
-						<li :data-idd="item.id" v-for="item in sectList" :key="item.id"  v-tap="{fn:alertFN,name:item.name,id:item.id,params:item.params, tel:item.tel}">{{item.name}}</li>
+						<li :data-idd="item.id" v-for="item in sectList" :key="item.id"  v-tap="{fn:alertFN,name:item.name,id:item.id,params:item.params, tel:item.tel, telList:item.telList}">{{item.name}}</li>
 					</ul>
 			  	</div>
 				<div v-show="verSion=='1'">
@@ -25,7 +25,8 @@
 						房屋户号： <input type="text" class="virtual-input" value=""  placeholder="请输入户号" @input="vernoInput" v-model="huhao" >
 					</div>
 					<div class="input-row hint2">
-			  			户号可咨询所在小区物业，请拨打物业管理处电话    <a v-show="officeTel!==''" class="link-tel" :href="'tel:'+officeTel">{{officeTel}}</a>
+			  			户号可咨询所在小区物业，请拨打物业管理处电话    
+						<a v-for="(item, key) in telList" :key="key" class="link-tel" :href="'tel:'+item">{{item}}&nbsp;&nbsp;<br></a>
 					</div>
 					<!-- <div class="input-row last" >  
 						物业电话：  <a class="link-tel" :href="'tel:'+officeTel">{{officeTel}}</a>
@@ -112,7 +113,8 @@
 				cellShow: false,
 				selectShow: false,
 				showOverlay: false,	//遮罩
-				officeTel: ''	//物业管理处电话
+				officeTel: '',	//物业管理处电话
+				telList: []
 			}
 		},
 		created(){
@@ -274,6 +276,7 @@
 				vm.verSion=s.params.WECHAT_HOUSE_SEL_MODE;
 				vm.shows=false;
 				vm.officeTel = s.tel
+				vm.telList = s.telList
 			})
 		},
 		queryAddr(){
