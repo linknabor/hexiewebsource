@@ -13,15 +13,15 @@ export default {
     };
   },
   mounted() {
-    alert("test mode ! initializing user 4 test !");
     this.initSession4Test();
+    alert("test mode ! initializing user 4 test !");
   },
   methods: {
     initSession4Test() {
       var data = {
         oriApp: "wx95f46f41ca5e570e",
       };
-      api.login("8441", data);
+      api.login("8441", data)
       //   var data = {
       //     oriApp: 'wx315c7cb4080e5fd8',
       //   }

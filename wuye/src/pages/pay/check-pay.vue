@@ -43,8 +43,8 @@
 			  	<!-- <div class="input-row add">
 			  		建筑面积允许误差±1m²以内
 			  	</div> -->
-				<div class="input-row selected" v-show="selectShow">
-					选定地址：<ul><li class="selected-addr">{{this.query.sect}}&nbsp;&nbsp;{{this.cellAddr}}</li></ul>
+				<div class="input-row selected" >
+					<ul><li class="selected-addr" v-show="selectShow">{{this.query.sect}}<br>{{this.cellAddr}}</li></ul>
 			  	</div>
 		  	</div>
 			</div>  
@@ -259,7 +259,6 @@
 			if(!this.query.sectID || !this.cellAddr) {
 				return false
 			}
-			this.selectShow = true
 			let param = {
 				sectId: this.query.sectID,
 				cellAddr: this.cellAddr
@@ -375,7 +374,7 @@
 	    opacity: 0.6;
 	}
 	.main{
-		margin: 0 .3rem;
+		margin: 1rem 0.3rem 0 0.3rem
 	}
 	.mint-tab-container-item{
 	flex-shrink: 0;
@@ -387,7 +386,7 @@
 		margin-bottom: 0.2rem;
 	}
 	.virtual-input{
-		width:3.4rem;
+		width:3.5rem;
 		border:1px solid #4c4c4c;
 		border-radius: 5px;
 		padding-left: 0.2rem;
@@ -452,11 +451,11 @@
 	}
 	.add{
 		color: #ff1a1a;
-		margin:-15px 0px 0px 45px;
+		margin:-0.2rem 0 0.2rem 0.8rem;
 	}
 	.hint{
 		color: #ff1a1a;
-		margin:-15px 0px 1px 45px;
+		margin:-0.2rem 0 0.2rem 0.8rem;
 		height: 0.2rem;
 		
 	}
