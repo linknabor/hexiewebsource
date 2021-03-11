@@ -25,11 +25,11 @@
 						房屋户号： <input type="text" class="virtual-input" value=""  placeholder="请输入户号" @input="vernoInput" v-model="huhao" >
 					</div>
 					<div class="input-row hint2">
-			  			户号可咨询小区所在物业获得，可拨打以下物业电话
+			  			户号可咨询所在小区物业，请拨打物业管理处电话    <a v-show="officeTel!==''" class="link-tel" :href="'tel:'+officeTel">{{officeTel}}</a>
 					</div>
-					<div class="input-row last" >  
+					<!-- <div class="input-row last" >  
 						物业电话：  <a class="link-tel" :href="'tel:'+officeTel">{{officeTel}}</a>
-					</div>
+					</div> -->
 			  	</div>
 				<div v-show="verSion=='0'">
 			  	<div class="input-row last">
@@ -420,7 +420,7 @@
 	}
 	.input-row{
 		padding-bottom: 0.3rem;
-		font-size: 0.3rem;
+		font-size: 0.32rem;
 		color: #a6937c;
 		height: 0.6rem;
 		position:relative;
@@ -483,7 +483,7 @@
 	}
 	.hint2{
 		color: #ff1a1a;
-		margin:-0.2rem 0 0.2rem 0.8rem;
+		margin:0rem 0 0.2rem 0.8rem;
 		font-size: 0.26rem;
 	}
 	.link-tel{
