@@ -396,7 +396,7 @@
 	    opacity: 0.6;
 	}
 	.main{
-		margin: 1rem 0.3rem 0 0.3rem
+		margin: 1rem 0 0 0.6rem
 	}
 	.mint-tab-container-item{
 	flex-shrink: 0;
@@ -404,7 +404,7 @@
 	}
 	.query-data{
 		/* height: 100%; */
-		padding: 0.25rem 1rem;
+		padding: 0.25rem 0.8rem 0.25rem 0.8rem;
 		margin-bottom: 0.2rem;
 	}
 	.virtual-input{
@@ -415,12 +415,12 @@
 		display: inline-block;
 		height: 0.6rem;
 		background-color: #fff;
-		font-size:16px;
+		font-size: 0.3rem;
 		box-sizing: border-box;
 	}
 	.input-row{
 		padding-bottom: 0.3rem;
-		font: 0.26rem/0.5rem "";
+		font-size: 0.35rem;
 		color: #a6937c;
 		height: 0.6rem;
 		position:relative;
@@ -453,7 +453,7 @@
 	}
 
 	.selected {
-		margin-left: -28px;
+		margin-left: -1.2rem;
 		margin-top: 1rem;
 		font-size: 0.3rem;
 	}
@@ -469,7 +469,7 @@
 		margin-top: 5rem;
 	}
 	.last{
-		margin-left: -28px;
+		margin-left: -0.8rem;
 	}
 	.add{
 		color: #ff1a1a;
@@ -477,12 +477,14 @@
 	}
 	.hint{
 		color: #ff1a1a;
-		margin:-0.2rem 0 0.2rem 0.8rem;
+		margin:-0.2rem 0 0 1.2rem;
 		height: 0.2rem;
+		font-size: 0.26rem;
 	}
 	.hint2{
 		color: #ff1a1a;
-		margin:-0.2rem 0 0.2rem 0.8rem;
+		margin:-0.2rem 0 0.2rem 1.2rem;
+		font-size: 0.26rem;
 	}
 	.link-tel{
 		color: #0000EE;	
