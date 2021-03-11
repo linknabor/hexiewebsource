@@ -22,13 +22,13 @@
 			  	</div>
 				<div v-show="verSion=='1'">
 					<div class="input-row last" >  
-						房屋户号： <input type="text" class="virtual-input" value=""  placeholder="请输入户号" @input="toTrim" v-model="huhao" >
+						房屋户号： <input type="text" class="virtual-input" value=""  placeholder="请输入户号" @input="vernoInput" v-model="huhao" >
 					</div>
-					<div class="input-row hint">
-			  			户号可咨询小区所在物业获得
+					<div class="input-row hint2">
+			  			户号可咨询小区所在物业获得，可拨打以下物业电话
 					</div>
 					<div class="input-row last" >  
-						物业电话：  <a :href="'tel:'+officeTel">{{officeTel}}</a>
+						物业电话：  <a class="link-tel" :href="'tel:'+officeTel">{{officeTel}}</a>
 					</div>
 			  	</div>
 				<div v-show="verSion=='0'">
@@ -155,6 +155,7 @@
 								vm.query.sectID=id;
 							}
 							vm.showi=true;
+							
 							// if(vm.verSion=='1') {
 							// 	vm.add();
 							// }
@@ -165,8 +166,13 @@
 				});
 			},
 			//去掉空格
-			toTrim(){
+			vernoInput(){
 				vm.huhao=vm.huhao.replace(/\s/g, "")
+				if(vm.huhao.length>0){
+					this.vernoShow = true
+				} else {
+					this.vernoShow = false
+				}
 			},
 			//添加房子
 			addRoom(){
@@ -312,6 +318,7 @@
 			vm.queryBillInfo  = [];//清空查询账单列表
 
 			this.removeAddr()
+			this.officeTel = ''
 			// vm.quan=false;
 		},
 		add() {
@@ -472,6 +479,13 @@
 		color: #ff1a1a;
 		margin:-0.2rem 0 0.2rem 0.8rem;
 		height: 0.2rem;
+	}
+	.hint2{
+		color: #ff1a1a;
+		margin:-0.2rem 0 0.2rem 0.8rem;
+	}
+	.link-tel{
+		color: #0000EE;	
 	}
 	.btn-fixed{
 		position: fixed;
