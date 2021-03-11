@@ -420,7 +420,7 @@
 	}
 	.input-row{
 		padding-bottom: 0.3rem;
-		font-size: 0.35rem;
+		font-size: 0.3rem;
 		color: #a6937c;
 		height: 0.6rem;
 		position:relative;
@@ -477,13 +477,13 @@
 	}
 	.hint{
 		color: #ff1a1a;
-		margin:-0.2rem 0 0 1.2rem;
+		margin:-0.2rem 0 0 0.8rem;
 		height: 0.2rem;
 		font-size: 0.26rem;
 	}
 	.hint2{
 		color: #ff1a1a;
-		margin:-0.2rem 0 0.2rem 1.2rem;
+		margin:-0.2rem 0 0.2rem 0.8rem;
 		font-size: 0.26rem;
 	}
 	.link-tel{
