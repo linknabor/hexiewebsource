@@ -192,16 +192,18 @@
 			var reg = /^\d{12}$/
 			if(reg.test(vm.huhao)){//为数字即通过
 				let url='/hexiehouse/'+vm.huhao;
+				this.showOverlay = true
 				vm.receiveData.getData(vm,url,'response',function(){
-				if(vm.response.success) {
+					vm.showOverlay = false
+					if(vm.response.success) {
 						if(vm.response.result== null) {
-							alert('未查询到该房屋')
+							Dialog({message: '未查询到该房屋'})
 						}else {
-	  	 					vm.$router.push({path:'/bindHouse/' + vm.huhao,query:{type:'1'}});
+							vm.$router.push({path:'/bindHouse/' + vm.huhao,query:{type:'1'}});
 						}
-				}else {
-					alert(vm.response.message==null?'未查询到该房屋':vm.response.message)
-				}
+					}else {
+						Dialog({message: vm.response.message==null?'未查询到该房屋':vm.response.message})
+					}
 				})
 			}else{
 				Dialog({message: '请输入正确的户号'})
@@ -456,7 +458,7 @@
 	}
 
 	.selected {
-		margin-left: -1.2rem;
+		margin-left: -0.6rem;
 		margin-top: 1rem;
 		font-size: 0.3rem;
 	}
