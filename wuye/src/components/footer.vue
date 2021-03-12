@@ -137,7 +137,7 @@ export default{
                       Bus.$emit('sends',n.result);
                       //存储cookie
                       vm.common.updatecookie(n.result.cardStatus,n.result.cardService,n.result.id,n.result.appid,n.result.cspId,n.result.sectId,n.result.cardPayService,n.result.bgImageList,n.result.wuyeTabsList,n.result.qrCode,n.result);
-                      Bus.$emit('wxSubscribe', subscribeTemplateIds);
+                      // Bus.$emit('wxSubscribe', subscribeTemplateIds);
                       // console.log(cookie.get('sectId'))
                     }
                     // cookie.set('userId',n.result.id);

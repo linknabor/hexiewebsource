@@ -1,59 +1,56 @@
 <template>
-    <van-popup v-model="show" position="bottom" duration='0.3' :style="{ height: '25%'}"  overlay round closeable>
-        <wx-open-subscribe style="width:100vw"  :template="subTemplateId" id="subscribe-btn" @success="success" @error="subError">
+    <div>
+        <wx-open-subscribe style="width:85vw;" :template="subTemplateId" id="subscribe-btn" @success="success" @error="subError">
             <script type="text/wxtag-template" >
                 <style>
                     .subscribe-btn {
-                        width: 80%;
-                        height: 200%;
-                        margin: 15% 10% 0 10%;
-                        padding:5px;
-                        color: #fff;
-                        background-color: #07c160;
-                        border-radius:25px;
+                        background:linear-gradient(to right, #DEB887, #DAA520);
+                        width: 100vw;
+                        color: white;
+                        margin-top:0.2rem;
+                        height:44px;
                         border-style: none;
-                        font-size: 100%;
+                        font-size: 80%;
                     }
                 </style>
-                <button class="subscribe-btn">授权订阅通知</button>
+                <button class="subscribe-btn">去设置</button>
             </script>
         </wx-open-subscribe>
-        <!-- <div style="width:100vw; height:19.2px;">
-            <button class="subscribe-btn">用户通知授权设置</button>
-        </div> -->
-    </van-popup>
+    </div>
 </template>
 <script>
 import WxSDK from 'weixin-js-sdk'
-import Bus from '../api/bus.js';
-import { Toast } from 'vant';
+import Weixin from '@/util/weixin.js'
+import Bus from "@/util/bus.js"
+// import Storage from "@/util/storage.js"
+import { Toast, Popup, Button } from 'vant'
 
 export default {
-
+    name: 'wxSubscribe',
     data(){
         return{
             subTemplateId: [],
-            show: false,
             wx:{}
         }
+    },
+    components:{
+        [Popup.name]: Popup,
+        [Button.name]: Button,
     },
     created(){
         this.wx = WxSDK;
     },
     mounted(){
-        this.initSubscButton();
-        Bus.$on("wxSubscribe",this.wxInitReady);
-        // Bus.$on("wxSubscribe",this.showSubscribeSetting);
-        this.wxInitFailed();
-        // this.test();
+        this.initWxConfig()
+        // this.subTemplateId = Storage.get("userInfo").subscribeTemplateIds
+        Bus.$on("subscribe", this.initSubscButton)
     },
-    beforeDestroy() {
-        Bus.$off();
-　　},
+    beforeDestroy(){
+        Bus.$off("subscribe");
+    },
     methods: {
         
         test(){
-                         
             let templateId = 'nFQNN0gCejjQBGG8ZyB5uF5zcG8Bu7wd2_QPrAY0FA4';                         
             let errorMsg = "{\"subscribeDetails\":{\"nFQNN0gCejjQBGG8ZyB5uF5zcG8Bu7wd2_QPrAY0FA4\":{\"status\":\"accept\"}, \"TenvU22BA1jCp4YHfYEpRuESXYReQyDuhs4vbdWA99I\":{}}}";
             // let details = JSON.parse(errorMsg);
@@ -65,30 +62,24 @@ export default {
 
             console.log(errorMsg.indexOf(templateId));
         },
-        initSubscButton() {
+        initWxConfig(){
             var url = location.href.split("#")[0];
             var data = {
-                vm:this,
                 wx:this.wx,
                 apiList:[],
                 openTagList:['wx-open-subscribe'],
                 url:url
             }
-            this.receiveData.wxconfig(data);
+            Weixin.config(data)
         },
-        showSubscribeSetting(data){
-            console.log(data);
-            if(!data){
-                return false;
-            }
-            this.subTemplateId = data;
-            this.timer = setTimeout(()=>{   //设置延迟执行
-                this.show = true;
-            },1000);
+        initSubscButton(templateIds) {
+            this.subTemplateId = templateIds
+            console.log(this.subTemplateId)
         },
         // 错误提示
         subError(e) {
             console.log(e)
+            location.reload()
         },
         // 我这里判断是必须把复数模板全部订阅
         success(e) {
@@ -119,47 +110,25 @@ export default {
                         default:
                             flag = false;
                             break;
-                    };
+                    }
                     if(flag) {
                         attend = true;
-                    };
+                    }
                 }
-            };
+            }
             if(!attend) {
                 Toast("未进行任何消息订阅");
             } else {
                 Toast("操作成功");
             }
             
-        },
-        //wx的初始化成功回调
-        wxInitReady(result){
-            this.wx.ready(()=>{
-                console.log("btn is ready.");
-                console.log(result);
-                this.showSubscribeSetting(result);
-            });
-        },
-        //wx初始化失败回调
-        wxInitFailed(){
-            this.wx.error((res)=>{
-                console.log("btn load failed! ")
-            });
         }
-
     }
 }
 </script>
 <style scoped>
     .subscribe-btn {
-        width: 80%;
-        height: 200%;
-        margin: 15% 10% 0 10%;
-        padding:5px;
-        color: #fff;
-        background-color: #07c160;
-        border-radius:25px;
-        border-style: none;
-        font-size: 100%;
+        /* background-color:transparent; */
+        border-style:none;
     }
 </style>

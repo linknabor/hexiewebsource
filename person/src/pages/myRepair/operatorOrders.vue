@@ -22,6 +22,7 @@
                 <span class="fr fs12 status-font">{{item.statusStr}}</span>
             </div>
         </div>
+        <wxsubscribe></wxsubscribe>
    </div>
 </template>
 
@@ -34,6 +35,8 @@ import btn4 from '../../assets/images/img/btn4.png';
 import btn5 from '../../assets/images/img/btn5.png';
 import btn6 from '../../assets/images/img/btn6.png';
 import btn7 from '../../assets/images/img/icon_btn_jiadian.png';
+import WxSubscribe from '../../components/WxSubscribe.vue';
+import Bus from '../../api/bus.js';
 export default {
    data () {
        return {
@@ -48,7 +51,8 @@ export default {
                 6:["其它维修",btn6],
                 7:["家电",btn7]
                     },
-            bgImage:this.common.GetImages('3'),//背景图          
+            bgImage:this.common.GetImages('3'),//背景图  
+            subscribeTemplateIds:this.$route.query.subscribeTemplateIds        
        };
    },
    created() {
@@ -57,7 +61,11 @@ export default {
    },
    mounted() {
        vm.query();
+       Bus.$emit("wxSubscribe", this.subscribeTemplateIds);
    },
+   components: {
+    'wxsubscribe':WxSubscribe
+  },
 
    methods: {
        query() {

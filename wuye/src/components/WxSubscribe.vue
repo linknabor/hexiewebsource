@@ -1,12 +1,12 @@
 <template>
-    <van-popup v-model="show" position="bottom" duration='0.3' :style="{ height: '20%'}"  overlay round>
+    <van-popup v-model="show" position="bottom" duration='0.3' :style="{ height: '25%'}"  overlay round closeable>
         <wx-open-subscribe style="width:100vw"  :template="subTemplateId" id="subscribe-btn" @success="success" @error="subError">
             <script type="text/wxtag-template" >
                 <style>
                     .subscribe-btn {
                         width: 80%;
                         height: 200%;
-                        margin: 12% 10% 0 10%;
+                        margin: 15% 10% 0 10%;
                         padding:5px;
                         color: #fff;
                         background-color: #07c160;
@@ -120,9 +120,7 @@ export default {
                             flag = false;
                             break;
                     };
-                    if(!flag) { // 如果其中有一个模板没有订阅，则全部不通过过
-                        attend = false;
-                    } else {
+                    if(flag) {
                         attend = true;
                     };
                 }
@@ -130,7 +128,7 @@ export default {
             if(!attend) {
                 Toast("未进行任何消息订阅");
             } else {
-                Toast("已成功订阅");
+                Toast("操作成功");
             }
             
         },
@@ -156,7 +154,7 @@ export default {
     .subscribe-btn {
         width: 80%;
         height: 200%;
-        margin: 12% 10% 0 10%;
+        margin: 15% 10% 0 10%;
         padding:5px;
         color: #fff;
         background-color: #07c160;
