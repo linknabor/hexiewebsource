@@ -38,7 +38,7 @@
 			  		<input type="text" class="virtual-input classinput" value="" placeholder="请输入房屋地址" @input="queryAddr" v-model="cellAddr">
 					<i class="iconfont icon-chacha  classc" @click="removeAddr" v-show="selectShow"></i>
 					<ul class="input-uis dropdown" v-show="cellShow" >
-						<li :data-idd="item.id" v-for="item in houseList" :key="item.id"  v-tap="{fn:selectCell,name:item.name,id:item.id,params:item.params}">{{item.name}}</li>
+						<li :data-idd="item.id" v-for="item in houseList" :key="item.id"  v-tap="{fn:selectCell,name:item.name,id:item.id,params:item.params}">{{item.name|subString}}</li>
 					</ul>
 			  	</div>
 				<div class="input-row hint">
@@ -73,6 +73,19 @@
 	import {Overlay, Loading, Dialog} from 'vant'
 
 	export default{
+		filters: {
+			subString(value) {
+				if(value != "" && value.length > 20){
+					let addr = value.substring(value.length-20, value.length)
+					console.log(addr)
+					addr = '…'+ addr
+					return addr
+				} else {
+					return value
+				}
+
+			}
+		},
 		data(){
 			return{
 				sectList:[],//小区列表
