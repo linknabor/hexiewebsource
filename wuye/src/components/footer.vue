@@ -89,8 +89,7 @@
 
 <script>
 let vm;
-import Bus from '../api/bus.js'
-import cookie  from 'js-cookie';
+import Bus from '../api/bus.js';
 export default{
     data(){
       return {
@@ -103,7 +102,6 @@ export default{
       vm=this;
     },
     mounted(){
-      // vm.initSession4Test()
       vm.initUserInfo();
       vm.geturl();
     },
@@ -111,14 +109,19 @@ export default{
       vm.getclass();
     },
     methods: {
-         initSession4Test() {
-            var url ='login/8427?code=8427';
+        initSession4Test(){
+            // var url ='login/8441?code=8441';
+            // var data = {
+            //     "oriApp": "wx95f46f41ca5e570e"
+            // }
+            var url ='login/125417?code=125417';
             var data = {
-              "oriApp": "wx95f46f41ca5e570e"
+                "oriApp": "wxbd214f5765f346c1"
             }
-            vm.receiveData.postData(vm,url,data,'res',function(){
+            vm.receiveData.postData(vm,url,data,'res',()=>{
             });
-         },
+        },
+
          initUserInfo(){
             let n = "GET",
                 a = "userInfo?oriApp="+vm.getUrlParam('oriApp'),
@@ -134,6 +137,7 @@ export default{
                       Bus.$emit('sends',n.result);
                       //存储cookie
                       vm.common.updatecookie(n.result.cardStatus,n.result.cardService,n.result.id,n.result.appid,n.result.cspId,n.result.sectId,n.result.cardPayService,n.result.bgImageList,n.result.wuyeTabsList,n.result.qrCode,n.result);
+                      // Bus.$emit('wxSubscribe', subscribeTemplateIds);
                       // console.log(cookie.get('sectId'))
                     }
                     // cookie.set('userId',n.result.id);

@@ -2,15 +2,28 @@ import Vue from 'vue';
 let receiveData = {
     /*
      * 微信配置提取的公共方法
+     obj须含有以下属性,apilist跟openTagList必须要有一项
      * @param  {objec} vm     [Vue实例]
      * @param  {objec} wx     [微信实例]
-     * @param  {string} url     [url地址]
      * @param  {array} apilist    [要调用的微信接口]
+     * @param  {array} openTagList    [微信开放标签]
+     * @param  {string} url     [url地址]
      */
-    wxconfig(vm,wx,apilist,url){
+    wxconfig(obj){
+        let vm = obj.vm;
+        let wx = obj.wx;
+        let url = obj.url===undefined?'':obj.url;
+        let apilist = obj.apilist===undefined?['scanQRCode']:obj.apilist;
+        let openTagList = obj.openTagList===undefined?[]:obj.openTagList;
+
         vm.axios.post('/getUrlJsSign', {url : url })
             .then(function (res) {
                 let a = JSON.parse(res.data)
+                let success = a.success;
+                if(success===false){
+                    // vm.$toast(a.errorCode);
+                    return false;
+                }
                 let wd = a.result  //接口返回的嵌入数据
                 wx.config({
                     debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
@@ -18,12 +31,13 @@ let receiveData = {
                     timestamp: wd.timestamp, // 必填，生成签名的时间戳
                     nonceStr: wd.nonceStr, // 必填，生成签名的随机串
                     signature: wd.signature,// 必填，签名，见附录1
-                    jsApiList: apilist // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+                    jsApiList: apilist, // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+                    openTagList:openTagList
                 });
             })
             .catch(function (err) {
                 //alert('暂放-微信config失败')
-                console.log('fail', err);
+                console.log(err);
         });
     },
 

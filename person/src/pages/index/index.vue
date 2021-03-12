@@ -127,7 +127,7 @@
         </router-link>
 
         <router-link
-          :to="{path:'/service'}"
+          :to="{path:'/service', query:{subscribeTemplateIds:this.subscribeTemplateIds}}"
           class="input-wrap menu-person-link lite-divider"
           v-show="serviceOperator || service_list.length > 0"
         >
@@ -135,7 +135,7 @@
           <span class="fr fs14 left_color">查看订单&nbsp;&nbsp;&nbsp;&nbsp;</span>
         </router-link>
         <router-link
-          :to="{path:'/operatorOrders'}"
+          :to="{path:'/operatorOrders', query:{subscribeTemplateIds:this.subscribeTemplateIds}}"
           class="input-wrap menu-person-link lite-divider"
           v-show="repairOperator"
         >
@@ -247,6 +247,8 @@ export default {
         nickname: "游客",
         levelname: "普通会员"
       },
+      subscribeTemplateIds:[] //工作人远用的订阅消息模板id列表
+
     };
   },
   created() {
@@ -260,7 +262,8 @@ export default {
     //模仿线上用户信息
     // 105/747/384
     initSession4Test() {
-      var url ='login/8427?code=8427';
+      
+      var url ='login/8441?code=8441';
       var data = {
         "oriApp": "wx95f46f41ca5e570e"
       }
@@ -289,6 +292,8 @@ export default {
             vm.evoucherOperator = n.result.serveRole.evoucherOperator;//核销卡卷
             vm.merchant = n.result.serveRole.merchant;//我是商家
             vm.msgSender = n.result.serveRole.msgSender;//消息推送
+            vm.subscribeTemplateIds = n.result.subscribeTemplateIds;
+
             if(vm.user.point<0){//小于0等于0
               vm.point=0;
             }else {

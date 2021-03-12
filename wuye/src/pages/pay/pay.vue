@@ -330,7 +330,14 @@ export default {
     vm.unitselect();
     vm.getHousin();
     let url = location.href.split("#")[0];
-    vm.receiveData.wxconfig(vm, wx, ["scanQRCode","getLocation"], url);
+    var data = {
+                vm:vm,
+                wx:wx,
+                apiList:['scanQRCode','getLocation'],
+                url:url
+            }
+    vm.receiveData.wxconfig(data);
+
     vm.Compatibility();
     // 判断是否是专业版
   },

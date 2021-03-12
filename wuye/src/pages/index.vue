@@ -19,13 +19,13 @@
 </template>
 
 <script>
-import wuye from '../pages/main/index'
-import foot from '../components/footer.vue'
-import cookie from "js-cookie";
+import Wuye from '../pages/main/index.vue'
+import Foot from '../components/footer.vue'
+
 export default {
   components:{
-    foot,
-    wuye
+    'foot':Foot,
+    'wuye':Wuye
   },
   mounted() {
 

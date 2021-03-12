@@ -1,53 +1,59 @@
 <template>
 	<div>
+	<van-overlay :show="showOverlay">
+    	<div class="overlay-loading">
+			<van-loading type="spinner" color="#ff8a00" vertical>处理中...</van-loading>
+    	</div>
+    </van-overlay>
 		<div class="main">
 		<div class="mint-tab-container-item">
 		<div class="query-data">
-		  		<div class="input-row">
-			  		小区：
+		  		<div class="input-row last">
+			  		小区名称：
 					    <!-- v-on:input="shousuo(query.sect)" -->
 					  <input type="text" id="btnd" class="virtual-input classinput" value=""  placeholder="请输入小区" v-on:input="sousuo(query.sect)" v-model="query.sect">
 					  	<i class="iconfont icon-chacha  classc" @click="clicki" v-show="showi"></i>
 			  		<!-- <select class="virtual-input" v-model="query.sect">
 						  <option v-for="item in sectList" :value="item.id" >{{item.name}}</option>   v-tap="{fn:alertFN,name:item.name}""
 			  		</select> -->
-					<ul class="input-uis test" v-show="shows" >
-						<li :data-idd="item.id" v-for="item in sectList" :key="item.id"  v-tap="{fn:alertFN,name:item.name,id:item.id,params:item.params}">{{item.name}}</li>
+					<ul class="input-uis" v-show="shows" >
+						<li :data-idd="item.id" v-for="item in sectList" :key="item.id"  v-tap="{fn:alertFN,name:item.name,id:item.id,params:item.params, tel:item.tel, telList:item.telList}">{{item.name}}</li>
 					</ul>
 			  	</div>
-
-				<div class="input-row" v-show="verSion=='1'">  
-					户号： <input type="text" class="virtual-input" value=""  placeholder="请输入户号" @input="toTrim" v-model="huhao" >
-				</div>	
+				<div v-show="verSion=='1'">
+					<div class="input-row last" >  
+						房屋户号： <input type="text" class="virtual-input" value=""  placeholder="请输入户号" @input="vernoInput" v-model="huhao" >
+					</div>
+					<div class="input-row hint2">
+			  			户号可咨询所在小区物业，请拨打物业管理处电话    
+						<a v-for="(item, key) in telList" :key="key" class="link-tel" :href="'tel:'+item">{{item}}&nbsp;&nbsp;<br></a>
+					</div>
+					<!-- <div class="input-row last" >  
+						物业电话：  <a class="link-tel" :href="'tel:'+officeTel">{{officeTel}}</a>
+					</div> -->
+			  	</div>
 				<div v-show="verSion=='0'">
-			  	<div class="input-row">
-			  		楼宇：
-			  		<select class="virtual-input" v-model="query.build"  @change="getCouponSelected">
-						<!-- <option value="0">请选择</option> -->
-			  			<option v-for="item in buildList" :value="item.id" :key="item.id">{{item.name}}</option>
-			  		</select>
+			  	<div class="input-row last">
+			  		房屋地址：
+			  		<input type="text" class="virtual-input classinput" value="" placeholder="请输入房屋地址" @input="queryAddr" v-model="cellAddr">
+					<i class="iconfont icon-chacha  classc" @click="removeAddr" v-show="selectShow"></i>
+					<ul class="input-uis dropdown" v-show="cellShow" >
+						<li :data-idd="item.id" v-for="item in houseList" :key="item.id"  v-tap="{fn:selectCell,name:item.name,id:item.id,params:item.params}">{{item.name|subString}}</li>
+					</ul>
 			  	</div>
-			  	<div class="input-row">
-			  		门牌：
-			  		<select class="virtual-input" v-model="query.unit" @change="getCoupon">
-						<!-- <option value="0">请选择</option> -->
-			  			<option v-for="item in unitList" :value="item.id" :key="item.id">{{item.name}}</option>	
-			  		</select>
+				<div class="input-row hint">
+			  		如1号101，输入1-101即可
 			  	</div>
-			  	<div class="input-row">
-			  		室号：
-			  		<select class="virtual-input" v-model="query.house" @change="getCoupons($event)">
-						   <!-- <option value="0">请选择</option> -->
-			  			<option v-for="(item,index) in houseList" :value="item.id" :key="index">{{item.name}}</option>	
-			  		</select>
-			  	</div>	
-			  	<!-- <div class="input-row last">
+			  	<div class="input-row last">
 			  		建筑面积：
 			  		<input type="text" class="virtual-input classinput" value="" @blur="fixScroll" v-model="query.area">&nbsp;&nbsp;m²
 			  	</div>
-			  	<div class="input-row add">
+			  	<!-- <div class="input-row add">
 			  		建筑面积允许误差±1m²以内
 			  	</div> -->
+				<div class="input-row selected" >
+					<ul><li class="selected-addr" v-show="selectShow">{{this.query.sect}}<br>{{this.cellAddr}}</li></ul>
+			  	</div>
 		  	</div>
 			</div>  
 			<div style="width:100%;height:0.92rem;"></div>
@@ -62,11 +68,24 @@
 <script>
 	let vm;
 	let timer;
-	import { MessageBox } from 'mint-ui';
-	import axios from 'axios';
-	import Bill from '../../components/bill.vue';
 	import '../../tap.js'
+	import Api from '@/api/api.js'
+	import {Overlay, Loading, Dialog} from 'vant'
+
 	export default{
+		filters: {
+			subString(value) {
+				if(value != "" && value.length > 20){
+					let addr = value.substring(value.length-20, value.length)
+					console.log(addr)
+					addr = '…'+ addr
+					return addr
+				} else {
+					return value
+				}
+
+			}
+		},
 		data(){
 			return{
 				sectList:[],//小区列表
@@ -79,7 +98,7 @@
 		  			build:'',//楼宇id
 		  			unit:'',//门牌id
 		  			house:'',//室号id
-		  			area:'0',//建筑面积id
+		  			area: '',//建筑面积id
 		  		},
 		  		stmtId:'',//快捷缴费 扫描出来的账单号
 		  		url : '/billList',
@@ -103,6 +122,12 @@
 				choosehouse:0,
 				huhao:'',//户号
 				verSion:'',//判断绑定房子方式
+				cellAddr: '',
+				cellShow: false,
+				selectShow: false,
+				showOverlay: false,	//遮罩
+				officeTel: '',	//物业管理处电话
+				telList: []
 			}
 		},
 		created(){
@@ -111,8 +136,10 @@
 		mounted(){
 			// this.common.checkRegisterStatus();
 		},
-		components:{Bill},
-		
+		components:{
+			[Overlay.name]: Overlay,
+			[Loading.name]: Loading,
+		},
 		methods:{
 			sousuo(name){
 				if (timer) {
@@ -143,6 +170,7 @@
 								vm.query.sectID=id;
 							}
 							vm.showi=true;
+							
 							// if(vm.verSion=='1') {
 							// 	vm.add();
 							// }
@@ -153,11 +181,19 @@
 				});
 			},
 			//去掉空格
-			toTrim(){
+			vernoInput(){
 				vm.huhao=vm.huhao.replace(/\s/g, "")
+				if(vm.huhao.length>0){
+					this.vernoShow = true
+				} else {
+					this.vernoShow = false
+				}
 			},
 			//添加房子
 			addRoom(){
+				if(!vm.verSion){
+					Dialog({message: '请选择小区'})
+				}
 				if(vm.verSion=='1') {
 					vm.Neea();
 				}else if(vm.verSion=='0') {
@@ -169,79 +205,111 @@
 			var reg = /^\d{12}$/
 			if(reg.test(vm.huhao)){//为数字即通过
 				let url='/hexiehouse/'+vm.huhao;
+				this.showOverlay = true
 				vm.receiveData.getData(vm,url,'response',function(){
-				if(vm.response.success) {
+					vm.showOverlay = false
+					if(vm.response.success) {
 						if(vm.response.result== null) {
-							alert('未查询到该房屋')
+							Dialog({message: '未查询到该房屋'})
 						}else {
-	  	 					vm.$router.push({path:'/bindHouse/' + vm.huhao,query:{type:'1'}});
+							vm.$router.push({path:'/bindHouse/' + vm.huhao,query:{type:'1'}});
 						}
-				}else {
-					alert(vm.response.message==null?'未查询到该房屋':vm.response.message)
-				}
+					}else {
+						Dialog({message: vm.response.message==null?'未查询到该房屋':vm.response.message})
+					}
 				})
 			}else{
-				MessageBox.alert('请输入正确户号');
+				Dialog({message: '请输入正确的户号'})
 			}   
 			
 		   },
 		   house(){
 			   	if(vm.query.sect==''||vm.query.house==''||vm.query.house=='0'){
-           			MessageBox.alert('请输入完整信息');
-           			return;
-           		}else{
-           			$('.pay').addClass('disabled');
-					$('.pay').text('正在处理...')
-
-				let url='/addhexiehouse2?area='+vm.query.area+'&houseId='+vm.choosehouse;	
-				vm.receiveData.postData(vm,url,null,'res',function(){
-					if(vm.res.success) {
-						if(vm.res.result!=null){
-							MessageBox.alert('添加房子成功').then(action =>{
-								vm.$router.push("/myhouse")
-							})							
-						}
-					}else {
-						MessageBox.alert(vm.res.message).then( action =>{
-								$('.pay').removeClass('disabled');
-								$('.pay').text('添加房屋')	
-								vm.query.sect='';
-								vm.query.build='';
-								vm.query.unit='';
-								vm.query.house='';
-								vm.query.area='';
-							})
-					}
-				})	
+					Dialog({message: '请选择小区或者房屋'})
+           			return false
            		}
+				Dialog.confirm({
+					message: this.cellAddr + ', 确认要绑定吗？'
+				}).then(()=>{
+					this.showOverlay = true
+					let url='/addhexiehouse2?area='+vm.query.area+'&houseId='+vm.query.house;	
+					vm.receiveData.postData(vm,url,null,'res',function(){
+						if(vm.res.success) {
+							if(vm.res.result!=null){
+								Dialog.alert({
+									message: '绑定房屋成功'
+								}).then(() => {
+									vm.$router.push("/myhouse")
+								}).catch((error)=>{
+									console.log(error)
+								})
+							}
+						}else {
+							Dialog.alert({
+								message: vm.res.message
+							}).then(() =>{
+								vm.showOverlay = false
+							})
+							
+						}
+					})
+				}).catch(()=>{
+					return false
+				})
+				return false
+					
 		   },
 	 
 	   //ios留白问题，点击事件无效
 		fixScroll() {
-        let u = navigator.userAgent;
-        let isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
-        if (isiOS) {
-          window.scrollTo(0,0);
-        }
-      },
-			//替换搜索内容
+			let u = navigator.userAgent;
+			let isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+			if (isiOS) {
+			window.scrollTo(0,0);
+			}
+		},
+		selectCell(s){
+			vm.$nextTick(()=>{
+				this.cellAddr = s.name
+				this.cellShow = false
+				this.selectShow = true
+				this.query.house = s.id
+			})
+		},
+		removeAddr(){
+			this.cellAddr = ''
+			this.selectShow = false
+			this.cellShow = false
+		},
+		//替换搜索内容
 		alertFN(s) {
-			 vm.$nextTick(function(){
+			vm.$nextTick(function(){
 				var add=document.getElementById('btnd')
 				add.value=s.name
 				vm.query.sect = s.name;
 				vm.query.sectID=s.id;
 				vm.verSion=s.params.WECHAT_HOUSE_SEL_MODE;
-					vm.shows=false;
-					if(vm.verSion=='0') {
-						vm.add();
-					}
-			  })
-		
+				vm.shows=false;
+				vm.officeTel = s.tel
+				vm.telList = s.telList
+			})
 		},
-			
-
-
+		queryAddr(){
+			if(!this.query.sectID || !this.cellAddr) {
+				return false
+			}
+			let param = {
+				sectId: this.query.sectID,
+				cellAddr: this.cellAddr
+			}
+			Api.getCellAddrList(param).then((response)=>{
+				let data = response.data
+				if(data.success){
+					this.houseList = data.result.house_info
+					this.cellShow = true
+				}
+			})
+		},
 		clicki() {
 			if(vm.sectList.length<=0) {
 				vm.query.sect='';
@@ -266,6 +334,9 @@
 			vm.shows=false;
 			vm.showi=false;
 			vm.queryBillInfo  = [];//清空查询账单列表
+
+			this.removeAddr()
+			this.officeTel = ''
 			// vm.quan=false;
 		},
 		add() {
@@ -343,7 +414,7 @@
 	    opacity: 0.6;
 	}
 	.main{
-		margin: 0 .3rem;
+		margin: 1rem 0 0 0.6rem
 	}
 	.mint-tab-container-item{
 	flex-shrink: 0;
@@ -351,34 +422,33 @@
 	}
 	.query-data{
 		/* height: 100%; */
-		padding: 0.25rem 1rem;
+		padding: 0.25rem 0.8rem 0.25rem 0.8rem;
 		margin-bottom: 0.2rem;
 	}
 	.virtual-input{
-		width:3.4rem;
+		width:3.5rem;
 		border:1px solid #4c4c4c;
 		border-radius: 5px;
 		padding-left: 0.2rem;
 		display: inline-block;
 		height: 0.6rem;
 		background-color: #fff;
-		font-size:16px;
+		font-size: 0.3rem;
 		box-sizing: border-box;
 	}
 	.input-row{
 		padding-bottom: 0.3rem;
-		font: 0.26rem/0.5rem "";
+		font-size: 0.32rem;
 		color: #a6937c;
 		height: 0.6rem;
 		position:relative;
 	}
 
    .input-row .input-uis {
-	width: 3.5rem;
+	width: 6rem;
     position: absolute;
-    top: 32px;
-    left: 39px;
-    height: 184px;
+    top: 0.8rem;
+    left: 0rem;
     z-index: 666;
     background-color: #F5F4F3;
     overflow: hidden;
@@ -389,21 +459,53 @@
 	}
 	.input-row .input-uis li {
 		overflow: hidden;
-		font-size: 16px;
+		font-size: 0.3rem;
 		height:30px;
 		line-height:30px;
 		border-bottom: 1px solid #ccc;
-		letter-spacing: 0.08rem;
-		color: #707070;
-		padding-left:0.2rem;
+		/* letter-spacing: 0.08rem; */
+		/* color: #707070; */
+		padding-left:0.1rem;
 		background-color:#fff;
+		width: 100vw;
 	}
-.last{
-		margin-left: -28px;
+
+	.selected {
+		margin-left: -0.6rem;
+		margin-top: 1rem;
+		font-size: 0.3rem;
+	}
+	.selected-addr {
+		color: #4c4c4c;
+		font-size: 0.3rem;
+		font-weight: bold;
+	}
+	.dropdown {
+		width: 100vw;
+	}
+	.overlay-loading{
+		margin-top: 5rem;
+	}
+	.last{
+		margin-left: -0.8rem;
 	}
 	.add{
 		color: #ff1a1a;
-		margin-left:45px;
+		margin:-0.2rem 0 0.2rem 0.8rem;
+	}
+	.hint{
+		color: #ff1a1a;
+		margin:-0.2rem 0 0rem 0.9rem;
+		height: 0.2rem;
+		font-size: 0.28rem;
+	}
+	.hint2{
+		color: #ff1a1a;
+		margin:0rem 0 0.2rem 0.9rem;
+		font-size: 0.28rem;
+	}
+	.link-tel{
+		color: #0000EE;	
 	}
 	.btn-fixed{
 		position: fixed;

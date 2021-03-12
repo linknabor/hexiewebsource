@@ -171,7 +171,14 @@ export default {
   mounted() {
     // vm.locationcitys();
     let url2 = location.href.split("#")[0];
-    vm.receiveData.wxconfig(vm, wx, ["getLocation"], url2);
+    var data = {
+                vm:vm,
+                wx:wx,
+                apiList:['getLocation'],
+                url:url2
+            }
+    vm.receiveData.wxconfig(data);
+
     vm.city();
     // vm.initSession4Test();
   },
