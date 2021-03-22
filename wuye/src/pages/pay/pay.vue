@@ -93,10 +93,7 @@
                 @change="huhaoserach()"
               />
               </div>
-              <div class="input-row hint2" >
-                户号可咨询所在小区物业，请拨打物业管理处电话    
-                <a v-for="(item, key) in telList" :key="key" class="link-tel" :href="'tel:'+item">{{item}}&nbsp;&nbsp;<br></a>
-              </div>
+              <div class="input-row hint2" >户号可咨询所在小区物业，请拨打物业管理处电话<a v-for="(item, key) in telList" :key="key" class="link-tel" :href="'tel:'+item">{{item}}&nbsp;&nbsp;<br></a></div>
           </div>
           <div v-show="wschat_house_sel_mode=='0'||qrCodeOper=='1'">
             <div class="input-row">
@@ -107,9 +104,7 @@
               <li :data-idd="item.id" v-for="item in houseList" :key="item.id"  v-tap="{fn:selectCell,name:item.name,id:item.id,params:item.params}">{{item.name|subString}}</li>
             </ul>
             </div>
-            <div class="input-row hint">
-              如1号101，输入1-101即可
-            </div>
+            <div class="input-row hint">如1号101，输入1-101即可</div>
           </div>
 
           <!-- 判断是否为无账单显示 -->
