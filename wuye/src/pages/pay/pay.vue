@@ -1,15 +1,11 @@
 <template>
 <div id="divwuye"  @scroll="getscroll">
   <div class="main">
-    <!-- 加载中 -->
-    <div id="phoneErro"></div>
-    <!-- class="hidden" -->
-    <div id="phoneAjax" v-show="showp">
-      <img
-        src="../../assets/images/house/7f1b3b58-c5b6-4022-b1ed-dc4188c43a3a.gif"
-        style="width:100%;vertical-align: middle;"
-      /> 
-    </div>
+    <van-overlay :show="showOverlay">
+    	<div class="overlay-loading">
+			<van-loading type="spinner" color="#ff8a00" vertical>处理中...</van-loading>
+    	</div>
+    </van-overlay>
     <mt-navbar id="navBar" v-model="selected">
       <!-- <mt-tab-item id="d">查询缴费</mt-tab-item>
       <mt-tab-item id="b">我的账单</mt-tab-item>
@@ -84,7 +80,7 @@
             <i class="iconfont icon-chacha classc" @click="clicki" v-show="showi"></i>
           </div>
 
-          <div class="input-row" v-show="wschat_house_sel_mode=='1'">
+          <div class="input-row" v-show="wschat_house_sel_mode=='1'&&qrCodeOper!='1'">
               <label>户号：</label>
               <input
                 type="text"
@@ -96,28 +92,19 @@
                 @change="huhaoserach()"
               />
           </div>
-          <div v-show="wschat_house_sel_mode=='0'">
-          <div class="input-row">
-            <label>楼宇：</label>
-            <select class="virtual-input" v-model="query.build" @change="getCouponSelected">
-              <!-- <option value="0">请选择</option> -->
-              <option v-for="item in buildList" :value="item.id" :key="item.id">{{item.name}}</option>
-            </select>
-          </div>
-          <div class="input-row">
-            <label>门牌：</label>
-            <select class="virtual-input" v-model="query.unit" @change="getCoupon">
-              <!-- <option value="0">请选择</option> -->
-              <option v-for="item in unitList" :value="item.id" :key="item.id">{{item.name}}</option>
-            </select>
-          </div>
-          <div class="input-row">
-            <label>室号：</label>
-            <select class="virtual-input" v-model="query.house" @change="getCoupons">
-              <!-- <option value="0">请选择</option> -->
-              <option v-for="item in houseList" :value="item.id" :key="item.id">{{item.name}}</option>
-            </select>
-          </div>
+          <div v-show="wschat_house_sel_mode=='0'||qrCodeOper=='1'">
+            <div class="input-row last">
+              房屋地址：
+            <input type="text" class="virtual-input" value="" placeholder="请输入房屋地址" @input="queryAddr" v-model="cellAddr">
+            <i class="iconfont icon-chacha  classc" @click="removeAddr" v-show="selectShow"></i>
+            <ul class="input-uis" v-show="cellShow" >
+              <li :data-idd="item.id" v-for="item in houseList" :key="item.id"  v-tap="{fn:selectCell,name:item.name,id:item.id,params:item.params}">{{item.name|subString}}</li>
+            </ul>
+            </div>
+            <div class="input-row hint">
+              如1号101，输入1-101即可
+            </div>
+            <div style="clear:both;"></div>
           </div>
 
           <!-- 判断是否为无账单显示 -->
@@ -178,21 +165,36 @@
 </template>
 <script>
 let vm;
-let timer,startData,endData;
+let startData,endData;
 let isloadPage=false;
 import wx from "weixin-js-sdk";
 import "../../tap.js";
-import axios from "axios";
-import { MessageBox } from "mint-ui";
 import Bill from "../../components/bill.vue";
-import { Indicator, Loadmore } from "mint-ui";
 // import Foot from "../../components/footer.vue";
 import moment from "../filter/datafromat";
-import Bus from '../../api/bus.js';
 import cookie  from 'js-cookie';
-export default {
-  components: { Bill},
+import Api from '@/api/api.js'
+import {Overlay, Loading, Dialog} from 'vant'
 
+export default {
+  filters: {
+    subString(value) {
+      if(value != "" && value.length > 20){
+        let addr = value.substring(value.length-20, value.length)
+        console.log(addr)
+        addr = '…'+ addr
+        return addr
+      } else {
+        return value
+      }
+    },
+    moment
+  },
+  components: { 
+    Bill,
+    [Overlay.name]: Overlay,
+    [Loading.name]: Loading,
+  },
   computed: {
     //物业缴费总价
     allPrice: function() {
@@ -308,11 +310,14 @@ export default {
       wuyeTabsList:'',//选项卡
       selected: "", //选项卡 默认选中
       cardPayService:'', //控制是否可以 绑卡支付
+      qrCodeOper: '0',
+      cellAddr: '',
+      cellShow: false,
+      selectShow: false,
+      showOverlay: false,	//遮罩
+      officeTel: '',	//物业管理处电话
+      telList: []
     };
-  },
-  //时间戳转换成日期
-  filters: {
-    moment
   },
   watch: {
     selected(newv,old){
@@ -365,7 +370,8 @@ export default {
               vm.wuyeTabsList = JSON.parse(window.localStorage.getItem("wuyeTabsList"));
               vm.selected = vm.wuyeTabsList[0].value;
             }else {
-              alert('没有配置选项卡');//没有配置选项卡提示
+              Dialog({message: '没有配置选项卡'})
+              return
             }
             vm.sectId=cookie.get('sectId'); //获取sectid
             vm.cardPayService =cookie.get('cardPayService');
@@ -376,6 +382,37 @@ export default {
         this.common.invokeApi(n, a, i, null, e, r);
       }
     },
+    removeAddr(){
+      this.cellAddr = ''
+      this.selectShow = false
+      this.cellShow = false
+    },
+    queryAddr(){
+			if(!this.query.sectID || !this.cellAddr) {
+				return false
+			}
+			let param = {
+				sectId: this.query.sectID,
+				cellAddr: this.cellAddr
+			}
+			Api.getCellAddrList(param).then((response)=>{
+				let data = response.data
+				if(data.success){
+					this.houseList = data.result.house_info
+					this.cellShow = true
+				}
+			})
+		},
+    selectCell(s){
+			vm.$nextTick(()=>{
+				this.cellAddr = s.name
+				this.cellShow = false
+				this.selectShow = true
+				this.query.house = s.id
+
+        this.getCoupons()
+			})
+		},
     //跳转绑定房子
     Myhouse() {
       vm.$router.push({path:'/Myhouse'});
@@ -451,14 +488,14 @@ export default {
                       if(vm.data.result.bill_info.length>0) {//不是空数组
                           vm.billInfo = vm.data.result.bill_info; //物业缴费
                       }else {
-                          alert("暂无需缴费账单");
+                          Dialog({message: '没有可以缴费的账单'})
                       }
                       vm.billPage += 1;
                   }else {
-                        alert("暂无需缴费账单");
+                        Dialog({message: '没有可以缴费的账单'})
                   }
               }else {
-                  alert(vm.data.message==null?"暂无需缴费账单":vm.data.message)
+                  Dialog({message: vm.data.message==null?"没有可以缴费的账单":vm.data.message})
               }
               vm.isshow=false;
               vm.showp = false;
@@ -506,6 +543,7 @@ export default {
                     vm.standard1 = false;
                   }
                   vm.wschat_house_sel_mode = link[i].params.WECHAT_HOUSE_SEL_MODE;
+                  vm.qrCodeOper = link[i].qrCodeOper;
                 }
             }
             if (link && link.length > 0) {
@@ -601,6 +639,7 @@ export default {
     },
     
     getBillStartDate() {
+      this.showOverlay = true
       vm.receiveData.getData(
         vm,
         "/getBillStartDateSDO?regionname=" +
@@ -609,6 +648,7 @@ export default {
           vm.query.house,
         "res",
         function() {
+          vm.showOverlay = false
           if (vm.res.success) {
             vm.is_null=vm.res.result.is_null;
             if(vm.is_null=='0'){
@@ -638,7 +678,7 @@ export default {
                  return;
             }
           }else {
-            alert(vm.res.message);
+            Dialog({message: vm.res.message})
           }
         }
       );
@@ -659,7 +699,7 @@ export default {
         function() {
           if (vm.res.success) {
             if(vm.res.result==null){
-              alert("没有搜索到账单");
+              Dialog({message: '没有搜索到账单'})
               vm.isshow=false;
               vm.showp = false;
              }
@@ -669,7 +709,7 @@ export default {
             vm.isshow=false;
             vm.showp = false;
           }else {
-            alert(vm.res.message);
+            Dialog({message: vm.res.message})
             vm.isshow = false;
             vm.showp = false;
           }
@@ -762,17 +802,18 @@ export default {
                 vm.queryBillList();
               }
             }else {
-              alert(vm.res.message)
+              Dialog({message: vm.res.message})
             }
         })  
       }else {
-          MessageBox.alert('请输入正确户号');
+          Dialog({message: '请输入正确户号'})
       }
       
     },
     //请求查询缴费 账单列表
     queryBillList() {
       // vm.getBillStartDate();
+      vm.showOverlay = true
       vm.isshow=true;
       vm.showp = true;
       let url = "billList?regionname=" + this.$route.query.City;
@@ -784,6 +825,7 @@ export default {
         url,
         "queryBillInfo",
         function() {
+          vm.showOverlay = false
           if (vm.queryBillInfo.success) {
             if (vm.queryBillInfo.result == null) {
               vm.queryBillInfo = [];
@@ -800,12 +842,12 @@ export default {
               ) {
                 vm.queryBillInfo = vm.queryBillInfo.result.bill_info;
               } else {
-                alert("没有搜索到账单");
+                Dialog({message: '没有可缴费的账单'})
                 vm.queryBillInfo = [];
               }
             }
           } else {
-            alert("没有搜索到账单");
+            Dialog({message: '没有可缴费的账单'})
             vm.queryBillInfo = [];
           }
           vm.showp = false;
@@ -818,7 +860,7 @@ export default {
     submit() {
       //请求扫码快速缴费数据
       if (vm.stmtId == "" || vm.stmtId.length != 18) {
-        alert("请输入正确账单号");
+        Dialog({message: '请输入正确账单号'})
         return;
       }
        isloadPage=false; //重置加载状态
@@ -839,7 +881,7 @@ export default {
           vm.pay_least_month = vm.quickData.result.pay_least_month;
           vm.quickBillpage+=1
         } else {
-          alert("未查询到数据");
+          Dialog({message: '未查询到数据'})
         }
       });
     },
@@ -941,7 +983,7 @@ export default {
     },
      pays(list, allPrice, allselect){ // 专业版
         if (vm[allPrice] < 0.01) {
-          alert("请选择账单后支付");
+          Dialog({message: '请选择账单后支付'})
           return;
         }
         let selectedArr = []; //所有数据
@@ -983,7 +1025,7 @@ export default {
         }
         if (vm.pay_least_month > 0) {
           if (vm.pay_least_month > sel_bill_arr.length) {
-            alert("请至少选择" + vm.pay_least_month + "个月的账单进行支付。");
+            Dialog({message: '请至少选择' + vm.pay_least_month + '个月的账单进行支付。'})
             return false;
           }
         }
@@ -1002,7 +1044,7 @@ export default {
       //第一个参数 账单数组，第二个参数 总价 第三个参数 是否全选,所有参数 string
       if (vm.getversion == "01") { //标准版
         if (vm[queryallPrice1] < 0.01) {
-          alert("请选择帐单后支付");
+          Dialog({message: '请选择帐单后支付'})
           return;
         }
         var oriapp=vm.common.getoriApp();
@@ -1093,7 +1135,7 @@ export default {
       //取反
       vm[a] = !vm[a];
     }
-  },
+  }
   
 };
 </script>
@@ -1143,7 +1185,6 @@ a {
   /* height: 100%; */
   padding: 0.25rem 0.4rem;
   /* margin-bottom: 0.2rem; */
-  overflow: hidden; 
 }
 .virtual-input {
   width: 4rem;
@@ -1173,30 +1214,27 @@ a {
 }
 
 .input-row .input-uis {
-  width: 3.5rem;
-  position: absolute;
-  top: 32px;
-  left: 39px;
-  height: 184px;
-  z-index: 666;
-  background-color: #f5f4f3;
-  overflow: hidden;
-  color: #000;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-  overflow-y: auto;
-}
-.input-row .input-uis li {
-  overflow: hidden;
-  font-size: 16px;
-  height: 30px;
-  line-height: 30px;
-  border-bottom: 1px solid #ccc;
-  letter-spacing: 0.08rem;
-  color: #707070;
-  padding-left: 0.2rem;
-  background-color: #fff;
-}
+	  width: 100vw;
+    position: absolute;
+    top: 0.7rem;
+    left: 0rem;
+    z-index: 666;
+    background-color: #F5F4F3;
+    color: #000;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    margin-left: -0.4rem;
+	}
+	.input-row .input-uis li {
+		font-size: 0.3rem;
+		height:0.5rem;
+		line-height:0.5rem;
+		border-bottom: 1px solid #ccc;
+		padding-left:0.3rem;
+		background-color:#fff;
+		width: 90vw;
+    text-align: left;
+	}
 .classc {
   position: absolute;
   right: -0.5rem;
@@ -1297,6 +1335,7 @@ a {
   width: 94%;
   margin: auto;
   margin: 0.2rem;
+  overflow: visible;
 }
 .btext {
     background-color: rgb(238, 238, 238);
@@ -1446,5 +1485,19 @@ a {
 .mint-tab-container-item{
   flex-shrink: 0;
     width: 100%;
+}
+.hint{
+  color: #ff1a1a;
+  margin:-0.3rem 0 0rem 0.2rem;
+  height: 0.2rem;
+  font-size: 0.28rem;
+}
+.hint2{
+  color: #ff1a1a;
+  margin:0rem 0 0.2rem 0.9rem;
+  font-size: 0.28rem;
+}
+.overlay-loading{
+  margin-top: 7rem;
 }
 </style>
