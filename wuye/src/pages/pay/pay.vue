@@ -1215,7 +1215,7 @@ a {
 }
 
 .input-row .input-uis {
-	  width: 100vw;
+	  width: 93vw;
     position: absolute;
     top: 0.7rem;
     left: 0rem;
