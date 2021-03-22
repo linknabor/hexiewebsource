@@ -92,6 +92,10 @@
                 @change="huhaoserach()"
               />
           </div>
+          <div class="input-row hint2">
+			  			户号可咨询所在小区物业，请拨打物业管理处电话    
+						  <a v-for="(item, key) in telList" :key="key" class="link-tel" :href="'tel:'+item">{{item}}&nbsp;&nbsp;<br></a>
+					</div>
           <div v-show="wschat_house_sel_mode=='0'||qrCodeOper=='1'">
             <div class="input-row last">
               房屋地址：
@@ -543,7 +547,8 @@ export default {
                     vm.standard1 = false;
                   }
                   vm.wschat_house_sel_mode = link[i].params.WECHAT_HOUSE_SEL_MODE;
-                  vm.qrCodeOper = link[i].qrCodeOper;
+                  vm.qrCodeOper = link[i].qrCodeOper
+                  vm.telList = link[i].telList
                 }
             }
             if (link && link.length > 0) {
@@ -1494,10 +1499,16 @@ a {
 }
 .hint2{
   color: #ff1a1a;
-  margin:0rem 0 0.2rem 0.9rem;
+  margin:-0.1rem 0 0.2rem 2.3rem;
   font-size: 0.28rem;
+  text-align: left;
+  width: 55vw;
+  line-height: 0.4rem;
 }
 .overlay-loading{
   margin-top: 7rem;
+}
+.link-tel{
+  color: #0000EE;	
 }
 </style>
