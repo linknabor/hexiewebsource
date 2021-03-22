@@ -80,8 +80,9 @@
             <i class="iconfont icon-chacha classc" @click="clicki" v-show="showi"></i>
           </div>
 
-          <div class="input-row" v-show="wschat_house_sel_mode=='1'&&qrCodeOper!='1'">
-              <label>户号：</label>
+          <div v-show="wschat_house_sel_mode=='1'&&qrCodeOper!='1'">
+              <div class="input-row">
+              户号：
               <input
                 type="text"
                 class="virtual-input classinput"
@@ -91,13 +92,14 @@
                 v-model="huhao"
                 @change="huhaoserach()"
               />
+              </div>
               <div class="input-row hint2" >
                 户号可咨询所在小区物业，请拨打物业管理处电话    
                 <a v-for="(item, key) in telList" :key="key" class="link-tel" :href="'tel:'+item">{{item}}&nbsp;&nbsp;<br></a>
               </div>
           </div>
           <div v-show="wschat_house_sel_mode=='0'||qrCodeOper=='1'">
-            <div class="input-row last">
+            <div class="input-row">
               房屋地址：
             <input type="text" class="virtual-input" value="" placeholder="请输入房屋地址" @input="queryAddr" v-model="cellAddr">
             <i class="iconfont icon-chacha  classc" @click="removeAddr" v-show="selectShow"></i>
@@ -108,7 +110,6 @@
             <div class="input-row hint">
               如1号101，输入1-101即可
             </div>
-            <div style="clear:both;"></div>
           </div>
 
           <!-- 判断是否为无账单显示 -->
@@ -1187,7 +1188,7 @@ a {
 }
 
 .query-data {
-  height: 18vh;
+  /* height: 18vh; */
   padding: 0.25rem 0.4rem;
   /* margin-bottom: 0.2rem; */
 }
@@ -1225,15 +1226,15 @@ a {
     left: 0rem;
     z-index: 666;
     background-color: #F5F4F3;
-    color: #000;
+    color: #696969;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
     margin-left: -0.4rem;
 	}
 	.input-row .input-uis li {
 		font-size: 0.3rem;
-		height:0.5rem;
-		line-height:0.5rem;
+		height:0.7rem;
+		line-height:0.7rem;
 		border-bottom: 1px solid #ccc;
 		padding-left:0.3rem;
 		background-color:#fff;
@@ -1493,13 +1494,13 @@ a {
 }
 .hint{
   color: #ff1a1a;
-  margin:-0.3rem 0 0rem 0.2rem;
+  margin:-0.3rem 0 0.2rem 0.1rem;
   height: 0.2rem;
   font-size: 0.28rem;
 }
 .hint2{
   color: #ff1a1a;
-  margin: 0.1rem 0 0.2rem 2.3rem;
+  margin: -0.1rem 0 0.2rem 2.3rem;
   font-size: 0.28rem;
   text-align: left;
   width: 55vw;
