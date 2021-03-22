@@ -91,11 +91,11 @@
                 v-model="huhao"
                 @change="huhaoserach()"
               />
+              <div class="input-row hint2" >
+                户号可咨询所在小区物业，请拨打物业管理处电话    
+                <a v-for="(item, key) in telList" :key="key" class="link-tel" :href="'tel:'+item">{{item}}&nbsp;&nbsp;<br></a>
+              </div>
           </div>
-          <div class="input-row hint2">
-			  			户号可咨询所在小区物业，请拨打物业管理处电话    
-						  <a v-for="(item, key) in telList" :key="key" class="link-tel" :href="'tel:'+item">{{item}}&nbsp;&nbsp;<br></a>
-					</div>
           <div v-show="wschat_house_sel_mode=='0'||qrCodeOper=='1'">
             <div class="input-row last">
               房屋地址：
@@ -1187,7 +1187,7 @@ a {
 }
 
 .query-data {
-  /* height: 100%; */
+  height: 18vh;
   padding: 0.25rem 0.4rem;
   /* margin-bottom: 0.2rem; */
 }
@@ -1499,7 +1499,7 @@ a {
 }
 .hint2{
   color: #ff1a1a;
-  margin:-0.1rem 0 0.2rem 2.3rem;
+  margin: 0.1rem 0 0.2rem 2.3rem;
   font-size: 0.28rem;
   text-align: left;
   width: 55vw;
