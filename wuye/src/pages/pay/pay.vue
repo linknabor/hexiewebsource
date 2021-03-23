@@ -785,15 +785,17 @@ export default {
       //判断是否为正确户号号
       var reg = /^\d{12}$/
       if(reg.test(vm.huhao)) {
-        vm.receiveData.getData(vm, "/hexiehouse/" + vm.huhao, "res", function() {
+          vm.showOverlay = true
+          vm.queryBillInfo = []; //清空查询账单列表
+          vm.otherbillinfo = [];
+          
+          vm.receiveData.getData(vm, "/hexiehouse/" + vm.huhao, "res", function() {
+            vm.showOverlay = false
+            vm.query.sectID = vm.res.result.sect_id;
+            vm.query.house = vm.res.result.mng_cell_id;
+            vm.queryBillPage = 1; //页码重置
+            isloadPage = false; //重置加载状态
             if (vm.res.success) {
-              vm.query.sectID = vm.res.result.sect_id;
-              vm.query.house = vm.res.result.mng_cell_id;
-              vm.queryBillInfo = []; //清空查询账单列表
-              vm.otherbillinfo = [];
-              vm.queryBillPage = 1; //页码重置
-              isloadPage = false; //重置加载状态
-
               if (vm.getversion == "01") {
                 vm.getBillStartDate();
                 vm.version = vm.getversion;
@@ -805,10 +807,10 @@ export default {
             }else {
               Dialog({message: vm.res.message})
             }
-        })  
-      }else {
-          Dialog({message: '请输入正确户号'})
-      }
+          })  
+        }else {
+            Dialog({message: '请输入正确户号'})
+        }
       
     },
     //请求查询缴费 账单列表
