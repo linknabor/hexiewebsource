@@ -11,7 +11,7 @@
   </div>
 </template>
 <script>
-import Api from "@/api/api.js";
+import UserApi from "@/api/UserApi.js";
 import Storage from "@/util/storage.js"
 import UserLogin from "@/components/UserLogin"
 import { Overlay, Loading, Toast } from "vant"
@@ -33,7 +33,7 @@ export default {
   methods: {
     getUserInfo() {
       this.showOverlay = true
-      Api.getUserInfo()
+      UserApi.getUserInfo()
         .then((response) => {
           let data = response.data;
           if (data.success && data.result != null) {

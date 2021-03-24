@@ -12,7 +12,7 @@
 </template>
 <script>
 import UserInfo from "@/components/UserInfo.vue";
-import api from "@/api/api.js";
+import UserApi from "@/api/UserApi.js";
 import common from "@/util/common.js";
 import { Overlay, Loading, Dialog, Toast } from "vant";
 
@@ -42,7 +42,7 @@ export default {
       //   let param = '?appid='+this.appid+'&sectIds='+this.sectIds+'&type='+this.type+'&scene='+this.scene+'&behavior='+this.behavior
       //   +'&feeId='+this.feeId+'&timestamp='+this.timestamp
 
-      api
+      UserApi
         .operAuthorize(param)
         .then((response) => {
           console.log(response);
