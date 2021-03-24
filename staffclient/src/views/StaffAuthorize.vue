@@ -36,27 +36,24 @@ export default {
         scene: this.scene,
         behavior: this.behavior,
         feeId: this.feeId,
-        timestamp: this.timestamp,
-        showOverlay: true
-      };
-      //   let param = '?appid='+this.appid+'&sectIds='+this.sectIds+'&type='+this.type+'&scene='+this.scene+'&behavior='+this.behavior
-      //   +'&feeId='+this.feeId+'&timestamp='+this.timestamp
-
-      UserApi
-        .operAuthorize(param)
+        timestamp: this.timestamp
+      }
+      this.showOverlay = true
+      UserApi.operAuthorize(param)
         .then((response) => {
-          console.log(response);
-          let success = response.data.success;
+         this.showOverlay = false
+          console.log(response)
+          let success = response.data.success
           if (success) {
             Dialog({
               message: "授权成功。接下来需要您设置所需要接收的消息类型。",
-            });
+            })
             this.$router.push({
               path: "/subscribeSetting",
               query: {
                 subscribeTemplateIds: this.userInfo.subscribeTemplateIds,
               },
-            });
+            })
           } else {
             Toast(response.data.message)
           }
@@ -76,8 +73,8 @@ export default {
       behavior: this.$route.query.behavior,
       feeId: this.$route.query.feeId,
       timestamp: this.$route.query.timestamp,
-      appid: "",
-    };
+      appid: ""
+    }
   },
 };
 </script>
