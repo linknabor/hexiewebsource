@@ -176,9 +176,12 @@ export default {
             vm.count=count;
 			let reduced_amt=0;
 			let reduce_rate = 0; //减少到角还是分减少到角还是分
+            if(!vm.reduceM){
+                return false
+            }
 			if ("0" == vm.reduceM) {
-			//不减免
-			return;
+			    //不减免
+			    return false;
 			} else if ("1" == vm.reduceM) {
 			//四舍五入至元
 			reduce_rate = "1";
@@ -211,7 +214,7 @@ export default {
 			reduced_amt = Math.ceil(vm.count * reduce_rate) / reduce_rate;
 			vm.hasReduce = "1";
 			}else {
-			return;
+			    return false;
             }
             vm.reduceMoney = parseFloat(vm.count) - parseFloat(reduced_amt.toFixed(2));//四舍五入的钱传给后端
             vm.reduceMoney = vm.reduceMoney.toFixed(2); //减少的钱 
@@ -221,6 +224,7 @@ export default {
   		},
         //物业优惠
         getDiscount(){
+            $('.box-bg').css("display",'block');
             let url = "/getDiscounts";
             let pType;
             if(vm.ulist.payType  >= 1){
@@ -253,7 +257,8 @@ export default {
                 }else {
                     alert(res.message)
                 }
-            } )
+                $('.box-bg').css("display",'block');
+            })
         },
         cullDiscount(){//优惠减免
             var cull_price = 0 ;//历年今年总金额
