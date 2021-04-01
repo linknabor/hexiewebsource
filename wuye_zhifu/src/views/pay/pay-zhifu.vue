@@ -257,7 +257,7 @@ export default {
                 }else {
                     alert(res.message)
                 }
-                $('.box-bg').css("display",'block');
+                $('.box-bg').css("display",'none');
             })
         },
         cullDiscount(){//优惠减免
