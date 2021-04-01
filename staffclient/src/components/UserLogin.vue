@@ -13,7 +13,7 @@
 import Common from "@/util/common.js"
 import Config from "@/util/config.js"
 import Storage from "@/util/storage.js"
-import Api from "@/api/api.js"
+import UserApi from "@/api/UserApi.js"
 import { Toast, Overlay, Loading } from "vant"
 
 export default {
@@ -68,7 +68,7 @@ export default {
         location.href = url;
       } else {
         console.log("start api login");
-        Api.login(o, param).then((response) => {
+        UserApi.login(o, param).then((response) => {
           let data = response.data;
           if (!data.success) {
             Common.removeParamFromUrl(["code"]);

@@ -4,7 +4,7 @@ import config from '@/util/config.js'
 import common from '@/util/common.js'
 
 let baseUrl = config.baseUrl
-const api = {
+const userApi = {
     getUserInfo(data) {
         let oriApp = common.getUrlParam('oriApp')
         if(!oriApp){
@@ -24,4 +24,4 @@ const api = {
     }
 }
 
-export default api;
+export default userApi;
