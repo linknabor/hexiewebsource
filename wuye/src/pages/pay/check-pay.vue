@@ -46,7 +46,7 @@
 			  	</div>
 			  	<div class="input-row last">
 			  		建筑面积：
-			  		<input type="text" class="virtual-input classinput" value="" @blur="fixScroll" v-model="query.area">&nbsp;&nbsp;m²
+			  		<input type="text" class="virtual-input classinput" value="" @blur="fixScroll" v-model.trim="query.area">&nbsp;&nbsp;m²
 			  	</div>
 			  	<!-- <div class="input-row add">
 			  		建筑面积允许误差±1m²以内
@@ -228,6 +228,10 @@
 					Dialog({message: '请选择小区或者房屋'})
            			return false
            		}
+				if(vm.query.area===''){
+					Dialog({message: '请输入面积'})
+           			return false
+				}
 				Dialog.confirm({
 					message: this.cellAddr + ', 确认要绑定吗？'
 				}).then(()=>{
