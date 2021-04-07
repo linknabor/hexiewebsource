@@ -71,7 +71,7 @@ export default {
                         reLogin();
                         return
                 }else {
-                    vm.evoucherOperator = n.result.evoucherOperator;
+                    vm.evoucherOperator = n.result.serveRole.evoucherOperator;
                     vm.query();
                 }
                 },
