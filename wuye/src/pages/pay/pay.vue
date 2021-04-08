@@ -292,7 +292,7 @@ export default {
       queryBillPage: 1, //查询缴费页码
       quickBillpage: 1,
       pay_least_month: 1,
-      reduceMode: 1, //减免金额的方式
+      reduceMode: 99, //减免金额的方式
       id: "",
       showi: false,
       showp: false,
