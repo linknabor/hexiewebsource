@@ -1,6 +1,6 @@
 <template>
   <van-popup v-model="ownerShow">
-    <vue-qr :text="ownerScanTxt" :size="200" :margin="0"></vue-qr>
+<!--    <vue-qr :text="ownerScanTxt" :size="200" :margin="0"></vue-qr>-->
   </van-popup>
   <div class="ind">
     <div class="avatar-wrap rel ov">
