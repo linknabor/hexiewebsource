@@ -1,4 +1,7 @@
 <template>
+  <van-popup v-model="ownerShow">
+    <div class="qrcode" ref="qrCodeUrl"></div>
+  </van-popup>
   <div class="ind">
     <div class="avatar-wrap rel ov">
       <div class="menu-person-link-white" @click="gotoEdit">
@@ -44,11 +47,18 @@
             <div class="point-title fs14">积分</div>
           </div>
         </div>
-        
+
         <div class="point-item-wrap item-wraps">
           <div class="point-item" @click="mycoupons">
             <div class="point-info fs16">{{user.couponCount}}</div>
             <div class="point-title fs14">我的优惠券</div>
+          </div>
+        </div>
+
+        <div class="point-item-wrap item-wraps">
+          <div class="point-item" @click="ownerScan">
+            <div class="point-info fs16" style="background-image: url('../../assets/images/ownerScan.png')"></div>
+            <div class="point-title fs14">业主码</div>
           </div>
         </div>
       </div>
@@ -81,7 +91,7 @@
         <router-link  class="module-item" :to="{path:'/myservice'}">
           <div class="module-logo logo3"></div>
           <div class="module-title fs14">服务订单</div>
-        </router-link> 
+        </router-link>
       </div>
 
        <div  class="module-item-wrap module-newwidth" >
@@ -142,7 +152,7 @@
           <span class="input-info lf30 fs16">我是维修工</span>
           <span class="fr fs14 left_color">查看维修单&nbsp;&nbsp;&nbsp;&nbsp;</span>
         </router-link>
-        
+
         <router-link
           :to="{path:'/mass-notice'}"
           class="input-wrap menu-person-link lite-divider"
@@ -205,7 +215,7 @@
     <div  v-show="login"
       style=" background: rgba(0,0,0,0.5);display: none;width: 100%;height: 100%;top: 0rem; position: fixed;z-index: 999;">
     </div>
-    <div id="login" v-show="login"> 
+    <div id="login" v-show="login">
       <img
         src="../../assets/images/img/7f1b3b58-c5b6-4022-b1ed-dc4188c43a3a.gif"
         style="width:100%;vertical-align: middle;"
@@ -219,6 +229,10 @@ let vm;
 import img from "../../assets/images/common/logo.jpg";
 import Bus from '../../api/bus.js'
 import cookie from 'js-cookie';
+import Vue from 'vue';
+import { Popup } from 'vant';
+import QRCode from 'qrcodejs2'
+Vue.use(Popup);
 export default {
   data() {
     return {
@@ -247,6 +261,7 @@ export default {
         nickname: "游客",
         levelname: "普通会员"
       },
+      ownerShow:false,
       subscribeTemplateIds:[] //工作人远用的订阅消息模板id列表
 
     };
@@ -255,14 +270,15 @@ export default {
     vm = this;
   },
   mounted() {
-    // this.initSession4Test(); 
-    this.User();  
+    // this.initSession4Test();
+    this.User();
+    this.creatQrCode();
   },
   methods: {
     //模仿线上用户信息
     // 105/747/384
     initSession4Test() {
-      
+
       var url ='login/8441?code=8441';
       var data = {
         "oriApp": "wx95f46f41ca5e570e"
@@ -283,7 +299,7 @@ export default {
           }else {
             // vm.donghu=n.result.donghu;//东湖标识
             vm.user = n.result;
-            vm.user.headimgurl = "" != n.result.name || n.result? n.result.headimgurl: vm.user_info.avatar;  
+            vm.user.headimgurl = "" != n.result.name || n.result? n.result.headimgurl: vm.user_info.avatar;
             vm.user.name ="" != n.result.name ? n.result.name : vm.user_info.nickname;
             vm.qrCode=n.result.qrCode;
             vm.cardService=n.result.cardService;
@@ -332,33 +348,33 @@ export default {
     //点击头像
     gotoEdit() {
         if(vm.cardService){
-          //1新用户未领卡未激活 
+          //1新用户未领卡未激活
           if(!vm.user.tel && (vm.user.cardStatus=='1'||vm.user.cardStatus==null || vm.user.cardStatus=='0')){
               vm.$router.push({ path: "/welfare" });
           }else if(!vm.user.tel && vm.user.cardStatus=='2'){ //2新用户领卡未激活
-              vm.$router.push({ path: "/register" }); 
+              vm.$router.push({ path: "/register" });
           }else if(vm.user.tel && (vm.user.cardStatus=='3' || vm.user.cardStatus=='4')){ //3新用户或老用户领卡已激活
               vm.receiveData.getData(vm,"/card/activateUrlOnMenu?oriApp="+vm.getUrlParam('oriApp'),'res',function(){
-                  if(vm.res.success) {                
+                  if(vm.res.success) {
                           location.href=vm.res.result;
                   }else {
-                        alert(vm.res.message);  
+                        alert(vm.res.message);
                   }
-              });  
+              });
           }else if(vm.user.tel && (vm.user.cardStatus=='1'||vm.user.cardStatus==null || vm.user.cardStatus=='0')){ //1老用户未领卡未激活
-              vm.$router.push({ path: "/welfare" });  
+              vm.$router.push({ path: "/welfare" });
           }else if(vm.user.tel && vm.user.cardStatus=='2') { //2 老用户领卡未激活
               vm.receiveData.getData(vm,"/card/activateUrlOnMenu?oriApp="+vm.getUrlParam('oriApp'),'res',function(){
-                  if(vm.res.success) {                
+                  if(vm.res.success) {
                           location.href=vm.res.result;
                   }else {
-                        alert(vm.res.message);  
+                        alert(vm.res.message);
                   }
-              });  
+              });
           }
         }else {
             vm.$router.push({ path: "/bindphone" });
-        }      
+        }
     },
     //我的优惠券
     mycoupons() {
@@ -370,7 +386,7 @@ export default {
     Notice() {
       vm.$router.push({path:'/notices'})
     },
-    //我是商家 
+    //我是商家
     business() {
       var evoucherOperator = '';
       if(this.evoucherOperator) {
@@ -379,11 +395,26 @@ export default {
         evoucherOperator = 'false';
       }
       vm.$router.push({path:'/specialorders',query:{'evoucherOperator':evoucherOperator,type:'1'}});
+    },
+    creatQrCode() {
+      let str = "?appid=" + this.user.appid + "&userid=" + this.user.wuyeId;
+      console.log(str);
+      new QRCode(this.$refs.qrCodeUrl, {
+        text: str, // 需要转换为二维码的内容
+        width: 100,
+        height: 100,
+        colorDark: '#000000',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.H
+      })
+    },
+    ownerScan() {
+      this.ownerShow = true;
     }
   },
   computed: {},
   components: {
- 
+
   }
 };
 </script>
@@ -476,7 +507,7 @@ export default {
   position: relative;
 }
 #point-list .item-wraps {
-  width: 50%;
+  width: 35%;
 }
 #point-list .point-item-wrap .point-item {
   border-radius: 2px;
@@ -549,7 +580,7 @@ export default {
 }
 #module-list .module-newwidth {
   width: 33%;
-} 
+}
 #module-list .module-item-wrap .module-item {
   margin-top: 10px;
   display: block;
@@ -676,4 +707,16 @@ export default {
     padding-top: 7%;
     color: #3b3937;
 }
+
+  .qrcode{
+    display: inline-block;
+  }
+
+  .qrcode img {
+    width: 132px;
+    height: 132px;
+    background-color: #fff; //设置白色背景色
+    padding: 6px; // 利用padding的特性，挤出白边
+    box-sizing: border-box;
+  }
 </style>
