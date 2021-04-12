@@ -1,6 +1,6 @@
 <template>
   <van-popup v-model="ownerShow">
-    <div class="qrcode" ref="qrCodeUrl"></div>
+    <vue-qr :text="ownerScanTxt" :size="200" :margin="0"></vue-qr>
   </van-popup>
   <div class="ind">
     <div class="avatar-wrap rel ov">
@@ -231,7 +231,7 @@ import Bus from '../../api/bus.js'
 import cookie from 'js-cookie';
 import Vue from 'vue';
 import { Popup } from 'vant';
-import QRCode from 'qrcodejs2'
+import VueQr from 'vue-qr'
 Vue.use(Popup);
 export default {
   data() {
@@ -262,6 +262,7 @@ export default {
         levelname: "普通会员"
       },
       ownerShow:false,
+      ownerScanTxt:'',
       subscribeTemplateIds:[] //工作人远用的订阅消息模板id列表
 
     };
@@ -272,7 +273,6 @@ export default {
   mounted() {
     // this.initSession4Test();
     this.User();
-    this.creatQrCode();
   },
   methods: {
     //模仿线上用户信息
@@ -396,25 +396,15 @@ export default {
       }
       vm.$router.push({path:'/specialorders',query:{'evoucherOperator':evoucherOperator,type:'1'}});
     },
-    creatQrCode() {
-      let str = "?appid=" + this.user.appid + "&userid=" + this.user.wuyeId;
-      console.log(str);
-      new QRCode(this.$refs.qrCodeUrl, {
-        text: str, // 需要转换为二维码的内容
-        width: 100,
-        height: 100,
-        colorDark: '#000000',
-        colorLight: '#ffffff',
-        correctLevel: QRCode.CorrectLevel.H
-      })
-    },
     ownerScan() {
+      let str = "?appid=" + this.user.appid + "&userid=" + this.user.wuyeId;
+      this.ownerScanTxt = str;
       this.ownerShow = true;
     }
   },
   computed: {},
   components: {
-
+    VueQr
   }
 };
 </script>
