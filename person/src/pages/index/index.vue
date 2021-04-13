@@ -54,7 +54,7 @@
 
         <div class="point-item-wrap item-wraps">
           <div class="point-item" >
-            <div class="point-info fs16">图片</div>
+            <div class="point-info fs16 qrcodelogo"></div>
             <div class="point-title fs14">业主码</div>
           </div>
         </div>
@@ -416,6 +416,9 @@
   .avatar-wrap {
     background-color: #ff8a00;
   }
+  .qrcodelogo {
+    background: url(../../assets/images/ownerScan.png) no-repeat;
+  }
   .rel {
     position: relative;
   }
@@ -483,7 +486,7 @@
     position: relative;
   }
   #point-list .item-wraps {
-    width: 35%;
+    width: 33%;
   }
   #point-list .point-item-wrap .point-item {
     border-radius: 2px;
