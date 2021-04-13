@@ -1,5 +1,8 @@
 <template>
   <div class="ind">
+    <van-popup v-model="qrshow">
+      <img :src="image" alt="">
+    </van-popup>
     <div class="avatar-wrap rel ov">
       <div class="menu-person-link-white" @click="gotoEdit">
         <img
@@ -53,8 +56,8 @@
         </div>
 
         <div class="point-item-wrap item-wraps">
-          <div class="point-item" >
-            <div class="point-info fs16 qrcodelogo"><img src=""></div>
+          <div class="point-item" @click="showQrcode">
+            <div class="point-info fs16 qrcodelogo" ><img src=""></div>
             <div class="point-title fs14 qrcodemsg">业主码</div>
           </div>
         </div>
@@ -226,6 +229,8 @@
   import img from "../../assets/images/common/logo.jpg";
   import Bus from '../../api/bus.js'
   import cookie from 'js-cookie';
+  import { Popup } from 'vant';
+  Vue.use(Popup);
   export default {
     data() {
       return {
@@ -254,6 +259,8 @@
           nickname: "游客",
           levelname: "普通会员"
         },
+        qrshow:false, //二维码显示开关
+        image:'',
         subscribeTemplateIds:[] //工作人远用的订阅消息模板id列表
 
       };
@@ -386,6 +393,10 @@
           evoucherOperator = 'false';
         }
         vm.$router.push({path:'/specialorders',query:{'evoucherOperator':evoucherOperator,type:'1'}});
+      },
+      showQrcode() {
+        this.qrshow = true
+        this.image = "www.baidu.com"
       }
     },
     computed: {},
