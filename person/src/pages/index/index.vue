@@ -2,7 +2,7 @@
   <div class="ind">
     <div class="">
       <van-popup v-model="qrshow">
-        <img :src="image" alt="">
+        <vue-qr :text="image" :margin="0" colorDark="#f67b29" colorLight="#fff" :size="200"></vue-qr>
       </van-popup>
     </div>
 
@@ -233,6 +233,7 @@
   import Bus from '../../api/bus.js'
   import cookie from 'js-cookie';
   import { Popup } from 'vant';
+  import vueQr from 'vue-qr';
   Vue.use(Popup);
   export default {
     data() {
@@ -398,13 +399,14 @@
         vm.$router.push({path:'/specialorders',query:{'evoucherOperator':evoucherOperator,type:'1'}});
       },
       showQrcode() {
-        this.qrshow = true
-        this.image = "www.baidu.com"
+        let str = "?appid=" + vm.user.appId + "&userid=" + vm.user.wuyeId;
+        vm.qrshow = true
+        vm.image = str
       }
     },
     computed: {},
     components: {
-
+      vueQr
     }
   };
 </script>
@@ -432,10 +434,10 @@
   }
   .qrcodelogo {
     background: url(../../assets/images/ownerScan.png) no-repeat;
-    width: 30px;
+    width: 100%;
     position: absolute;
     left: 50%;
-    top:10px;
+    height: 100%;
   }
   .rel {
     position: relative;
