@@ -2,7 +2,7 @@
   <div class="ind">
     <div class="qrDiv">
       <van-popup v-model="qrshow">
-        <vue-qr :text="image" :margin="20" :size="200"></vue-qr>
+        <vue-qr :text="image" :margin="20" :size="400"></vue-qr>
       </van-popup>
     </div>
 
