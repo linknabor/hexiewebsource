@@ -1,8 +1,11 @@
 <template>
   <div class="ind">
-    <van-popup v-model="qrshow">
-      <img :src="image" alt="">
-    </van-popup>
+    <div class="">
+      <van-popup v-model="qrshow">
+        <img :src="image" alt="">
+      </van-popup>
+    </div>
+
     <div class="avatar-wrap rel ov">
       <div class="menu-person-link-white" @click="gotoEdit">
         <img
@@ -58,7 +61,6 @@
         <div class="point-item-wrap item-wraps">
           <div class="point-item" @click="showQrcode">
             <div class="point-info fs16 qrcodelogo" ><img src=""></div>
-            <div class="point-title fs14 qrcodemsg">业主码</div>
           </div>
         </div>
       </div>
@@ -429,14 +431,10 @@
   }
   .qrcodelogo {
     background: url(../../assets/images/ownerScan.png) no-repeat;
-    width: 20px;
+    width: 30px;
     position: absolute;
     left: 50%;
-  }
-  .qrcodemsg{
-    position: absolute;
-    top: 18px;
-    left: 50px;
+    top:10px;
   }
   .rel {
     position: relative;
