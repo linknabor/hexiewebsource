@@ -228,6 +228,7 @@
 
 <script>
   let vm;
+  import Vue from 'vue';
   import img from "../../assets/images/common/logo.jpg";
   import Bus from '../../api/bus.js'
   import cookie from 'js-cookie';
