@@ -1,8 +1,8 @@
 <template>
   <div class="ind">
-    <div class="">
+    <div class="qrDiv">
       <van-popup v-model="qrshow">
-        <vue-qr :text="image" :margin="0" colorDark="#f67b29" colorLight="#fff" :size="200"></vue-qr>
+        <vue-qr :text="image" :margin="20" :size="200"></vue-qr>
       </van-popup>
     </div>
 
