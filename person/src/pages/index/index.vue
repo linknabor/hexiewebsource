@@ -61,6 +61,7 @@
         <div class="point-item-wrap item-wraps">
           <div class="point-item" @click="showQrcode">
             <div class="point-info fs16 qrcodelogo" ><img src=""></div>
+			<div class="point-title fs14">业主码</div>
           </div>
         </div>
       </div>
