@@ -443,7 +443,7 @@
   .qrcodeowner {
     position: absolute;
     top: 19px;
-    left: 50px;
+    left: 10%;
   }
   .rel {
     position: relative;
