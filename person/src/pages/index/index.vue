@@ -61,7 +61,7 @@
         <div class="point-item-wrap item-wraps">
           <div class="point-item" @click="showQrcode">
             <div class="point-info fs16 qrcodelogo" ><img src=""></div>
-			<div class="point-title fs14">业主码</div>
+			<div class="point-title fs14 qrcodeowner">业主码</div>
           </div>
         </div>
       </div>
@@ -438,7 +438,12 @@
     width: 100%;
     position: absolute;
     left: 50%;
-    height: 100%;
+  }
+
+  .qrcodeowner {
+    position: absolute;
+    top: 19px;
+    left: 50px;
   }
   .rel {
     position: relative;
