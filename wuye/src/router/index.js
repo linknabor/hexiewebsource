@@ -9,6 +9,11 @@ const router= new VueRouter({
             component: resolve=>require(['@/pages/index'],resolve)
         },
         {
+            path: '/version2',
+            name: 'version2',
+            component: resolve=>require(['@/pages/main/Version2'],resolve)
+        },
+        {
             path:'/message',
             name:'message',
             component:resolve=> require(['@/pages/main/message'],resolve)
@@ -26,6 +31,7 @@ const router= new VueRouter({
               title:'我的房子'
             }
         },
+        //绑定房屋首页
         {
             path:'/identHouse',
             name:'IdentHouse',
@@ -34,6 +40,7 @@ const router= new VueRouter({
               title:'绑定房子'
             }
         },
+        //对账单绑定房屋
         {
             path:'/addHouse',
             name:'AddHouse',
@@ -190,7 +197,7 @@ router.beforeEach((to, from, next) => {
        flag= common.checkRegisterStatus()
         if(!flag) {
             return
-        }
+      }
       }
     //动态改变title
     changeTitle(to.meta.title)
