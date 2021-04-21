@@ -1,5 +1,6 @@
 <template>
     <div class="main">
+        <van-skeleton title :row="3" :loading="skeletonLoading" style="padding-top:2rem">
         <div class="header">
             <div class="location">
                 <div class="location-image"></div>
@@ -46,6 +47,7 @@
             <div class="pub-date">30分钟前</div>
         </div>
         <div class="main-end"></div>
+        </van-skeleton>
         <foot @userInfo="setUser"></foot>
     </div>
     
@@ -53,6 +55,7 @@
 
 <script>
 import Foot from '@/components/footer.vue'
+import { Skeleton } from "vant";
 
 
 export default ({
@@ -62,13 +65,17 @@ export default ({
             menuList: [],
             activeIconClass: 'icons',
             activeMomHeaderclass: 'moments-header',
+            skeletonLoading: true
         }
     },
     components: {
         'foot': Foot,
+        [Skeleton.name]: Skeleton
     },
     mounted(){
-        
+        this.timer = setTimeout(()=>{   //设置延迟执行
+            this.skeletonLoading = false  
+        },1000);
     },
     methods: {
         setUser(data){
@@ -94,7 +101,6 @@ export default ({
 }
 
 .location{
-    width: 100%;
     padding: 0.67rem 0 0 4.17%;
     &-image{
         float: left;
