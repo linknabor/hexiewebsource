@@ -23,7 +23,7 @@
         </span>
       </div>
       <!--  -->
-      <div id="point-list" style="border-bottom: none;" class="div_bottom" v-show="cardService==false">
+      <div id="point-list" style="border-bottom: none;" class="div_bottom" v-show="cardService==true">
         <div class="point-item-wrap" style="width: 24%">
           <div class="point-item">
             <div class="point-info fs16">{{user.zhima}}</div>
@@ -51,7 +51,7 @@
         </div>
 		
       </div>
-      <div id="point-list" style="border-bottom: none;" class="div_bottom" v-show="cardService==true">
+      <div id="point-list" style="border-bottom: none;" class="div_bottom" v-show="cardService==false">
         <div class="point-item-wrap item-wraps">
           <div class="point-item " >
             <div class="point-info fs16">{{point}}</div>
