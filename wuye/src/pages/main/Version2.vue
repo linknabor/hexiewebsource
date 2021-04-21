@@ -94,7 +94,6 @@ export default ({
 }
 
 .location{
-    width: 100%;
     padding: 0.67rem 0 0 4.17%;
     &-image{
         float: left;
