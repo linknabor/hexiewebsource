@@ -96,6 +96,7 @@ export default{
         list:[],
         link:'',
         login:true,
+        userInfo:{}
       }
     },
     created() {
@@ -109,18 +110,6 @@ export default{
       vm.getclass();
     },
     methods: {
-        initSession4Test(){
-            // var url ='login/8441?code=8441';
-            // var data = {
-            //     "oriApp": "wx95f46f41ca5e570e"
-            // }
-            var url ='login/125417?code=125417';
-            var data = {
-                "oriApp": "wxbd214f5765f346c1"
-            }
-            vm.receiveData.postData(vm,url,data,'res',()=>{
-            });
-        },
 
          initUserInfo(){
             let n = "GET",
@@ -135,6 +124,7 @@ export default{
                       vm.login=false;
                       vm.list=n.result.iconList;
                       Bus.$emit('sends',n.result);
+                      vm.$emit("userInfo", n.result)
                       //存储cookie
                       vm.common.updatecookie(n.result.cardStatus,n.result.cardService,n.result.id,n.result.appid,n.result.cspId,n.result.sectId,n.result.cardPayService,n.result.bgImageList,n.result.wuyeTabsList,n.result.qrCode,n.result);
                       // Bus.$emit('wxSubscribe', subscribeTemplateIds);
