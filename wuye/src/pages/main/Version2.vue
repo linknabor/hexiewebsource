@@ -1,20 +1,28 @@
 <template>
     <div class="main">
         <van-skeleton title :row="3" :loading="skeletonLoading" style="padding-top:2rem">
+        <div>
+            <van-popup v-model="qrShow">
+                <vue-qr :text="qrImage" :margin="20" :size="275"></vue-qr>
+            </van-popup>
+        </div>
         <div class="header">
             <div class="location">
                 <div class="location-image"></div>
-                <div class="location-text">三林苑</div>
-                <div class="owner-text">业主码</div>
-                <div class="owner-image"></div>
+                <div class="location-text">{{this.sectName}}</div>
+                <div class="owner-text" @click="showQrcode">业主码</div>
+                <div class="owner-image" @click="showQrcode"></div>
             </div>
         </div>
         <div :class="activeIconClass">
             <ul>
                 <li v-for="(menu, index) in menuList" :key="index"
-                    :class="[{'icon-layer-upon-first':index%4===0 }, 
-                    {'icon-layer-upon-other': index%4!==0}]"
-                >
+                    :class="[{'icon-layer-upon-first':index%4===0 && index < 4 }, 
+                    {'icon-layer-upon-other': index%4!==0 && index < 4}, 
+                    {'icon-layer-down-first': index%4===0 && index >= 4}, 
+                    {'icon-layer-down-other': index%4!==0 && index >= 4}
+                    ]"
+                    @click="gotoPage(menu.url, menu.status, menu.code)">
                     <div class="icon" :style="{'background-image': 'url('+menu.image+')'}"></div>
                     <span class="icon-text">{{menu.name}}</span>
                 </li>
@@ -55,22 +63,28 @@
 
 <script>
 import Foot from '@/components/footer.vue'
-import { Skeleton } from "vant";
-
+import { Skeleton, Popup, Toast, Dialog } from "vant"
+import VueQr from 'vue-qr'
 
 export default ({
     data (){
         return {
+            sectName: '',
             userInfo: {},
             menuList: [],
             activeIconClass: 'icons',
             activeMomHeaderclass: 'moments-header',
-            skeletonLoading: true
+            skeletonLoading: true,
+            qrShow:false, //二维码显示开关
+            qrImage:'',
         }
     },
     components: {
         'foot': Foot,
-        [Skeleton.name]: Skeleton
+        VueQr,
+        [Skeleton.name]: Skeleton,
+        [Popup.name]: Popup,
+        [Toast.name]: Toast
     },
     mounted(){
         this.timer = setTimeout(()=>{   //设置延迟执行
@@ -80,11 +94,68 @@ export default ({
     methods: {
         setUser(data){
             this.userInfo = data
+            this.sectName = this.userInfo.xiaoquName
+            if(!this.sectName){
+                this.sectName = "游客"
+            }
             this.menuList = data.menuList
             if(this.menuList.length <= 4 && this.menuList.length > 0){
                 this.activeIconClass = 'icons-single'
                 this.activeMomHeaderclass = 'moments-header-single'
             }
+        },
+        showQrcode() {
+            let image = "?appid=" + this.userInfo.appId + "&userid=" + this.userInfo.wuyeId;
+            this.qrShow = true
+            this.qrImage = image
+        },
+        gotoPage(url, status, code){
+            console.log(url)
+            console.log(status)
+            if(status!==1){
+                Toast("当前功能尚未开通。")
+                return 
+            }
+            if(!code){
+                Toast("当前功能尚未开通。")
+                return
+            }
+            if('repair'===code) {
+                this.gotoRepair(url)
+            } else if ('onsale'===code) {
+                this.gotoEshop(url)
+            } else if ('rgroup'===code) {
+                this.gotoHref(url)
+            } else if ('service'===code) {
+                this.gotoHref(url)
+            } else if ('evoucher'===code){
+                this.gotoEvoucher(url)
+            } else {
+                this.$router.push({path: url, query:{}})
+            }
+            
+        },
+        gotoRepair(url) {
+            let user = this.userInfo
+            if(!user.sectId || user.sectId===0 || user.sectName === null){
+                Dialog({message: '您暂未绑定房屋，请前往“我是业主”\r\n进行操作！'})
+                return
+            }else  if(user.cfgParam==null || user.cfgParam.ONLINE_REPAIR == undefined||user.cfgParam.ONLINE_REPAIR==0) {
+                Dialog({message: '当前所在的小区未开启当前业务'})
+                return
+            }else {
+                this.$router.push({path: url,query:{'projectId':'1'}})
+            }
+        },
+        gotoEshop(url){
+            location.href = this.basePageUrl + url + this.common.getoriApp() + '#/classification'
+        },
+        gotoHref(url){
+            location.href = this.basePageUrlpay + url + this.common.getoriApp()
+            location.href = this.basePageUrl + url + this.common.getoriApp()
+        },
+        gotoEvoucher(url){
+            location.href = this.basePageUrl + url + this.common.getoriApp()+'#/cardrollindex'
         }
     },
 
@@ -120,7 +191,8 @@ export default ({
     }
 }
 .owner-text{
-    margin-left: 4.39rem;
+    position: absolute;
+    margin-left: 5.57rem;
     margin-top: 0.04rem;
     float: left;
     text-align: left;
@@ -128,7 +200,8 @@ export default ({
     color: #FFFFFF;
 }
 .owner-image{
-    margin-left: 0.2rem;
+    position: absolute;
+    margin-left: 6.55rem;
     float: left;
     width: 0.32rem;
     height: 0.32rem;
@@ -151,7 +224,8 @@ export default ({
     background-color: #fff;
     position: absolute;
     width: 92%;
-    height: 3.77rem;
+    // height: 3.77rem;
+    height: auto;
     border-radius: 0.16rem;
 }
 
@@ -161,7 +235,8 @@ export default ({
     background-color: #fff;
     position: absolute;
     width: 92%;
-    height: 1.88rem;
+    // height: 1.88rem;
+    height: auto;
     border-radius: 0.16rem;
 }
 
@@ -170,11 +245,21 @@ export default ({
     margin: 0.23rem 0.24rem 0.34rem 0.34rem;
     float: left;
     width: 1.04rem;
-    
 }
 
 .icon-layer-upon-other{
     margin: 0.23rem 0.24rem 0.34rem 0.48rem;
+    float: left;
+    width: 1.04rem;
+}
+
+.icon-layer-down-first{
+    margin: 0.08rem 0.24rem 0.44rem 0.34rem;
+    float: left;
+    width: 1.04rem;
+}
+.icon-layer-down-other{
+    margin: 0.08rem 0.24rem 0.44rem 0.48rem;
     float: left;
     width: 1.04rem;
 }
@@ -199,13 +284,11 @@ export default ({
     background-repeat: no-repeat;
 }
 .moments-header {
-    top: 2.31rem;
     color: #292929;
     text-align: left;
-    vertical-align: top;
     font-weight: bolder;
     font-size: 0.38rem;
-    margin: 0.5rem 0 0.41rem 0.4rem;
+    margin: 2.4rem 0 0.41rem 0.4rem;
 }
 
 .moments-header-single {
@@ -213,7 +296,7 @@ export default ({
     text-align: left;
     font-weight: bolder;
     font-size: 0.38rem;
-    margin: 1rem 0 0.41rem 0.4rem;
+    margin: 0.75rem 0 0.41rem 0.4rem;
 }
 
 .moments{
@@ -274,7 +357,7 @@ export default ({
     text-align: left;
     font-size: 0.26rem;
     padding-bottom: 0.4rem;
-    width: 1.1rem;
+    width: 1.3rem;
     height: 0.24rem;
 }
 .main-end{
