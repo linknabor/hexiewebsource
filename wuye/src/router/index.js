@@ -208,6 +208,7 @@ router.beforeEach((to, from, next) => {
     let kyappid = config.C('kyappid')  //昆亿乐居
     let dcappid = config.C('dcappid')   //东辰物业
     let nbappid = config.C('nbappid')
+    console.log("router, oriApp : " + appid)
     if(appid!==kyappid && appid!==dcappid && appid!==nbappid){
       newVersionIndex = true
     }
