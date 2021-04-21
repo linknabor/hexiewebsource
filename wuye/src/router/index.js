@@ -204,11 +204,12 @@ router.beforeEach((to, from, next) => {
   let newVersionIndex = false
   if('index'===pageName){
     let config = Vue.prototype.is_config
-    let appid = common.getoriApp()
+    let getUrlParam = Vue.prototype.getUrlParam
+    let appid = getUrlParam('oriApp')
     let kyappid = config.C('kyappid')  //昆亿乐居
-    let dcappid = config.C('dcappid')   //东辰物业
-    let nbappid = config.C('nbappid')
-    console.log("router, oriApp : " + appid)
+    let dcappid = config.C('dcappid')  //东辰物业
+    let nbappid = config.C('nbappid')   //测试用
+    console.log('router, oriApp : ' + appid)
     if(appid!==kyappid && appid!==dcappid && appid!==nbappid){
       newVersionIndex = true
     }
