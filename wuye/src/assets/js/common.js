@@ -38,6 +38,7 @@ var MasterConfig = function() {
 
         is_debug:true,
 
+        nbappid:'wxa48ca61b68163483',//奈博科技，测试用
         kyappid:'wxa54bc90bdbc845a8',//昆亿
         dcappid:'wxcfa72801fc101382'//东城
     },
