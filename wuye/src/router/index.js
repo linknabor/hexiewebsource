@@ -205,9 +205,10 @@ router.beforeEach((to, from, next) => {
   if('index'===pageName){
     let config = Vue.prototype.is_config
     let appid = common.getoriApp()
-    var kyappid = config.C('kyappid');  //昆亿乐居
-    var dcappid = config.C('dcappid');   //东辰物业
-    if(appid!==kyappid && appid!==dcappid){
+    let kyappid = config.C('kyappid')  //昆亿乐居
+    let dcappid = config.C('dcappid')   //东辰物业
+    let nbappid = config.C('nbappid')
+    if(appid!==kyappid && appid!==dcappid && appid!==nbappid){
       newVersionIndex = true
     }
   }
