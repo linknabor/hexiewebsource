@@ -212,8 +212,10 @@ export default ({
             this.getNotice();
         },
         noticeDetail(url){
+            console.log(url)
             if(!url){
                 Toast("未配置跳转链接")
+                return
             }
             location.href = url
         },
