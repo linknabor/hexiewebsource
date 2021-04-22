@@ -31,29 +31,33 @@
         <div :class="activeMomHeaderclass">
             <span class="moments-header-text">我的圈子</span>
         </div>
-        <div class="moments">
-            <div class="moment-title">
-                <div class="head-image"></div>
-                <span class="head-sect">三林苑</span>
-            </div>
-            <div class="moment-content">
-                <div class="content-text">升级了！小区物业清扫用上清扫机器人</div>
-                <div class="content-image"></div>
-            </div>
-            <div class="pub-date">30分钟前</div>
-        </div>
+        <van-pull-refresh v-model="pageRefreshing" @refresh="onRefresh" loosing-text="加载中">
+            <van-list v-model="pageLoading" :finished="pageLoadingFinished" @load="getNotice" error-text="请求失败，点击重新加载" :error.sync="pageLoadError">
+                <div class="moments" v-for="(notice, index) in noticeList" :key="index">
+                    <div class="moment-title">
+                        <div :class="[{'sys-notice-image': notice.noticeType===9||notice.noticeType===10},
+                            {'wuye-notice-image': notice.noticeType===0||notice.noticeType===1||notice.noticeType===2||notice.noticeType===3},
+                            {'moment-notice-image': notice.noticeType===11}]" >
+                        </div>
+                        <span class="head-sect">{{notice.creator}}</span>
+                    </div>
+                    <div class="moment-content" @click="notice.noticeType!==11&&noticeDetail(notice.url)">
+                        <div class="content-text">{{notice.title}}</div>
+                        <div class="content-image" 
+                                v-for="(image, key) in notice.thumbnailImgList" :key="key">
+                                    <div :class="[{'content-image-view': notice.thumbnailImgList.length===1},
+                                {'content-image-view-multi': notice.thumbnailImgList.length>=2&&key!==2},
+                                {'content-image-view-triple': notice.thumbnailImgList.length>2&&key===2}]" 
+                                :style="{'background-image': 'url('+image+')'}" @click="notice.noticeType===11&&showImage(notice.thumbnailImgList, key)"></div>
+                            </div>
+                            <div style="clear: both"></div>
+                    </div>
+                    <div class="pub-date">{{notice.noticeDate}}</div>
+                </div>
+            </van-list>
+            <van-empty description="还没有消息哦" image="search" image-size="1.8rem" v-if="noticeList.length==0"/>
+        </van-pull-refresh>
         
-        <div class="moments">
-            <div class="moment-title">
-                <div class="head-image"></div>
-                <span class="head-sect">三林苑</span>
-            </div>
-            <div class="moment-content">
-                <div class="content-text">升级了！小区物业清扫用上清扫机器人</div>
-                <div class="content-image"></div>
-            </div>
-            <div class="pub-date">30分钟前</div>
-        </div>
         <div class="main-end"></div>
         </van-skeleton>
         <foot @userInfo="setUser"></foot>
@@ -63,8 +67,9 @@
 
 <script>
 import Foot from '@/components/footer.vue'
-import { Skeleton, Popup, Toast, Dialog } from "vant"
 import VueQr from 'vue-qr'
+import { Skeleton, Popup, Toast, Dialog, Empty, List, PullRefresh, ImagePreview } from 'vant'
+import NoticeApi from '@/api/NoticeApi.js'
 
 export default ({
     data (){
@@ -72,11 +77,27 @@ export default ({
             sectName: '',
             userInfo: {},
             menuList: [],
+            noticeList: [],
             activeIconClass: 'icons',
             activeMomHeaderclass: 'moments-header',
             skeletonLoading: true,
             qrShow:false, //二维码显示开关
             qrImage:'',
+            currPage: 0, //当前页
+            pageLoading: false,
+            pageLoadingFinished: true,
+            pageLoadError: false,
+            pageRefreshing: false
+        }
+    },
+    watch: {
+        menuList: {
+            handler(val){
+                if(val.length > 0){
+                    this.getNotice()
+                }
+            },
+            deep: true
         }
     },
     components: {
@@ -84,7 +105,11 @@ export default ({
         VueQr,
         [Skeleton.name]: Skeleton,
         [Popup.name]: Popup,
-        [Toast.name]: Toast
+        [Toast.name]: Toast,
+        [Empty.name]: Empty,
+        [List.name]: List,
+        [PullRefresh.name]: PullRefresh,
+        [ImagePreview.name]: ImagePreview,
     },
     mounted(){
         this.timer = setTimeout(()=>{   //设置延迟执行
@@ -156,6 +181,47 @@ export default ({
         },
         gotoEvoucher(url){
             location.href = this.basePageUrl + url + this.common.getoriApp()+'#/cardrollindex'
+        },
+        getNotice(){
+            setTimeout(() => {
+                NoticeApi.getNotice(this.currPage).then((response)=>{
+                    this.pageLoading = false
+                    this.pageRefreshing = false
+                    let data = response.data
+                    console.log(data)
+                    if(data && data.errorCode === 0){
+                        if(data.result && data.result.length ===0){
+                            this.pageLoadingFinished = true
+                        }else {
+                            this.noticeList = this.noticeList.concat(data.result)
+                            this.currPage++
+                        }
+                    }else {
+                        console.log(data.error)
+                        this.pageLoadError = true
+                    }
+                }).catch((err)=>{
+                    console.log(err)
+                    this.pageLoadError = true
+                })
+            }, 1000)
+        },
+        onRefresh(){
+            this.pageLoadingFinished = false;
+            this.pageLoading = true;
+            this.getNotice();
+        },
+        noticeDetail(url){
+            if(!url){
+                Toast("未配置跳转链接")
+            }
+            location.href = url
+        },
+        showImage(imageArr, index){
+            ImagePreview({
+                images: imageArr,
+                startPosition: index,
+            });
         }
     },
 
@@ -313,12 +379,29 @@ export default ({
     position: relative;
 }
 
-.head-image{
+.sys-notice-image{
     width: 0.86rem;
     height: 0.86rem;
     background-size: cover;
     background-repeat: no-repeat;
-    .bg-image('../../assets/images/index/momentsDefHead');
+    .bg-image('../../assets/images/index/syshead_logo');
+    display: inline-block;
+}
+
+.wuye-notice-image{
+    width: 0.86rem;
+    height: 0.86rem;
+    background-size: cover;
+    background-repeat: no-repeat;
+    .bg-image('../../assets/images/index/moments_logo');
+    display: inline-block;
+}
+.moment-notice-image{
+    width: 0.86rem;
+    height: 0.86rem;
+    background-size: cover;
+    background-repeat: no-repeat;
+    .bg-image('../../assets/images/index/moments_logo');
     display: inline-block;
 }
 
@@ -341,15 +424,37 @@ export default ({
     text-align: left;
     color: #292929;
     font-size: 0.32rem;
+    width: 90%;
 }
 .content-image{
     margin-top: 0.3rem;
+    height: auto;
+}
+.content-image-view {
     width: 4.38rem;
     height: 2.5rem;
     border-radius: 0.16rem;
     background-size: cover;
     background-repeat: no-repeat;
-    background-image: url('../../assets/images/index/sample1.png');
+}
+.content-image-view-multi {
+    width: 1.58rem;
+    height: 1.58rem;
+    margin-left: 0.1rem;
+    margin-bottom: 0.1rem;
+    border-radius: 0.16rem;
+    background-size: cover;
+    background-repeat: no-repeat;
+    float: left;
+}
+.content-image-view-triple {
+    width: 1.58rem;
+    height: 1.58rem;
+    margin-left: 0.1rem;
+    border-radius: 0.16rem;
+    background-size: cover;
+    background-repeat: no-repeat;
+    clear:left;
 }
 .pub-date{
     margin: 0.26rem 0 0.3rem 0.32rem;
@@ -362,7 +467,7 @@ export default ({
 }
 .main-end{
     width: 100%;
-    height: 1.2rem;
+    height: 1.8rem;
 }
 
 </style>
