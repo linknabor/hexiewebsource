@@ -48,7 +48,7 @@
                                     <div :class="[{'content-image-view': notice.thumbnailImgList.length===1},
                                 {'content-image-view-multi': notice.thumbnailImgList.length>=2&&key!==2},
                                 {'content-image-view-triple': notice.thumbnailImgList.length>2&&key===2}]" 
-                                :style="{'background-image': 'url('+image+')'}" @click="notice.noticeType===11&&showImage(notice.thumbnailImgList, key)"></div>
+                                :style="{'background-image': 'url('+image+')'}" @click="notice.noticeType===11&&showImage(notice.imgList, key)"></div>
                             </div>
                             <div style="clear: both"></div>
                     </div>
