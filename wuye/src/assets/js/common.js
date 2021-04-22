@@ -1,9 +1,13 @@
 //开发环境
 var MasterConfig = function() {
     var t = {
-        baseUrl: /127|test|192/.test(location.origin)?'https://test.e-shequ.cn/wechat/hexie/wechat/':
+        baseUrl: /127|test|192/.test(location.origin)?'http://127.0.0.1:86/':
         /uat/.test(location.origin)?'https://uat.e-shequ.cn/wechat/hexie/wechat/':
         'https://www.e-shequ.cn/wechat/hexie/wechat/',
+
+        // baseUrl: /127|test|192/.test(location.origin)?'https://test.e-shequ.cn/wechat/hexie/wechat/':
+        // /uat/.test(location.origin)?'https://uat.e-shequ.cn/wechat/hexie/wechat/':
+        // 'https://www.e-shequ.cn/wechat/hexie/wechat/',
 
       basePageUrl:/127|test|192/.test(location.origin)?'https://test.e-shequ.cn/weixin/':
         /uat/.test(location.origin)?'https://uat.e-shequ.cn/hexie/weixin/':

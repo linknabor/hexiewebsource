@@ -57,6 +57,11 @@
 .footer_shequ_guizhou {background-image: url('../assets/images/icon/footer_zenzhi.png')}
 .footer_person_guizhou {background-image: url('../assets/images/icon/footer_wode.png')}
 .footer_group_guizhou{background-image: url('../assets/images/common/icon_pindan.png');}
+
+.overlay-loading{
+  margin-top: 3rem;
+}
+
 </style>
 
 <template>
@@ -73,30 +78,27 @@
         </ul>
       </nav>
     </footer>   
-    <div  v-show="login"
-      style=" background: rgba(0,0,0,0.5);display: none;width: 100%;height: 100%;top: 0rem; position: absolute;">
-    </div>
-    <div id="login" v-show="login"> 
-      <img
-        src="../assets/images/house/7f1b3b58-c5b6-4022-b1ed-dc4188c43a3a.gif"
-        style="width:100%;vertical-align: middle;"
-      />
-    </div >
-      
+    <van-overlay :show="showOverlay">
+    	<div class="overlay-loading">
+			  <van-loading type="spinner" color="#ff8a00" vertical>加载中...</van-loading>
+    	</div>
+    </van-overlay>
     
 	</div>
 </template>
 
 <script>
 let vm;
-import Bus from '../api/bus.js';
+import Bus from '../api/bus.js'
+import { Loading, Overlay } from 'vant';
+
 export default{
     data(){
       return {
         list:[],
         link:'',
-        login:true,
-        userInfo:{}
+        userInfo:{},
+        showOverlay: false	//遮罩
       }
     },
     created() {
@@ -109,9 +111,14 @@ export default{
     updated(){
       vm.getclass();
     },
+    components: {
+      [Loading.name]: Loading,
+      [Overlay.name]: Overlay
+    },
     methods: {
 
          initUserInfo(){
+           vm.showOverlay = true
             let n = "GET",
                 a = "userInfo?oriApp="+vm.getUrlParam('oriApp'),
                 i = null,
@@ -121,7 +128,7 @@ export default{
                          return
                     }
                     if(n.result!=null) {
-                      vm.login=false;
+                      vm.showOverlay = false
                       vm.list=n.result.iconList;
                       Bus.$emit('sends',n.result);
                       vm.$emit("userInfo", n.result)
@@ -145,8 +152,8 @@ export default{
                     //       vm.common.localSet('wuyeTabsList',JSON.stringify(n.result.wuyeTabsList));
                     // }
                 },
-                r = function(res) { 
-                   vm.login=false;
+                r = function() { 
+                   vm.showOverlay = false
                 };
             this.common.invokeApi(n, a, i, null, e, r);
 
