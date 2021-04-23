@@ -159,6 +159,9 @@ export default{
 
         },
        getclass(){
+         if(!vm.$refs.listli){
+           return
+         }
          for(var i=0;i<vm.$refs.listli.length;i++) {
             vm.$refs.listli[i].style.width=100/vm.$refs.listli.length+'%'
          } 
