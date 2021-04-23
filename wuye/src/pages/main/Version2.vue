@@ -10,8 +10,8 @@
             <div class="location">
                 <div class="location-image"></div>
                 <div class="location-text">{{this.sectName}}</div>
-                <div class="owner-text" @click="showQrcode">业主码</div>
-                <div class="owner-image" @click="showQrcode"></div>
+                <div class="owner-text" @click="showQrcode" v-show="registered">业主码</div>
+                <div class="owner-image" @click="showQrcode" v-show="registered"></div>
             </div>
         </div>
         <div :class="activeIconClass">
@@ -74,6 +74,7 @@ import NoticeApi from '@/api/NoticeApi.js'
 export default ({
     data (){
         return {
+            registered: false,
             sectName: '',
             userInfo: {},
             menuList: [],
@@ -119,7 +120,10 @@ export default ({
     methods: {
         setUser(data){
             this.userInfo = data
-            this.sectName = this.userInfo.xiaoquName
+            if(this.userInfo.sectId && this.userInfo.sectId !== '0'){
+                this.registered = true
+                this.sectName = this.userInfo.xiaoquName
+            }
             if(!this.sectName){
                 this.sectName = "游客"
             }
