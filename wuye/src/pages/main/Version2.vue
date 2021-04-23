@@ -32,7 +32,7 @@
             <span class="moments-header-text">我的圈子</span>
         </div>
         <van-pull-refresh v-model="pageRefreshing" @refresh="onRefresh" loosing-text="加载中">
-            <van-list v-model="pageLoading" :finished="pageLoadingFinished" @load="getNotice" error-text="请求失败，点击重新加载" :error.sync="pageLoadError">
+            <van-list v-model="pageLoading" :finished="pageLoadingFinished" @load="getNotice" error-text="请求失败，点击重新加载" :error.sync="pageLoadError" >
                 <div class="moments" v-for="(notice, index) in noticeList" :key="index">
                     <div class="moment-title">
                         <div :class="[{'sys-notice-image': notice.noticeType===9||notice.noticeType===10},
@@ -85,7 +85,7 @@ export default ({
             qrImage:'',
             currPage: 0, //当前页
             pageLoading: false,
-            pageLoadingFinished: true,
+            pageLoadingFinished: false,
             pageLoadError: false,
             pageRefreshing: false
         }
@@ -114,7 +114,7 @@ export default ({
     mounted(){
         this.timer = setTimeout(()=>{   //设置延迟执行
             this.skeletonLoading = false  
-        },1000);
+        },2000);
     },
     methods: {
         setUser(data){
@@ -456,7 +456,8 @@ export default ({
     border-radius: 0.16rem;
     background-size: cover;
     background-repeat: no-repeat;
-    clear:left;
+    float: left;
+    clear:both;
 }
 .pub-date{
     margin: 0.26rem 0 0.3rem 0.32rem;
