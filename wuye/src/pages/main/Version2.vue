@@ -399,7 +399,7 @@ export default ({
     height: 0.86rem;
     background-size: cover;
     background-repeat: no-repeat;
-    .bg-image('../../assets/images/index/moments_logo');
+    .bg-image('../../assets/images/index/xiaoxi');
     display: inline-block;
 }
 .moment-notice-image{
