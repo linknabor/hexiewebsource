@@ -114,7 +114,7 @@ export default ({
     mounted(){
         this.timer = setTimeout(()=>{   //设置延迟执行
             this.skeletonLoading = false  
-        },1000);
+        },2000);
     },
     methods: {
         setUser(data){
