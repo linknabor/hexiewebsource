@@ -121,11 +121,13 @@ export default ({
         setUser(data){
             this.userInfo = data
             if(this.userInfo.sectId && this.userInfo.sectId !== '0'){
-                this.registered = true
                 this.sectName = this.userInfo.xiaoquName
             }
             if(!this.sectName){
                 this.sectName = "游客"
+            }
+            if(this.userInfo.tel){
+                 this.registered = true
             }
             this.menuList = data.menuList
             if(this.menuList.length <= 4 && this.menuList.length > 0){
