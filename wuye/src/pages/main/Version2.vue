@@ -1,20 +1,28 @@
 <template>
     <div class="main">
         <van-skeleton title :row="3" :loading="skeletonLoading" style="padding-top:2rem">
+        <div>
+            <van-popup v-model="qrShow">
+                <vue-qr :text="qrImage" :margin="20" :size="275"></vue-qr>
+            </van-popup>
+        </div>
         <div class="header">
             <div class="location">
                 <div class="location-image"></div>
-                <div class="location-text">三林苑</div>
-                <div class="owner-text">业主码</div>
-                <div class="owner-image"></div>
+                <div class="location-text">{{this.sectName}}</div>
+                <div class="owner-text" @click="showQrcode" v-show="registered">业主码</div>
+                <div class="owner-image" @click="showQrcode" v-show="registered"></div>
             </div>
         </div>
         <div :class="activeIconClass">
             <ul>
                 <li v-for="(menu, index) in menuList" :key="index"
-                    :class="[{'icon-layer-upon-first':index%4===0 }, 
-                    {'icon-layer-upon-other': index%4!==0}]"
-                >
+                    :class="[{'icon-layer-upon-first':index%4===0 && index < 4 }, 
+                    {'icon-layer-upon-other': index%4!==0 && index < 4}, 
+                    {'icon-layer-down-first': index%4===0 && index >= 4}, 
+                    {'icon-layer-down-other': index%4!==0 && index >= 4}
+                    ]"
+                    @click="gotoPage(menu.url, menu.status, menu.code)">
                     <div class="icon" :style="{'background-image': 'url('+menu.image+')'}"></div>
                     <span class="icon-text">{{menu.name}}</span>
                 </li>
@@ -23,29 +31,33 @@
         <div :class="activeMomHeaderclass">
             <span class="moments-header-text">我的圈子</span>
         </div>
-        <div class="moments">
-            <div class="moment-title">
-                <div class="head-image"></div>
-                <span class="head-sect">三林苑</span>
-            </div>
-            <div class="moment-content">
-                <div class="content-text">升级了！小区物业清扫用上清扫机器人</div>
-                <div class="content-image"></div>
-            </div>
-            <div class="pub-date">30分钟前</div>
-        </div>
+        <van-pull-refresh v-model="pageRefreshing" @refresh="onRefresh" loosing-text="加载中">
+            <van-list v-model="pageLoading" :finished="pageLoadingFinished" @load="getNotice" error-text="请求失败，点击重新加载" :error.sync="pageLoadError" >
+                <div class="moments" v-for="(notice, index) in noticeList" :key="index">
+                    <div class="moment-title">
+                        <div :class="[{'sys-notice-image': notice.noticeType===9||notice.noticeType===10},
+                            {'wuye-notice-image': notice.noticeType===0||notice.noticeType===1||notice.noticeType===2||notice.noticeType===3},
+                            {'moment-notice-image': notice.noticeType===11}]" >
+                        </div>
+                        <span class="head-sect">{{notice.creator}}</span>
+                    </div>
+                    <div class="moment-content" @click="notice.noticeType!==11&&noticeDetail(notice.url)">
+                        <div class="content-text">{{notice.title}}</div>
+                        <div class="content-image" 
+                                v-for="(image, key) in notice.thumbnailImgList" :key="key">
+                                    <div :class="[{'content-image-view': notice.thumbnailImgList.length===1},
+                                {'content-image-view-multi': notice.thumbnailImgList.length>=2&&key!==2},
+                                {'content-image-view-triple': notice.thumbnailImgList.length>2&&key===2}]" 
+                                :style="{'background-image': 'url('+image+')'}" @click="notice.noticeType===11&&showImage(notice.imgList, key)"></div>
+                            </div>
+                            <div style="clear: both"></div>
+                    </div>
+                    <div class="pub-date">{{notice.noticeDate}}</div>
+                </div>
+            </van-list>
+            <van-empty description="还没有消息哦" image="search" image-size="1.8rem" v-if="noticeList.length==0"/>
+        </van-pull-refresh>
         
-        <div class="moments">
-            <div class="moment-title">
-                <div class="head-image"></div>
-                <span class="head-sect">三林苑</span>
-            </div>
-            <div class="moment-content">
-                <div class="content-text">升级了！小区物业清扫用上清扫机器人</div>
-                <div class="content-image"></div>
-            </div>
-            <div class="pub-date">30分钟前</div>
-        </div>
         <div class="main-end"></div>
         </van-skeleton>
         <foot @userInfo="setUser"></foot>
@@ -55,36 +67,167 @@
 
 <script>
 import Foot from '@/components/footer.vue'
-import { Skeleton } from "vant";
-
+import VueQr from 'vue-qr'
+import { Skeleton, Popup, Toast, Dialog, Empty, List, PullRefresh, ImagePreview } from 'vant'
+import NoticeApi from '@/api/NoticeApi.js'
 
 export default ({
     data (){
         return {
+            registered: false,
+            sectName: '',
             userInfo: {},
             menuList: [],
+            noticeList: [],
             activeIconClass: 'icons',
             activeMomHeaderclass: 'moments-header',
-            skeletonLoading: true
+            skeletonLoading: true,
+            qrShow:false, //二维码显示开关
+            qrImage:'',
+            currPage: 0, //当前页
+            pageLoading: false,
+            pageLoadingFinished: false,
+            pageLoadError: false,
+            pageRefreshing: false
+        }
+    },
+    watch: {
+        menuList: {
+            handler(val){
+                if(val.length > 0){
+                    this.getNotice()
+                }
+            },
+            deep: true
         }
     },
     components: {
         'foot': Foot,
-        [Skeleton.name]: Skeleton
+        VueQr,
+        [Skeleton.name]: Skeleton,
+        [Popup.name]: Popup,
+        [Toast.name]: Toast,
+        [Empty.name]: Empty,
+        [List.name]: List,
+        [PullRefresh.name]: PullRefresh,
+        [ImagePreview.name]: ImagePreview,
     },
     mounted(){
         this.timer = setTimeout(()=>{   //设置延迟执行
             this.skeletonLoading = false  
-        },1000);
+        },2000);
     },
     methods: {
         setUser(data){
             this.userInfo = data
+            if(this.userInfo.sectId && this.userInfo.sectId !== '0'){
+                this.registered = true
+                this.sectName = this.userInfo.xiaoquName
+            }
+            if(!this.sectName){
+                this.sectName = "游客"
+            }
             this.menuList = data.menuList
             if(this.menuList.length <= 4 && this.menuList.length > 0){
                 this.activeIconClass = 'icons-single'
                 this.activeMomHeaderclass = 'moments-header-single'
             }
+        },
+        showQrcode() {
+            let image = "?appid=" + this.userInfo.appId + "&userid=" + this.userInfo.wuyeId;
+            this.qrShow = true
+            this.qrImage = image
+        },
+        gotoPage(url, status, code){
+            console.log(url)
+            console.log(status)
+            if(status!==1){
+                Toast("当前功能尚未开通。")
+                return 
+            }
+            if(!code){
+                Toast("当前功能尚未开通。")
+                return
+            }
+            if('repair'===code) {
+                this.gotoRepair(url)
+            } else if ('onsale'===code) {
+                this.gotoEshop(url)
+            } else if ('rgroup'===code) {
+                this.gotoHref(url)
+            } else if ('service'===code) {
+                this.gotoHref(url)
+            } else if ('evoucher'===code){
+                this.gotoEvoucher(url)
+            } else {
+                this.$router.push({path: url, query:{}})
+            }
+            
+        },
+        gotoRepair(url) {
+            let user = this.userInfo
+            if(!user.sectId || user.sectId===0 || user.sectName === null){
+                Dialog({message: '您暂未绑定房屋，请前往“我是业主”\r\n进行操作！'})
+                return
+            }else  if(user.cfgParam==null || user.cfgParam.ONLINE_REPAIR == undefined||user.cfgParam.ONLINE_REPAIR==0) {
+                Dialog({message: '当前所在的小区未开启当前业务'})
+                return
+            }else {
+                this.$router.push({path: url,query:{'projectId':'1'}})
+            }
+        },
+        gotoEshop(url){
+            location.href = this.basePageUrl + url + this.common.getoriApp() + '#/classification'
+        },
+        gotoHref(url){
+            location.href = this.basePageUrlpay + url + this.common.getoriApp()
+            location.href = this.basePageUrl + url + this.common.getoriApp()
+        },
+        gotoEvoucher(url){
+            location.href = this.basePageUrl + url + this.common.getoriApp()+'#/cardrollindex'
+        },
+        getNotice(){
+            setTimeout(() => {
+                NoticeApi.getNotice(this.currPage).then((response)=>{
+                    this.pageLoading = false
+                    this.pageRefreshing = false
+                    let data = response.data
+                    console.log(data)
+                    if(data && data.errorCode === 0){
+                        if(data.result && data.result.length ===0){
+                            this.pageLoadingFinished = true
+                        }else {
+                            this.noticeList = this.noticeList.concat(data.result)
+                            this.currPage++
+                        }
+                    }else {
+                        console.log(data.error)
+                        this.pageLoadError = true
+                    }
+                }).catch((err)=>{
+                    console.log(err)
+                    this.pageLoadError = true
+                })
+            }, 1000)
+        },
+        onRefresh(){
+            this.pageLoadingFinished = false;
+            this.pageLoading = true;
+            this.getNotice();
+        },
+        noticeDetail(url){
+            console.log(url)
+            if(!url){
+                Toast("未配置跳转链接")
+                return
+            }
+            location.href = url
+        },
+        showImage(imageArr, index){
+            ImagePreview({
+                images: imageArr,
+                startPosition: index,
+            });
         }
     },
 
@@ -120,7 +263,8 @@ export default ({
     }
 }
 .owner-text{
-    margin-left: 4.39rem;
+    position: absolute;
+    margin-left: 5.57rem;
     margin-top: 0.04rem;
     float: left;
     text-align: left;
@@ -128,7 +272,8 @@ export default ({
     color: #FFFFFF;
 }
 .owner-image{
-    margin-left: 0.2rem;
+    position: absolute;
+    margin-left: 6.55rem;
     float: left;
     width: 0.32rem;
     height: 0.32rem;
@@ -151,7 +296,8 @@ export default ({
     background-color: #fff;
     position: absolute;
     width: 92%;
-    height: 3.77rem;
+    // height: 3.77rem;
+    height: auto;
     border-radius: 0.16rem;
 }
 
@@ -161,7 +307,8 @@ export default ({
     background-color: #fff;
     position: absolute;
     width: 92%;
-    height: 1.88rem;
+    // height: 1.88rem;
+    height: auto;
     border-radius: 0.16rem;
 }
 
@@ -170,11 +317,21 @@ export default ({
     margin: 0.23rem 0.24rem 0.34rem 0.34rem;
     float: left;
     width: 1.04rem;
-    
 }
 
 .icon-layer-upon-other{
     margin: 0.23rem 0.24rem 0.34rem 0.48rem;
+    float: left;
+    width: 1.04rem;
+}
+
+.icon-layer-down-first{
+    margin: 0.08rem 0.24rem 0.44rem 0.34rem;
+    float: left;
+    width: 1.04rem;
+}
+.icon-layer-down-other{
+    margin: 0.08rem 0.24rem 0.44rem 0.48rem;
     float: left;
     width: 1.04rem;
 }
@@ -199,13 +356,11 @@ export default ({
     background-repeat: no-repeat;
 }
 .moments-header {
-    top: 2.31rem;
     color: #292929;
     text-align: left;
-    vertical-align: top;
     font-weight: bolder;
     font-size: 0.38rem;
-    margin: 0.5rem 0 0.41rem 0.4rem;
+    margin: 2.4rem 0 0.41rem 0.4rem;
 }
 
 .moments-header-single {
@@ -213,7 +368,7 @@ export default ({
     text-align: left;
     font-weight: bolder;
     font-size: 0.38rem;
-    margin: 1rem 0 0.41rem 0.4rem;
+    margin: 0.75rem 0 0.41rem 0.4rem;
 }
 
 .moments{
@@ -230,12 +385,29 @@ export default ({
     position: relative;
 }
 
-.head-image{
+.sys-notice-image{
     width: 0.86rem;
     height: 0.86rem;
     background-size: cover;
     background-repeat: no-repeat;
-    .bg-image('../../assets/images/index/momentsDefHead');
+    .bg-image('../../assets/images/index/syshead_logo');
+    display: inline-block;
+}
+
+.wuye-notice-image{
+    width: 0.86rem;
+    height: 0.86rem;
+    background-size: cover;
+    background-repeat: no-repeat;
+    .bg-image('../../assets/images/index/xiaoxi');
+    display: inline-block;
+}
+.moment-notice-image{
+    width: 0.86rem;
+    height: 0.86rem;
+    background-size: cover;
+    background-repeat: no-repeat;
+    .bg-image('../../assets/images/index/moments_logo');
     display: inline-block;
 }
 
@@ -258,15 +430,38 @@ export default ({
     text-align: left;
     color: #292929;
     font-size: 0.32rem;
+    width: 90%;
 }
 .content-image{
     margin-top: 0.3rem;
+    height: auto;
+}
+.content-image-view {
     width: 4.38rem;
     height: 2.5rem;
     border-radius: 0.16rem;
     background-size: cover;
     background-repeat: no-repeat;
-    background-image: url('../../assets/images/index/sample1.png');
+}
+.content-image-view-multi {
+    width: 1.58rem;
+    height: 1.58rem;
+    margin-left: 0.1rem;
+    margin-bottom: 0.1rem;
+    border-radius: 0.16rem;
+    background-size: cover;
+    background-repeat: no-repeat;
+    float: left;
+}
+.content-image-view-triple {
+    width: 1.58rem;
+    height: 1.58rem;
+    margin-left: 0.1rem;
+    border-radius: 0.16rem;
+    background-size: cover;
+    background-repeat: no-repeat;
+    float: left;
+    clear:both;
 }
 .pub-date{
     margin: 0.26rem 0 0.3rem 0.32rem;
@@ -274,12 +469,12 @@ export default ({
     text-align: left;
     font-size: 0.26rem;
     padding-bottom: 0.4rem;
-    width: 1.1rem;
+    width: 1.3rem;
     height: 0.24rem;
 }
 .main-end{
     width: 100%;
-    height: 1.2rem;
+    height: 1.8rem;
 }
 
 </style>
