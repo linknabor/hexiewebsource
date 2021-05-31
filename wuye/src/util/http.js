@@ -47,7 +47,23 @@ const http ={
             config.params = params
         }
         return request(config)
-    }
+    },
+    /**
+     * 调用这个方法的时候请传入formData，不然会报错
+     */
+    post4File(url,params){
+        const config = {
+            method: 'post',
+            url:url,
+        }
+        config.headers = {
+            'Content-Type': 'multipart/form-data' //配置请求头
+        }
+        if(params) {
+            config.data = params
+        }
+        return request(config)
+    },
 }
 //导出
 export default http
