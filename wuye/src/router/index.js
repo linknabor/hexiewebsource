@@ -187,6 +187,15 @@ const router= new VueRouter({
               title:''
             }
       },
+      //工单
+      {
+        path:'/workorder',
+        name:'workorder',
+        component:resolve=> require(['@/pages/workorder/WorkOrder'],resolve),
+        meta:{
+          title:'创建工单'
+        }
+      },
     ]
 });
 
@@ -199,7 +208,7 @@ router.beforeEach((to, from, next) => {
   if(viewArray.indexOf(pageName)===-1){
     if(!common.checkRegisterStatus()){
       return
-    }
+  	}
   }
   let newVersionIndex = false
   if('index'===pageName){

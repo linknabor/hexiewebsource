@@ -165,7 +165,6 @@ export default {
             }
           }
         }).catch((error)=>{
-          console.log(error)
           Toast(error)
         })
     },
@@ -354,7 +353,6 @@ export default {
       formData.append('addressId', this.address.id)
       formData.append('content', this.memo)
       this.fileList.forEach(item => {
-        console.log(item.file)
         formData.append('fileList', item.file)
       })
 
@@ -370,7 +368,6 @@ export default {
           //TODO
         }
       }).catch((error)=>{
-        console.log(error)
         Toast(error)
       })
 
