@@ -29,7 +29,7 @@ const opinionApi = {
   },
 
   upload(data){
-    return http.postImg(baseUrl + 'thread/upload', data)
+    return http.post4File(baseUrl + 'thread/upload', data)
   }
 }
 export default opinionApi
