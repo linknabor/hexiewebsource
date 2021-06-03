@@ -30,6 +30,16 @@ const opinionApi = {
 
   upload(data){
     return http.post4File(baseUrl + 'thread/upload', data)
+  },
+
+  getSect(){
+    return http.get(baseUrl + 'repair/project/1', null)
+  },
+
+  getAddr(){
+    return http.get(baseUrl + '/addresses?module=repair', null)
   }
+
+
 }
 export default opinionApi

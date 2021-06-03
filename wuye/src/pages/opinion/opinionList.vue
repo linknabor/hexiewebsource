@@ -1,37 +1,39 @@
 <template>
   <div id="words">
+    <van-empty v-show="showEmpty" description="您还没有提过意见"/>
+    <div v-show="show">
+      <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
 
-    <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
-      <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad" :error.sync="loadError">
-        <div class="p15" v-for="thread in threads">
-          <div class="ov" style="width: 100%;">
-            <div><img class="fl thread-picture" :src="thread.userHead"/></div>
-            <div class="thread_user_name">{{ thread.userName }}</div>
-            <div class="thread_user_addr">{{ thread.userSectName }}</div>
-          </div>
-          <div class="ov pt15" @click="gotoDetail(thread.threadId)">{{ thread.threadContent }}</div>
+        <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad" :error.sync="loadError">
+          <div class="p15" v-for="thread in threads">
+            <div class="ov" style="width: 100%;">
+              <div><img class="fl thread-picture" :src="thread.userHead"/></div>
+              <div class="thread_user_name">{{ thread.userName }}</div>
+              <div class="thread_user_addr">{{ thread.userSectName }}</div>
+            </div>
+            <div class="ov pt15" @click="gotoDetail(thread.threadId)">{{ thread.threadContent }}</div>
 
-          <div class="preview_img_layer">
-            <div v-for="(previewurl,index) in thread.previewLink">
-              <div class="sub_img_layer" @click="viewSrcImg(thread.imgUrlLink);">
-                <img class="preview_img" :src="previewurl"/>
+            <div class="preview_img_layer">
+              <div v-for="(previewurl,index) in thread.previewLink">
+                <div class="sub_img_layer" @click="viewSrcImg(thread.imgUrlLink);">
+                  <img class="preview_img" :src="previewurl"/>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div class="threadDate">
-            <img class="timeImg"
-                 src="../../assets/images/common/icon_time_gray.png"/>&nbsp;{{ thread.formattedDateTime }}
-            <div class="threadCount" style="text-align: right;" @click="gotoDetail(thread.threadId)">
+            <div class="threadDate">
               <img class="timeImg"
-                   src="../../assets/images/common/icon_comment_gray.png"/>&nbsp;{{ thread.commentsCount }}
+                   src="../../assets/images/common/icon_time_gray.png"/>&nbsp;{{ thread.formattedDateTime }}
+              <div class="threadCount" style="text-align: right;" @click="gotoDetail(thread.threadId)">
+                <img class="timeImg"
+                     src="../../assets/images/common/icon_comment_gray.png"/>&nbsp;{{ thread.commentsCount }}
+              </div>
             </div>
+
           </div>
-
-        </div>
-      </van-list>
-    </van-pull-refresh>
-
+        </van-list>
+      </van-pull-refresh>
+    </div>
     <div style="position: fixed; bottom:0.5px; width: 100%; color: white;">
       <div class="submit-btn-black" @click="gotoBack" style="width: 25%">返回</div>
       <div class="submit-btn-orange" @click="newOpinion" style="width: 73%">我要发布</div>
@@ -43,7 +45,7 @@
 
 <script>
   import opinionApi from "@/api/OpinionApi.js";
-  import {List, PullRefresh, Uploader,ImagePreview  } from 'vant';
+  import {List, PullRefresh, Uploader, ImagePreview, Empty} from 'vant';
 
   export default {
     name: "opinionList",
@@ -55,6 +57,8 @@
         finished: false,
         refreshing: false,
         loadError: false,
+        show: true,
+        showEmpty:false,
       }
     },
     components: {
@@ -62,6 +66,7 @@
       [PullRefresh.name]: PullRefresh,
       [Uploader.name]: Uploader,
       [ImagePreview.Component.name]: ImagePreview.Component,
+      [Empty.name]: Empty,
     },
     mounted() {
     },
@@ -91,6 +96,11 @@
           } else {
             this.loadError = true
           }
+
+          if (this.threads.length == 0) {
+            this.show = false
+            this.showEmpty = true
+          }
         })
       },
       onRefresh() {
@@ -114,7 +124,7 @@
         this.$router.push({path: '/'})
       },
 
-      viewSrcImg(imgs){
+      viewSrcImg(imgs) {
         ImagePreview(imgs)
       }
     }

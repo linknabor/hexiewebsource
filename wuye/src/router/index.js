@@ -128,7 +128,7 @@ const router= new VueRouter({
         name:'opinionList',
         component:resolve=> require(['@/pages/opinion/opinionList'], resolve),
         meta:{
-          title:'业主意见'
+          title:'我的意见'
         }
       },
 
@@ -137,7 +137,7 @@ const router= new VueRouter({
         name:'addOpinion',
         component:resolve=> require(['@/pages/opinion/addOpinion'], resolve),
         meta:{
-          title:'发布意见'
+          title:'我的意见'
         }
       },
 
@@ -146,7 +146,7 @@ const router= new VueRouter({
         name:'opinionDetail',
         component:resolve=> require(['@/pages/opinion/opinionDetail'], resolve),
         meta:{
-          title:'发布意见'
+          title:'我的意见'
         }
       },
       //新的业主意见 end
