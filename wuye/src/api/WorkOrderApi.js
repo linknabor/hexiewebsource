@@ -9,6 +9,12 @@ const workOrderApi = {
     },
     addWorkOrder(data) {
         return Http.post4File(baseUrl + '/workorder/save', data)
+    },
+    getOrderList() {
+        return Http.get(baseUrl + '/workorder/orderList', null)
+    },
+    getOrderDetail(param) {
+        return Http.get(baseUrl + '/workorder/orderDetail/' + param, null)
     }
 
 }
