@@ -1,10 +1,13 @@
 <template>
   <div class="main">
-    <van-nav-bar title="工单明细" left-text="返回" left-arrow @click-left="onClickNav"/>
-    <div class="header"></div>
+    <div class="header" v-if="skeletonLoading"></div>
+    <van-overlay :show="showOverlay">
+        <van-loading type="spinner" color="#1989fa" vertical class="loading">处理中...</van-loading>
+    </van-overlay>
     <van-skeleton title :row="3" :loading="skeletonLoading">
-      <van-empty :style="{ display: empty }" description="没有查询到工单哦" />
-      <van-cell-group>
+    <van-nav-bar title="工单明细" left-text="返回" left-arrow @click-left="onClickNav"/>
+      <van-empty v-show="empty" description="没有查询到工单哦"/>
+      <van-cell-group v-show="!empty">
         <van-cell title="基本信息" class="title-text" />
         <van-cell :value="orderDetail.order_id" value-class="order-text">
           <template slot="title"
@@ -32,14 +35,19 @@
             <p>{{step.desc}} <a :href="'tel:' + step.mobile" class="mobile-view">{{step.mobile}}</a></p>
         </van-step>
       </van-steps> 
-      <van-field v-model="reason" placeholder="如需撤回工单，请填写驳回原因" left-icon="records"/>
+      <van-field v-show="orderDetail.workorder_status==='00'" v-model="reason" placeholder="如需撤回工单，请填写驳回原因" left-icon="records"/>
+      <div class="end-view"></div>
+      <van-goods-action v-if="orderDetail.workorder_status==='00'||orderDetail.workorder_status==='03'">
+        <van-goods-action-button type="warning" text="订单撤回" v-if="orderDetail.workorder_status==='00'" @click="reverse"/>
+        <van-goods-action-button type="danger" text="支付" v-if="orderDetail.workorder_status==='03'" @click="pay"/>
+      </van-goods-action>
     </van-skeleton>
   </div>
 </template>
 <script>
 import WorkOrderApi from '@/api/WorkOrderApi.js';
 import {
-  Toast,
+  Toast, Dialog, Loading, Overlay, 
   Skeleton,
   Cell,
   CellGroup,
@@ -51,13 +59,15 @@ import {
   Step,
   Steps,
   Field,
+  GoodsAction, GoodsActionButton
 } from 'vant';
 export default {
   data() {
     return {
+      showOverlay: false,
       skeletonLoading: true,
       orderId: this.$route.query.orderId,
-      empty: 'block',
+      empty: true,
       active: 0,
       orderDetail: {},
       orderFlow: [],
@@ -77,23 +87,29 @@ export default {
     [Step.name]: Step,
     [Steps.name]: Steps,
     [Field.name]: Field,
+    [GoodsAction.name]: GoodsAction,
+    [GoodsActionButton.name]: GoodsActionButton,
+    [Dialog.Component.name]: Dialog.Component,
+    [Loading.name]: Loading,
+    [Overlay.name]: Overlay
   },
   mounted() {
     if (this.orderId) {
       this.getOrderDetail(this.orderId);
     }
     setTimeout(() => {
-      this.skeletonLoading = false;
+      this.skeletonLoading = false
     }, 1000); //延迟时间 这里是1秒
   },
   methods: {
     getOrderDetail(orderId) {
-      WorkOrderApi.getOrderDetail(orderId)
-        .then((response) => {
+      WorkOrderApi.getOrderDetail(orderId).then((response) => {
           if (response.data.success) {
             this.orderDetail = response.data.result.order_detail;
             this.orderFlow = response.data.result.order_flow;
-            this.empty = 'none';
+            if(this.orderDetail.order_id) {
+                this.empty = false
+            }
             let steps = []
             this.orderFlow.forEach((flow)=>{
                 let step = {}
@@ -123,6 +139,39 @@ export default {
         images: images,
         startPosition: index,
       });
+    },
+    reverse() {
+        let reason = this.reason.trim()
+        if(!reason) {
+            Toast('请填写撤回原因')
+            return false
+        }
+        Dialog.confirm({
+            message: '确认要撤回订单么？',
+        }).then(() => {
+            let data = {
+                reason: this.reason
+            }
+            this.showOverlay = true
+            WorkOrderApi.reverseOrder(this.orderId, data).then((response)=>{
+                if(response.data.success){
+                    Toast('订单撤消成功, 即将为您跳转...')
+                    setTimeout(() => {
+                        let url = 'workOrderList'
+                        this.$router.push({path: url})
+                    }, 1000); //延迟时间 这里是1秒
+                }else{
+                    Toast(response.data.message)
+                    this.showOverlay = false
+                }
+            }).catch((error)=>{
+                Toast(error)
+                this.showOverlay = false
+            })
+        }).catch(() => {
+            return false
+        });
+        
     },
     onClickNav() {},
   },
@@ -158,6 +207,9 @@ export default {
   color: #1989fa;
 }
 .end-view {
-  height: 10vh;
+  height: 15vh;
+}
+.loading {
+    margin-top: 45vh;
 }
 </style>

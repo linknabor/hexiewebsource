@@ -224,6 +224,7 @@ router.beforeEach((to, from, next) => {
   if(viewArray.indexOf(pageName)===-1){
     if(!common.checkRegisterStatus()){
       return
+	}
   }
   let newVersionIndex = false
   if('index'===pageName){
@@ -249,7 +250,7 @@ router.beforeEach((to, from, next) => {
   }
   
   
-});
+})
 Vue.use(VueRouter)
 
 
@@ -257,6 +258,6 @@ Vue.use(VueRouter)
 function changeTitle(title) {
     title = title ? title : Vue.prototype.common.newname;
     window.document.title = title;
-};
+}
 
 export default router

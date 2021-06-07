@@ -15,6 +15,9 @@ const workOrderApi = {
     },
     getOrderDetail(param) {
         return Http.get(baseUrl + '/workorder/orderDetail/' + param, null)
+    },
+    reverseOrder(param, data) {
+        return Http.get(baseUrl + '/workorder/reverse/' + param, data)
     }
 
 }
