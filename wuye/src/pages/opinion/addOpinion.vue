@@ -3,24 +3,15 @@
     <div v-show="page=='main'">
       <div class="topLine">
         <div class="topLineLeft">所在小区</div>
-        <div class="topLineRight">{{ address.xiaoquName }}</div>
+        <div class="topLineRight">{{ address.sect_name }}</div>
       </div>
 
       <div class="addr_area" @click="choseAddress">
         <div class="addrtop">&nbsp;</div>
-        <div style="text-align:center;background-color: #f7f7f1;">
-          <div class="add_address" v-show="!address.receiveName">选择收货地址</div>
-        </div>
-        <div class="custom-menu-link" v-show="address.receiveName">
+        <div class="custom-menu-link" v-show="address.cell_addr">
           <div class="sustoma">
-            <span>{{ address.receiveName }}</span>
-            <span style="margin-left:15px;">{{ address.tel }}</span>
-            <div
-              class="addr_location"
-            >
-              {{ address.province }}{{ address.city }}{{ address.county }}{{ address.xiaoquName }}{{
-                address.detailAddress
-              }}
+            <div class="addr_location" >
+              {{ address.cell_addr }}
             </div>
           </div>
         </div>
@@ -52,17 +43,10 @@
       <div v-show="operType=='init'">
         <div
           class="cssAddress" v-for="(item,index) in addresses" @click="checks(item)" :key="index">
-          <i class="checkboxs" :class="{checkeds:address&&address.id===item.id}"></i>
+          <i class="checkboxs" :class="{checkeds:address&&address.mng_cell_id===item.mng_cell_id}"></i>
           <div>
-            <span style="margin-left:20px">{{ item.receiveName }}</span>
-            <span style="margin-left:15px">{{ item.tel }}</span>
+            <span style="margin-left:20px">{{ item.cell_addr }}</span>
             <span class="mainlian" style="margin-left:15px" v-if="item.main">默认</span>
-          </div>
-          <div
-            class="locations"
-            style="margin-left:35px"
-          >
-            {{ item.province }}{{ item.city }}{{ item.county }}{{ item.locationAddr }}({{ item.xiaoquName }}){{ item.detailAddress }}
           </div>
         </div>
       </div>
@@ -101,21 +85,19 @@
         Dialog({ message: '未绑定房屋' });
         this.$router.push({path: '/Version2'})
       }
-
       this.getSect()
     },
     methods: {
 
       getSect() {
-        opinionApi.getSect().then((response) => {
+        opinionApi.getAddr().then((response) => {
           let data = response.data
-          if (data && data.success) {
-            this.address = data.result.address;
+          if (data.result && data.success) {
+            this.address = data.result[0];
           }
         })
       },
       addThread() {
-        console.log(this.threadContent)
         if (!this.threadContent) {
           Toast("请填写内容！")
           return;
@@ -132,7 +114,7 @@
             threadCategory: '9', //是否需要调整？
             threadContent: this.threadContent,
             attachmentUrl: str,
-            userAddress: this.address.receiveName
+            userAddress: this.address.cell_addr
           }
           opinionApi.saveThread(param).then((response) => {
             let data = response.data
@@ -175,7 +157,7 @@
       dataAddress() {
         opinionApi.getAddr().then((response) => {
           let data = response.data
-          if (data && data.success) {
+          if (data.success && data.result) {
             this.addresses = data.result;
           } else {
             this.addresses = [];
@@ -325,7 +307,7 @@
     background-position: right center;
     margin: 0 15px;
     color: #3b3937;
-    padding: 5px 4px;
+    padding: 10px 4px;
     display: block;
     overflow: hidden;
     padding-right: 12px;
@@ -346,7 +328,6 @@
     height: 16px;
     background: url(../../assets/images/common/icon_unselect.png) no-repeat;
     background-size: 16px;
-    margin-top: 12px;
   }
 
   .mainlian {
