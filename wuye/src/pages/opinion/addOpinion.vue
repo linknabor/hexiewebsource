@@ -67,16 +67,13 @@
         </div>
       </div>
     </div>
-
-
-  </div>
-
   </div>
 </template>
 
 <script>
   import opinionApi from "@/api/OpinionApi.js";
   import {Toast, Dialog, Uploader, Field} from 'vant'
+  import cookie  from 'js-cookie';
 
   export default {
     name: "",
@@ -99,6 +96,12 @@
       [Dialog.name]: Dialog,
     },
     mounted() {
+      var sectId = cookie.get('sectId');
+      if(sectId == '0' || sectId == null) {
+        Dialog({ message: '未绑定房屋' });
+        this.$router.push({path: '/Version2'})
+      }
+
       this.getSect()
     },
     methods: {
@@ -109,8 +112,6 @@
           if (data && data.success) {
             this.address = data.result.address;
           }
-
-          console.log(this.address)
         })
       },
       addThread() {
@@ -120,7 +121,6 @@
           return;
         }
 
-        console.log(123)
         Dialog.confirm({
           message: '您的意见将会被提交到所在物业，确定要提交吗？',
         }).then(() => {

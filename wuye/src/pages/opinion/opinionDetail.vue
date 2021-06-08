@@ -82,7 +82,8 @@
 
 <script>
   import opinionApi from "@/api/OpinionApi.js";
-  import {ImagePreview, Toast, Uploader, Overlay, Loading } from 'vant'
+  import {ImagePreview, Toast, Uploader, Overlay, Loading, Dialog} from 'vant'
+  import cookie  from 'js-cookie';
 
   export default {
     name: "",
@@ -106,6 +107,11 @@
       [ImagePreview.Component.name]: ImagePreview.Component,
     },
     mounted() {
+      var sectId = cookie.get('sectId');
+      if(sectId == '0' || sectId == null) {
+        Dialog({ message: '未绑定房屋' });
+        this.$router.push({path: '/Version2'})
+      }
       this.getThread();
     },
 
