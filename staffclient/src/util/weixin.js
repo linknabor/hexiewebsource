@@ -1,4 +1,5 @@
-import api from '@/api/api.js'
+
+import UserApi from '@/api/UserApi.js'
 
 const weixin = {
     /*
@@ -15,7 +16,8 @@ const weixin = {
         let apilist = data.apilist === undefined ? ['scanQRCode'] : data.apilist;
         let openTagList = data.openTagList === undefined ? [] : data.openTagList;
 
-        api.getUrlJsSign({ url: url }).then((response) => {
+        UserApi.getUrlJsSign({ url: url }).then((response) => {
+
             let n = response.data;
             let success = n.success;
             if (success === false) {

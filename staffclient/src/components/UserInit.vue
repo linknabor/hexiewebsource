@@ -3,8 +3,7 @@
 </template>
 
 <script>
-import api from "@/api/api.js";
-
+import UserApi from "@/api/UserApi.js";
 export default {
   name: "UserInit",
   data() {
@@ -13,14 +12,22 @@ export default {
     };
   },
   mounted() {
-    this.initSession4Test();
+    if(this.testMode){
+      alert("测试模式...");
+      alert("将初始化本地调试用的测试用户...");
+      this.initSession4Test();
+    }
   },
   methods: {
     initSession4Test() {
+      // var data = {
+      //   oriApp: "wx95f46f41ca5e570e",
+      // };
+      // UserApi.login("8441", data);
       var data = {
-        oriApp: "wx95f46f41ca5e570e",
-      };
-      api.login("8441", data);
+        oriApp: 'wx315c7cb4080e5fd8',
+      }
+      UserApi.login('8462', data)
     },
   },
 };

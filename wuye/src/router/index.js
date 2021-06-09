@@ -113,7 +113,7 @@ const router= new VueRouter({
             meta:{
               title:''
             }
-      }, 
+      },
       {
             path:'/submitSuccess',
             name:'submitSuccess',
@@ -122,6 +122,36 @@ const router= new VueRouter({
               title:''
             }
       },
+      //新的业主意见 start
+      {
+        path:'/opinionList',
+        name:'opinionList',
+        component:resolve=> require(['@/pages/opinion/opinionList'], resolve),
+        meta:{
+          title:'我的意见'
+        }
+      },
+
+      {
+        path:'/addOpinion',
+        name:'addOpinion',
+        component:resolve=> require(['@/pages/opinion/addOpinion'], resolve),
+        meta:{
+          title:'我的意见'
+        }
+      },
+
+      {
+        path:'/opinionDetail',
+        name:'opinionDetail',
+        component:resolve=> require(['@/pages/opinion/opinionDetail'], resolve),
+        meta:{
+          title:'我的意见'
+        }
+      },
+      //新的业主意见 end
+
+
       {
             path:'/mysteward',
             name:'mysteward',
@@ -186,6 +216,15 @@ const router= new VueRouter({
             meta:{
               title:''
             }
+      },
+      //工单
+      {
+        path:'/workorder',
+        name:'workorder',
+        component:resolve=> require(['@/pages/workorder/WorkOrder'],resolve),
+        meta:{
+          title:'创建工单'
+        }
       },
     ]
 });
