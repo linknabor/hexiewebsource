@@ -34,6 +34,7 @@ export default {
     getUserInfo() {
       this.showOverlay = true
       UserApi.getUserInfo()
+
         .then((response) => {
           let data = response.data;
           if (data.success && data.result != null) {

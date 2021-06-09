@@ -5,6 +5,7 @@ import router from './router'
 // import Vconsole from 'vconsole';
 // Vue.prototype.$vConsole = new Vconsole();
 
+
 Vue.prototype.testMode = false
 
 Vue.config.productionTip = false
