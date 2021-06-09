@@ -1,3 +1,4 @@
+
 import UserApi from '@/api/UserApi.js'
 
 const weixin = {
@@ -16,6 +17,7 @@ const weixin = {
         let openTagList = data.openTagList === undefined ? [] : data.openTagList;
 
         UserApi.getUrlJsSign({ url: url }).then((response) => {
+
             let n = response.data;
             let success = n.success;
             if (success === false) {

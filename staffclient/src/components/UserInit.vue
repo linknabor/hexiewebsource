@@ -4,7 +4,6 @@
 
 <script>
 import UserApi from "@/api/UserApi.js";
-
 export default {
   name: "UserInit",
   data() {
