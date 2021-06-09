@@ -9,6 +9,11 @@ const router= new VueRouter({
             component: resolve=>require(['@/pages/index'],resolve)
         },
         {
+            path: '/version2',
+            name: 'version2',
+            component: resolve=>require(['@/pages/main/Version2'],resolve)
+        },
+        {
             path:'/message',
             name:'message',
             component:resolve=> require(['@/pages/main/message'],resolve)
@@ -26,6 +31,7 @@ const router= new VueRouter({
               title:'我的房子'
             }
         },
+        //绑定房屋首页
         {
             path:'/identHouse',
             name:'IdentHouse',
@@ -34,6 +40,7 @@ const router= new VueRouter({
               title:'绑定房子'
             }
         },
+        //对账单绑定房屋
         {
             path:'/addHouse',
             name:'AddHouse',
@@ -182,19 +189,41 @@ const router= new VueRouter({
       },
     ]
 });
+
+const viewArray = ['index', 'register', 'sms_notification', 'version2']
 //路由的钩子函数，
 //在每一次路由跳转之前会进入这个方法 to：到哪去  from：从哪来 next() 调用这个方法来完成这个钩子函数
 router.beforeEach((to, from, next) => {
-    var flag;
-    if(to.matched[0].name != "index"&& to.matched[0].name!='register'&& to.matched[0].name!='sms_notification') {
-       flag= common.checkRegisterStatus()
-        if(!flag) {
-            return
-        }
-      }
-    //动态改变title
-    changeTitle(to.meta.title)
-    next();
+  let pageName = to.matched[0].name
+  if(viewArray.indexOf(pageName)===-1){
+    if(!common.checkRegisterStatus()){
+      return
+  	}
+  }
+  let newVersionIndex = false
+  if('index'===pageName){
+    let config = Vue.prototype.is_config
+    let getUrlParam = Vue.prototype.getUrlParam
+    let appid = getUrlParam('oriApp')
+    let kyappid = config.C('kyappid')  //昆亿乐居
+    let dcappid = config.C('dcappid')  //东辰物业
+    let nbappid = config.C('nbappid')   //测试用
+    console.log('router, oriApp : ' + appid)
+    if(appid!==kyappid && appid!==dcappid && appid!==nbappid){
+      newVersionIndex = true
+    }
+  }
+  //动态改变title
+  changeTitle(to.meta.title)
+  if(newVersionIndex){
+    next({
+      path: '/version2' //不是以上3个公众号的，劫持后跳到新首页
+    })
+  } else {
+    next()
+  }
+
+
 });
 Vue.use(VueRouter)
 

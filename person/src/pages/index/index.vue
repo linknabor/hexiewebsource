@@ -24,24 +24,32 @@
       </div>
       <!--  -->
       <div id="point-list" style="border-bottom: none;" class="div_bottom" v-show="cardService==false">
-        <div class="point-item-wrap">
+        <div class="point-item-wrap" style="width: 24%">
           <div class="point-item">
             <div class="point-info fs16">{{user.zhima}}</div>
             <div class="point-title fs14">我的芝麻</div>
           </div>
         </div>
-        <div class="point-item-wrap">
+        <div class="point-item-wrap" style="width: 24%">
           <div class="point-item">
             <div class="point-info fs16">{{user.lvdou}}</div>
             <div class="point-title fs14">我的绿豆</div>
           </div>
         </div>
-        <div class="point-item-wrap">
+        <div class="point-item-wrap" style="width: 24%">
           <div class="point-item" @click="mycoupons">
             <div class="point-info fs16">{{user.couponCount}}</div>
             <div class="point-title fs14">我的现金劵</div>
           </div>
         </div>
+		
+		<div class="point-item-wrap" style="width: 24%">
+          <div class="point-item" @click="showQrcode">
+            <div class="point-info fs16 qrcodelogo"><img src=""></div>
+            <div class="point-title fs14 qrcodeowner">业主码</div>
+          </div>
+        </div>
+		
       </div>
       <div id="point-list" style="border-bottom: none;" class="div_bottom" v-show="cardService==true">
         <div class="point-item-wrap item-wraps">
@@ -443,7 +451,7 @@
   .qrcodeowner {
     position: absolute;
     top: 19px;
-    left: 50px;
+    left: 10%;
   }
   .rel {
     position: relative;

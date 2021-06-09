@@ -403,7 +403,7 @@ export default {
     },
     data () {
         return {
-            testMode: false,
+            testMode: this.testMode,
             showWxSubscribe: false,
             kyappid:false,
             isloadPage:false,
@@ -447,8 +447,8 @@ export default {
     },
     mounted(){
         // this.initSession4Test();
-       Bus.$on("sends",this.getMsgFromZha);
-       vm.getky();
+        Bus.$on("sends",this.getMsgFromZha);
+        vm.getky();
     },
     updated() {
         vm.$nextTick(()=> {
@@ -467,15 +467,6 @@ export default {
             var comappid ="oriApp="+vm.is_config.C('kyappid');//配置appid
             var dcappid ="oriApp="+vm.is_config.C('dcappid');//配置appid
             vm.kyappid = comappid == urloriapp || urloriapp == dcappid ? true:false; // true显示最新图片
-        },
-        //模仿线上用户信息/105/747/384/
-        initSession4Test(){
-            var url ='login/8441?code=8441';
-            var data = {
-                "oriApp": "wx95f46f41ca5e570e"
-            }
-            vm.receiveData.postData(vm,url,data,'res',()=>{
-            });
         },
         //轮播图
         bannerss() {

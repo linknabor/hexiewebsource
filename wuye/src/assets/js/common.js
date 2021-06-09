@@ -5,7 +5,7 @@ var MasterConfig = function() {
         /uat/.test(location.origin)?'https://uat.e-shequ.cn/wechat/hexie/wechat/':
         'https://www.e-shequ.cn/wechat/hexie/wechat/',
 
-      basePageUrl:/127|test|192/.test(location.origin)?'https://test.e-shequ.cn/weixin/':
+        basePageUrl:/127|test|192/.test(location.origin)?'https://test.e-shequ.cn/weixin/':
         /uat/.test(location.origin)?'https://uat.e-shequ.cn/hexie/weixin/':
         'https://www.e-shequ.cn/weixin/',
         
@@ -38,6 +38,7 @@ var MasterConfig = function() {
 
         is_debug:true,
 
+        nbappid:'wxa48ca61b68163483',//奈博科技，测试用
         kyappid:'wxa54bc90bdbc845a8',//昆亿
         dcappid:'wxcfa72801fc101382'//东城
     },

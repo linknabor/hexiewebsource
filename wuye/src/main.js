@@ -33,6 +33,8 @@ import './assets/js/rem.js'
 import './assets/font-icon/font_a2awfrh3fuq/iconfont.css'
 import './assets/font-icon/font_954185_v0okajshs8/iconfont.css'
 
+Vue.prototype.testMode = false
+
 import receiveData from './assets/js/receiveData'
 Vue.prototype.receiveData = receiveData;
 

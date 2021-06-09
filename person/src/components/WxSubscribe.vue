@@ -81,6 +81,9 @@ export default {
             if(!data){
                 return false;
             }
+            if(data.length === 0){
+                return false
+            }
             this.subTemplateId = data;
             this.timer = setTimeout(()=>{   //设置延迟执行
                 this.show = true;
