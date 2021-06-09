@@ -108,7 +108,7 @@
     },
     mounted() {
       var sectId = cookie.get('sectId');
-      if(sectId == '0' || sectId == null) {
+      if(sectId == '0' || sectId == null || sectId == 'null') {
         Dialog({ message: '未绑定房屋' });
         this.$router.push({path: '/Version2'})
       }
