@@ -31,7 +31,7 @@
       </div>
 
       <div style="padding-left: 0.3rem">
-        <van-uploader v-model="fileList" :after-read="uploadImgs" :before-delete="delImgs"/>
+        <van-uploader v-model="fileList" :after-read="uploadImgs" accept="file" :before-delete="delImgs"/>
       </div>
 
       <div class="btn-fabu" @click="addThread">
