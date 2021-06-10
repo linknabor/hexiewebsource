@@ -76,7 +76,7 @@
     <div class="loadImg">
       <van-uploader v-model="fileList" :after-read="uploadImgs" :before-delete="delImgs"/>
     </div>
-
+    <user-info @getUserInfo="getUserInfo"></user-info>
   </div>
 </template>
 
@@ -84,7 +84,7 @@
   import opinionApi from "@/api/OpinionApi.js";
   import {ImagePreview, Toast, Uploader, Overlay, Loading, Dialog} from 'vant'
   import cookie  from 'js-cookie';
-
+  import UserInfo from "@/components/UserInfo";
   export default {
     name: "",
     data() {
@@ -97,6 +97,7 @@
         upImgs:[],
         fileList:[],
         show: false,
+        userInfo: [],
       }
     },
     components: {
@@ -105,6 +106,7 @@
       [Overlay.name]: Overlay,
       [Loading.name]: Loading,
       [ImagePreview.Component.name]: ImagePreview.Component,
+      "user-info": UserInfo,
     },
     mounted() {
       var sectId = cookie.get('sectId');
@@ -116,6 +118,9 @@
     },
 
     methods: {
+      getUserInfo(result) {
+        this.userInfo = result;
+      },
       getThread() {
         this.show = true
         setTimeout(() => {
