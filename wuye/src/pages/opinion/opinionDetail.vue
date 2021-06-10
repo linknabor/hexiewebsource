@@ -109,17 +109,17 @@
       "user-info": UserInfo,
     },
     mounted() {
-      var sectId = cookie.get('sectId');
-      if(sectId == '0' || sectId == null || sectId == 'null') {
-        Dialog({ message: '未绑定房屋' });
-        this.$router.push({path: '/Version2'})
-      }
       this.getThread();
     },
 
     methods: {
       getUserInfo(result) {
         this.userInfo = result;
+        var sectId = this.userInfo.sectId;
+        if(sectId == '0' || sectId == null || sectId == 'null') {
+          Dialog({ message: '未绑定房屋' });
+          this.$router.push({path: '/Version2'})
+        }
       },
       getThread() {
         this.show = true
