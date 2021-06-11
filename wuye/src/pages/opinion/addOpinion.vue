@@ -31,7 +31,7 @@
       </div>
 
       <div style="padding-left: 0.3rem">
-        <van-uploader v-model="fileList" :after-read="uploadImgs" :before-delete="delImgs"/>
+        <van-uploader v-model="fileList" :after-read="uploadImgs" accept="file" capture="['album', 'camera']" :before-delete="delImgs"/>
       </div>
 
       <div class="btn-fabu" @click="addThread">
@@ -81,7 +81,7 @@
     },
     mounted() {
       var sectId = cookie.get('sectId');
-      if(sectId == '0' || sectId == null) {
+      if(sectId == '0' || sectId == null || sectId == 'null') {
         Dialog({ message: '未绑定房屋' });
         this.$router.push({path: '/Version2'})
       }

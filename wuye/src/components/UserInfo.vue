@@ -11,10 +11,10 @@
   </div>
 </template>
 <script>
-import UserApi from "@/api/UserApi.js";
+import UserApi from "@/api/api.js";
 import Storage from "@/util/storage.js"
 import UserLogin from "@/components/UserLogin"
-import { Overlay, Loading, Toast } from "vant"
+import {Overlay, Loading, Toast, Dialog} from "vant"
 
 export default {
   data() {
@@ -32,16 +32,18 @@ export default {
   },
   methods: {
     getUserInfo() {
+      Dialog({ message: '5' });
       this.showOverlay = true
       UserApi.getUserInfo()
-
         .then((response) => {
           let data = response.data;
           if (data.success && data.result != null) {
             Storage.set("userInfo", data.result)
             this.$emit("getUserInfo", data.result)
             this.showOverlay = false
+            Dialog({ message: '6' });
           } else {
+            Dialog({ message: '7' });
             this.showOverlay = false
             this.$refs.userLogin.login();
           }
@@ -51,6 +53,7 @@ export default {
         });
     },
     getLoginUser(data) {
+      Dialog({ message: '8' });
       if (data) {
         this.$emit("getUserInfo", data.result);
       }

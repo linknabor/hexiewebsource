@@ -12,7 +12,9 @@
 </template>
 <script>
 import UserInfo from "@/components/UserInfo.vue";
+
 import UserApi from "@/api/UserApi.js";
+
 import common from "@/util/common.js";
 import { Overlay, Loading, Dialog, Toast } from "vant";
 
