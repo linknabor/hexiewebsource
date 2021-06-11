@@ -32,7 +32,6 @@ export default {
   },
   methods: {
     getUserInfo() {
-      Dialog({ message: '5' });
       this.showOverlay = true
       UserApi.getUserInfo()
         .then((response) => {
@@ -41,9 +40,7 @@ export default {
             Storage.set("userInfo", data.result)
             this.$emit("getUserInfo", data.result)
             this.showOverlay = false
-            Dialog({ message: '6' });
           } else {
-            Dialog({ message: '7' });
             this.showOverlay = false
             this.$refs.userLogin.login();
           }
@@ -53,7 +50,6 @@ export default {
         });
     },
     getLoginUser(data) {
-      Dialog({ message: '8' });
       if (data) {
         this.$emit("getUserInfo", data.result);
       }
