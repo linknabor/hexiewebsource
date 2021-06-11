@@ -41,10 +41,10 @@
       </mt-tab-container-item>
       <mt-tab-container-item id="b" >
         <!-- 物业缴费开始 -->
-        <div class="btext" v-show="sectId==0 || sectId== null">
+        <div class="btext" v-show="sectId==0 || sectId== null || sectId == 'null'">
           <div >业主未绑定房屋,请点击下方"我是业主"前往绑定</div>
           <div class="bhouse" @click="Myhouse">我是业主</div>
-        </div> 
+        </div>
         <div id="word">
           <Bill v-show="sectId!=0 && sectId!= null" :bill-info="billInfo" @itemClick="itemClick"  :version="version1" ></Bill>
         </div>
@@ -112,11 +112,11 @@
             <label>起始日期：</label>
             <input class="virtual-input classinput1" type="date" value="" v-model="startData" >
           </div>
-          
+
           <div class="input-row" v-if="standard3">
             <label>起始日期：</label>
             <div class="virtual-input classinput1" type="date">{{startData | moment("YYYY/MM/DD")}}</div>
-          
+
           </div>
           <div class="input-row" v-if="standard2" v-show="andios=='Android'">
             <label>结束日期：</label>
@@ -125,9 +125,9 @@
 
           <div class="input-row" v-if="standard2" v-show="andios=='ios'">
             <label>结束日期：</label>
-            <input class="virtual-input classinput1" type="date" value="" v-model="endData" @blur="Blurname()"> 
+            <input class="virtual-input classinput1" type="date" value="" v-model="endData" @blur="Blurname()">
           </div>
-          
+
         </div>
           <div id="word">
           <Bill
@@ -190,7 +190,7 @@ export default {
     },
     moment
   },
-  components: { 
+  components: {
     Bill,
     [Overlay.name]: Overlay,
     [Loading.name]: Loading,
@@ -206,7 +206,7 @@ export default {
       }
       return parseFloat(ap).toFixed(2);
     },
-    
+
     //快捷缴费总价
     quickAllPrice: function() {
       let ap = 0;
@@ -376,8 +376,8 @@ export default {
             vm.sectId=cookie.get('sectId'); //获取sectid
             vm.cardPayService =cookie.get('cardPayService');
           },
-          r = function(n) { 
-            
+          r = function(n) {
+
           };
         this.common.invokeApi(n, a, i, null, e, r);
       }
@@ -433,13 +433,13 @@ export default {
                 if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
             return fmt;
     },
-    
+
     Compatibility(){
       const u = navigator.userAgent, app = navigator.appVersion;
       // Android 判断
       const isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1;
       // iOS 判断
-      const isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); 
+      const isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
       if (isAndroid) {
         vm.andios='Android';
       }
@@ -602,7 +602,7 @@ export default {
       vm.standard3= false;
 
       // vm.standard4= false;
-      vm.otherbillinfo = []; 
+      vm.otherbillinfo = [];
     },
     //门牌选中
     getCoupon() {
@@ -614,7 +614,7 @@ export default {
       vm.standard1= false;
       vm.standard2= false;
       vm.standard3= false;
-      vm.otherbillinfo = []; 
+      vm.otherbillinfo = [];
     },
     //室号选中
     getCoupons() {
@@ -623,7 +623,7 @@ export default {
       vm.standard2= false;
       vm.standard3= false;
       vm.queryBillInfo = []; //清空查询账单列表
-      vm.otherbillinfo = []; 
+      vm.otherbillinfo = [];
       vm.queryBillPage = 1; //页码重置
       isloadPage=false;//重置加载状态
       vm.queryisLastPage = false; //是否最后一页重置
@@ -638,7 +638,7 @@ export default {
         vm.queryBillList();
       }
     },
-    
+
     getBillStartDate() {
       this.showOverlay = true
       vm.receiveData.getData(
@@ -714,7 +714,7 @@ export default {
             vm.isshow = false;
             vm.showp = false;
           }
-         
+
         }
       );
     },
@@ -770,7 +770,7 @@ export default {
                 vm.houseList = [];
               }
             vm.showp = false;
-            vm.isshow=false;  
+            vm.isshow=false;
           }
         },
         params
@@ -788,7 +788,7 @@ export default {
           vm.showOverlay = true
           vm.queryBillInfo = []; //清空查询账单列表
           vm.otherbillinfo = [];
-          
+
           vm.receiveData.getData(vm, "/hexiehouse/" + vm.huhao, "res", function() {
             vm.showOverlay = false
             vm.query.sectID = vm.res.result.sect_id;
@@ -807,11 +807,11 @@ export default {
             }else {
               Dialog({message: vm.res.message})
             }
-          })  
+          })
         }else {
             Dialog({message: '请输入正确户号'})
         }
-      
+
     },
     //请求查询缴费 账单列表
     queryBillList() {
@@ -859,7 +859,7 @@ export default {
         vm.params
       );
     },
-   
+
     submit() {
       //请求扫码快速缴费数据
       if (vm.stmtId == "" || vm.stmtId.length != 18) {
@@ -888,7 +888,7 @@ export default {
         }
       });
     },
-    //分页 
+    //分页
 		 getscroll(e) {
 			var st = e.srcElement.scrollTop;
 			// console.log(st);
@@ -905,7 +905,7 @@ export default {
 					vm.queryLoadBottom();
 				}
 			}
-       },  	
+       },
     queryLoadBottom() {
       //查询缴费上拉加载数据
       let tempArr = null;
@@ -971,7 +971,7 @@ export default {
         function() {
             tempArr = vm.pageData.result.bill_info; //物业缴费
           vm.billPage += 1;
-         
+
           if (tempArr && tempArr.length > 0) {
             vm.billInfo = vm.billInfo.concat(tempArr); //物业缴费
             vm.bAllSelect = false;
@@ -1035,10 +1035,10 @@ export default {
         var oriapp=vm.common.getoriApp();
         var oriap = vm.getUrlParam('oriApp');
         if(oriap == 'wxe8dea53aad1a93b9') {
-          window.location.href =vm.basedhzj3Url +"wuyepay.html?"+oriapp+"#/?billIds=" +bills + "&stmtId=" + vm.stmtId + 
+          window.location.href =vm.basedhzj3Url +"wuyepay.html?"+oriapp+"#/?billIds=" +bills + "&stmtId=" + vm.stmtId +
          "&totalPrice=" +vm[allPrice] + "&reduceMode=" + vm.reduceMode + "&regionname=" +vm.regionname +"&getversion=" + "02"+"&cardPayService="+vm.cardPayService + "&payFeeType=01" + "&selected="+vm.selected;
         }else {
-         window.location.href =vm.basePageUrl +"wuyepay.html?"+oriapp+"#/?billIds=" +bills + "&stmtId=" + vm.stmtId + 
+         window.location.href =vm.basePageUrl +"wuyepay.html?"+oriapp+"#/?billIds=" +bills + "&stmtId=" + vm.stmtId +
          "&totalPrice=" +vm[allPrice] + "&reduceMode=" + vm.reduceMode + "&regionname=" +vm.regionname +"&getversion=" + "02"+"&cardPayService="+vm.cardPayService + "&payFeeType=01" + "&selected="+vm.selected;
         }
     },
@@ -1061,7 +1061,7 @@ export default {
         }
       } else { // 专业版
          vm.pays(list, allPrice, allselect)
-      }   
+      }
     },
 
     //调用微信扫一扫接口, 成功 数据返回到stmtId,显示在input上
@@ -1139,7 +1139,7 @@ export default {
       vm[a] = !vm[a];
     }
   }
-  
+
 };
 </script>
 <style>
@@ -1507,6 +1507,6 @@ a {
   margin-top: 7rem;
 }
 .link-tel{
-  color: #0000EE;	
+  color: #0000EE;
 }
 </style>

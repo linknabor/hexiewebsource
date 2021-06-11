@@ -113,7 +113,7 @@ const router= new VueRouter({
             meta:{
               title:''
             }
-      }, 
+      },
       {
             path:'/submitSuccess',
             name:'submitSuccess',
@@ -122,6 +122,36 @@ const router= new VueRouter({
               title:''
             }
       },
+      //新的业主意见 start
+      {
+        path:'/opinionList',
+        name:'opinionList',
+        component:resolve=> require(['@/pages/opinion/opinionList'], resolve),
+        meta:{
+          title:'我的意见'
+        }
+      },
+
+      {
+        path:'/addOpinion',
+        name:'addOpinion',
+        component:resolve=> require(['@/pages/opinion/addOpinion'], resolve),
+        meta:{
+          title:'我的意见'
+        }
+      },
+
+      {
+        path:'/opinionDetail',
+        name:'opinionDetail',
+        component:resolve=> require(['@/pages/opinion/opinionDetail'], resolve),
+        meta:{
+          title:'我的意见'
+        }
+      },
+      //新的业主意见 end
+
+
       {
             path:'/mysteward',
             name:'mysteward',
@@ -194,12 +224,11 @@ const viewArray = ['index', 'register', 'sms_notification', 'version2']
 //路由的钩子函数，
 //在每一次路由跳转之前会进入这个方法 to：到哪去  from：从哪来 next() 调用这个方法来完成这个钩子函数
 router.beforeEach((to, from, next) => {
-  
   let pageName = to.matched[0].name
   if(viewArray.indexOf(pageName)===-1){
     if(!common.checkRegisterStatus()){
       return
-    }
+  	}
   }
   let newVersionIndex = false
   if('index'===pageName){
@@ -223,8 +252,8 @@ router.beforeEach((to, from, next) => {
   } else {
     next()
   }
-  
-  
+
+
 });
 Vue.use(VueRouter)
 
