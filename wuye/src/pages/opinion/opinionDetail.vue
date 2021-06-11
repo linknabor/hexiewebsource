@@ -76,7 +76,8 @@
     <div class="loadImg">
       <van-uploader v-model="fileList" :after-read="uploadImgs" :before-delete="delImgs"/>
     </div>
-    <user-info @getUserInfo="getUserInfo"></user-info>
+    <user-login ref="userLogin" @getLoginUser="getLoginUser"></user-login>
+<!--    <user-info @getUserInfo="getUserInfo"></user-info>-->
   </div>
 </template>
 
@@ -84,7 +85,9 @@
   import opinionApi from "@/api/OpinionApi.js";
   import {ImagePreview, Toast, Uploader, Overlay, Loading, Dialog} from 'vant'
   import cookie  from 'js-cookie';
-  import UserInfo from "@/components/UserInfo";
+  // import UserInfo from "@/components/UserInfo";
+  import UserLogin from "@/components/UserLogin"
+  import UserApi from "@/api/api.js";
   export default {
     name: "",
     data() {
@@ -101,19 +104,48 @@
       }
     },
     components: {
+      "user-login": UserLogin,
       [Toast.name]: Toast,
       [Uploader.name]: Uploader,
       [Overlay.name]: Overlay,
       [Loading.name]: Loading,
       [ImagePreview.Component.name]: ImagePreview.Component,
-      "user-info": UserInfo,
+      // "user-info": UserInfo,
     },
     mounted() {
       this.getThread();
     },
 
     methods: {
-      getUserInfo(result) {
+      getUserInfo() {
+        Dialog({ message: '5' });
+        this.showOverlay = true
+        UserApi.getUserInfo()
+          .then((response) => {
+            let data = response.data;
+            if (data.success && data.result != null) {
+              Storage.set("userInfo", data.result)
+              this.$emit("getUserInfo", data.result)
+              this.showOverlay = false
+              this.checkUser(data.result)
+              Dialog({ message: '6' });
+            } else {
+              Dialog({ message: '7' });
+              this.showOverlay = false
+              this.$refs.userLogin.login();
+            }
+          })
+          .catch((error) => {
+            Toast(error);
+          });
+      },
+      getLoginUser(data) {
+        Dialog({ message: '8' });
+        if (data) {
+          this.$emit("getUserInfo", data.result);
+        }
+      },
+      checkUser(result) {
         Dialog({ message: '1' });
         this.userInfo = result;
         var sectId = this.userInfo.sectId;
