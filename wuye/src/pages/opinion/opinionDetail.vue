@@ -114,7 +114,7 @@
 
     methods: {
       getUserInfo(result) {
-        alert(1)
+        Dialog({ message: '1' });
         this.userInfo = result;
         var sectId = this.userInfo.sectId;
         if(sectId == '0' || sectId == null || sectId == 'null') {
@@ -123,7 +123,7 @@
         }
       },
       getThread() {
-        alert(2)
+        Dialog({ message: '2' });
         this.show = true
         setTimeout(() => {
           this.threadList();
@@ -132,7 +132,7 @@
       },
 
       threadList() {
-        alert(3)
+        Dialog({ message: '3' });
         let param = {
           threadId: this.threadId,
         }
