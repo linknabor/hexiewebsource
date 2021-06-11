@@ -32,6 +32,7 @@ export default {
   },
   methods: {
     getUserInfo() {
+      alert(5)
       this.showOverlay = true
       UserApi.getUserInfo()
         .then((response) => {
@@ -40,7 +41,9 @@ export default {
             Storage.set("userInfo", data.result)
             this.$emit("getUserInfo", data.result)
             this.showOverlay = false
+            alert(6)
           } else {
+            alert(7)
             this.showOverlay = false
             this.$refs.userLogin.login();
           }
@@ -50,6 +53,7 @@ export default {
         });
     },
     getLoginUser(data) {
+      alert(8)
       if (data) {
         this.$emit("getUserInfo", data.result);
       }

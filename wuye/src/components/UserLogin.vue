@@ -33,6 +33,7 @@ export default {
      * 微信授权
      */
     login() {
+      alert(9)
       var o = Common.getCallBackParams().code;
       var oriApp = Common.getUrlParam("oriApp");
       var mainAppId = Config.appId;
