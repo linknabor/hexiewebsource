@@ -105,9 +105,11 @@
         </router-link>
       </div>
 
-      <div  class="module-item-wrap module-newwidth" @click="gotoRepairOrder">
-        <div class="module-logo logo7"></div>
-        <div class="module-title fs14">维修订单</div>
+      <div class="module-item-wrap module-newwidth" >
+        <div class="module-item" @click="gotoRepairOrder">
+          <div class="module-logo logo7"></div>
+          <div class="module-title fs14">维修订单</div>
+        </div>
       </div>
     </div>
 
