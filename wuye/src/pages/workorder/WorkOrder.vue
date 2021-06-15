@@ -450,7 +450,7 @@ display: inline-block;}
     }
 .section-titles,.lite-dividers {
   border-bottom: 1px solid #d4cfc8;padding-left: 15px;}
-.mt1s {margin-top: 30px;}
+.mt1s {margin-top: 15px;}
 .fs14s {font-size: 14px;}
 .checkboxs.checkeds {
   background-image: url(../../assets/images/common/icon_selected.png);
@@ -458,7 +458,7 @@ display: inline-block;}
 .checkboxs {float: left;display: inline-block;width: 16px;height: 16px;
   background:url(../../assets/images/common/icon_unselect.png) no-repeat;
   background-size: 16px;margin-top: 12px;}
-.locations {line-height: 20px;margin-top: 6px;}
+.locations {line-height: 20px; margin: 10px 10px 10px 0}
 
 .check {
   color: #f60;
