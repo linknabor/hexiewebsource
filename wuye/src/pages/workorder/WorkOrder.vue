@@ -1,6 +1,10 @@
 <template>
   <div id="repairs">
-    <div id="zzmb"  class="zzmb" ></div>
+    <van-overlay :show="showOverlay">
+      <van-loading type="spinner" vertical color="#1989fa" :show="showOverlay" class="loading">
+        处理中...
+      </van-loading>
+    </van-overlay>
     <div v-show="page== 'main'" class="address">
       <div class="topLine">
         <div class="topLineLeft">所在小区</div>
@@ -49,7 +53,7 @@
           <div style="float: right;padding-right: 15px;color: #999">{{fileList.length}}/3</div>
         </div>
         <div>
-          <van-uploader v-model="fileList" multiple :max-count="3" :max-size="5000 * 1024" @oversize="onOversize"/>
+          <van-uploader v-model="fileList" multiple :max-count="3" :max-size="5000 * 1024" @oversize="onOversize" accept="image/*"/>
         </div>
         <div style="width: 100%;height: 80px;"></div>
         <div class="btn-fixed">
@@ -84,7 +88,7 @@
 
 <script>
 let vm
-import { Dialog, Toast, RadioGroup, Radio, Uploader } from 'vant'
+import { Dialog, Toast, RadioGroup, Radio, Uploader, Overlay, Loading } from 'vant'
 import WorkOrderApi from '@/api/WorkOrderApi.js'
 export default {
   data() {
@@ -128,7 +132,8 @@ export default {
       showz: false,
       distType: '1',
       pubAddress: '',
-      fileList: []
+      fileList: [],
+      showOverlay: false
     };
   },
   watch: {
@@ -154,7 +159,9 @@ export default {
     [Toast.name]: Toast,
     [RadioGroup.name]: RadioGroup,
     [Radio.name]: Radio,
-    [Uploader.name]: Uploader
+    [Uploader.name]: Uploader,
+    [Overlay.name]: Overlay,
+    [Loading.name]: Loading
   },
   methods: {
     initInfo() {
@@ -346,6 +353,7 @@ export default {
         Dialog({ message: '问题描述不能为空' })
         return false
       }
+      this.showOverlay = true
       let addressName = this.distType==='0'?this.pubAddress:this.address.regionStr+this.address.detailAddress
       let formData = new FormData()
       formData.append('distType', this.distType)
@@ -355,20 +363,17 @@ export default {
       this.fileList.forEach(item => {
         formData.append('fileList', item.file)
       })
-
-      // let formData = {
-      //   distType: this.distType,
-      //   address: addressName,
-      //   addressId: this.address.id,
-      //   content: this.memo,
-      //   fileList: this.fileList
-      // }
       WorkOrderApi.addWorkOrder(formData).then((response)=>{
+        this.showOverlay = false
         if(response.data.success){
-          //TODO
+          Toast('报修成功')
+          // this.$router.push({path: url)
+        }else{
+          Toast(response.data.message)
         }
       }).catch((error)=>{
         Toast(error)
+        this.showOverlay = false
       })
 
     }   
@@ -509,6 +514,9 @@ display: inline-block;}
 }
 .fileUploader {
   margin: 0 0 15px 15px;
+}
+.loading {
+  margin-top: 40vh;
 }
 
 </style>
