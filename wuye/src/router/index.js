@@ -219,11 +219,27 @@ const router= new VueRouter({
       },
       //工单
       {
-        path:'/workorder',
-        name:'workorder',
+        path:'/workOrder',
+        name:'workOrder',
         component:resolve=> require(['@/pages/workorder/WorkOrder'],resolve),
         meta:{
           title:'创建工单'
+        }
+      },
+      {
+        path:'/workOrderList',
+        name:'workOrderList',
+        component:resolve=> require(['@/pages/workorder/OrderList'],resolve),
+        meta:{
+          title:'工单列表'
+        }
+      },
+      {
+        path:'/workOrderDetail',
+        name:'workOrderDetail',
+        component:resolve=> require(['@/pages/workorder/OrderDetail'],resolve),
+        meta:{
+          title:'工单明细'
         }
       },
     ]
@@ -263,7 +279,7 @@ router.beforeEach((to, from, next) => {
   }
 
 
-});
+})
 Vue.use(VueRouter)
 
 
@@ -271,6 +287,6 @@ Vue.use(VueRouter)
 function changeTitle(title) {
     title = title ? title : Vue.prototype.common.newname;
     window.document.title = title;
-};
+}
 
 export default router

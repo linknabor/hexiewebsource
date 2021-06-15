@@ -25,6 +25,7 @@ import axios from 'axios'
 import cookie from 'js-cookie'
 
 import VueAxios from 'vue-axios';
+import VueClipboard  from 'vue-clipboard2'
 
 
 import './assets/css/base.css'
@@ -95,6 +96,7 @@ axiosInstance.interceptors.request.use(
 )
 
 Vue.use(VueAxios, axiosInstance);
+Vue.use(VueClipboard)
 
 
 //生产环境提示
