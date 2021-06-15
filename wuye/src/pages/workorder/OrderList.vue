@@ -100,4 +100,5 @@ export default {
   margin-left: 75%;
   color: #ff8a00;
 }
+
 </style>

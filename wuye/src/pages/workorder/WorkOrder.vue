@@ -5,6 +5,7 @@
         处理中...
       </van-loading>
     </van-overlay>
+    <div class="header" v-if="skeletonLoading"></div>
     <van-skeleton title :row="3" :loading="skeletonLoading">
     <div v-show="page== 'main'" class="address">
       <div class="topLine">
@@ -355,7 +356,7 @@ export default {
         if(response.data.success){
           Toast('报修成功,即将为您跳转...')
           let url = this.basePageUrl+'wuye/index.html?'+this.common.getoriApp()+'#/workOrderList'
-          this.$router.push({path: url})
+          location.href = url
         }else{
           this.showOverlay = false
           Toast(response.data.message)
@@ -507,5 +508,9 @@ display: inline-block;}
 .loading {
   margin-top: 40vh;
 }
-
+.header {
+  height: 4vh;
+  widows: 100%;
+  background-color: #fff;
+}
 </style>

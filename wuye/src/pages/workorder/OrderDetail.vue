@@ -201,7 +201,7 @@ export default {
   height: auto;
 }
 .header {
-  height: 3vh;
+  height: 4vh;
   widows: 100%;
   background-color: #fafafa;
 }
