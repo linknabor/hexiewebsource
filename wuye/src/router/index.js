@@ -224,7 +224,7 @@ router.beforeEach((to, from, next) => {
   if(viewArray.indexOf(pageName)===-1){
     if(!common.checkRegisterStatus()){
       return
-	}
+  }
   }
   let newVersionIndex = false
   if('index'===pageName){
