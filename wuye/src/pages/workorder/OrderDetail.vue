@@ -27,7 +27,7 @@
         <van-cell title="服务地址" :label="orderDetail.serve_address" label-class="label-text"/>
         <van-cell title="工单内容" :label="orderDetail.content" label-class="label-text"/>
         <van-image class="image-view" lazy-load v-for="(image, index) in orderDetail.images" :key="index"
-            width="80" height="80" :scr="image" @click="imagePreview(index, orderDetail.images)"/>
+            width="80" height="80" :src="image" @click="imagePreview(index, orderDetail.images)"/>
       </van-cell-group>
       <van-steps direction="vertical" :active="active">
         <van-step v-for="(step, index) in steps" :key="index">
@@ -42,10 +42,13 @@
         <van-goods-action-button type="danger" text="支付" v-if="orderDetail.workorder_status==='03'" @click="pay"/>
       </van-goods-action>
     </van-skeleton>
+    <user-info ref='user'></user-info>
   </div>
 </template>
 <script>
-import WorkOrderApi from '@/api/WorkOrderApi.js';
+import WorkOrderApi from '@/api/WorkOrderApi.js'
+import Storage from '@/util/storage.js'
+import UserInfo from "@/components/UserInfo"
 import {
   Toast, Dialog, Loading, Overlay, 
   Skeleton,
@@ -64,6 +67,7 @@ import {
 export default {
   data() {
     return {
+      userInfo: {},
       showOverlay: false,
       skeletonLoading: true,
       orderId: this.$route.query.orderId,
@@ -76,6 +80,7 @@ export default {
     }
   },
   components: {
+    "user-info": UserInfo,
     [Skeleton.name]: Skeleton,
     [Cell.name]: Cell,
     [CellGroup.name]: CellGroup,
@@ -93,7 +98,8 @@ export default {
     [Loading.name]: Loading,
     [Overlay.name]: Overlay
   },
-  mounted() {
+  async mounted() {
+    await this.initUser()
     if (this.orderId) {
       this.getOrderDetail(this.orderId);
     }
@@ -102,6 +108,14 @@ export default {
     }, 1000); //延迟时间 这里是1秒
   },
   methods: {
+    initUser() {
+      let userInfo = Storage.get('userInfo')
+      if(!userInfo) {
+        userInfo = this.$refs.user.getUserInfo()
+        console.log(userInfo)
+        this.userInfo = userInfo
+      }
+    },
     getOrderDetail(orderId) {
       WorkOrderApi.getOrderDetail(orderId).then((response) => {
           if (response.data.success) {
