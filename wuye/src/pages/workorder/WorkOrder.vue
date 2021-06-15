@@ -78,7 +78,7 @@
           </div>
           <div
             class="locations"
-            style="margin-left:25px"
+            style="margin-left:35px"
           >{{item.city_name}} {{item.sect_name}} {{item.cell_addr}}</div>
         </div>
       </div>
@@ -321,7 +321,7 @@ export default {
            }
        },
     submit() {
-      if(this.distType==='1' && !this.address.id){
+      if(this.distType==='1' && !this.address.mng_cell_id){
         Dialog({ message: '请选择服务地址' })
         return false
       }
@@ -334,7 +334,8 @@ export default {
         return false
       }
       this.showOverlay = true
-      let addressName = this.distType==='0'?this.pubAddress:this.address.regionStr+this.address.detailAddress
+      let serveAddr = this.address.city_name+this.address.sect_name+this.address.cell_addr
+      let addressName = this.distType==='0'?this.pubAddress:serveAddr
       let formData = new FormData()
       formData.append('distType', this.distType)
       formData.append('address', addressName)
@@ -347,7 +348,8 @@ export default {
         this.showOverlay = false
         if(response.data.success){
           Toast('报修成功')
-          // this.$router.push({path: url)
+          let url = this.basePageUrl+'wuye/index.html?'+this.common.getoriApp()+'#/workOrderList'
+          this.$router.push({path: url})
         }else{
           Toast(response.data.message)
         }

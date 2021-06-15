@@ -3,6 +3,7 @@
     <!-- <van-nav-bar title="我的工单" left-text="个人中心" left-arrow @click-left="onClickNav" /> -->
     <div class="header"></div>
     <van-skeleton title :row="3" :loading="skeletonLoading">
+      <van-empty description="还没有维修单哦" v-if="orderList&&orderList.length===0"/>
       <div class="data-list">
         <ul v-for="(order, index) in orderList" :key="index">
           <li class="data">
@@ -18,7 +19,7 @@
 
 <script>
 import WorkOrderApi from "@/api/WorkOrderApi.js";
-import { Toast, Skeleton, Cell, CellGroup, NavBar } from "vant";
+import { Toast, Skeleton, Cell, CellGroup, NavBar, Empty } from "vant";
 
 export default {
   data() {
@@ -31,7 +32,8 @@ export default {
     [Skeleton.name]: Skeleton,
     [Cell.name]: Cell,
     [CellGroup.name]: CellGroup,
-    [NavBar.name]: NavBar
+    [NavBar.name]: NavBar,
+    [Empty.name]: Empty
   },
   mounted() {
     setTimeout(() => {
