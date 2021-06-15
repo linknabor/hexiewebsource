@@ -5,6 +5,7 @@
         处理中...
       </van-loading>
     </van-overlay>
+    <van-skeleton title :row="3" :loading="skeletonLoading">
     <div v-show="page== 'main'" class="address">
       <div class="topLine">
         <div class="topLineLeft">所在小区</div>
@@ -83,14 +84,15 @@
         </div>
       </div>
     </div>
+    </van-skeleton>
   </div>
 </template>
 
 <script>
 let vm
-import { Dialog, Toast, RadioGroup, Radio, Uploader, Overlay, Loading } from 'vant'
+import { Dialog, Toast, RadioGroup, Radio, Uploader, Overlay, Loading, Skeleton } from 'vant'
 import WorkOrderApi from '@/api/WorkOrderApi.js'
-import Storage from '@/assets/js/storage.js'
+import Storage from '@/util/storage.js'
 export default {
   data() {
     return {
@@ -135,7 +137,8 @@ export default {
       distType: '1',
       pubAddress: '',
       fileList: [],
-      showOverlay: false
+      showOverlay: false,
+      skeletonLoading: true,
     };
   },
   watch: {
@@ -155,6 +158,9 @@ export default {
     vm = this
   },
   mounted() {
+    setTimeout(() => {
+      this.skeletonLoading = false;
+    }, 800);
     this.getUserInfo()
     this.initInfo()
   },
@@ -164,7 +170,8 @@ export default {
     [Radio.name]: Radio,
     [Uploader.name]: Uploader,
     [Overlay.name]: Overlay,
-    [Loading.name]: Loading
+    [Loading.name]: Loading,
+    [Skeleton.name]: Skeleton,
   },
   methods: {
     getUserInfo() {
@@ -345,12 +352,12 @@ export default {
         formData.append('fileList', item.file)
       })
       WorkOrderApi.addWorkOrder(formData).then((response)=>{
-        this.showOverlay = false
         if(response.data.success){
-          Toast('报修成功')
+          Toast('报修成功,即将为您跳转...')
           let url = this.basePageUrl+'wuye/index.html?'+this.common.getoriApp()+'#/workOrderList'
           this.$router.push({path: url})
         }else{
+          this.showOverlay = false
           Toast(response.data.message)
         }
       }).catch((error)=>{
@@ -450,7 +457,7 @@ display: inline-block;}
     }
 .section-titles,.lite-dividers {
   border-bottom: 1px solid #d4cfc8;padding-left: 15px;}
-.mt1s {margin-top: 30px;}
+.mt1s {margin-top: 15px;}
 .fs14s {font-size: 14px;}
 .checkboxs.checkeds {
   background-image: url(../../assets/images/common/icon_selected.png);
@@ -458,7 +465,7 @@ display: inline-block;}
 .checkboxs {float: left;display: inline-block;width: 16px;height: 16px;
   background:url(../../assets/images/common/icon_unselect.png) no-repeat;
   background-size: 16px;margin-top: 12px;}
-.locations {line-height: 20px;margin-top: 6px;}
+.locations {line-height: 20px; margin: 10px 10px 10px 0}
 
 .check {
   color: #f60;
