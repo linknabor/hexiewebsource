@@ -5,7 +5,7 @@ let baseUrl = Config.baseUrl
 const workOrderApi = {
 
     getDefaultAddress() {
-        return Http.get(baseUrl + '/workorder/address/default', null)
+        return Http.get(baseUrl + '/hexiehouses', null)
     },
     addWorkOrder(data) {
         return Http.post4File(baseUrl + '/workorder/save', data)

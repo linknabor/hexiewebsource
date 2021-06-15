@@ -5,7 +5,7 @@
         <van-loading type="spinner" color="#1989fa" vertical class="loading">处理中...</van-loading>
     </van-overlay>
     <van-skeleton title :row="3" :loading="skeletonLoading">
-    <van-nav-bar title="工单明细" left-text="返回" left-arrow @click-left="onClickNav"/>
+    <!-- <van-nav-bar title="工单明细" left-text="返回" left-arrow @click-left="onClickNav"/> -->
       <van-empty v-show="empty" description="没有查询到工单哦"/>
       <van-cell-group v-show="!empty">
         <van-cell title="基本信息" class="title-text" />
