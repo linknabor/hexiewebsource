@@ -8,7 +8,7 @@
     <div v-show="page== 'main'" class="address">
       <div class="topLine">
         <div class="topLineLeft">所在小区</div>
-        <div class="topLineRight">{{address.xiaoquName}}</div>
+        <div class="topLineRight">{{address.sect_name}}</div>
       </div>
       <div class="radioBox">
         <van-radio-group v-model="distType" direction="horizontal">
@@ -19,15 +19,15 @@
       <div class="addr_area" @click="choseAddress" v-if="distType==='1'">
         <div class="addrtop">&nbsp;</div>
         <div style="text-align:center;background-color: #f7f7f1;">
-          <div class="add_address" v-show="!address.receiveName">选择收货地址</div>
+          <div class="add_address" v-show="!address.cell_addr">选择报修地址</div>
         </div>
-        <div class="custom-menu-link" v-show="address.receiveName">
+        <div class="custom-menu-link" v-show="address.cell_addr">
           <div class="sustoma">
-            <span>{{address.receiveName}}</span>
-            <span style="margin-left:15px;">{{address.tel}}</span>
+            <span>{{userInfo.name}}</span>
+            <span style="margin-left:15px;">{{userInfo.tel}}</span>
             <div
               class="addr_location"
-            >{{address.province}}{{address.city}}{{address.county}}{{address.xiaoquName}}{{address.detailAddress}}</div>
+            >{{address.city_name}} {{address.sect_name}} {{address.cell_addr}}</div>
           </div>
         </div>
         <div class="addrbottom">&nbsp;</div>
@@ -70,16 +70,16 @@
           @click="checks(item)"
           :key="index"
         >
-          <i class="checkboxs" :class="{checkeds:address&&address.id===item.id}"></i>
+          <i class="checkboxs" :class="{checkeds:address&&address.mng_cell_id===item.mng_cell_id}"></i>
           <div>
-            <span style="margin-left:20px">{{item.receiveName}}</span>
+            <!-- <span style="margin-left:20px">{{item.receiveName}}</span>
             <span style="margin-left:15px">{{item.tel}}</span>
-            <span class="mainlian" style="margin-left:15px" v-if="item.main">默认</span>
+            <span class="mainlian" style="margin-left:15px" v-if="item.main">默认</span> -->
           </div>
           <div
             class="locations"
-            style="margin-left:35px"
-          >{{item.province}}{{item.city}}{{item.county}}{{item.locationAddr}}({{item.xiaoquName}}){{item.detailAddress}}</div>
+            style="margin-left:25px"
+          >{{item.city_name}} {{item.sect_name}} {{item.cell_addr}}</div>
         </div>
       </div>
     </div>
@@ -90,9 +90,11 @@
 let vm
 import { Dialog, Toast, RadioGroup, Radio, Uploader, Overlay, Loading } from 'vant'
 import WorkOrderApi from '@/api/WorkOrderApi.js'
+import Storage from '@/assets/js/storage.js'
 export default {
   data() {
     return {
+      userInfo: {},
       page: "main",
       address: {}, //报修地址
       localIdsid:'',
@@ -153,6 +155,7 @@ export default {
     vm = this
   },
   mounted() {
+    this.getUserInfo()
     this.initInfo()
   },
   components: {
@@ -164,11 +167,17 @@ export default {
     [Loading.name]: Loading
   },
   methods: {
+    getUserInfo() {
+      this.userInfo = Storage.get('userInfo')
+    },
     initInfo() {
         WorkOrderApi.getDefaultAddress().then((response)=>{
           if(response.data.success){
             if(response.data.result){
-              this.address = response.data.result
+              this.addresses = response.data.result
+              if(this.addresses && this.addresses.length>0) {
+                this.address = this.addresses[0]
+              }
             }
           }
         }).catch((error)=>{
@@ -189,40 +198,11 @@ export default {
     //点击切换地址
     choseAddress() {
       vm.page = "list";
-      vm.dataAddress();
-    },
-    //获取地址
-    dataAddress() {
-      var repair='repair';
-      vm.receiveData.getData(vm, "/addresses?module="+repair, "data", function() {
-        if (vm.data.success) {
-          vm.addresses = vm.data.result;
-        } else {
-          vm.addresses = [];
-        }
-      });
     },
     //选择地址
     checks(item) {
       vm.address = item;
       vm.page = "main";
-    },
-    toAddAddress() {
-      vm.lian = "xing";
-      vm.submitAddress={
-        xiaoquEntId: 0,
-        receiveName: "",
-        province: "",
-        city: "",
-        county: "",
-        tel: "",
-        xiaoquAddr: "",
-        xiaoquName: "",
-        id: 0,
-        detailAddress: ""
-        }   
-      vm.distinct='';
-      vm.suggestLocation='';
     },
     //!--------------!
      getRegions(type,id) {

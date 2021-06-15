@@ -105,11 +105,9 @@
         </router-link>
       </div>
 
-      <div  class="module-item-wrap module-newwidth" >
-        <router-link class="module-item" :to="{path:'/myrepair'}">
-          <div class="module-logo logo7"></div>
-          <div class="module-title fs14">维修订单</div>
-        </router-link>
+      <div  class="module-item-wrap module-newwidth" @click="gotoRepairOrder">
+        <div class="module-logo logo7"></div>
+        <div class="module-title fs14">维修订单</div>
       </div>
     </div>
 
@@ -240,7 +238,6 @@
   import Vue from 'vue';
   import img from "../../assets/images/common/logo.jpg";
   import Bus from '../../api/bus.js'
-  import cookie from 'js-cookie';
   import { Popup } from 'vant';
   import vueQr from 'vue-qr';
   Vue.use(Popup);
@@ -253,7 +250,7 @@
           level: "",
           zhima: "0",
           lvdou: "0",
-          couponCount: 0,
+          couponCount: 0
         },
         service_list:[],
         login:false,
@@ -411,6 +408,17 @@
         let str = "?appid=" + vm.user.appId + "&userid=" + vm.user.wuyeId;
         vm.qrshow = true
         vm.image = str
+      },
+      gotoRepairOrder() {
+        // <router-link class="module-item" :to="{path:'/myrepair'}">
+        // </router-link>
+        console.log(this.user.cfgParam.ONLINE_REPAIR)
+        if(this.user.cfgParam.ONLINE_REPAIR === '1') {
+          this.$router.push({path:'/myrepair'});
+        } else if (this.user.cfgParam.ONLINE_REPAIR === '2') {
+          let url = this.basePageUrl+'wuye/index.html?'+this.common.getoriApp()+'#/workOrderList'
+          location.href = url
+        }
       }
     },
     computed: {},

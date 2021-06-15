@@ -141,8 +141,6 @@ export default ({
             this.qrImage = image
         },
         gotoPage(url, status, code){
-            console.log(url)
-            console.log(status)
             if(status!==1){
                 Toast("当前功能尚未开通。")
                 return 

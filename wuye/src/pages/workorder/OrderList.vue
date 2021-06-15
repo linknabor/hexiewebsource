@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <van-nav-bar title="我的工单" left-text="个人中心" left-arrow @click-left="onClickNav" />
+    <!-- <van-nav-bar title="我的工单" left-text="个人中心" left-arrow @click-left="onClickNav" /> -->
     <div class="header"></div>
     <van-skeleton title :row="3" :loading="skeletonLoading">
       <div class="data-list">
