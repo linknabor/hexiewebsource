@@ -342,7 +342,7 @@ export default {
         return false
       }
       this.showOverlay = true
-      let serveAddr = this.address.city_name+this.address.sect_name+this.address.cell_addr
+      let serveAddr = this.address.cell_addr
       let addressName = this.distType==='0'?this.pubAddress:serveAddr
       let formData = new FormData()
       formData.append('distType', this.distType)
