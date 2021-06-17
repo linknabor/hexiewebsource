@@ -7,6 +7,7 @@
       <div class="data-list">
         <ul v-for="(order, index) in orderList" :key="index">
           <li class="data">
+            {{ order.content|subString }}<br /><br />
             {{ order.serve_address }}<br /><br />
             {{ order.createDateStr }}<br />
             <span class="data-check"><a @click="viewDetail(order.order_id)">查看明细</a></span>
@@ -22,6 +23,16 @@ import WorkOrderApi from "@/api/WorkOrderApi.js";
 import { Toast, Skeleton, Cell, CellGroup, NavBar, Empty } from "vant";
 
 export default {
+  filters: {
+    subString(value) {
+        if(value && value.length > 30){
+            return value.substr(0,30) + "…";
+        } else {
+            return value;
+        }
+
+    }
+  },
   data() {
     return {
       orderList: [],

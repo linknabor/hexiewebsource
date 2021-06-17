@@ -29,7 +29,7 @@
             <span style="margin-left:15px;">{{userInfo.tel}}</span>
             <div
               class="addr_location"
-            >{{address.city_name}} {{address.sect_name}} {{address.cell_addr}}</div>
+            >{{address.cell_addr}}</div>
           </div>
         </div>
         <div class="addrbottom">&nbsp;</div>
@@ -81,7 +81,7 @@
           <div
             class="locations"
             style="margin-left:35px"
-          >{{item.city_name}} {{item.sect_name}} {{item.cell_addr}}</div>
+          >{{item.sect_name}} {{item.cell_addr}}</div>
         </div>
       </div>
     </div>
@@ -361,7 +361,7 @@ export default {
           this.showOverlay = false
           Toast(response.data.message)
         }
-      }).catch((error)=>{
+      }).catch((error)=>{ 
         Toast(error)
         this.showOverlay = false
       })
