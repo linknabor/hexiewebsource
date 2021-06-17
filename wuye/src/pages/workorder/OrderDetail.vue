@@ -39,7 +39,7 @@
       <div class="end-view"></div>
       <van-goods-action v-if="orderDetail.workorder_status==='00'||orderDetail.workorder_status==='03'">
         <van-goods-action-button type="warning" text="订单撤回" v-if="orderDetail.workorder_status==='00'" @click="reverse"/>
-        <van-goods-action-button type="danger" text="支付" v-if="orderDetail.workorder_status==='03'" @click="pay"/>
+        <!-- <van-goods-action-button type="danger" text="支付" v-if="orderDetail.workorder_status==='03'" @click="pay"/> -->
       </van-goods-action>
     </van-skeleton>
     <user-info ref='user'></user-info>
