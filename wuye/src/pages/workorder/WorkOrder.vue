@@ -359,11 +359,17 @@ export default {
           location.href = url
         }else{
           this.showOverlay = false
-          Toast(response.data.message)
+          if(response.data.message) {
+            Dialog({ message: response.data.message})
+          } else {
+            this.showOverlay = false
+            Dialog({message: '报修失败,请重试'})
+          }
+          
         }
-      }).catch((error)=>{ 
-        Toast(error)
+      }).catch(()=>{ 
         this.showOverlay = false
+        Dialog({message: '报修失败,请重试'})
       })
 
     }   
