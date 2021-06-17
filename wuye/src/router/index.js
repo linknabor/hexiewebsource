@@ -223,7 +223,7 @@ const router= new VueRouter({
         name:'workOrder',
         component:resolve=> require(['@/pages/workorder/WorkOrder'],resolve),
         meta:{
-          title:'创建工单'
+          title:'物业报修'
         }
       },
       {
@@ -231,7 +231,7 @@ const router= new VueRouter({
         name:'workOrderList',
         component:resolve=> require(['@/pages/workorder/OrderList'],resolve),
         meta:{
-          title:'工单列表'
+          title:'维修订单'
         }
       },
       {
@@ -239,7 +239,7 @@ const router= new VueRouter({
         name:'workOrderDetail',
         component:resolve=> require(['@/pages/workorder/OrderDetail'],resolve),
         meta:{
-          title:'工单明细'
+          title:'维修订单明细'
         }
       },
     ]
@@ -253,7 +253,7 @@ router.beforeEach((to, from, next) => {
   if(viewArray.indexOf(pageName)===-1){
     if(!common.checkRegisterStatus()){
       return
-  	}
+    }
   }
   let newVersionIndex = false
   if('index'===pageName){
