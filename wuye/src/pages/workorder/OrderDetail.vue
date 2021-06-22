@@ -26,8 +26,12 @@
         <van-cell title="所在小区" :label="orderDetail.sect_name" label-class="label-text"/>
         <van-cell title="服务地址" :label="orderDetail.serve_address" label-class="label-text"/>
         <van-cell title="工单内容" :label="orderDetail.content" label-class="label-text"/>
-        <van-image class="image-view" lazy-load v-for="(image, index) in orderDetail.images" :key="index"
-            width="80" height="80" :src="image" @click="imagePreview(index, orderDetail.images)"/>
+      </van-cell-group>
+      <van-cell-group>
+        <div class="white-space"></div>
+        <van-image class="image-view" lazy-load v-for="(image, index) in orderDetail.thumbnailImgList" :key="index"
+            width="80" height="80" :src="image" @click="imagePreview(index, orderDetail.imgList)"/>
+        <div class="white-space"></div>
       </van-cell-group>
       <van-steps direction="vertical" :active="active">
         <van-step v-for="(step, index) in steps" :key="index">
@@ -225,5 +229,11 @@ export default {
 }
 .loading {
     margin-top: 45vh;
+}
+.white-space {
+  width: 100%;
+  background-color: #fff;
+  padding-top: 20px;
+  border: none;
 }
 </style>
