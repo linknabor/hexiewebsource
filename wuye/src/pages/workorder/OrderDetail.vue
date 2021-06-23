@@ -42,7 +42,7 @@
       <van-field v-show="orderDetail.workorder_status==='00'" v-model="reason" placeholder="如需撤回工单，请填写驳回原因" left-icon="records"/>
       <div class="end-view"></div>
       <van-goods-action v-if="orderDetail.workorder_status==='00'||orderDetail.workorder_status==='03'">
-        <van-goods-action-button type="warning" text="订单撤回" v-if="orderDetail.workorder_status==='00'" @click="reverse"/>
+        <van-goods-action-button type="warning" text="工单撤回" v-if="orderDetail.workorder_status==='00'" @click="reverse"/>
         <!-- <van-goods-action-button type="danger" text="支付" v-if="orderDetail.workorder_status==='03'" @click="pay"/> -->
       </van-goods-action>
     </van-skeleton>
@@ -132,8 +132,12 @@ export default {
             this.orderFlow.forEach((flow)=>{
                 let step = {}
                 step.text = flow.operDateStr
-                step.desc = '订单' + flow.operation_cn + ' ' + flow.oper + ' '
-                step.mobile = flow.oper_contact
+                step.desc = '工单' + flow.operation_cn + ' ' + flow.oper + ' '
+                let mobile = flow.oper_contact
+                if('01'===flow.operation){
+                  mobile = ''
+                }
+                step.mobile = mobile
                 steps.push(step)
             })
             this.steps = steps
@@ -165,7 +169,7 @@ export default {
             return false
         }
         Dialog.confirm({
-            message: '确认要撤回订单么？',
+            message: '确认要撤回工单么？',
         }).then(() => {
             let data = {
                 reason: this.reason
@@ -173,7 +177,7 @@ export default {
             this.showOverlay = true
             WorkOrderApi.reverseOrder(this.orderId, data).then((response)=>{
                 if(response.data.success){
-                    Toast('订单撤消成功, 即将为您跳转...')
+                    Toast('工单撤消成功, 即将为您跳转...')
                     setTimeout(() => {
                         let url = 'workOrderList'
                         this.$router.push({path: url})
