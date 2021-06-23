@@ -132,11 +132,15 @@ export default {
             this.orderFlow.forEach((flow)=>{
                 let step = {}
                 step.text = flow.operDateStr
-                step.desc = '工单' + flow.operation_cn + ' ' + flow.oper + ' '
+                let desc = '工单' + flow.operation_cn + ' ' + flow.oper + ' '
                 let mobile = flow.oper_contact
                 if('01'===flow.operation){
                   mobile = ''
                 }
+                if('02'===flow.operation){
+                  desc += '  ' + flow.oper_reason
+                }
+                step.desc = desc
                 step.mobile = mobile
                 steps.push(step)
             })
