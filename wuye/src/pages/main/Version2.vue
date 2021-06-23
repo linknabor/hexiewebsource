@@ -141,8 +141,6 @@ export default ({
             this.qrImage = image
         },
         gotoPage(url, status, code){
-            console.log(url)
-            console.log(status)
             if(status!==1){
                 Toast("当前功能尚未开通。")
                 return 
@@ -171,11 +169,17 @@ export default ({
             if(!user.sectId || user.sectId===0 || user.sectName === null){
                 Dialog({message: '您暂未绑定房屋，请前往“我是业主”\r\n进行操作！'})
                 return
-            }else  if(user.cfgParam==null || user.cfgParam.ONLINE_REPAIR == undefined||user.cfgParam.ONLINE_REPAIR==0) {
-                Dialog({message: '当前所在的小区未开启当前业务'})
+            }else  if(user.cfgParam==null || user.cfgParam.ONLINE_REPAIR == undefined||user.cfgParam.ONLINE_REPAIR==='0') {
+                Dialog({message: '当前所在小区未开启当前业务'})
                 return
-            }else {
+            } else if (user.cfgParam.ONLINE_REPAIR==='1') {
                 this.$router.push({path: url,query:{'projectId':'1'}})
+            } else if (user.cfgParam.ONLINE_REPAIR==='2') {
+                url = '/workorder' //TODO 应该取菜单里的
+                this.$router.push({path: url,query:{'projectId':'1'}})
+            } else {
+                Dialog({message: '当前小区维修参数配置错误, ONLINE_REPAIR : ' + user.cfgParam.ONLINE_REPAIR})
+                return
             }
         },
         gotoEshop(url){

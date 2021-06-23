@@ -14,7 +14,7 @@
 import UserApi from "@/api/api.js";
 import Storage from "@/util/storage.js"
 import UserLogin from "@/components/UserLogin"
-import {Overlay, Loading, Toast, Dialog} from "vant"
+import {Overlay, Loading, Toast} from "vant"
 
 export default {
   data() {
