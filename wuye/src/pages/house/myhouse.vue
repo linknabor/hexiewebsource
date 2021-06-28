@@ -80,8 +80,8 @@
 				</p>
 				<p>
 					<span class="fl">{{i.cell_addr}}</span> 
-					<span class="fr">{{i.cnst_area}}平米</span>
 				</p>
+				<p><span class="fl">{{i.cnst_area}}平米</span></p>
 				<p>{{i.ver_no}}（户号）</p>
 				<!-- 城市：{{i.city_name}} <br>
 				面积: {{i.cnst_area}}<br>

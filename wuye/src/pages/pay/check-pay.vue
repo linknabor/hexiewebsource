@@ -328,4 +328,7 @@
 .link-tel{
 	color: #0000EE;	
 }
+.overlay-loading{
+	margin-top: 40vh;
+}
 </style>
