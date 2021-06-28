@@ -11,7 +11,8 @@ const baseInfoApi = {
         return Http.get(baseUrl + '/getLikeCellAddr', param)
     },
     bindHouseByArea(param){
-        return Http.post(baseUrl + '/addhexiehouse2', param)
+        let uri = '/addhexiehouse2?houseId='+param.houseId+'&area='+param.area
+        return Http.post(baseUrl + uri, null)
     },
     queryHouseByVersno(param){
         return Http.get(baseUrl + '/hexiehouse/' + param, null)

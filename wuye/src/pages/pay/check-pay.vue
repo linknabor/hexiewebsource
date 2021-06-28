@@ -291,6 +291,7 @@
 	height: 5vh;
 }
 .title-text {
+	font-size: 0.32rem;
 	margin: 0 0.2rem 0 0.2rem;
 	color: #a6937c;
 }
@@ -302,10 +303,11 @@
 	padding: 0.15rem;
 	border-bottom: 1px solid #ccc;
 	width: 80%;
+	font-size: 0.3rem;
 }
 .addr-hint {
 	color: red;
-	margin-left: 1.8rem;
+	margin-left: 2rem;
 	margin-right: 0.2rem;
 }
 .select-cell {
