@@ -209,6 +209,7 @@
 						area: this.cellArea,
 						houseId: this.selCell
 					}
+					this.showOverlay = true
 					Dialog.confirm({
 						message: this.cellAddr + '，确认要添加吗？',
 					}).then(() => {
@@ -220,6 +221,7 @@
 									this.$router.push("/myhouse")
 								}).catch((error)=>{
 									Toast(error)
+									this.showOverlay = false
 								})
 
 							}else {
@@ -230,17 +232,18 @@
 								Dialog.alert({
 									message: message
 								})
+								this.showOverlay = false
 								return false
 							}
 						}).catch((error)=>{
 							Toast(error)
+							this.showOverlay = false
 						})
 					}).catch(() => {
 						return false
 					})
 
 				}else if(this.version === '1'){
-					console.log(this.verno)
 					if(!this.verno){
 						Toast('请填写正确的户号')
 						return false
@@ -254,8 +257,8 @@
 					BaseInfoApi.queryHouseByVersno(this.verno).then((response)=>{
 						if(response.data.success) {
 							this.showOverlay = false
-							if(response.data.result && response.data.result.length>0){
-								this.$router.push({path:'/bindHouse/' + vm.huhao,query:{type:'1'}});
+							if(response.data.result){
+								this.$router.push({path:'/bindHouse/' + this.verno,query:{type:'1'}});
 							}else{
 								Dialog({message: '未查询到该房屋'})
 							}
