@@ -54,7 +54,7 @@
 				</div>
 			</van-cell-group>
 			
-			<van-goods-action :safe-area-inset-bottom="true">
+			<van-goods-action :safe-area-inset-bottom="true" v-if="(version==='0'&&selCell)||(version==='1'&&verno)">
 				<van-goods-action-button color="#ff8a00" type="warning" text="绑定房屋" @click="onBindSubmit"/>
 			</van-goods-action>
 		</div>
