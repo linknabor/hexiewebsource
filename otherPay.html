@@ -137,6 +137,10 @@
         var house_id = "";//室号id
         var ischeckaddr = ""; //是否显示地址
         var cull_appid = "";
+        var payee_openid = "";
+		var order_id = "";
+		var order_detail="";
+		var fee_amt = "";
 
         function getUrlParam() {
             let theRequest = {};
@@ -158,7 +162,10 @@
             qrcode_id = theRequest.qrcode_id;
             cull_appid = theRequest.appid
             ischeckaddr = theRequest.is_check_addr;
-
+            payee_openid = theRequest.payee_openid;
+			order_id = theRequest.order_id;
+			order_detail = theRequest.order_detail;
+			fee_amt = theRequest.fee_amt;
             openid = getParam(paramUrl, "openid");
             user_id = getParam(paramUrl, "user_id");
 
@@ -167,6 +174,11 @@
             }else {
                 $('#showaddr').hide();
             }
+
+			if(fee_amt) {
+				$("#money").val(fee_amt);
+				$("#money").attr("readOnly", "readOnly");
+			}
         }
 
         function getCellMng(inpAddr) {
@@ -188,7 +200,8 @@
                             let str = "";
                             $.each(house,function(idx,obj) {
                                 let objName = subLimit(obj.name);
-                                str += "<li onclick=checkAddrOne('"+obj.id+"','"+obj.name+"') >"+objName+"</li>";
+								var addr = "'"+ obj.id+"','"+obj.name+"'";
+                                str += "<li onclick=checkAddrOne("+addr+") >"+objName+"</li>";
                             })
                             $(".cellDiv").empty();
                             $(".cellDiv").append(str);
@@ -224,7 +237,7 @@
             $("#checkCellAddr").val(cellAdd);
             $(".cellDiv").hide();
             $("#closebtn").show();
-            $("#closebtn").removeAttr("style")
+            $("#closebtn").removeAttr("style");
             $(".cellDiv").empty();
         }
 
@@ -299,6 +312,9 @@
                 list.appid = cull_appid;
             }
             list.real_appid = cull_appid;
+            list.payee_openid = payee_openid;
+			list.order_id = order_id
+			list.order_detail = order_detail
 
             $.ajax({
                 type : "POST",
@@ -386,6 +402,9 @@
 
             //点击输入金额
             $("#money").click(function () {
+				if(fee_amt) {
+					return false;
+				}
                 //显示键盘
                 $(".num_key").show();
                 //添加高度滚动，按钮加定位样式
