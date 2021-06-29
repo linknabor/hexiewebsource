@@ -28,7 +28,7 @@ const router= new VueRouter({
             name:'Myhouse',
             component: resolve=> require(['@/pages/house/myhouse'],resolve),
             meta:{
-              title:'我的房子'
+              title:'我的房屋'
             }
         },
         //绑定房屋首页
@@ -37,7 +37,7 @@ const router= new VueRouter({
             name:'IdentHouse',
             component:resolve=> require(['@/pages/house/identify-house'],resolve),
             meta:{
-              title:'绑定房子'
+              title:'绑定房屋'
             }
         },
         //对账单绑定房屋
@@ -46,7 +46,7 @@ const router= new VueRouter({
             name:'AddHouse',
             component:resolve=> require(['@/pages/house/add-house'],resolve),
             meta:{
-              title:'添加房子'
+              title:'添加房屋'
             }
         },
         {
@@ -54,7 +54,7 @@ const router= new VueRouter({
             name:'BindHouse',
             component:resolve=> require(['@/pages/house/bind-house'],resolve),
             meta:{
-              title:'绑定房子'
+              title:'绑定房屋'
             }
         },
         {
@@ -103,7 +103,7 @@ const router= new VueRouter({
             name:'checkPay',
             component:resolve=> require(['@/pages/pay/check-pay'],resolve),
             meta:{
-              title:'绑定房子'
+              title:'绑定房屋'
             }
         },
         {
