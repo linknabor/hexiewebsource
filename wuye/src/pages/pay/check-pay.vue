@@ -8,7 +8,7 @@
 		<div class="white-space"></div>
 		<div class="search-body">
 			<van-cell-group :border="false">
-				<van-search v-model="sectName" placeholder="小区名称" @input="queryInput" @clear="onSectClear">
+				<van-search v-model="sectName" placeholder="查询房屋所在小区" @input="queryInput" @clear="onSectClear">
 					<template slot="left">
 						<div class="title-text">小区名称</div>
 					</template>
@@ -16,16 +16,16 @@
 				<div class="search-values" v-for="sect in sectList" :key="sect.id" @click="selectSect(sect)">{{sect.name}}</div>
 			</van-cell-group>
 			<van-cell-group :border="false" v-show="version==='0'">
-				<van-search v-if="selSect&&selSect.length>0" v-model="cellAddr" placeholder="房屋地址" @input="queryCellInput" 
+				<van-search v-if="selSect&&selSect.length>0&&sectList.length===0" v-model="cellAddr" placeholder="如1号101，输入1-101即可" @input="queryCellInput" 
 					@clear="onCellClear">
 					<template slot="left">
 						<div class="title-text">房屋地址</div>
 					</template>
 				</van-search>
-				<div class="addr-hint" v-if="selSect&&selSect.length>0">如1号101，输入1-101即可</div>
+				<div class="addr-hint" v-if="selSect&&selSect.length>0&&sectList.length===0">如1号101，输入1-101即可</div>
 				<div class="search-values" v-for="cell in cellList" :key="cell.id" @click="selectCell(cell)">{{cell.name|subString}}</div>
 
-				<van-search v-if="selCell&&selCell.length>0" placeholder="建筑面积  ㎡" @focus="showKeyboard = true"
+				<van-search v-if="selCell&&selCell.length>0" placeholder="输入房屋建筑面积用以验证  ㎡" @focus="showKeyboard = true"
 					readonly clickable :value="cellArea">
 					<template slot="left" >
 						<div class="title-text">建筑面积</div>
@@ -117,6 +117,7 @@
 				if(!this.sectName) {
 					return false
 				}
+				this.onCellClear()
 				this.querySect().then((response)=>{
 					if(response.data.success) {
 						if(response.data.result.sect_info) {
@@ -294,7 +295,7 @@
 	height: 5vh;
 }
 .title-text {
-	font-size: 0.32rem;
+	font-size: 0.36rem;
 	margin: 0 0.2rem 0 0.2rem;
 	color: #a6937c;
 }
@@ -306,12 +307,13 @@
 	padding: 0.15rem;
 	border-bottom: 1px solid #ccc;
 	width: 80%;
-	font-size: 0.3rem;
+	font-size: 0.34rem;
 }
 .addr-hint {
 	color: red;
-	margin-left: 2rem;
+	margin-left: 2.2rem;
 	margin-right: 0.2rem;
+	font-size: 0.3rem;
 }
 .select-cell {
 	margin: 0 0.5rem 0rem 0.5rem;
