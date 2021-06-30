@@ -17,9 +17,9 @@
         <div :class="activeIconClass">
             <ul>
                 <li v-for="(menu, index) in menuList" :key="index"
-                    :class="[{'icon-layer-upon-first':index%4===0 && index < 4 }, 
-                    {'icon-layer-upon-other': index%4!==0 && index < 4}, 
-                    {'icon-layer-down-first': index%4===0 && index >= 4}, 
+                    :class="[{'icon-layer-upon-first':index%4===0 && index < 4 },
+                    {'icon-layer-upon-other': index%4!==0 && index < 4},
+                    {'icon-layer-down-first': index%4===0 && index >= 4},
                     {'icon-layer-down-other': index%4!==0 && index >= 4}
                     ]"
                     @click="gotoPage(menu.url, menu.status, menu.code)">
@@ -36,18 +36,21 @@
                 <div class="moments" v-for="(notice, index) in noticeList" :key="index">
                     <div class="moment-title">
                         <div :class="[{'sys-notice-image': notice.noticeType===9||notice.noticeType===10},
-                            {'wuye-notice-image': notice.noticeType===0||notice.noticeType===1||notice.noticeType===2||notice.noticeType===3},
-                            {'moment-notice-image': notice.noticeType===11}]" >
+                            {'wuye-notice-image': notice.noticeType===0||notice.noticeType===1
+                            || notice.noticeType===2||notice.noticeType===3},
+                            {'moment-notice-image': notice.noticeType===11},
+                            {'option-notice-image': notice.noticeType=== 12 || notice.noticeType===13
+                            ||notice.noticeType===14||notice.noticeType=== 15 }]" >
                         </div>
                         <span class="head-sect">{{notice.creator}}</span>
                     </div>
                     <div class="moment-content" @click="notice.noticeType!==11&&noticeDetail(notice.url)">
-                        <div class="content-text">{{notice.title}}</div>
-                        <div class="content-image" 
+                        <div class="content-text" v-for="(msg, key) in notice.showMsg" :key="key">{{msg}}</div>
+                        <div class="content-image"
                                 v-for="(image, key) in notice.thumbnailImgList" :key="key">
                                     <div :class="[{'content-image-view': notice.thumbnailImgList.length===1},
                                 {'content-image-view-multi': notice.thumbnailImgList.length>=2&&key!==2},
-                                {'content-image-view-triple': notice.thumbnailImgList.length>2&&key===2}]" 
+                                {'content-image-view-triple': notice.thumbnailImgList.length>2&&key===2}]"
                                 :style="{'background-image': 'url('+image+')'}" @click="notice.noticeType===11&&showImage(notice.imgList, key)"></div>
                             </div>
                             <div style="clear: both"></div>
@@ -57,12 +60,12 @@
             </van-list>
             <van-empty description="还没有消息哦" image="search" image-size="1.8rem" v-if="noticeList.length==0"/>
         </van-pull-refresh>
-        
+
         <div class="main-end"></div>
         </van-skeleton>
         <foot @userInfo="setUser"></foot>
     </div>
-    
+
 </template>
 
 <script>
@@ -114,7 +117,7 @@ export default ({
     },
     mounted(){
         this.timer = setTimeout(()=>{   //设置延迟执行
-            this.skeletonLoading = false  
+            this.skeletonLoading = false
         },2000);
     },
     methods: {
@@ -143,7 +146,7 @@ export default ({
         gotoPage(url, status, code){
             if(status!==1){
                 Toast("当前功能尚未开通。")
-                return 
+                return
             }
             if(!code){
                 Toast("当前功能尚未开通。")
@@ -162,7 +165,7 @@ export default ({
             } else {
                 this.$router.push({path: url, query:{}})
             }
-            
+
         },
         gotoRepair(url) {
             let user = this.userInfo
@@ -366,7 +369,7 @@ export default ({
     text-align: left;
     font-weight: bolder;
     font-size: 0.38rem;
-    margin: 2.4rem 0 0.41rem 0.4rem;
+    margin: 2.1rem 0 0.2rem 0.4rem;
 }
 
 .moments-header-single {
@@ -386,14 +389,14 @@ export default ({
 }
 
 .moment-title{
-    padding: 0.4rem 0 0 0.3rem;
+    padding: 0.2rem 0 0 0.3rem;
     width: 100%;
     position: relative;
 }
 
 .sys-notice-image{
-    width: 0.86rem;
-    height: 0.86rem;
+    width: 0.7rem;
+    height: 0.7rem;
     background-size: cover;
     background-repeat: no-repeat;
     .bg-image('../../assets/images/index/syshead_logo');
@@ -401,16 +404,26 @@ export default ({
 }
 
 .wuye-notice-image{
-    width: 0.86rem;
-    height: 0.86rem;
+    width: 0.7rem;
+    height: 0.7rem;
     background-size: cover;
     background-repeat: no-repeat;
     .bg-image('../../assets/images/index/xiaoxi');
     display: inline-block;
 }
+
+.option-notice-image {
+  width: 0.7rem;
+  height: 0.7rem;
+  background-size: cover;
+  background-repeat: no-repeat;
+  .bg-image('../../assets/images/index/option');
+  display: inline-block;
+}
+
 .moment-notice-image{
-    width: 0.86rem;
-    height: 0.86rem;
+    width: 0.7rem;
+    height: 0.7rem;
     background-size: cover;
     background-repeat: no-repeat;
     .bg-image('../../assets/images/index/moments_logo');
@@ -418,8 +431,8 @@ export default ({
 }
 
 .head-sect{
-    margin-top: 0.22rem;
-    margin-left: 0.2rem;
+    margin-top: 0.15rem;
+    margin-left: 0.1rem;
     color: #C793F7;
     text-align: left;
     font-size: 0.3rem;
@@ -428,23 +441,24 @@ export default ({
 }
 
 .moment-content{
-    margin: 0.3rem 0 0 0.3rem;
+    margin: 0.1rem 0 0 0.3rem;
     width: 100%;
 }
 
 .content-text{
     text-align: left;
     color: #292929;
-    font-size: 0.32rem;
+    font-size: 0.25rem;
     width: 90%;
+    padding-top: 0.05rem;
 }
 .content-image{
-    margin-top: 0.3rem;
+    margin-top: 0.15rem;
     height: auto;
 }
 .content-image-view {
-    width: 4.38rem;
-    height: 2.5rem;
+    width: 3rem;
+    height: 1.5rem;
     border-radius: 0.16rem;
     background-size: cover;
     background-repeat: no-repeat;
@@ -470,11 +484,11 @@ export default ({
     clear:both;
 }
 .pub-date{
-    margin: 0.26rem 0 0.3rem 0.32rem;
+    margin: 0.15rem 0 0.15rem 0.32rem;
     color: #BFBEB9;
     text-align: left;
-    font-size: 0.26rem;
-    padding-bottom: 0.4rem;
+    font-size: 0.24rem;
+    padding-bottom: 0.2rem;
     width: 1.3rem;
     height: 0.24rem;
 }
