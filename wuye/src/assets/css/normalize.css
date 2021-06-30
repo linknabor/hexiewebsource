@@ -22,8 +22,7 @@ p{
 
  html {
   line-height: 1.15; /* 1 */
-  -ms-text-size-adjust: 100%; /* 2 */
-  -webkit-text-size-adjust: 100%; /* 2 */
+  
 }
 
 /* Sections
@@ -33,8 +32,13 @@ p{
  * Remove the margin in all browsers (opinionated).
  */
 
-body {
+body {  /* IOS禁止微信调整字体大小 */
   margin: 0;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100% !important;
+  text-size-adjust: 100% !important;
+  -moz-text-size-adjust: 100% !important;
+
 }
 
 /**
