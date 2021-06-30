@@ -37,14 +37,15 @@
                     <div class="moment-title">
                         <div :class="[{'sys-notice-image': notice.noticeType===9||notice.noticeType===10},
                             {'wuye-notice-image': notice.noticeType===0||notice.noticeType===1
-                            || notice.noticeType===2||notice.noticeType===3||notice.noticeType=== 12
-                            || notice.noticeType===13||notice.noticeType===14||notice.noticeType=== 15},
-                            {'moment-notice-image': notice.noticeType===11}]" >
+                            || notice.noticeType===2||notice.noticeType===3},
+                            {'moment-notice-image': notice.noticeType===11},
+                            {'option-notice-image': notice.noticeType=== 12 || notice.noticeType===13
+                            ||notice.noticeType===14||notice.noticeType=== 15 }]" >
                         </div>
                         <span class="head-sect">{{notice.creator}}</span>
                     </div>
                     <div class="moment-content" @click="notice.noticeType!==11&&noticeDetail(notice.url)">
-                        <div class="content-text">{{notice.title}}</div>
+                        <div class="content-text" v-for="(msg, key) in notice.showMsg" :key="key">{{msg}}</div>
                         <div class="content-image"
                                 v-for="(image, key) in notice.thumbnailImgList" :key="key">
                                     <div :class="[{'content-image-view': notice.thumbnailImgList.length===1},
@@ -394,8 +395,8 @@ export default ({
 }
 
 .sys-notice-image{
-    width: 0.86rem;
-    height: 0.86rem;
+    width: 0.7rem;
+    height: 0.7rem;
     background-size: cover;
     background-repeat: no-repeat;
     .bg-image('../../assets/images/index/syshead_logo');
@@ -410,9 +411,19 @@ export default ({
     .bg-image('../../assets/images/index/xiaoxi');
     display: inline-block;
 }
+
+.option-notice-image {
+  width: 0.7rem;
+  height: 0.7rem;
+  background-size: cover;
+  background-repeat: no-repeat;
+  .bg-image('../../assets/images/index/option');
+  display: inline-block;
+}
+
 .moment-notice-image{
-    width: 0.86rem;
-    height: 0.86rem;
+    width: 0.7rem;
+    height: 0.7rem;
     background-size: cover;
     background-repeat: no-repeat;
     .bg-image('../../assets/images/index/moments_logo');
@@ -430,7 +441,7 @@ export default ({
 }
 
 .moment-content{
-    margin: 0.2rem 0 0 0.3rem;
+    margin: 0.1rem 0 0 0.3rem;
     width: 100%;
 }
 
@@ -439,9 +450,10 @@ export default ({
     color: #292929;
     font-size: 0.25rem;
     width: 90%;
+    padding-top: 0.05rem;
 }
 .content-image{
-    margin-top: 0.2rem;
+    margin-top: 0.15rem;
     height: auto;
 }
 .content-image-view {
