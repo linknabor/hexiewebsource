@@ -489,7 +489,7 @@ export default ({
     text-align: left;
     font-size: 0.24rem;
     padding-bottom: 0.2rem;
-    width: 1.3rem;
+    width: 2rem;
     height: 0.24rem;
 }
 .main-end{
