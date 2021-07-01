@@ -40,7 +40,7 @@
                             || notice.noticeType===2||notice.noticeType===3},
                             {'moment-notice-image': notice.noticeType===11},
                             {'option-notice-image': notice.noticeType=== 12 || notice.noticeType===13
-                            ||notice.noticeType===14||notice.noticeType=== 15 }]" >
+                            ||notice.noticeType===14||notice.noticeType=== 15||notice.noticeType=== 16 }]" >
                         </div>
                         <span class="head-sect">{{notice.creator}}</span>
                     </div>
@@ -413,8 +413,8 @@ export default ({
 }
 
 .option-notice-image {
-  width: 0.7rem;
-  height: 0.7rem;
+  width: 0.6rem;
+  height: 0.5rem;
   background-size: cover;
   background-repeat: no-repeat;
   .bg-image('../../assets/images/index/option');
@@ -450,7 +450,7 @@ export default ({
     color: #292929;
     font-size: 0.25rem;
     width: 90%;
-    padding-top: 0.05rem;
+    padding-top: 0.1rem;
 }
 .content-image{
     margin-top: 0.15rem;
@@ -489,7 +489,7 @@ export default ({
     text-align: left;
     font-size: 0.24rem;
     padding-bottom: 0.2rem;
-    width: 1.3rem;
+    width: 2rem;
     height: 0.24rem;
 }
 .main-end{
