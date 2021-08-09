@@ -7,7 +7,7 @@
     <van-skeleton title :row="3" :loading="skeletonLoading">
     <!-- <van-nav-bar title="工单明细" left-text="返回" left-arrow @click-left="onClickNav"/> -->
       <van-empty v-show="empty" description="没有查询到工单哦"/>
-      <van-cell-group v-show="!empty">
+      <van-cell-group v-show="!empty" border="false">
         <van-cell title="基本信息" class="title-text" />
         <van-cell :value="orderDetail.order_id" value-class="order-text">
           <template slot="title"
@@ -27,12 +27,21 @@
         <van-cell title="服务地址" :label="orderDetail.serve_address" label-class="label-text"/>
         <van-cell title="工单内容" :label="orderDetail.content" label-class="label-text"/>
       </van-cell-group>
-      <van-cell-group>
-        <div class="white-space"></div>
+      
+      <van-cell-group v-show="orderDetail.thumbnailImgList && orderDetail.thumbnailImgList.length>0">
+        <van-cell title="报修图片" :border="false"/>
         <van-image class="image-view" lazy-load v-for="(image, index) in orderDetail.thumbnailImgList" :key="index"
             width="80" height="80" :src="image" @click="imagePreview(index, orderDetail.imgList)"/>
         <div class="white-space"></div>
       </van-cell-group>
+
+      <van-cell-group v-show="orderDetail.finishThumbnailImgList && orderDetail.finishThumbnailImgList.length>0">
+        <van-cell title="完工图片" :border="false"/>
+        <van-image class="image-view" lazy-load v-for="(image, index) in orderDetail.finishThumbnailImgList" :key="index"
+            width="80" height="80" :src="image" @click="imagePreview(index, orderDetail.finishImgList)"/>
+        <div class="white-space"></div>
+      </van-cell-group>
+
       <van-steps direction="vertical" :active="active">
         <van-step v-for="(step, index) in steps" :key="index">
             <h3>{{step.text}}</h3>
