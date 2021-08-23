@@ -14,6 +14,11 @@ const router= new VueRouter({
             component: resolve=>require(['@/pages/main/Version2'],resolve)
         },
         {
+          path: '/version3',
+          name: 'version3',
+          component: resolve=>require(['@/pages/main/Version3'],resolve)
+        },
+        {
             path:'/message',
             name:'message',
             component:resolve=> require(['@/pages/main/message'],resolve)
@@ -302,7 +307,7 @@ const router= new VueRouter({
     ]
 });
 
-const viewArray = ['index', 'register', 'sms_notification', 'version2', 'indexCar', 'queryCarPay', 'addCar', 'queryCarList','carPay','carPaySuccess','carPayDetail']
+const viewArray = ['index', 'register', 'sms_notification', 'version2', 'version3','indexCar', 'queryCarPay', 'addCar', 'queryCarList','carPay','carPaySuccess','carPayDetail']
 //路由的钩子函数，
 //在每一次路由跳转之前会进入这个方法 to：到哪去  from：从哪来 next() 调用这个方法来完成这个钩子函数
 router.beforeEach((to, from, next) => {
@@ -312,7 +317,7 @@ router.beforeEach((to, from, next) => {
       return
   	}
   }
-  let newVersionIndex = false
+  let version = ''
   if('index'===pageName){
     let config = Vue.prototype.is_config
     let getUrlParam = Vue.prototype.getUrlParam
@@ -320,16 +325,20 @@ router.beforeEach((to, from, next) => {
     let kyappid = config.C('kyappid')  //昆亿乐居
     let dcappid = config.C('dcappid')  //东辰物业
     let nbappid = config.C('nbappid')   //测试用
+    let ccappid = config.C('ccappid')
     console.log('router, oriApp : ' + appid)
     if(appid!==kyappid && appid!==dcappid && appid!==nbappid){
-      newVersionIndex = true
+      version = 'version2'
     }
+    if(appid===ccappid) {
+      version = 'version3'
+  }
   }
   //动态改变title
   changeTitle(to.meta.title)
-  if(newVersionIndex){
+  if(version){
     next({
-      path: '/version2' //不是以上3个公众号的，劫持后跳到新首页
+      path: '/'+version //不是以上3个公众号的，劫持后跳到新首页
     })
   } else {
     next()
