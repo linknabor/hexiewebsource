@@ -389,6 +389,7 @@ overflow: hidden; background-color: white;}
 <script>
 let vm;
 import {swiper,swiperSlide} from 'vue-awesome-swiper';
+import 'swiper/dist/css/swiper.css'
 import BScroll from 'better-scroll';
 import Bus from '../../api/bus.js';
 import WxSubscribe from '../../components/WxSubscribe.vue';
