@@ -242,10 +242,67 @@ const router= new VueRouter({
           title:'维修订单明细'
         }
       },
+
+      {
+        path:'/indexCar',
+        name:'indexCar',
+        component:resolve=> require(['@/pages/park/indexCar'],resolve),
+        meta:{
+          title:'停车场'
+        }
+      },
+      {
+        path:'/queryCarPay',
+        name:'queryCarPay',
+        component:resolve=> require(['@/pages/park/queryCarPay'],resolve),
+        meta:{
+          title:'停车费记录'
+        }
+      },
+      {
+        path:'/addCar',
+        name:'addCar',
+        component:resolve=> require(['@/pages/park/addCar'],resolve),
+        meta:{
+          title:'添加车牌'
+        }
+      },
+      {
+        path:'/queryCarList',
+        name:'queryCarList',
+        component:resolve=> require(['@/pages/park/queryCarList'],resolve),
+        meta:{
+          title:'车辆信息'
+        }
+      },
+      {
+        path:'/carPay',
+        name:'carPay',
+        component:resolve=> require(['@/pages/park/carPay'],resolve),
+        meta:{
+          title:'停车信息'
+        }
+      },
+      {
+        path:'/carPaySuccess',
+        name:'carPaySuccess',
+        component:resolve=> require(['@/pages/park/carPaySuccess'],resolve),
+        meta:{
+          title:'缴费结果'
+        }
+      },
+      {
+        path:'/carPayDetail',
+        name:'carPayDetail',
+        component:resolve=> require(['@/pages/park/carPayDetail'],resolve),
+        meta:{
+          title:'缴费结果'
+        }
+      },
     ]
 });
 
-const viewArray = ['index', 'register', 'sms_notification', 'version2']
+const viewArray = ['index', 'register', 'sms_notification', 'version2', 'indexCar', 'queryCarPay', 'addCar', 'queryCarList','carPay','carPaySuccess','carPayDetail']
 //路由的钩子函数，
 //在每一次路由跳转之前会进入这个方法 to：到哪去  from：从哪来 next() 调用这个方法来完成这个钩子函数
 router.beforeEach((to, from, next) => {
