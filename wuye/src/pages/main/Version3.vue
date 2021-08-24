@@ -1,7 +1,7 @@
 <template>
     <div class="main">
         <van-skeleton title :row="3" :loading="skeletonLoading" style="padding-top:2rem">
-        <div class="menu-grid">
+        <div class="banner-swiper">
             <swiper :options="swiperOption" ref="mySwiper" v-if="bannerList.length>0">
                 <swiper-slide v-for="item in bannerList" :key="item.id">
                     <div class="banner">
@@ -14,11 +14,12 @@
             </swiper>
         </div>
 
-        <div class="white-space"></div>
         <div class="menu-grid">
             <ul>
-                <van-grid :column-num="3" :border="false" icon-size="1.2rem">
-                    <van-grid-item v-for="(menu, index) in menuList" :key="index" :icon="menu.image" :text="menu.name" />
+                <van-grid :column-num="3" :border="false" icon-size="0.9rem" class="grid-frame">
+                    <van-grid-item v-for="(menu, index) in menuList" :key="index" :icon="menu.image" :text="menu.name" 
+                        @click="gotoPage(menu.url, menu.status, menu.code)"
+                    />
                 </van-grid>
 
             </ul>
@@ -401,7 +402,7 @@ export default ({
     text-align: left;
     font-weight: bolder;
     font-size: 0.38rem;
-    margin: 0.25rem 0 0.41rem 0.4rem;
+    margin: 0.25rem 0 0.3rem 0.4rem;
 }
 
 .moments-header-single {
@@ -417,7 +418,7 @@ export default ({
     // height: 6.28rem;
     margin: 0rem 4% 0rem 4%;
     background-color: #FFFFFF;
-    border-radius: 0.16rem;
+    // border-radius: 0.16rem;
 }
 
 .moment-title{
@@ -523,12 +524,12 @@ export default ({
 .banner img{
     width: 100%;
 }
-.white-space{
-    width: 100%;
-    height: 0.25rem;
-}
 .menu-grid {
     margin: 0 0.25rem;
+    
+}
+.banner-swiper {
+    margin: 0.25rem 0.25rem;
 }
 
 </style>
