@@ -373,7 +373,7 @@
 					是否需要发票:&nbsp;&nbsp;
 					 <input  type="radio" id="yes" value="1" v-model="needInvoice">
   					 <label for="yes" class="ty-label">是</label>
-          <div v-if="is_default_invoice == '1'">
+          <div v-if="is_default_invoice !== '1'">
             <input type="radio" id="no" value="0" v-model="needInvoice">
             <label for="no" class="ty-label">否</label>
           </div>
