@@ -166,11 +166,11 @@
 }
 .chk_1 {
 	display: none;
-}	
+}
 .Manner {
 	border: 1px solid #cecdc9;
 	margin-bottom:0.3rem;
-}	
+}
 .Manner-title {
 	text-align: left;
 	padding: 0.2rem;
@@ -215,7 +215,7 @@
     left: 0px;
 	height: 0.531rem;
     line-height: 0.531rem;
-	border-radius: 0.265rem; 
+	border-radius: 0.265rem;
     color: #fff;
     width: 100%;
     text-align: center;
@@ -239,7 +239,7 @@
 	right: 0.291rem;
 }
 .fs3 {
-	font-size: 0.36rem;	
+	font-size: 0.36rem;
 }
 .Mtext {
 	position: relative;
@@ -301,7 +301,7 @@
 	border: none;
 	outline: none;
 	opacity: 0;
-	appearance:none; 
+	appearance:none;
 	-moz-appearance:none;
 	-ms-appearance:none;
 	-o-appearance:none;
@@ -330,7 +330,7 @@
 					<p class="fr">{{area}} m<sup style="font-size:0.2rem">2</sup></p>
 				</div>
 			</div>
-			
+
 		<!-- 费用列表 -->
 			<div v-if="version=='02' || version=='03'">
 				<div v-for="(item,index) in feeList" :key="index">
@@ -360,7 +360,7 @@
 					</dd>
 				</dl>
 			</div>
-			
+
 			<!-- 支付金额 -->
 			<div class="payCount">
 				<p class="fl">账单金额</p>
@@ -373,8 +373,10 @@
 					是否需要发票:&nbsp;&nbsp;
 					 <input  type="radio" id="yes" value="1" v-model="needInvoice">
   					 <label for="yes" class="ty-label">是</label>
-					 <input type="radio" id="no" value="0" v-model="needInvoice">
-  					 <label for="no" class="ty-label">否</label>
+          <div v-if="is_default_invoice == '1'">
+            <input type="radio" id="no" value="0" v-model="needInvoice">
+            <label for="no" class="ty-label">否</label>
+          </div>
 				</div>
 				<div v-if="needInvoice == '1'" class="form-row">
 					申请发票类型:&nbsp;&nbsp;
@@ -405,10 +407,10 @@
 						<input type="radio" id="checkbox_a1" name="flag" value="1" v-model="bind_switch" class="chk_1"  />
 
 						<label for="checkbox_a2" class="chendad" :class="{addse:bind_switch=='0'}" ></label>
-						<span>否</span>	
+						<span>否</span>
 						<input type="radio" id="checkbox_a2" name="flag" value="0"  v-model="bind_switch" class="chk_1"  />
-					</div>		
-				</div>	
+					</div>
+				</div>
 			</div>
 
 			<!-- 贵州银行卡支付 -->
@@ -442,7 +444,7 @@
 							<div class="fl Mannerwl">姓名</div>
 							<div class="fl Mannerwr">
 								<input type="text" placeholder="请输入持卡人姓名" :value="item.acctName" @blur="fixScroll">
-							</div>					
+							</div>
 						</div>
 						<div class="Manner-bd Manner-name ov">
 							<div class="fl Mannerwl">卡号</div>
@@ -462,7 +464,7 @@
 						<input type="radio" id="checkbox_a5" value="1" v-model="payType" class="chk_1"  />
 					</div>
 				</div>
-			</div>	
+			</div>
 			<div v-show="payType == '1' ">
 			<div class="Manner" >
 				<div class="Manner-bd Manner-name ov">
@@ -526,8 +528,9 @@
 			return {
 				invoice_title:'',//发票抬头
 				credit_code:'',//公司税号
-				invoice_title_type:'01',//个人01或公司02 
-				needInvoice:'1',//是否需要发票				
+				invoice_title_type:'01',//个人01或公司02
+				needInvoice:'1',//是否需要发票
+        is_default_invoice:'0',
 				routeParams:{
 					billIds : this.$route.query.billIds,//id 集合
 					stmtId:this.$route.query.stmtId,//扫码数据
@@ -549,7 +552,7 @@
 				version:'',
 				bind_switch:'1',
 				reduceMoney:'0',
-				
+
 				selected:this.$route.query.selected,//查询缴费显示工作人员收费
 				cardPayService:this.$route.query.cardPayService, //控制是否可以 绑卡支付
 				payType:'0',//支付方式
@@ -583,10 +586,10 @@
 			moment
 		},
 		beforeCreate(){//刷新页面
-			
+
 		},
 		created(){
-			vm = this;		
+			vm = this;
 			if(vm.routeParams.stmtId == " "){
 				vm.routeParams.stmtId = ""
 			}
@@ -623,9 +626,9 @@
 					this.invoice_title_type ='01'
 				}
 			},
-			bind_switch(na,nw) {	
+			bind_switch(na,nw) {
 				this.bind_switch=na;
-				
+
 			},
 			remember(na,nw) { //监控是否记住卡号 0->false 1->true
 				if(na == true){
@@ -633,7 +636,7 @@
 				}else {
 					vm.remerbernumm = '0';
 				}
-				
+
 			},
 			certType(na,nw) { //证件类型
 				if(na != nw) {
@@ -644,14 +647,14 @@
 					}
 				}
 			},
-			payType(na,nw) { //监控银行卡支付类型		
+			payType(na,nw) { //监控银行卡支付类型
 				if(na == '1'){
 					vm.customerName = '',//姓名
 					vm.acctNo = '',//卡号
 					vm.certType = '',//证件类型
 					vm.certId = '',//证件号
 					vm.phoneNo = ''//手机号
-					
+
 				}
 			}
 
@@ -686,7 +689,7 @@
 						}
 					});
 			},
-			btncard(item){ //使用保存的卡				
+			btncard(item){ //使用保存的卡
 				vm.acctNNo = item.acctNo;
 				vm.cardId = item.cardId;
 			},
@@ -710,12 +713,13 @@
 			getBillDetail() {
 				if(vm.version=='01'){
 					let url="getPayListStd?regionname="+this.regionname+"&house_id="+ this.house_id +
-					"&sect_id="+this.sect_id +"&start_date="+this.start_date +"&end_date="+this.end_date; 
-					
+					"&sect_id="+this.sect_id +"&start_date="+this.start_date +"&end_date="+this.end_date;
+
 					vm.receiveData.getData(
 						vm,url,'data',function(){
 							vm.request_siccess = true;//判断是否请求成功显示
 							vm.show_com_flag=vm.data.result.other_bill_info[0].show_com_flag;
+              vm.is_default_invoice=vm.data.result.other_bill_info[0].is_default_invoice;
 							vm.show_invoice_flag = vm.data.result.other_bill_info[0].show_invoice_flag;
 							vm.is_create_qrcode = vm.data.result.other_bill_info[0].is_create_qrcode;
 							if(vm.is_create_qrcode == 0 || vm.selected != 'd') {
@@ -725,7 +729,7 @@
 								}
 							}
 							vm.bindhouses();
-							
+
 							vm.support_card_pay = vm.data.result.other_bill_info[0].support_card_pay;
 							let useDate = vm.data.result.other_bill_info[0];
 							vm.verNumber = useDate.ver_no;
@@ -747,13 +751,14 @@
 						function(){
 							vm.request_siccess = true;//判断是否请求成功显示
 							vm.show_com_flag=vm.data.result.show_com_flag;
+              vm.is_default_invoice=vm.data.result.is_default_invoice;
 							vm.show_invoice_flag = vm.data.result.show_invoice_flag;
 							vm.is_create_qrcode = vm.data.result.is_create_qrcode;
 							if(vm.is_create_qrcode == 0 || vm.selected != 'd') {
 								vm.show_invoice=vm.data.result.show_invoice;
 								if(vm.show_invoice=='1') {
 									vm.invoice_title_type='01';
-								}	
+								}
 							}
 							vm.bindhouses();
 							vm.support_card_pay = vm.data.result.support_card_pay;
@@ -761,7 +766,7 @@
 							// let useDate = vm.data.result.fee_data[0];
 							// //户号
 							// vm.verNumber = useDate.ver_no;
-							
+
 							// 房屋 地址 面积
 							vm.pay_cell = vm.data.result.pay_cell;
 							//费用列表
@@ -800,7 +805,7 @@
 						if(!(/^1[3-9][0-9]\d{8}$/.test(vm.phoneNo))) {
 							alert("请填写正确的手机号！");
 							return;
-						}	
+						}
 					}
 					vm.wechatPay(); //微信支付
 				}
