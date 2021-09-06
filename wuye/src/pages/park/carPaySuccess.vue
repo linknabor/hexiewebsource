@@ -1,7 +1,5 @@
 <template>
   <div class="main">
-    <van-nav-bar title="缴费结果" left-text="返回" left-arrow placeholder fixed @click-left="goBack"
-    />
     <van-notice-bar left-icon="volume-o" :scrollable="false"
                     :text="out_park_prompt"/>
 
@@ -27,7 +25,7 @@
 </template>
 
 <script>
-  import {Cell, NavBar, NoticeBar, Icon} from 'vant';
+  import {Cell, NoticeBar, Icon} from 'vant';
 
   export default {
     name: "carPay",
@@ -42,7 +40,6 @@
 
     components: {
       [Cell.name]: Cell,
-      [NavBar.name]: NavBar,
       [NoticeBar.name]: NoticeBar,
       [Icon.name]: Icon
     },

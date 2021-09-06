@@ -3,8 +3,6 @@
     <van-overlay :show="show_overlay">
       <van-loading type="spinner" />
     </van-overlay>
-    <van-nav-bar title="停车记录" left-text="返回" left-arrow placeholder fixed @click-left="goBack"
-    />
     <div style="height: 0.1rem"></div>
     <div style="margin: 0 0.1rem; border-radius: 0.3rem">
       <van-search v-model="searchValue" show-action placeholder="请输入车牌号码">
@@ -50,7 +48,7 @@
 </template>
 
 <script>
-  import {Search, Cell, List, Divider, Button, NavBar, Toast, Dialog, Overlay, Loading } from 'vant';
+  import {Search, Cell, List, Divider, Button, Toast, Dialog, Overlay, Loading } from 'vant';
   import ParkApi from "@/api/Park.js"
 
   export default {
@@ -71,7 +69,6 @@
       [Cell.name]: Cell,
       [Divider.name]: Divider,
       [Button.name]: Button,
-      [NavBar.name]: NavBar,
       [Toast.name]: Toast,
       [Dialog.name]: Dialog,
       [Overlay.name]: Overlay,

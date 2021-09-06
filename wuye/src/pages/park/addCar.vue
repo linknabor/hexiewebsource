@@ -4,8 +4,6 @@
       <van-loading type="spinner" />
     </van-overlay>
 
-    <van-nav-bar title="添加车牌" left-text="返回" left-arrow placeholder fixed @click-left="goBack"
-    />
     <div style="height: 4.5rem">
       <plateNumber @getPlateLicense="getPlateLicense" :mat="formData" :butName="butName" :isShowCheck="isShowCheck"></plateNumber>
     </div>
@@ -20,7 +18,7 @@
 
 <script>
   import plateNumber from '@/components/plateNumber'
-  import { NavBar, Toast, Overlay, Loading } from 'vant';
+  import { Toast, Overlay, Loading } from 'vant';
   import ParkApi from "@/api/Park.js"
 
   export default {
@@ -46,7 +44,6 @@
 
     components: {
       plateNumber,
-      [NavBar.name]: NavBar,
       [Toast.name]: Toast,
       [Overlay.name]: Overlay,
       [Loading.name]: Loading
@@ -95,5 +92,11 @@
     background-color: white;
     border: 0.001rem solid blue;
     color: blue;
+  }
+  .van-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
   }
 </style>

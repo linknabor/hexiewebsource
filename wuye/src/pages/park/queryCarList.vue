@@ -3,8 +3,6 @@
     <van-overlay :show="show_overlay">
       <van-loading type="spinner" />
     </van-overlay>
-    <van-nav-bar title="车辆信息" left-text="返回" left-arrow placeholder fixed @click-left="goBack"
-    />
 
     <van-cell-group v-for="(item, index) in carList" :key="index">
       <van-swipe-cell :before-close="beforeClose" :name="item.car_no">
@@ -19,30 +17,20 @@
 </template>
 
 <script>
-  import {Cell, CellGroup, NavBar, SwipeCell, Button, Toast, Overlay, Loading, Dialog} from 'vant';
+  import {Cell, CellGroup, SwipeCell, Button, Toast, Overlay, Loading, Dialog} from 'vant';
   import ParkApi from "@/api/Park.js"
   export default {
     name: "queryCarList",
     data() {
       return {
         show_overlay: true,
-        carList: [
-          {
-            car_id: '',
-            car_no: '沪A45321'
-          },
-          {
-            car_id: '',
-            car_no: '沪B23SD2'
-          }
-        ]
+        carList: []
       }
     },
 
     components: {
       [Cell.name]: Cell,
       [CellGroup.name]: CellGroup,
-      [NavBar.name]: NavBar,
       [SwipeCell.name]: SwipeCell,
       [Button.name]: Button,
       [Overlay.name]: Overlay,
@@ -76,7 +64,6 @@
               message: '确定删除吗？',
             }).then(() => {
               this.delCar(instance.name)
-              // instance.close();
             });
             break;
         }

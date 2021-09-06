@@ -1,10 +1,13 @@
 <template>
   <div class="main">
-    <van-nav-bar title="停车信息" left-text="返回" left-arrow placeholder fixed @click-left="goBack"
-    />
-
+    <van-overlay :show="show_overlay">
+      <van-loading type="spinner"/>
+    </van-overlay>
     <div class="data-head">
-      <div class="data-title"><van-icon :name="parkImg" size="15"/>{{ obj.park_name }}</div>
+      <div class="data-title">
+        <van-icon :name="parkImg" size="15"/>
+        {{ obj.park_name }}
+      </div>
       <div class="data-amt"><span>{{ obj.fee_amt }}</span>元</div>
       <div class="data-desc">应付金额</div>
     </div>
@@ -13,7 +16,12 @@
       <van-cell-group title="停车信息">
         <van-cell title="车牌号" :value="obj.car_no"/>
         <van-cell title="入场时间" :value="obj.in_time"/>
-        <van-cell title="停车时长" :value="obj.park_time"/>
+        <van-cell title="停车时长" :value="newDate">
+          <!--        <template #default>-->
+          <!--          <van-count-down :time="obj.park_time" />-->
+          <!--        </template>-->
+        </van-cell>
+
       </van-cell-group>
     </div>
 
@@ -34,24 +42,27 @@
           <van-button type="warning" size="small" round @click="toPay">立即支付</van-button>
         </div>
       </div>
-
     </div>
   </div>
 </template>
 
 <script>
-  import {Cell, CellGroup, NavBar, NoticeBar, Button, Icon} from 'vant';
+  import {Cell, CellGroup, NoticeBar, Button, Icon, Overlay, Loading, CountDown} from 'vant';
   import ParkApi from "@/api/Park.js"
   import wx from 'weixin-js-sdk';
+
+  var time = '';
 
   export default {
     name: "carPay",
     data() {
       return {
+        show_overlay: true,
         carNo: '',
         parkId: '',
-        parkImg:require('../../assets/img/p.png'),
-        obj: {}
+        parkImg: require('../../assets/img/p.png'),
+        obj: {},
+        newDate: '',
       }
     },
     created() {
@@ -61,17 +72,44 @@
     components: {
       [Cell.name]: Cell,
       [CellGroup.name]: CellGroup,
-      [NavBar.name]: NavBar,
       [NoticeBar.name]: NoticeBar,
       [Button.name]: Button,
-      [Icon.name]: Icon
+      [Icon.name]: Icon,
+      [Overlay.name]: Overlay,
+      [Loading.name]: Loading,
+      [CountDown.name]: CountDown,
     },
 
     mounted() {
       this.getPayInfo()
     },
     methods: {
+
+      reTime() {
+        time++
+        this.newDate = this.formatOutput()
+        // 递归
+        setTimeout(this.reTime.bind(this), 1000)
+      },
+
+      /**
+       * 输出时间
+       */
+      formatOutput() {
+        // 获取时分秒
+        let h = parseInt(time / 3600)
+        let m = parseInt((time - h * 3600) / 60)
+        let s = time - h * 3600 - m * 60
+
+        // 格式化
+        h < 10 ? h = `0${h}` : ''
+        m < 10 ? m = `0${m}` : ''
+        s < 10 ? s = `0${s}` : ''
+        return `${h}:${m}:${s}`;
+      },
+
       getPayInfo() {
+        this.show_overlay = true
         let param = {
           carNo: this.carNo,
           parkId: this.parkId
@@ -80,11 +118,15 @@
           let data = response.data
           if (data && data.success) {
             this.obj = data.result
+            time = this.obj.park_time / 1000 || parseInt(Math.random() * 3600)
+            this.reTime()
           }
+          this.show_overlay = false
         })
       },
 
       toPay() {
+        this.show_overlay = true
         let param = {
           car_no: this.carNo,
           park_id: this.parkId
@@ -101,12 +143,12 @@
               jsApiList: ['chooseWXPay'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
             });
             wx.chooseWXPay({
-              "appId":data.result.appid,
-              "timestamp":data.result.timestamp,
-              "nonceStr":data.result.noncestr,
-              "package":data.result.package,
-              "signType":data.result.signtype,
-              "paySign":data.result.paysign,
+              "appId": data.result.appid,
+              "timestamp": data.result.timestamp,
+              "nonceStr": data.result.noncestr,
+              "package": data.result.package,
+              "signType": data.result.signtype,
+              "paySign": data.result.paysign,
 
               success: function (res) {
                 console.log(res)
@@ -122,14 +164,15 @@
                   }
                 })
               },
-              fail:function(res) {
+              fail: function (res) {
                 console.log(JSON.stringify(res))
               },
-              cancel:function(res){
+              cancel: function (res) {
                 alert('支付取消');
                 // $('.box-bg').css("display",'none');
               }
             })
+            this.show_overlay = false
           }
         })
       },
@@ -229,12 +272,19 @@
     padding-top: 0.1rem
   }
 
-  .data-desc-tel{
+  .data-desc-tel {
     padding-top: 0.2rem
   }
 
-  .van-icon{
-    position:relative;
+  .van-icon {
+    position: relative;
     top: 0.06rem;
+  }
+
+  .van-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 </style>
