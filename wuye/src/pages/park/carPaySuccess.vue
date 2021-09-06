@@ -3,7 +3,7 @@
     <van-nav-bar title="缴费结果" left-text="返回" left-arrow placeholder fixed @click-left="goBack"
     />
     <van-notice-bar left-icon="volume-o" :scrollable="false"
-                    text="请于付款后15分钟内离场，超时将加收停车费"/>
+                    :text="out_park_prompt"/>
 
     <div class="data-head">
       <div class="data-head-icon">
@@ -13,7 +13,7 @@
         缴费成功
       </div>
       <div class="data-head-amt">
-        <span>{{ obj.feeAmt }}</span> 元
+        <span>{{ amt }}</span> 元
       </div>
     </div>
 
@@ -21,7 +21,7 @@
 
     <div class="data-bottom">
       <van-icon name="phone-o" color="blue"/>
-      <a style="color: blue" :href="'tel:'+obj.serviceTel">客服电话</a>
+      <a style="color: blue" :href="'tel:'+ tel">客服电话</a>
     </div>
   </div>
 </template>
@@ -33,11 +33,10 @@
     name: "carPay",
     data() {
       return {
-        obj: {
-          detailId: '1',
-          feeAmt: '16.0',
-          serviceTel: '110',
-        },
+        out_park_prompt:'',
+        amt:'',
+        tel:'',
+        order_id:'',
       }
     },
 
@@ -47,12 +46,22 @@
       [NoticeBar.name]: NoticeBar,
       [Icon.name]: Icon
     },
-
+    created() {
+      this.out_park_prompt = this.$route.query.out_park_prompt;
+      this.amt = this.$route.query.amt;
+      this.tel = this.$route.query.tel;
+      this.order_id = this.$route.query.order_id;
+    },
     mounted() {
     },
     methods: {
       goPayDetail() {
-        this.$router.push('/carPayDetail');
+        this.$router.push({
+          path: '/carPayDetail',
+          query: {
+            order_id: this.order_id,
+          }
+        })
       },
 
       goBack() {

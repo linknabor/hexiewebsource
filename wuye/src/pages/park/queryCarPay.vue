@@ -1,110 +1,140 @@
 <template>
   <div class="main">
+    <van-overlay :show="show_overlay">
+      <van-loading type="spinner" />
+    </van-overlay>
     <van-nav-bar title="停车记录" left-text="返回" left-arrow placeholder fixed @click-left="goBack"
     />
     <div style="height: 0.1rem"></div>
-    <van-skeleton title :row="3" :loading="loading">
-      <div style="margin: 0 0.1rem; border-radius: 0.3rem">
-        <van-search v-model="searchValue" placeholder="请输入车牌号码"/>
-      </div>
-      <van-list v-model="listLoading" :finished="finished"
-                finished-text="没有更多了"
-                @load="onLoad"
-      >
-        <div v-for="(item, index) in payList" :key="index">
-          <div class="data-detail">
-            <van-cell :title="item.park_name.concat('-').concat(item.car_no)" :value="item.amt" value-class="css-value"/>
-            <div class="data-detail-content">
-              <div class="data-invoice" v-if="item.is_invoice === '1'">
-                已开票
-              </div>
-              <div class="data-text">
-                <div class="data-date-txt">进场时间</div>
-                <div class="data-date">{{ item.start_date }}</div>
-              </div>
-              <div class="data-text">
-                <div class="data-date-txt">出场时间</div>
-                <div class="data-date">{{ item.end_date }}</div>
-              </div>
+    <div style="margin: 0 0.1rem; border-radius: 0.3rem">
+      <van-search v-model="searchValue" show-action placeholder="请输入车牌号码">
+        <template #action>
+          <div @click="onSearch">搜索</div>
+        </template>
+      </van-search>
+    </div>
+    <van-list v-model="listLoading" :finished="finished"
+              finished-text="没有更多了"
+              @load="onLoad"
+    >
+      <div v-for="(item, index) in payList" :key="index">
+        <div class="data-detail">
+          <van-cell :title="item.park_name.concat('-').concat(item.car_no)" :value="item.amt" value-class="css-value"/>
+          <div class="data-detail-content">
+            <div class="data-invoice" v-if="item.is_invoice === '1'">
+              已开票
             </div>
-            <van-divider/>
-            <div class="data-detail-bottom">
-              <div class="data-detail-bottom-text text-center">
-                <van-button v-if="item.is_invoice !=='1'" type="info" plain round hairline size="small">申请发票</van-button>
-              </div>
-              <div class="data-detail-bottom-text bottom-color" style="padding-top: 0.1rem;">
-                <img class="data-img" src="../../assets/images/common/icon_time_gray.png"/>
-                停车时长: {{ item.park_time }}
-              </div>
+            <div class="data-text">
+              <div class="data-date-txt">进场时间</div>
+              <div class="data-date">{{ item.start_date }}</div>
+            </div>
+            <div class="data-text">
+              <div class="data-date-txt">出场时间</div>
+              <div class="data-date">{{ item.end_date }}</div>
+            </div>
+          </div>
+          <van-divider/>
+          <div class="data-detail-bottom">
+            <div class="data-detail-bottom-text text-center">
+              <van-button v-if="item.is_invoice !=='1'" type="info" plain round hairline size="small">申请发票</van-button>
+            </div>
+            <div class="data-detail-bottom-text bottom-color" style="padding-top: 0.1rem;">
+              <img class="data-img" src="../../assets/images/common/icon_time_gray.png"/>
+              停车时长: {{ item.park_time }}
             </div>
           </div>
         </div>
-
-      </van-list>
-
-    </van-skeleton>
+      </div>
+    </van-list>
   </div>
 </template>
 
 <script>
-  import {Skeleton, Search, Cell, List, Divider, Button, NavBar} from 'vant';
+  import {Search, Cell, List, Divider, Button, NavBar, Toast, Dialog, Overlay, Loading } from 'vant';
+  import ParkApi from "@/api/Park.js"
 
   export default {
     name: "queryCarPay",
     data() {
       return {
-        loading: true,
+        show_overlay: true,
         searchValue: '',
         listLoading: false,
         finished: false,
-
-        payList: [
-          {
-            id: '',
-            start_date: '2021-08-12 21:23:54',
-            end_date: '2021-08-13 21:23:54',
-            park_name: '某某停车场',
-            car_no: '沪A54618',
-            amt: '20.00元',
-            park_time: '25:20:05',
-            is_invoice: '1',
-          },
-          {
-            id: '',
-            start_date: '2021-08-12 21:23:54',
-            end_date: '2021-08-13 21:23:54',
-            park_name: '某某停车场',
-            car_no: '沪A54618',
-            amt: '20.00元',
-            park_time: '25:20:05',
-            is_invoice: '0',
-          },
-        ],
+        payList: [],
+        currPage: 1,
       }
     },
     components: {
-      [Skeleton.name]: Skeleton,
       [Search.name]: Search,
       [List.name]: List,
       [Cell.name]: Cell,
       [Divider.name]: Divider,
       [Button.name]: Button,
       [NavBar.name]: NavBar,
+      [Toast.name]: Toast,
+      [Dialog.name]: Dialog,
+      [Overlay.name]: Overlay,
+      [Loading.name]: Loading,
     },
     created() {
 
     },
     mounted() {
-      this.getPayList()
+      this.show_overlay = true
+      setTimeout(() => {
+        this.getPayList()
+        this.show_overlay = false
+      }, 1000);
     },
     methods: {
       onLoad() {
-        this.finished = true
+        setTimeout(() => {
+          this.getPayList();
+        }, 1000);
       },
 
       getPayList() {
-        this.loading = false
+        if(this.finished) {
+          return
+        }
+        let param = {
+          carNo: this.searchValue,
+          currPage: this.currPage,
+        }
+        ParkApi.getParkPayList(param).then((response) => {
+          let data = response.data
+          if (data && data.success && data.result) {
+            if(this.currPage == '1' && data.result.length == 0) { //如果是第一页
+              Dialog({message: '没有支付记录'})
+              this.payList = []
+              this.finished = true
+              this.listLoading = false
+            } else {
+              if(data.result.length > 0) {
+                this.payList = this.payList.concat(data.result)
+                this.finished = false
+                this.currPage += 1;
+                this.listLoading = false
+              } else {
+                Toast('没有更多了')
+                this.finished = true
+              }
+            }
+          }else {
+            this.finished = false
+            this.listLoading = false
+          }
+        })
       },
+
+      onSearch() {
+        this.currPage = 1;
+        this.loading = false;
+        this.finished = false;
+        this.getPayList()
+      },
+
       goBack() {
         this.$router.push('/indexCar');
       },

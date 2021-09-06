@@ -1,5 +1,9 @@
 <template>
+
   <div class="main">
+    <van-overlay :show="show_overlay">
+      <van-loading type="spinner" />
+    </van-overlay>
     <van-skeleton title :row="3" :loading="loading">
       <div v-if="showFlag">
         <div class="data-top">
@@ -10,7 +14,7 @@
             <div class="data-park-left">停车场:</div>
             <div class="data-park-right" @click="goMap">
               <van-icon name="location"/>
-              <span class="data-park-txt">某某停车场</span>
+              <span class="data-park-txt">{{selectParkName}}</span>
               <van-icon name="arrow"/>
             </div>
             <div style="clear:both"></div>
@@ -19,7 +23,7 @@
             <plateNumber @getPlateLicense="getPlateLicense" :mat="formData" :butName="butName" :isShowCheck="0"></plateNumber>
 
           <div>
-            <div class="carList" v-for="(item, index) in carList" :key="index" @click="clickCar(item.car_id, item.car_no)">
+            <div class="carList" v-for="(item, index) in carList" :key="index" @click="clickCar(item.car_no)">
               {{item.car_no}} >
             </div>
           </div>
@@ -35,7 +39,7 @@
 
         <div class="data-bottom">
           <div class="data-bottom-title">计费规则：</div>
-          <div class="data-bottom-text" v-for="(item, index) in ruleList" :key="index">
+          <div class="data-bottom-text" v-for="(item, index) in parkInfo.ruleList" :key="index">
             <span>. {{item.ruleName}}</span>
           </div>
         </div>
@@ -45,14 +49,18 @@
         <van-nav-bar title="停车场列表" left-text="返回" left-arrow @click-left="goBack"
         />
         <div>
-          <van-search v-model="searchValue" placeholder="请输入停车场名称"/>
+          <van-search v-model="searchValue" show-action placeholder="请输入停车场名称">
+            <template #action>
+              <div @click="onSearch">搜索</div>
+            </template>
+          </van-search>
         </div>
         <van-list v-model="listLoading" :finished="finished"
                   finished-text="没有更多了"
                   @load="onLoad"
         >
           <div v-for="(item, index) in parkList" :key="index">
-            <van-cell :title="item.park_name" icon="location-o" :label="item.park_addr" center is-link/>
+            <van-cell :title="item.park_name" icon="location-o" :label="item.park_addr" center is-link @click="checkCell(item.park_id, item.park_name)"/>
           </div>
         </van-list>
       </div>
@@ -62,16 +70,32 @@
 </template>
 
 <script>
-  import {Skeleton, Icon, Grid, GridItem, Cell, Search, List, NavBar, Dialog, Switch, Toast} from 'vant';
+  import {
+    Skeleton,
+    Icon,
+    Grid,
+    GridItem,
+    Cell,
+    Search,
+    List,
+    NavBar,
+    Dialog,
+    Switch,
+    Toast,
+    Overlay,
+    Loading
+  } from 'vant';
   import plateNumber from '@/components/plateNumber'
   import UserLogin from "@/components/UserLogin"
-  import UserApi from "@/api/api.js";
+  import UserApi from "@/api/api.js"
+  import ParkApi from "@/api/Park.js"
   import Storage from "@/util/storage.js"
 
   export default {
     name: "indexCar",
     data() {
       return {
+        show_overlay: true,
         loading: true,
         showFlag: true,
         searchValue: '',
@@ -94,46 +118,16 @@
           num7: ''
         },
 
-        selectCarId:'',
         selectCarNo:'',
 
-        carList:[
-          {
-            car_id:'',
-            car_no:'沪A13445',
-          },
-          {
-            car_id:'',
-            car_no:'沪B45D22',
-          },
-        ],
-        parkList: [
-          {
-            id: '',
-            park_name: '某某停车场1',
-            park_addr: 'XXX路100号',
-          },
-          {
-            id: '',
-            park_name: '某某停车场2',
-            park_addr: 'XXX路200号',
-          },
-        ],
+        selectParkId:'',
+        selectParkName:'',
 
-        ruleList:[
-          {
-            ruleName:'收费标准：5元/小时',
-          },
-          {
-            ruleName:'最高40元/天',
-          },
-          {
-            ruleName:'当天1小时免费',
-          },
-          {
-            ruleName:'咨询电话：1234567',
-          },
-        ],
+        carList:[],
+
+        parkInfo:'',
+
+        parkList:[],
       }
     },
     components: {
@@ -148,27 +142,38 @@
       [NavBar.name]: NavBar,
       [Dialog.Component.name]: Dialog.Component,
       [Switch.name]: Switch,
+      [Overlay.name]: Overlay,
+      [Loading.name]: Loading,
+      [Toast.name]: Toast,
       plateNumber
     },
     created() {
 
     },
     mounted() {
+      this.show_overlay = true
+      this.loading = true
+      //this.initSession4Test()
       this.getUserInfo()
       this.initCar()
+      this.loading = false
+      this.show_overlay = false
     },
     methods: {
+      initSession4Test() {
+        var data = {
+          oriApp: "wx95f46f41ca5e570e",
+        };
+        UserApi.login("8456", data)
+      },
+
       getUserInfo() {
-        this.loading = true
-        UserApi.getUserInfo()
-          .then((response) => {
+        UserApi.getUserInfo().then((response) => {
             let data = response.data;
             if (data.success && data.result != null) {
               Storage.set("userInfo", data.result)
               this.$emit("getUserInfo", data.result)
-              this.loading = false
             } else {
-              this.loading = false
               this.$refs.userLogin.login();
             }
           })
@@ -178,29 +183,65 @@
       },
 
       initCar() {
-        if(this.carList.length > 0) {
-          let car_no = this.carList[0].car_no
-          let car_id = this.carList[0].car_id
-          this.clickCar(car_id, car_no)
-        }
+        ParkApi.getIndexCar().then((response) => {
+          let data = response.data
+          if(data && data.success) {
+            this.carList = data.result.carList
+            this.parkInfo = data.result.parkInfo
+            this.selectParkName = this.parkInfo.park_name;
+            this.selectParkId = this.parkInfo.park_id;
+
+            if(this.carList.length > 0) {
+              let car_no = this.carList[0].car_no
+              this.clickCar(car_no)
+            }
+          }
+        })
       },
       onLoad() {
         this.finished = true
       },
       getPlateLicense(data, checked) {
-        console.log(data)
-        this.$router.push('/carPay');
+        this.$router.push({
+          path: '/carPay',
+          query: {
+            carNo: data,
+            parkId: this.selectParkId
+          }
+        })
       },
 
       goMap() {
+        this.show_overlay = true
         this.showFlag = false
+        let param = {
+          parkName: this.searchValue
+        }
+        ParkApi.getParkList(param).then((response) => {
+          let data = response.data
+          if(data && data.success) {
+            this.parkList = data.result
+          }
+          this.show_overlay = false
+        })
       },
+
+      onSearch() {
+        this.goMap()
+      },
+
+      checkCell(parkId, parkName) {
+        this.selectParkId = parkId
+        this.selectParkName = parkName
+        this.showFlag = true
+        this.searchValue = ""
+      },
+
       goBack() {
         this.showFlag = true
       },
 
-      clickCar(car_id, car_no) {
-        this.selectCarId = car_id
+      clickCar(car_no) {
         this.selectCarNo = car_no
         var strs = car_no.split("")
         if(strs.length === 7) {
@@ -222,7 +263,6 @@
       },
 
       getLoginUser(data) {
-        alert(data)
         if (data) {
           this.$emit("getUserInfo", data.result);
         }

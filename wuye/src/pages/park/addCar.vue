@@ -1,8 +1,14 @@
 <template>
   <div class="main">
+    <van-overlay :show="show_overlay">
+      <van-loading type="spinner" />
+    </van-overlay>
+
     <van-nav-bar title="添加车牌" left-text="返回" left-arrow placeholder fixed @click-left="goBack"
     />
-    <plateNumber @getPlateLicense="getPlateLicense" :mat="formData" :butName="butName" :isShowCheck="isShowCheck"></plateNumber>
+    <div style="height: 4.5rem">
+      <plateNumber @getPlateLicense="getPlateLicense" :mat="formData" :butName="butName" :isShowCheck="isShowCheck"></plateNumber>
+    </div>
     <div class="css-bt">
       <div class="submit-box">
         <button @click="queryCar">查看我的车辆</button>
@@ -14,12 +20,14 @@
 
 <script>
   import plateNumber from '@/components/plateNumber'
-  import { NavBar } from 'vant';
+  import { NavBar, Toast, Overlay, Loading } from 'vant';
+  import ParkApi from "@/api/Park.js"
 
   export default {
     name: "addCar",
     data() {
       return {
+        show_overlay: false,
         isShowCheck: 1,
         butName:'保存',
         formData:{
@@ -38,14 +46,28 @@
 
     components: {
       plateNumber,
-      [NavBar.name]: NavBar
+      [NavBar.name]: NavBar,
+      [Toast.name]: Toast,
+      [Overlay.name]: Overlay,
+      [Loading.name]: Loading
     },
 
     mounted() {
     },
     methods: {
       getPlateLicense(data, checked) {
-        this.showDia = true
+        this.show_overlay = true;
+        let param = {
+          carNo: data,
+          checked: checked
+        }
+        ParkApi.saveCar(param).then((response) => {
+          let data = response.data
+          if(data.result) {
+            Toast("保存成功")
+          }
+          this.show_overlay = false
+        })
       },
 
       queryCar() {
@@ -70,7 +92,6 @@
     height: 0.8rem;
     border-radius: 0.25rem;
     font-size: 0.3rem;
-    margin-top: 0.7rem;
     background-color: white;
     border: 0.001rem solid blue;
     color: blue;

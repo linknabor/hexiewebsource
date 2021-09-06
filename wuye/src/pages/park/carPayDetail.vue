@@ -21,12 +21,14 @@
 
 <script>
   import {Cell, NavBar, NoticeBar, Icon} from 'vant';
+  import ParkApi from "@/api/Park.js"
 
   export default {
     name: "carPayDetail",
     data() {
       return {
         parkImg:require('../../assets/img/p.png'),
+        order_id:'',
         obj:{
           detailId:'1',
           paraName:'某某某停车场',
@@ -49,12 +51,23 @@
       [NoticeBar.name]: NoticeBar,
       [Icon.name]: Icon
     },
-
+    created() {
+      this.order_id = this.$route.query.order_id;
+    },
     mounted() {
+      this.getPayDetail()
     },
     methods: {
-      goPayDetail() {
-        this.$router.push('/carPayDetail');
+      getPayDetail() {
+        let param = {
+          orderId: this.order_id
+        }
+        ParkApi.getPayDetailById(param).then((response) => {
+          let data = response.data
+          if (data && data.success) {
+            this.obj = data.result
+          }
+        })
       },
 
       goBack() {
