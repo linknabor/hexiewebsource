@@ -1,0 +1,140 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1,initial-scale=1,user-scalable=no"/>
+        <meta name="referrer" content="no-referrer"/>
+        <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate"/>
+        <meta http-equiv="pragma" content="no-cache"/>
+        <meta http-equiv="expires" content="0"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0,minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.6/dist/vue.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vant@2.12/lib/vant.min.js"></script>
+        <!-- 引入样式文件 -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@2.12/lib/index.css" />
+        <title>向商家付款</title>
+    </head>
+    <body>
+        <div id="app" class="app" v-cloak>
+            <van-overlay :show="showOverlay" >
+                <van-loading type="circle" color="#ff9834" vertical style="top:40vh"/>
+            </van-overlay>
+        </div>
+        <script>
+
+            var baseUrl = /127|test/.test(location.origin)?'https://test.e-shequ.cn/weixin/':
+                /uat/.test(location.origin)?'https://uat.e-shequ.cn/hexie/weixin/' : 'https://www.e-shequ.cn/weixin/'
+            var reqUrl = baseUrl + "otherPayV2.html"+window.location.search
+            var serverUrl = /127|test/.test(location.origin)?'https://test.e-shequ.cn/wechat/hexie/wechat':
+            /uat/.test(location.origin)?'https://uat.e-shequ.cn/wechat/hexie/wechat' : 'https://www.e-shequ.cn/wechat/hexie/wechat/'
+
+            function getCode() {
+                var e = location.search,
+                    o = {};
+                if ("" === e || void 0 === e) return o;
+                e = e.substr(1).split("&");
+                for (let n in e) {
+                    let t = e[n].split("=");
+                    o[t[0]] = t[1]
+                }
+                return o.from && delete o.code,o
+            }
+
+            function gerAuthcode() {
+                var e = location.search,
+                    o = {};
+
+                if ("" === e || void 0 === e) return o;
+                e = e.substr(1).split("&");
+                for (let n in e) {
+                    let t = e[n].split("=");
+                    o[t[0]] = t[1]
+                }
+                return o.from && delete o.auth_code,o
+            }
+
+            let appid = ''
+            var app = new Vue({
+
+                el: '#app',
+
+                mounted() {
+                    this.checkEnv()
+                },
+                data: {
+                    showOverlay: true,
+                    message: 'Hello Vue!'
+                },
+                methods: {
+                    checkEnv(){
+                        let env = this.getEnv()
+                        
+                        if("Alipay" === env) { //支付宝
+                            this.alipayAuthorize()
+                        } else if("WeiXin" === env) { //微信
+                            this.wechatAuth()
+                        } else {
+                            vant.Dialog({
+                                message: '请用微信或支付宝扫码支付',
+                            }).then(()=>{
+                                this.showLoading = false
+                                return false
+                            })
+                        }
+                    },
+                    getEnv() {
+                        var ua = window.navigator.userAgent.toLowerCase()
+                        //判断是不是微信
+                        if (ua.match(/MicroMessenger/i) == 'micromessenger') {
+                            return "WeiXin"
+                        }
+                        //判断是不是支付宝
+                        if (ua.match("alipayclient") == 'alipayclient') {
+                            return "Alipay"
+                        }
+                        //哪个都不是
+                        return "";
+                    },
+                    wechatAuth() {
+                        appId = /127|test/.test(location.origin)?'wx95f46f41ca5e570e':
+                            /uat/.test(location.origin)?'wx9ffe0a2b5a64a285' : 'wxbd214f5765f346c1'
+
+                        let componentAppId = /127|test/.test(location.origin)?'wx4d706a1a7a139d1f':
+                            /uat/.test(location.origin)?'wxc65085912aca5444' : 'wx0d408844b35d85e2'
+
+                        let authorize_url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=snsapi_base&state=123&component_appid=COMPONENT_APPID#wechat_redirect";
+
+                        let o = getCode().code;
+
+                        if (o === undefined) {
+                            let authorize = authorize_url.replace("APPID", appId).replace("REDIRECT_URI", encodeURIComponent(reqUrl)).replace("COMPONENT_APPID", componentAppId);
+                            location.href = authorize;
+                        }
+                    },
+                    alipayAuthorize() {
+                        appId = /127|test/.test(location.origin)?'2021001163621308':
+                            /uat/.test(location.origin)?'2021001163651280' : '2021001161682727';
+
+                        let authorize_url = "https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=APPID&scope=SCOPE&redirect_uri=ENCODED_URL";
+                        let o = gerAuthcode().auth_code;
+                        if (o === undefined) {
+                            let authorize = authorize_url.replace("APPID", appId).replace("SCOPE", "auth_base").replace("ENCODED_URL", encodeURIComponent(requrl))
+                            location.href = authorize;
+                        }
+                    }
+                }
+            })
+            Vue.use(vant.Lazyload)
+
+        </script>
+        <style>
+            .app {
+                width: 100%;
+                min-height: 100vh;
+                margin: 0 0;
+                padding: 0 0;
+                background: #F5F5F5;
+            }
+        </style>
+    </body>
+</html>
