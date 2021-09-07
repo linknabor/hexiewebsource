@@ -39,7 +39,7 @@
 
         <div class="data-bottom">
           <div class="data-bottom-title">计费规则：</div>
-          <div class="data-bottom-text" v-for="(item, index) in parkInfo.ruleList" :key="index">
+          <div class="data-bottom-text" v-for="(item, index) in ruleList" :key="index">
             <span>. {{item.ruleName}}</span>
           </div>
         </div>
@@ -60,7 +60,7 @@
                   @load="onLoad"
         >
           <div v-for="(item, index) in parkList" :key="index">
-            <van-cell :title="item.park_name" icon="location-o" :label="item.park_addr" center is-link @click="checkCell(item.park_id, item.park_name)"/>
+            <van-cell :title="item.park_name" icon="location-o" :label="item.park_addr" center is-link @click="checkCell(item)"/>
           </div>
         </van-list>
       </div>
@@ -128,6 +128,8 @@
         parkInfo:'',
 
         parkList:[],
+
+        ruleList:[],
       }
     },
     components: {
@@ -190,7 +192,7 @@
             this.parkInfo = data.result.parkInfo
             this.selectParkName = this.parkInfo.park_name;
             this.selectParkId = this.parkInfo.park_id;
-
+            this.ruleList = this.parkInfo.ruleList
             if(this.carList.length > 0) {
               let car_no = this.carList[0].car_no
               this.clickCar(car_no)
@@ -230,11 +232,12 @@
         this.goMap()
       },
 
-      checkCell(parkId, parkName) {
-        this.selectParkId = parkId
-        this.selectParkName = parkName
+      checkCell(item) {
+        this.selectParkId = item.park_id
+        this.selectParkName = item.park_name
         this.showFlag = true
         this.searchValue = ""
+        this.ruleList = item.ruleList
       },
 
       goBack() {

@@ -61,6 +61,7 @@
         finished: false,
         payList: [],
         currPage: 1,
+        isEntye: false
       }
     },
     components: {
@@ -78,21 +79,21 @@
 
     },
     mounted() {
-      this.show_overlay = true
-      setTimeout(() => {
-        this.getPayList()
-        this.show_overlay = false
-      }, 1000);
+      // this.show_overlay = true
+      //this.getPayList()
+      // this.show_overlay = false
     },
     methods: {
       onLoad() {
+        //this.show_overlay = true
         setTimeout(() => {
           this.getPayList();
+          this.show_overlay = false
         }, 1000);
       },
 
       getPayList() {
-        if(this.finished) {
+        if(this.isEntye) {
           return
         }
         let param = {
@@ -102,25 +103,30 @@
         ParkApi.getParkPayList(param).then((response) => {
           let data = response.data
           if (data && data.success && data.result) {
-            if(this.currPage == '1' && data.result.length == 0) { //如果是第一页
+            if(this.currPage == 1 && data.result.length == 0) { //如果是第一页
               Dialog({message: '没有支付记录'})
               this.payList = []
               this.finished = true
               this.listLoading = false
+              this.isEntye = true
             } else {
               if(data.result.length > 0) {
                 this.payList = this.payList.concat(data.result)
                 this.finished = false
-                this.currPage += 1;
+                this.currPage++;
                 this.listLoading = false
+
+                console.log(this.currPage)
               } else {
                 Toast('没有更多了')
                 this.finished = true
+                this.isEntye = true
               }
             }
           }else {
             this.finished = false
             this.listLoading = false
+            this.isEntye = true
           }
         })
       },
@@ -129,6 +135,8 @@
         this.currPage = 1;
         this.loading = false;
         this.finished = false;
+        this.payList = []
+        this.isEntye = false
         this.getPayList()
       },
 
@@ -234,5 +242,12 @@
 
   .van-button--small {
     height: 0.5rem;
+  }
+
+  .van-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 </style>
