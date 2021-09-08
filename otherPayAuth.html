@@ -12,7 +12,7 @@
         <script src="https://cdn.jsdelivr.net/npm/vant@2.12/lib/vant.min.js"></script>
         <!-- 引入样式文件 -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@2.12/lib/index.css" />
-        <title>向商家付款</title>
+        <title>获取商户信息...</title>
     </head>
     <body>
         <div id="app" class="app" v-cloak>
@@ -77,9 +77,9 @@
                             vant.Dialog({
                                 message: '请用微信或支付宝扫码支付',
                             }).then(()=>{
-                                this.showLoading = false
-                                return false
                             })
+                            this.showLoading = false
+                            return false
                         }
                     },
                     getEnv() {
@@ -103,22 +103,20 @@
                             /uat/.test(location.origin)?'wxc65085912aca5444' : 'wx0d408844b35d85e2'
 
                         let authorize_url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=snsapi_base&state=123&component_appid=COMPONENT_APPID#wechat_redirect";
-
                         let o = getCode().code;
-
                         if (o === undefined) {
                             let authorize = authorize_url.replace("APPID", appId).replace("REDIRECT_URI", encodeURIComponent(reqUrl)).replace("COMPONENT_APPID", componentAppId);
+                            console.log("redirect_uri:"+ authorize)
                             location.href = authorize;
                         }
                     },
                     alipayAuthorize() {
                         appId = /127|test/.test(location.origin)?'2021001163621308':
                             /uat/.test(location.origin)?'2021001163651280' : '2021001161682727';
-
                         let authorize_url = "https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=APPID&scope=SCOPE&redirect_uri=ENCODED_URL";
                         let o = gerAuthcode().auth_code;
                         if (o === undefined) {
-                            let authorize = authorize_url.replace("APPID", appId).replace("SCOPE", "auth_base").replace("ENCODED_URL", encodeURIComponent(requrl))
+                            let authorize = authorize_url.replace("APPID", appId).replace("SCOPE", "auth_base").replace("ENCODED_URL", encodeURIComponent(reqUrl))
                             location.href = authorize;
                         }
                     }
