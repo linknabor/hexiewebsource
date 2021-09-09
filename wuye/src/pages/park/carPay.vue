@@ -34,12 +34,17 @@
 
     <div class="data-bottom">
       <van-notice-bar :scrollable="false" :text="obj.out_park_prompt"/>
-      <div class="data-bottom-desc">
+      <div class="data-bottom-desc" v-show="showPay">
         <div class="data-bottom-amt">
           应收金额：<span>{{ obj.fee_amt }}</span> 元
         </div>
         <div class="data-bottom-bt">
           <van-button type="warning" size="small" round @click="toPay">立即支付</van-button>
+        </div>
+      </div>
+      <div class="data-bottom-desc" v-show="!showPay">
+        <div style="text-align: center">
+          <van-button type="warning" size="small" round @click="toReplay">刷新</van-button>
         </div>
       </div>
     </div>
@@ -63,6 +68,8 @@
         parkImg: require('../../assets/img/p.png'),
         obj: {},
         newDate: '',
+        goNum:0,
+        showPay: true
       }
     },
     created() {
@@ -88,6 +95,10 @@
       reTime() {
         time++
         this.newDate = this.formatOutput()
+        this.goNum++
+        if(this.goNum > 30) {
+          this.showPay = false
+        }
         // 递归
         setTimeout(this.reTime.bind(this), 1000)
       },
@@ -123,6 +134,10 @@
           }
           this.show_overlay = false
         })
+      },
+
+      toReplay() {
+        location. reload()
       },
 
       toPay() {
