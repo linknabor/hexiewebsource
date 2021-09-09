@@ -33,10 +33,10 @@
           </div>
           <van-divider/>
           <div class="data-detail-bottom">
-            <div class="data-detail-bottom-text text-center">
+            <div class="data-detail-bottom-text1 text-center">
               <van-button v-if="item.is_invoice !=='1'" type="info" plain round hairline size="small">申请发票</van-button>
             </div>
-            <div class="data-detail-bottom-text bottom-color" style="padding-top: 0.1rem;">
+            <div class="data-detail-bottom-text2 bottom-color" style="padding-top: 0.1rem;">
               <img class="data-img" src="../../assets/images/common/icon_time_gray.png"/>
               停车时长: {{ item.park_time }}
             </div>
@@ -202,8 +202,8 @@
     text-align: center;
   }
 
-  .data-detail-bottom-text {
-    width: 50%;
+  .data-detail-bottom-text1 {
+    width: 45%;
     height: 100%;
     float: left;
     line-height: 0.5rem;
@@ -211,8 +211,17 @@
     font-size: 0.26rem;
   }
 
+  .data-detail-bottom-text2 {
+    width: 55%;
+    height: 100%;
+    float: left;
+    line-height: 0.5rem;
+    overflow: hidden;
+    font-size: 0.2rem;
+  }
+
   .data-img {
-    padding-left: 0.2rem;
+    padding-left: 0.1rem;
     width: 0.3rem;
     position: relative;
     top: 0.05rem;
