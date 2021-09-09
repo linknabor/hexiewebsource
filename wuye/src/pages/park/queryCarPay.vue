@@ -212,7 +212,7 @@
   }
 
   .data-img {
-    padding-left: 0.5rem;
+    padding-left: 0.2rem;
     width: 0.3rem;
     position: relative;
     top: 0.05rem;
