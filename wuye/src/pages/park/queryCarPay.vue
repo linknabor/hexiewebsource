@@ -141,7 +141,7 @@
         this.finished = false;
         this.payList = []
         this.isEntye = false
-        this.getPayList()
+        this.onLoad()
       },
 
       goBack() {
@@ -221,11 +221,11 @@
     float: left;
     line-height: 0.5rem;
     overflow: hidden;
-    font-size: 0.2rem;
+    font-size: 0.23rem;
   }
 
   .data-img {
-    padding-left: 0.1rem;
+    padding-left: 0.2rem;
     width: 0.3rem;
     position: relative;
     top: 0.05rem;
