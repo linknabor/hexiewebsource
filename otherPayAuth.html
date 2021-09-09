@@ -12,7 +12,7 @@
         <script src="https://cdn.jsdelivr.net/npm/vant@2.12/lib/vant.min.js"></script>
         <!-- 引入样式文件 -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@2.12/lib/index.css" />
-        <title>获取商户信息...</title>
+        <title></title>
     </head>
     <body>
         <div id="app" class="app" v-cloak>
@@ -106,8 +106,7 @@
                         let o = getCode().code;
                         if (o === undefined) {
                             let authorize = authorize_url.replace("APPID", appId).replace("REDIRECT_URI", encodeURIComponent(reqUrl)).replace("COMPONENT_APPID", componentAppId);
-                            console.log("redirect_uri:"+ authorize)
-                            location.href = authorize;
+                            location.replace (authorize)
                         }
                     },
                     alipayAuthorize() {
@@ -117,7 +116,7 @@
                         let o = gerAuthcode().auth_code;
                         if (o === undefined) {
                             let authorize = authorize_url.replace("APPID", appId).replace("SCOPE", "auth_base").replace("ENCODED_URL", encodeURIComponent(reqUrl))
-                            location.href = authorize;
+                            location.replace (authorize)
                         }
                     }
                 }

@@ -21,7 +21,7 @@
         }
     </style>
     <div id="app" class="app" v-cloak>
-        <van-overlay :show="showOverlay" >
+        <van-overlay :show="showOverlay" z-index="101">
             <van-loading type="circle" color="#ff9834" vertical style="top:40vh"/>
         </van-overlay>
         <div class="title">
@@ -49,7 +49,7 @@
             />
         </van-cell-group>
         <div class="search-values" v-for="house in houseInfo" :key=house.id @click="chooseCell(house)">{{house.name}}</div>
-        <div style="clear:both; height: 1em;" v-show="selectHouse==='1'"></div>
+        <div style="clear:both; height: 0.5em;" v-show="selectHouse==='1'"></div>
         
         <van-cell-group inset v-show="houseInfo.length === 0">
             <van-field @touchstart.native.stop="showKeyBoard = true" >
@@ -62,7 +62,7 @@
             </van-field>
         </van-cell-group>
 
-        <div style="clear:both; height: 1em;"></div>
+        <div style="clear:both; height: 0.5em;"></div>
 
         <!-- <van-dialog v-model="showRemark" title="备注" show-cancel-button confirmButtonText="保存">
             <van-field v-model="remark" label-width="2.5em" label="备注" clickable placeholder="选填" left-icon="records"
@@ -92,7 +92,7 @@
     
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6/dist/vue.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vant@2.12/lib/vant.min.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/axios@0.21.4/dist/axios.min.js"></script>
     <!-- 引入样式文件 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@2.12/lib/index.css" />
     <script>
@@ -139,7 +139,7 @@
             return o.from && delete o.code,o
         }
 
-        // var regex = /^[0-9]\\d*\\.\\d{0,2}$/
+        // var regex = /^[0-9]\d*\.\d{0,2}$/
         var regex = /^(([1-9][0-9]*)|(([0]\.\d{1,2}|[1-9][0-9]*\.\d{1,2})))$/
         function checkPayAmt(amt){
             if(regex.test(amt)) {
@@ -165,7 +165,6 @@
                 this.checkEnv()
                 let endTime = new Date()
                 let diff = endTime - beginTime
-                
                 console.log('页面初始化用时：' + diff + "毫秒")
             },
             data: {
@@ -195,6 +194,9 @@
                 remark: '',         //备注
             },
             methods: {
+                remainder(){
+                    this.$refs.flightsList.$el.style.height = (window.innerHeight - this.specialLineTimeHeight) + 'px';
+                },
                 checkEnv(){
                     let env = this.getEnv()
                     if("Alipay" === env) { //支付宝
@@ -204,10 +206,9 @@
                     } else {
                         vant.Dialog({
                             message: '请用微信或支付宝扫码支付',
-                        }).then(()=>{
-                            this.showLoading = false
-                            return false
                         })
+                        this.showLoading = false
+                        return false
                     }
                     this.env = env;
                 },
@@ -257,18 +258,27 @@
                     let openid = this.openid
                     if(!openid) { //说明没拿过openid
                         let url = serverUrl + "/authorize/" + o + "/"+ this.wechatAppid
+                        let flag = false
                         axios.post(url).then((response)=>{
                             if(response.data.success) {
                                 this.openid = response.data.result.openid
                             } else {
+                                let message = response.data.message
+                                if(response.data.message.indexOf('40163')>-1) {
+                                    message = '请重新扫描或识别二维码！'
+                                    flag = true
+                                }
                                 vant.Dialog({
-                                    message: response.data.message
-                                }).then(()=>{})
+                                    message: message
+                                })
                             }
-                            this.showOverlay = false
+                            if(!flag) {
+                                this.showOverlay = false
+                            }
+                            
                         }).catch((error)=>{ // 请求失败处理
                             vant.Dialog({
-                                message: '请刷新页面重试！'
+                                message: '请重新扫描或识别二维码！'
                             })
                             this.showOverlay = false
                             return false
@@ -291,7 +301,7 @@
                             this.showOverlay = false
                         }).catch((error)=>{ // 请求失败处理
                             vant.Dialog({
-                                message: '请刷新页面重试！'
+                                message: '请重新扫描或识别二维码！'
                             }).then(()=>{})
                             this.showOverlay = false
                             return false
@@ -321,7 +331,7 @@
                         }
                     }).catch((error)=>{ // 请求失败处理
                         vant.Dialog({
-                            message: '服务器异常，请稍后重试！'
+                            message: '服务器异常，请稍后再试！'
                         })
                         return false
                     })
@@ -344,7 +354,6 @@
                         }
                     } else {
                         let pointIndex = this.money.indexOf('.')
-                        console.log(pointIndex)
                         if(pointIndex > -1) {
                             if(event == '.') {
                                 return false
@@ -355,6 +364,9 @@
                             }
                         } else {
                             if(this.money.length === 5 && event != '.') {
+                                return false
+                            }
+                            if(this.money.startsWith('0') && event != '.') {
                                 return false
                             }
                         }
@@ -379,7 +391,7 @@
                         }).then(()=>{})
                         return false
                     }
-                    if(parseFloat(this.money) < 1) {
+                    if(parseFloat(this.money) == 0.00) {
                         vant.Dialog({
                             message: '请输入正确的支付金额！'
                         })
@@ -389,7 +401,7 @@
                         if(!this.cellId || this.cellId == 0) {
                             vant.Dialog({
                                 message: '请选择房屋地址!'
-                            }).then(()=>{})
+                            })
                             return false
                         }
                     }
@@ -397,9 +409,8 @@
                         if(parseFloat(this.money) > 10000) {
                             vant.Dialog({
                                 message: '超出微信二维码支付单笔限额，请拆成多笔支付（单笔10000元及以下），或使用支付宝扫码'
-                            }).then(()=>{
-                                return false
                             })
+                            return false
                         }
                     }
 
@@ -491,7 +502,7 @@
                         }
                     }).catch((error)=>{ // 请求失败处理
                         vant.Dialog({
-                            message: '服务器异常，请稍后重试！'
+                            message: '服务器异常，请稍后再试！'
                         })
                     })
 
@@ -572,13 +583,13 @@
         }
         .payamt-label {
             height: 2.5em;
-            margin-top: 1.5em;
-            font-size: 1.48em;
+            margin-top: 1.6em;
+            font-size: 1.4em;
             color: DarkGray;
         }
         .input-box {
-            margin-top: 1.5em;
-            font-size:1.48em; 
+            margin-top: 0.9em;
+            font-size:1.8em; 
             width: 8em; 
             border:none; 
             text-align: right;
@@ -590,7 +601,7 @@
             font-size: 0.85em;
             color: DarkGray;
             display: block;
-            bottom: 19em;
+            bottom: 18.25em;
         }
         .hint{
             color: #ff1a1a;
