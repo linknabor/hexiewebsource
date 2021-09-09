@@ -5,8 +5,8 @@
     </van-overlay>
     <div style="height: 0.1rem"></div>
     <div style="margin: 0 0.1rem; border-radius: 0.3rem">
-      <van-search v-model="searchValue" show-action placeholder="请输入车牌号码">
-        <template #action>
+      <van-search v-model="searchValue" show-action @search="onSearch" placeholder="请输入车牌号码">
+        <template name="action" slot="action">
           <div @click="onSearch">搜索</div>
         </template>
       </van-search>

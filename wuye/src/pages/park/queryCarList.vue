@@ -7,7 +7,7 @@
     <van-cell-group v-for="(item, index) in carList" :key="index">
       <van-swipe-cell :before-close="beforeClose" :name="item.car_no">
         <van-cell :title="item.car_no" :border="false" size="large" icon="location-o"/>
-        <template #right>
+        <template name="right" slot="right">
           <van-button square type="danger" text="删除" />
         </template>
       </van-swipe-cell>

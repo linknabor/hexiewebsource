@@ -49,8 +49,8 @@
         <van-nav-bar title="停车场列表" left-text="返回" left-arrow @click-left="goBack"
         />
         <div>
-          <van-search v-model="searchValue" show-action placeholder="请输入停车场名称">
-            <template #action>
+          <van-search v-model="searchValue" @search="onSearch" show-action placeholder="请输入停车场名称">
+            <template name="action" slot="action">
               <div @click="onSearch">搜索</div>
             </template>
           </van-search>
