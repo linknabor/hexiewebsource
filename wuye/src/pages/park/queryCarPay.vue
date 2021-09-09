@@ -34,7 +34,7 @@
           <van-divider/>
           <div class="data-detail-bottom">
             <div class="data-detail-bottom-text1 text-center">
-              <van-button v-if="item.is_invoice !=='1'" type="info" plain round hairline size="small">申请发票</van-button>
+              <van-button v-if="item.is_invoice !=='1'" type="info" plain round hairline size="small" @click="applyInvoice(item.trade_id)">申请发票</van-button>
             </div>
             <div class="data-detail-bottom-text2 bottom-color" style="padding-top: 0.1rem;">
               <img class="data-img" src="../../assets/images/common/icon_time_gray.png"/>
@@ -129,6 +129,10 @@
             this.isEntye = true
           }
         })
+      },
+
+      applyInvoice(trade_id) {
+        window.location.href = "https://test.e-shequ.cn/weixin/wuye/invoice.html?trade_water_id=" + trade_id
       },
 
       onSearch() {
