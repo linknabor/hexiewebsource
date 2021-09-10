@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1,initial-scale=1,user-scalable=no"/>
+    <meta name="referrer" content="no-referrer"/>
+    <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="pragma" content="no-cache"/>
+    <meta http-equiv="expires" content="0"/>
+    <script src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script src="https://gw.alipayobjects.com/as/g/h5-lib/alipayjsapi/3.1.1/alipayjsapi.inc.min.js"></script>
+    <script src="./static/js/base64.js"></script>
+
+    <title>向商家付款</title>
+    
+</head>
+<body>
+    <style>
+        [v-cloak]{
+            display: none;
+        }
+    </style>
+    <div id="app" class="app" v-cloak>
+        <van-overlay :show="showOverlay" z-index="101">
+            <van-loading type="circle" color="#ff9834" vertical style="top:40vh"/>
+        </van-overlay>
+        <div class="title">
+            <ul>
+                <li class="title-name">
+                    {{sectName}}
+                </li>
+                <li class="add-remark" @click="showRemark=true">
+                    添加备注
+                </li>
+                <li class="sub-title-name">{{feeName}}</li>
+            </ul>
+        </div>
+
+        <van-cell-group inset v-show="selectHouse==='1'">
+            <van-search
+                v-model="cellAddr"
+                show-action
+                placeholder="房屋信息。如1号101，输入1-101即可"
+                @search="onSearch"
+                @cancel="onCancel"
+                @input="onInput"
+                @focus="onFocus"
+                @blur="onBlur"
+            />
+        </van-cell-group>
+        <div class="search-values" v-for="house in houseInfo" :key=house.id @click="chooseCell(house)">{{house.name}}</div>
+        <div style="clear:both; height: 0.5em;" v-show="selectHouse==='1'"></div>
+        
+        <van-cell-group inset v-show="houseInfo.length === 0">
+            <van-field @touchstart.native.stop="showKeyBoard = true" >
+                <template #label>
+                    <div class="payamt-label">支付金额</div>
+                </template>
+                <template #input>
+                    <input type=text class="input-box" :value="money" placeholder="￥" readonly clickable>
+                </template>
+            </van-field>
+        </van-cell-group>
+
+        <div style="clear:both; height: 0.5em;"></div>
+
+        <!-- <van-dialog v-model="showRemark" title="备注" show-cancel-button confirmButtonText="保存">
+            <van-field v-model="remark" label-width="2.5em" label="备注" clickable placeholder="选填" left-icon="records"
+                @input="onRemarkInput" maxlength="40"
+                type="textarea" autosize
+                rows="5">
+            />
+        </van-dialog> -->
+        
+        <van-cell-group inset v-show="showRemark">
+            <van-field v-model="remark" label-width="2.5em" label="备注" clickable placeholder="选填" left-icon="records"
+                @focus="onRemarkFocus" @blur="onRemarkBlur" @input="onRemarkInput" maxlength="18"
+            />
+        </van-cell-group>
+        <div class="tech-support" v-show="showKeyBoard && houseInfo.length === 0">由合协管家提供技术支持</div>
+        
+        <van-number-keyboard :show="showKeyBoard" theme="custom" extra-key="." 
+            safe-area-inset-bottom
+            close-button-text="确认支付" 
+            @blur="showKeyBoard = true"
+            @close="confirmPay"
+            @input="onAmtInput" @delete="onDelete"
+            v-show="houseInfo.length === 0"
+        />
+        
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6/dist/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vant@2.12/lib/vant.min.js"></script>
+    <script src="https://unpkg.com/axios@0.21.4/dist/axios.min.js"></script>
+    <!-- 引入样式文件 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@2.12/lib/index.css" />
+    <script>
+
+        var baseUrl = /127|test/.test(location.origin)?'https://test.e-shequ.cn/weixin/':
+            /uat/.test(location.origin)?'https://uat.e-shequ.cn/hexie/weixin/' : 'https://www.e-shequ.cn/weixin/'
+
+        var serverUrl = /127|test/.test(location.origin)?'https://test.e-shequ.cn/wechat/hexie/wechat':
+            /uat/.test(location.origin)?'https://uat.e-shequ.cn/wechat/hexie/wechat' : 'https://www.e-shequ.cn/wechat/hexie/wechat/'
+
+        let beginTime = new Date()
+
+        function getParam(url, name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+            var r = url.match(reg);  //匹配目标参数
+            if (r != null) {
+                return unescape(r[2]);
+            } else {
+                return null;
+            }
+        }
+        function gerAuthcode() {
+            var e = location.search,
+                o = {};
+
+            if ("" === e || void 0 === e) return o;
+            e = e.substr(1).split("&");
+            for (let n in e) {
+                let t = e[n].split("=");
+                o[t[0]] = t[1]
+            }
+            return o.from && delete o.auth_code,o
+        }
+        function gercode() {
+            var e = location.search,
+                o = {};
+
+            if ("" === e || void 0 === e) return o;
+            e = e.substr(1).split("&");
+            for (let n in e) {
+                let t = e[n].split("=");
+                o[t[0]] = t[1]
+            }
+            return o.from && delete o.code,o
+        }
+
+        // var regex = /^[0-9]\d*\.\d{0,2}$/
+        var regex = /^(([1-9][0-9]*)|(([0]\.\d{1,2}|[1-9][0-9]*\.\d{1,2})))$/
+        function checkPayAmt(amt){
+            if(regex.test(amt)) {
+                return true
+            }
+            return false
+        }
+
+        const axiosInstance = axios.create({
+            baseURL: serverUrl,
+            timeout: 10000,
+        })
+
+        var app = new Vue({
+            el: '#app',
+            created() {
+                this.locationSearch = window.location.search
+                this.wechatAppid = /127|test/.test(location.origin)?'wx95f46f41ca5e570e':/uat/.test(location.origin)?'wx9ffe0a2b5a64a285' : 'wxbd214f5765f346c1'
+                this.alipayAppid = /127|test/.test(location.origin)?'2021001163621308':/uat/.test(location.origin)?'2021001163651280' : '2021001161682727'
+                this.getUrlParam()
+            },
+            mounted() {
+                this.checkEnv()
+                let endTime = new Date()
+                let diff = endTime - beginTime
+                console.log('页面初始化用时：' + diff + "毫秒")
+            },
+            data: {
+                showOverlay: true,
+                env: '',
+                wechatAppid: '',
+                alipayAppid: '',
+                userid: '',
+                openid: '',
+                money: '',
+                showKeyBoard: true,
+                cellAddr: '',
+                cellId: '',
+                houseInfo: [],
+                showRemark: false,
+                sectId: '',     
+                sectName: '',
+                feeId: '',
+                feeName: '',
+                appid: '',
+                qrCodeId: '',       //付款二维码ID
+                selectHouse: '0',    //是否选择房屋
+                payeeOpenid: '',    //付款人openid
+                orderId: '',        //工单支付的工单ID
+                orderDetail: '',    //工单支付明细
+                feeAmt: '',         //工单支付金额
+                remark: '',         //备注
+            },
+            methods: {
+                remainder(){
+                    this.$refs.flightsList.$el.style.height = (window.innerHeight - this.specialLineTimeHeight) + 'px';
+                },
+                checkEnv(){
+                    let env = this.getEnv()
+                    if("Alipay" === env) { //支付宝
+                        this.alipayAuthorize()
+                    } else if("WeiXin" === env) { //微信
+                        this.wechatAuth()
+                    } else {
+                        vant.Dialog({
+                            message: '请用微信或支付宝扫码支付',
+                        })
+                        this.showLoading = false
+                        return false
+                    }
+                    this.env = env;
+                },
+                getEnv() {
+                    var ua = window.navigator.userAgent.toLowerCase()
+                    //判断是不是微信
+                    if (ua.match(/MicroMessenger/i) == 'micromessenger') {
+                        return "WeiXin"
+                    }
+                    //判断是不是支付宝
+                    if (ua.match("alipayclient") == 'alipayclient') {
+                        return "Alipay"
+                    }
+                    //哪个都不是
+                    return "";
+                },
+                getUrlParam() {
+                    let theRequest = {}
+                    let paramUrl = this.locationSearch.substr(1)
+                    let param = getParam(paramUrl, "param")
+                    if(!param){
+                        console.error('url param is empty !')
+                        return false
+                    }
+                    param = strAnsi2Unicode(decode64(param))
+                    let params = param.split("&");
+                    for(var i = 0; i < params.length; i ++) {
+                        theRequest[params[i].split("=")[0]]=unescape(params[i].split("=")[1]);
+                    }
+                    this.sectId = theRequest.sect_id
+                    this.sectName = theRequest.sect_name
+                    this.feeId = theRequest.fee_id
+                    this.feeName = theRequest.fee_name
+                    this.qrCodeId = theRequest.qrcode_id
+                    this.appid = theRequest.appid
+                    this.selectHouse = theRequest.is_check_addr
+                    this.payeeOpenid = theRequest.payee_openid
+                    this.orderId = theRequest.order_id
+                    this.orderDetail = theRequest.order_detail
+                    this.feeAmt = theRequest.fee_amt
+                    if(this.feeAmt) {
+                        this.money = this.feeAmt
+                    }
+                },
+                wechatAuth() {
+                    let o = gercode().code
+                    let openid = this.openid
+                    if(!openid) { //说明没拿过openid
+                        let url = serverUrl + "/authorize/" + o + "/"+ this.wechatAppid
+                        let flag = false
+                        axios.post(url).then((response)=>{
+                            if(response.data.success) {
+                                this.openid = response.data.result.openid
+                            } else {
+                                let message = response.data.message
+                                if(response.data.message.indexOf('40163')>-1) {
+                                    message = '请重新扫描或识别二维码！'
+                                    flag = true
+                                }
+                                vant.Dialog({
+                                    message: message
+                                })
+                            }
+                            if(!flag) {
+                                this.showOverlay = false
+                            }
+                            
+                        }).catch((error)=>{ // 请求失败处理
+                            vant.Dialog({
+                                message: '请重新扫描或识别二维码！'
+                            })
+                            this.showOverlay = false
+                            return false
+                        })
+                    }
+                },
+                alipayAuthorize() {
+                    let o = gerAuthcode().auth_code
+                    let userid = this.userid
+                    if(!userid) { //说明没拿过user_id
+                        let url = serverUrl + "/authorizeAlipay/" + o
+                        axios.post(url).then((response)=>{
+                            if(response.data.success) {
+                                this.userid = response.data.result.userid
+                            } else {
+                                vant.Dialog({
+                                    message: response.data.message
+                                }).then(()=>{})
+                            }
+                            this.showOverlay = false
+                        }).catch((error)=>{ // 请求失败处理
+                            vant.Dialog({
+                                message: '请重新扫描或识别二维码！'
+                            }).then(()=>{})
+                            this.showOverlay = false
+                            return false
+                        })
+                    }
+                },
+                queryCell(){
+                    let queryUrl = '/getLikeCellAddr2'
+                    let params = new URLSearchParams()
+                    params.append('sectId', this.sectId)
+                    params.append('cellAddr', this.cellAddr)
+                    params.append('appId', this.appid)
+
+                    axiosInstance({
+                        url: queryUrl,
+                        method: 'get',
+                        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                        params: params,
+                    }).then((response)=>{
+                        if(response.data.success) {
+                            this.houseInfo = response.data.result.house_info
+                        } else {
+                            vant.Dialog({
+                                message: response.data.message
+                            })
+                            return false
+                        }
+                    }).catch((error)=>{ // 请求失败处理
+                        vant.Dialog({
+                            message: '服务器异常，请稍后再试！'
+                        })
+                        return false
+                    })
+                },
+                chooseCell(cell) {
+                    this.cellAddr = cell.name
+                    this.cellId = cell.id
+                    this.houseInfo = []
+                    this.showKeyBoard = true
+                },
+                onAmtInput(event) {
+                    if(event=='0' && this.money.length === 1) {
+                        if(this.money.startsWith('0')){
+                            return false
+                        }
+                    }
+                    if(!this.money){
+                        if(event == '.'){
+                            this.money = '0'
+                        }
+                    } else {
+                        let pointIndex = this.money.indexOf('.')
+                        if(pointIndex > -1) {
+                            if(event == '.') {
+                                return false
+                            }
+                            let decimalStr = this.money.substr(pointIndex+1)
+                            if(decimalStr.length === 2) {
+                                return false
+                            }
+                        } else {
+                            if(this.money.length === 5 && event != '.') {
+                                return false
+                            }
+                            if(this.money.startsWith('0') && event != '.') {
+                                return false
+                            }
+                        }
+
+                    }
+                    this.money += event
+
+                },
+                onDelete() {
+                    let money = this.money
+                    if(money){
+                        money = money.substr(0, money.length-1)
+                    }
+                    this.money = money
+                    
+                },
+                confirmPay() {
+                    let isValid = checkPayAmt(this.money)
+                    if(!isValid) {
+                        vant.Dialog({
+                            message: '请输入正确的支付金额！'
+                        }).then(()=>{})
+                        return false
+                    }
+                    if(parseFloat(this.money) == 0.00) {
+                        vant.Dialog({
+                            message: '请输入正确的支付金额！'
+                        })
+                        return false
+                    }
+                    if(this.selectHouse === '1') {
+                        if(!this.cellId || this.cellId == 0) {
+                            vant.Dialog({
+                                message: '请选择房屋地址!'
+                            })
+                            return false
+                        }
+                    }
+                    if ('WeiXin' === this.env) {
+                        if(parseFloat(this.money) > 10000) {
+                            vant.Dialog({
+                                message: '超出微信二维码支付单笔限额，请拆成多笔支付（单笔10000元及以下），或使用支付宝扫码'
+                            })
+                            return false
+                        }
+                    }
+
+                    let openid = ''
+                    let appid = ''
+                    if('Alipay' === this.env) {
+                        openid = this.userid
+                        appid = this.alipayAppid
+                    } else if ('WeiXin' === this.env) {
+                        openid = this.openid
+                        appid = this.appid
+                    }
+
+                    let formData = {
+                        money: this.money,
+                        remark: this.remark,
+                        sect_id : this.sectId,
+                        fee_id: this.feeId,
+                        qrcode_id: this.qrCodeId,
+                        mng_cell_id: this.cellId,
+                        openid: openid,
+                        appid: appid,
+                        real_appid: this.appid,
+                        payee_openid: this.payeeOpenid,
+                        order_id: this.orderId,
+                        order_detail: this.orderDetail,
+                    }
+                    let dataStr = JSON.stringify(formData)
+                    let payUrl = '/requestOtherPay'
+
+                    this.showOverlay = true
+                    axiosInstance({
+                        url: payUrl,
+                        method: 'post',
+                        headers: {'Content-Type': 'application/json;charset=UTF-8'},
+                        data: dataStr,
+                    }).then((response)=>{
+                        let that = this
+                        if(response.data.success) {
+                            let result = response.data.result
+                            if('Alipay' === this.env) {
+                                let tranNo = result.packageId;
+                                ap.tradePay({
+                                    tradeNO: tranNo
+                                },function(res){
+                                    if(res.resultCode === "9000") {
+                                        ap.call("closeWebview")
+                                    } else {
+                                        that.showOverlay = false
+                                    }
+                                })
+                            } else if ('WeiXin' === this.env) {
+                                wx.config({
+                                    appId: result.appid, // 必填，公众号的唯一标识
+                                    timestamp: result.timestamp, // 必填，生成签名的时间戳
+                                    nonceStr: result.noncestr, // 必填，生成签名的随机串
+                                    signature: result.paysign,// 必填，签名，见附录1
+                                    jsApiList: ['chooseWXPay'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+                                });
+                                wx.chooseWXPay({
+                                    "timestamp":result.timestamp,
+                                    "nonceStr":result.noncestr,
+                                    "package":result.package,
+                                    "signType":result.signtype,
+                                    "paySign":result.paysign,
+                                    "appId":result.appid,
+                                    success: function (res) {
+                                        wx.closeWindow();
+                                    },
+                                    cancel: function(res) {
+                                        that.showOverlay = false
+                                    },
+                                    fail: function(res) {
+                                        let errmsg = res
+                                        if(!errmsg) {
+                                            errmsg = '支付失败!'
+                                        }
+                                        vant.Dialog({
+                                            message: errmsg
+                                        })
+                                        return false
+                                    }
+                                })
+                            }
+                        } else {
+                            vant.Dialog({
+                                message: response.data.message
+                            })
+                        }
+                    }).catch((error)=>{ // 请求失败处理
+                        vant.Dialog({
+                            message: '服务器异常，请稍后再试！'
+                        })
+                    })
+
+                },
+                onSearch() {
+                    this.queryCell()
+                },
+                onCancel() {
+
+                },
+                onInput(event) {
+                    if(!event){
+                        return false
+                    }
+                    this.cellAddr = event
+                    this.queryCell()
+                },
+                onFocus(event) {
+                    this.showKeyBoard = false
+                },
+                onBlur() {
+                    if(this.houseInfo.length===0){
+                        this.showKeyBoard = true
+                    }
+                },
+                onRemarkInput(event){
+                    if(!event){
+                        return false
+                    }
+                    this.remark = event
+                },
+                onRemarkFocus(event) {
+                    this.showKeyBoard = false
+                },
+                onRemarkBlur() {
+                    if(this.houseInfo.length===0){
+                        this.showKeyBoard = true
+                    }
+                },
+
+            }
+        })
+    </script>
+    <style>
+        .app {
+            width: 100%;
+            min-height: 100vh;
+            margin: 0 0;
+            padding: 0 0;
+            background: #F5F5F5;
+        }
+        .title {
+            padding: 1.2em 0;
+            margin: 0 1.2em 0em 1.2em;
+            font-size: 1.4em;
+            font-weight: 520;
+            overflow: hidden;
+            /* height: 2em; */
+        }
+        .title-name {
+            width: 70%;
+            float: left;
+        }
+        .add-remark {
+            margin-top: 0.3em;
+            font-size: 0.7em;
+            width: 29%;
+            text-align: right;
+            float: left;
+            color: #d2bf85;
+        }
+        .sub-title-name {
+            font-size: 0.65em;
+            color: #C0C0C0;
+            width: 100%;
+            float: left;
+            margin: 0.5em 0.2em 1.5em 0.8em;
+        }
+        .payamt-label {
+            height: 2.5em;
+            margin-top: 1.6em;
+            font-size: 1.4em;
+            color: DarkGray;
+        }
+        .input-box {
+            margin-top: 0.9em;
+            font-size:1.8em; 
+            width: 8em; 
+            border:none; 
+            text-align: right;
+        }
+        .tech-support {
+            position:fixed;
+            text-align: center;
+            width: 100%;
+            font-size: 0.85em;
+            color: DarkGray;
+            display: block;
+            bottom: 18.25em;
+        }
+        .hint{
+            color: #ff1a1a;
+            font-size: 1em;
+            margin-top: 0.2em;
+            margin-left: 0.5em;
+        }
+        .search-values {
+            margin-left: 1em;
+            padding: 0.75em;
+            border-bottom: 1px solid #ccc;
+            width: 85%;
+            font-size: 1em;
+            background-color: #FFFFFF;
+        }
+        
+    </style>
+</body>
+</html>
