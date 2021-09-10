@@ -17,9 +17,6 @@
         <van-cell title="车牌号" :value="obj.car_no"/>
         <van-cell title="入场时间" :value="obj.in_time"/>
         <van-cell title="停车时长" :value="newDate">
-          <!--        <template #default>-->
-          <!--          <van-count-down :time="obj.park_time" />-->
-          <!--        </template>-->
         </van-cell>
 
       </van-cell-group>
@@ -33,7 +30,9 @@
     </div>
 
     <div class="data-bottom">
-      <van-notice-bar :scrollable="false" :text="obj.out_park_prompt"/>
+      <div style="background-color: #fffbe8;height: 0.5rem;line-height: 0.5rem;width: 100%;text-align: center">
+        <span style="color: #ed6a0c">{{obj.out_park_prompt}}</span>
+      </div>
       <div class="data-bottom-desc" v-show="showPay">
         <div class="data-bottom-amt">
           应收金额：<span>{{ obj.fee_amt }}</span> 元
@@ -52,7 +51,7 @@
 </template>
 
 <script>
-  import {Cell, CellGroup, NoticeBar, Button, Icon, Overlay, Loading, CountDown} from 'vant';
+  import {Cell, CellGroup, Button, Icon, Overlay, Loading, CountDown} from 'vant';
   import ParkApi from "@/api/Park.js"
   import wx from 'weixin-js-sdk';
 
@@ -68,7 +67,7 @@
         parkImg: require('../../assets/img/p.png'),
         obj: {},
         newDate: '',
-        goNum:0,
+        goNum: 0,
         showPay: true
       }
     },
@@ -79,7 +78,6 @@
     components: {
       [Cell.name]: Cell,
       [CellGroup.name]: CellGroup,
-      [NoticeBar.name]: NoticeBar,
       [Button.name]: Button,
       [Icon.name]: Icon,
       [Overlay.name]: Overlay,
@@ -96,9 +94,13 @@
         time++
         this.newDate = this.formatOutput()
         this.goNum++
-        if(this.goNum > 30) {
-          this.showPay = false
+
+        if (this.obj.refresh_time > 0) {
+          if (this.goNum > parseInt(this.obj.refresh_time)) {
+            this.showPay = false
+          }
         }
+
         // 递归
         setTimeout(this.reTime.bind(this), 1000)
       },
@@ -137,7 +139,7 @@
       },
 
       toReplay() {
-        location. reload()
+        location.reload()
       },
 
       toPay() {
@@ -301,5 +303,16 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+  }
+
+  .van-notice-bar__content .van-ellipsis{
+    text-align: center !important;
+    width: 100% !important;
+  }
+
+
+  .van-ellipsis {
+    text-align: center !important;
+    width: 100% !important;
   }
 </style>

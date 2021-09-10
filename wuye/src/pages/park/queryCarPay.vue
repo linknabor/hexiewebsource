@@ -17,7 +17,7 @@
     >
       <div v-for="(item, index) in payList" :key="index">
         <div class="data-detail">
-          <van-cell :title="item.park_name.concat('-').concat(item.car_no)" :value="item.amt" value-class="css-value"/>
+          <van-cell :title="item.park_name.concat('-').concat(item.car_no)" :value="item.pay_amt.concat('元')" value-class="css-value"/>
           <div class="data-detail-content">
             <div class="data-invoice" v-if="item.is_invoice === '1'">
               已开票
