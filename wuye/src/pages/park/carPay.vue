@@ -304,15 +304,4 @@
     left: 50%;
     transform: translate(-50%, -50%);
   }
-
-  .van-notice-bar__content .van-ellipsis{
-    text-align: center !important;
-    width: 100% !important;
-  }
-
-
-  .van-ellipsis {
-    text-align: center !important;
-    width: 100% !important;
-  }
 </style>

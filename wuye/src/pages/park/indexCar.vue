@@ -150,7 +150,9 @@
       plateNumber
     },
     created() {
-
+      setTimeout(() => {
+        this.loading = false
+      }, 1000) //延迟时间 这里是1秒
     },
     mounted() {
       this.show_overlay = true
@@ -361,5 +363,12 @@
     text-align: center;
     float: left;
     margin-bottom: 0.3rem;
+  }
+
+  .van-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 </style>
