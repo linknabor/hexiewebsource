@@ -18,6 +18,9 @@ const workOrderApi = {
     },
     reverseOrder(param, data) {
         return Http.get(baseUrl + '/workorder/reverse/' + param, data)
+    },
+    getService(){
+        return Http.get(baseUrl + '/workorder/service', null)
     }
 
 }
