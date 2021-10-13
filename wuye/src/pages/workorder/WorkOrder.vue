@@ -85,13 +85,23 @@
         </div>
       </div>
     </div>
+    <van-popup v-model="showHotline" :style="{width: '90%', height: '60%', fontSize: '0.4rem'}" round :close-on-click-overlay="false">
+        <van-image
+          :src="require('../../assets/images/repair/outofservice.jpeg')"
+          fit="cover"
+        />
+        <div class="hotline">
+          当前非物业正常工作时间，请拨打值班报修热线：
+          <a href="tel:+'hotline'" class="a_hotline">{{hotline}}</a>
+        </div>
+    </van-popup>
     </van-skeleton>
   </div>
 </template>
 
 <script>
 let vm
-import { Dialog, Toast, RadioGroup, Radio, Uploader, Overlay, Loading, Skeleton } from 'vant'
+import { Dialog, Toast, RadioGroup, Radio, Uploader, Overlay, Loading, Skeleton, Popup, Image as VanImage } from 'vant'
 import WorkOrderApi from '@/api/WorkOrderApi.js'
 import Storage from '@/util/storage.js'
 export default {
@@ -129,7 +139,6 @@ export default {
       distinct: "",
       selectRegion: 'false',
       currentRegionType: 1,
-      //小区
       suggestLocation: "",
       suggestion: {},
       suggestions: [],
@@ -140,6 +149,11 @@ export default {
       fileList: [],
       showOverlay: false,
       skeletonLoading: true,
+      acceptType: '', //工单接单类型
+      hotline: '',  //报修电话
+      startTime: '',
+      endTime: '',
+      showHotline: false,
     };
   },
   watch: {
@@ -173,18 +187,27 @@ export default {
     [Overlay.name]: Overlay,
     [Loading.name]: Loading,
     [Skeleton.name]: Skeleton,
+    [Popup.name]: Popup,
+    [VanImage.name]: VanImage,
   },
   methods: {
     getUserInfo() {
       this.userInfo = Storage.get('userInfo')
     },
     initInfo() {
-        WorkOrderApi.getDefaultAddress().then((response)=>{
+        WorkOrderApi.getService().then((response)=>{
           if(response.data.success){
             if(response.data.result){
-              this.addresses = response.data.result
+              this.acceptType = response.data.result.accept_type
+              this.hotline = response.data.result.repair_hotline
+              this.startTime = response.data.result.start_time
+              this.endTime = response.data.result.end_time
+              this.addresses = response.data.result.hou_info
               if(this.addresses && this.addresses.length>0) {
                 this.address = this.addresses[0]
+              }
+              if(this.acceptType === '4'){
+                this.showHotline = true
               }
             }
           }
@@ -327,7 +350,7 @@ export default {
                     vm.selectRegion="false";
                }
            }
-       },
+    },
     submit() {
       if(this.distType==='1' && !this.address.mng_cell_id){
         Dialog({ message: '请选择服务地址' })
@@ -345,6 +368,7 @@ export default {
       let serveAddr = this.address.cell_addr
       let addressName = this.distType==='0'?this.pubAddress:serveAddr
       let formData = new FormData()
+      formData.append("acceptType", this.acceptType)
       formData.append('distType', this.distType)
       formData.append('address', addressName)
       formData.append('addressId', this.address.id)
@@ -372,7 +396,7 @@ export default {
         Dialog({message: '报修失败,请重试'})
       })
 
-    }   
+    }
   },
   computed: {}
 };
@@ -516,7 +540,14 @@ display: inline-block;}
 }
 .header {
   height: 4vh;
-  widows: 100%;
+  width: 100%;
   background-color: #fff;
+}
+.hotline {
+  margin: 0 5%;
+  font-size: 0.4rem;
+}
+.a_hotline {
+  color: #4994df;
 }
 </style>

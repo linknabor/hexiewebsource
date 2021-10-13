@@ -7,7 +7,7 @@
     <van-skeleton title :row="3" :loading="skeletonLoading">
     <!-- <van-nav-bar title="工单明细" left-text="返回" left-arrow @click-left="onClickNav"/> -->
       <van-empty v-show="empty" description="没有查询到工单哦"/>
-      <van-cell-group v-show="!empty" border="false">
+      <van-cell-group v-show="!empty" :border="false">
         <van-cell title="基本信息" class="title-text" />
         <van-cell :value="orderDetail.order_id" value-class="order-text">
           <template slot="title"
