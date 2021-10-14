@@ -548,7 +548,7 @@ display: inline-block;}
   background-color: #fff;
 }
 .hotline {
-  margin: 0 5%;
+  margin: 8% 0 0 5%;
   font-size: 0.4rem;
 }
 .a_hotline {
