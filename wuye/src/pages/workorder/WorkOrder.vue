@@ -85,7 +85,7 @@
         </div>
       </div>
     </div>
-    <van-popup v-model="showHotline" :style="{width: '90%', height: '60%', fontSize: '0.4rem'}" round :close-on-click-overlay="false">
+    <van-popup v-model="showHotline" :style="{width: '90%', height: '72%', fontSize: '0.4rem'}" round :close-on-click-overlay="false">
         <van-image
           :src="require('../../assets/images/repair/outofservice.jpeg')"
           fit="cover"
@@ -195,6 +195,7 @@ export default {
       this.userInfo = Storage.get('userInfo')
     },
     initInfo() {
+        this.showOverlay = true
         WorkOrderApi.getService().then((response)=>{
           if(response.data.success){
             if(response.data.result){
@@ -209,7 +210,10 @@ export default {
               if(this.acceptType === '4'){
                 this.showHotline = true
               }
+              this.showOverlay = false
             }
+          } else {
+              Toast(response.data.message)
           }
         }).catch((error)=>{
           Toast(error)
