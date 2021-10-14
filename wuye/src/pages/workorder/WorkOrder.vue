@@ -85,7 +85,7 @@
         </div>
       </div>
     </div>
-    <van-popup v-model="showHotline" :style="{width: '90%', height: '70%', fontSize: '0.4rem'}" round :close-on-click-overlay="false">
+    <van-popup v-model="showHotline" :style="{width: '90%', height: '72%', fontSize: '0.4rem'}" round :close-on-click-overlay="false">
         <van-image
           :src="require('../../assets/images/repair/outofservice.jpeg')"
           fit="cover"
@@ -548,7 +548,7 @@ display: inline-block;}
   background-color: #fff;
 }
 .hotline {
-  margin: 8% 0 0 5%;
+  margin: 4% 0 0 5%;
   font-size: 0.4rem;
 }
 .a_hotline {
