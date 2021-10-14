@@ -51,11 +51,11 @@
           </textarea>
         </div>
         <div style="margin-top:15px;width:100%;height:30px;font-size: 14px;color: #666">
-          <div style="float: left;padding-left: 5px;">上传照片(单张图片大小不超过5M)</div>
+          <div style="float: left;padding-left: 5px;">上传照片(单张图片大小不超过10M)</div>
           <div style="float: right;padding-right: 15px;color: #999">{{fileList.length}}/3</div>
         </div>
         <div>
-          <van-uploader v-model="fileList" multiple :max-count="3" :max-size="5000 * 1024" @oversize="onOversize" accept="image/*"/>
+          <van-uploader v-model="fileList" multiple :max-count="3" :max-size="10000 * 1024" @oversize="onOversize" accept="image/*"/>
         </div>
         <div style="width: 100%;height: 80px;"></div>
         <div class="btn-fixed">
@@ -85,13 +85,13 @@
         </div>
       </div>
     </div>
-    <van-popup v-model="showHotline" :style="{width: '90%', height: '72%', fontSize: '0.4rem'}" round :close-on-click-overlay="false">
+    <van-popup v-model="showHotline" :style="{width: '90%', height: '70%', fontSize: '0.4rem'}" round :close-on-click-overlay="false">
         <van-image
           :src="require('../../assets/images/repair/outofservice.jpeg')"
           fit="cover"
         />
         <div class="hotline">
-          当前非物业正常工作时间，请拨打值班报修热线：
+          请拨打报修值班电话：
           <a href="tel:+'hotline'" class="a_hotline">{{hotline}}</a>
         </div>
     </van-popup>
