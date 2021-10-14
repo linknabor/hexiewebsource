@@ -91,7 +91,7 @@
           fit="cover"
         />
         <div class="hotline">
-          当前非物业正常工作时间，请拨打值班报修热线：
+          请拨打报修值班电话：
           <a href="tel:+'hotline'" class="a_hotline">{{hotline}}</a>
         </div>
     </van-popup>
