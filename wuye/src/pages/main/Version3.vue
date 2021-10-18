@@ -38,7 +38,7 @@
                         <span class="head-sect">{{notice.creator}}</span>
                     </div>
                     <div class="moment-content" @click="notice.noticeType!==11&&noticeDetail(notice.url)">
-                        <div class="content-text">{{notice.title}}</div>
+                        <div class="content-text" v-for="(msg, key) in notice.showMsg" :key="key">{{msg}}</div>
                         <div class="content-image" 
                                 v-for="(image, key) in notice.thumbnailImgList" :key="key">
                                     <div :class="[{'content-image-view': notice.thumbnailImgList.length===1},
