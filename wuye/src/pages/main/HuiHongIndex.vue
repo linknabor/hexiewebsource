@@ -269,7 +269,7 @@ export default ({
     }
 }
 .cspname{
-    margin-left: 0.3rem;
+    // margin-left: 0.3rem;
     margin-top:  0.2rem;
     float: left;
     text-align: center;
