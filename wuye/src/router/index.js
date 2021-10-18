@@ -19,6 +19,11 @@ const router= new VueRouter({
           component: resolve=>require(['@/pages/main/Version3'],resolve)
         },
         {
+          path: '/huihongIndex',
+          name: 'huihong',
+          component: resolve=>require(['@/pages/main/HuihongIndex'],resolve)
+        },
+        {
             path:'/message',
             name:'message',
             component:resolve=> require(['@/pages/main/message'],resolve)
@@ -258,23 +263,27 @@ router.beforeEach((to, from, next) => {
   if(viewArray.indexOf(pageName)===-1){
     if(!common.checkRegisterStatus()){
       return
-  	}
+    }
   }
   let version = ''
   if('index'===pageName){
     let config = Vue.prototype.is_config
     let getUrlParam = Vue.prototype.getUrlParam
     let appid = getUrlParam('oriApp')
-    let kyappid = config.C('kyappid')  //昆亿乐居
-    let dcappid = config.C('dcappid')  //东辰物业
+    let kyappid = config.C('kyappid')   //昆亿乐居
+    let dcappid = config.C('dcappid')   //东辰物业
     let nbappid = config.C('nbappid')   //测试用
-    let ccappid = config.C('ccappid')
+    let ccappid = config.C('ccappid')   //春川
+    let hhappid = config.C('hhappid')   //汇宏
     console.log('router, oriApp : ' + appid)
     if(appid!==kyappid && appid!==dcappid && appid!==nbappid){
       version = 'version2'
     }
     if(appid===ccappid) {
       version = 'version3'
+    }
+    if(appid===hhappid){
+      version = 'huihong'
     }
   }
   //动态改变title
