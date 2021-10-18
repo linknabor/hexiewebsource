@@ -19,7 +19,7 @@ const router= new VueRouter({
           component: resolve=>require(['@/pages/main/Version3'],resolve)
         },
         {
-          path: '/huihongIndex',
+          path: '/huihong',
           name: 'huihong',
           component: resolve=>require(['@/pages/main/HuihongIndex'],resolve)
         },
