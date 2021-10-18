@@ -37,7 +37,7 @@
             <van-list v-model="pageLoading" :finished="pageLoadingFinished" @load="getNotice" error-text="请求失败，点击重新加载" :error.sync="pageLoadError" >
                 <div class="moments" v-for="(notice, index) in noticeList" :key="index">
                     <div class="moment-title">
-                        <div :class="[{'sys-notice-image': notice.noticeType===9||notice.noticeType===10},
+                        <div :class="[{'wuye-notice-image': notice.noticeType===9||notice.noticeType===10},
                             {'wuye-notice-image': notice.noticeType===0||notice.noticeType===1
                             || notice.noticeType===2||notice.noticeType===3},
                             {'moment-notice-image': notice.noticeType===11},
