@@ -19,7 +19,7 @@ const router= new VueRouter({
           component: resolve=>require(['@/pages/main/Version3'],resolve)
         },
         {
-          path: '/huihongIndex',
+          path: '/huihong',
           name: 'huihong',
           component: resolve=>require(['@/pages/main/HuihongIndex'],resolve)
         },
@@ -312,7 +312,7 @@ const router= new VueRouter({
     ]
 });
 
-const viewArray = ['index', 'register', 'sms_notification', 'version2', 'version3','indexCar', 'queryCarPay', 'addCar', 'queryCarList','carPay','carPaySuccess','carPayDetail']
+const viewArray = ['index', 'register', 'sms_notification', 'version2', 'version3', 'huihong','indexCar', 'queryCarPay', 'addCar', 'queryCarList','carPay','carPaySuccess','carPayDetail']
 //路由的钩子函数，
 //在每一次路由跳转之前会进入这个方法 to：到哪去  from：从哪来 next() 调用这个方法来完成这个钩子函数
 router.beforeEach((to, from, next) => {
