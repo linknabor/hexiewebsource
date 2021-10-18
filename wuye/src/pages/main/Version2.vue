@@ -98,7 +98,7 @@ export default ({
         menuList: {
             handler(val){
                 if(val.length > 0){
-                    this.getNotice()
+                    // this.getNotice()
                 }
             },
             deep: true
