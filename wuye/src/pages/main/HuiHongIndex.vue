@@ -272,7 +272,7 @@ export default ({
     margin-left: 0.3rem;
     margin-top:  0.2rem;
     float: left;
-    text-align: left;
+    text-align: center;
     font-size: 0.36rem;
     color: #FFFFFF;
     width: 100%;
