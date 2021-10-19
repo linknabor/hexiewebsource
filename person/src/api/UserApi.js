@@ -18,6 +18,9 @@ const api = {
     getUrlJsSign(data) {
         return http.post(baseUrl + '/getUrlJsSign', data)
     },
+    activateMemberCard(param) {  //激活会员卡
+        return http.get(baseUrl + '/card/activateUrlOnMenu' + '?oriApp=' +param, null)
+    },
 }
 
 export default api;

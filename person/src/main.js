@@ -25,12 +25,14 @@ import './assets/download/font_954185_gwiryn5z3ch/iconfont.css';
 // import {common,MasterConfig,getUrlParam,dealWithAjaxData} from './api/common';
 
 Vue.prototype.common=common;
+Vue.prototype.masterConfig = MasterConfig;
 Vue.prototype.getUrlParam=getUrlParam;
 Vue.prototype.baseUrl=MasterConfig.C('baseUrl');
 Vue.prototype.basePageUrl=MasterConfig.C('basePageUrl');
 Vue.prototype.basePageUrlpay=MasterConfig.C('basePageUrlpay');
 Vue.prototype.dealWithAjaxData=dealWithAjaxData;
 
+Vue.prototype.testMode = true
 //import Vconsole from 'vconsole';
 //Vue.prototype.$vConsole = new Vconsole();
 
@@ -95,21 +97,3 @@ new Vue({
   template: '<App/>'
 })
 
-// let startApp = function () {
-//   axios({
-//       method:'get',
-//       url:'serverconfig.json',
-//       // baseURL:'https://test.e-shequ.com/weixin/person/'
-//   }).then((res) => {
-//     Vue.prototype.ApiUrl=res.data.ApiUrl;
-//     console.log(res,res.data.ApiUrl);
-     //基础地址
-    // Vue.prototype.order_url = res.data.order_url;//全部订单
-    // Vue.prototype.onsaleorders_url = res.data.onsaleorders_url;//商品订单
-    // Vue.prototype.grouporders_url = res.data.grouporders_url;//团购订单
-    // Vue.prototype.homeorders_url = res.data.homeorders_url;//服务订单
-    // Vue.prototype.yezhu_url = res.data.yezhu_url;//业主绑定
-
-//   })
-// }
-// startApp()

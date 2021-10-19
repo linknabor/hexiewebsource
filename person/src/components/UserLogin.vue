@@ -13,7 +13,7 @@
 import Common from "@/util/common.js"
 import Config from "@/util/config.js"
 import Storage from "@/util/storage.js"
-import UserApi from "@/api/LoginApi.js"
+import UserApi from "@/api/UserApi.js"
 import { Toast, Overlay, Loading } from "vant"
 
 export default {

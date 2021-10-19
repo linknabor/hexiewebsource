@@ -11,7 +11,7 @@
   </div>
 </template>
 <script>
-import UserApi from "@/api/LoginApi.js";
+import UserApi from "@/api/UserApi.js";
 import Storage from "@/util/storage.js"
 import UserLogin from "@/components/UserLogin"
 import {Overlay, Loading, Toast} from "vant"
