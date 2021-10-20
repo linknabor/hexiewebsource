@@ -236,7 +236,7 @@ export default ({
     background-color: #fff;
 }
 .white-blank {
-    height: 1rem;
+    height: 2rem;
     width: 100%;
 }
 .infos {
