@@ -319,24 +319,21 @@ let router= new Router({
 
 router.beforeEach((to, from, next)=>{
   
-  var isParent = false
-  if(to.path=="/" &&to.matched[0].parent==undefined){
-    isParent = true
-  }
-  const viewArray = ['index', 'register', 'welfare', 'reset', 'version2']
+  let toPath = to.path
   let pageName = to.matched[0].name
+  const viewArray = ['index', 'register', 'welfare', 'reset', 'version2']
 
-  console.log("router, pageName: " + pageName + ", toPath:" + to.path + ", parent: " + to.matched[0].parent)
+  console.log("router, pageName: " + pageName + ", toPath:" + to.path)
 
   //动态改变title
-  if(!isParent && viewArray.indexOf(pageName)===-1) {
+  if('/'!==toPath && 'version2'!==toPath && viewArray.indexOf(pageName)===-1) {
      if(!common.checkRegisterStatus()) {
        return
      }
   }
 
   let version = ''
-  if(isParent || 'index'===pageName || pageName === undefined){
+  if('/'===toPath || 'version2'===toPath){
     let config = Vue.prototype.masterConfig
     let getUrlParam = Vue.prototype.getUrlParam
     let appid = getUrlParam('oriApp')
