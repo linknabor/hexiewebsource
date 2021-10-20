@@ -16,6 +16,16 @@ let router= new Router({
       ]
     },
     {
+      path: '/version2',
+      component: resolve=> require(['@/pages/index'],resolve),
+      children:[
+        {path:'',component:resolve=>require(['@/pages/index/Version2'],resolve),
+        meta: {
+          title:'个人中心'
+        }}
+      ]
+    },
+    {
       path:'/register',
       name:'register',
       component: resolve=>require(['@/pages/register'],resolve),
@@ -308,23 +318,41 @@ let router= new Router({
 //在每一次路由跳转之前会进入这个方法 to：到哪去  from：从哪来 next() 调用这个方法来完成这个钩子函数
 
 router.beforeEach((to, from, next)=>{
-
+  
   var isParent = false
   if(to.path=="/" &&to.matched[0].parent==undefined){
     isParent = true
   }
-
+  const viewArray = ['index', 'register', 'welfare', 'reset', 'version2']
+  let pageName = to.matched[0].name
   //动态改变title
-  var flag;
-  if(!isParent&&to.matched[0].name != "index"&& to.matched[0].name!='register'&&to.matched[0].name!='welfare'&&to.matched[0].name!='ageess'&&to.matched[0].name!='reset'&&to.matched[0].name!='operAuth') {
-     flag=common.checkRegisterStatus()
-     if(!flag) {
-       return
-     }
+  if(!isParent && viewArray.indexOf(pageName)===-1) {
+    //  if(!common.checkRegisterStatus()) {
+    //    return
+    //  }
   }
 
-  changeTitle(to.meta.title);
-  next();
+  let version = ''
+  if(isParent || 'index'===pageName){
+    let config = Vue.prototype.masterConfig
+    let getUrlParam = Vue.prototype.getUrlParam
+    let appid = getUrlParam('oriApp')
+    let kyappid = config.C('kyappid')   //昆亿乐居
+    let dcappid = config.C('dcappid')   //东辰物业
+    let nbappid = config.C('nbappid')   //测试用
+    console.log('router, oriApp : ' + appid)
+    if(appid!==kyappid && appid!==dcappid && appid!==nbappid){
+      version = 'version2'
+    }
+  }
+  changeTitle(to.meta.title)
+  if(version){
+    next({
+      path: '/'+version //不是以上3个公众号的，劫持后跳到新首页
+    })
+  } else {
+    next()
+  }
 });
 
 //动态改变title

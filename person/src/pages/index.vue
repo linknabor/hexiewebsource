@@ -48,7 +48,7 @@
 
 <template>
 	<div class="index">
-		<router-view class="contetn"></router-view>
+		<router-view class="content"></router-view>
     <footer class="footer">
       <nav>
         <ul>
@@ -78,36 +78,36 @@ import Bus from '../api/bus.js'
       vm=this;
     },
     mounted(){
-      Bus.$on("sends",this.getMsgFromZha);
-      vm.geturl();   
+      Bus.$on("sends",this.initIcons)
+      vm.geturl()
     },
     updated() {
       vm.getclass();
     },
     methods:{
-        getMsgFromZha(info) {
-          vm.list=info;
-       } ,
-       getclass(){
-         for(var i=0;i<vm.$refs.listli.length;i++) {
-            vm.$refs.listli[i].style.width=100/vm.$refs.listli.length+'%'
-         }
-       },  
-      geturl() {
+        initIcons(iconList) {
+          vm.list=iconList;
+        } ,
+        getclass(){
+          for(var i=0;i<vm.$refs.listli.length;i++) {
+              vm.$refs.listli[i].style.width=100/vm.$refs.listli.length+'%'
+          }
+        },  
+        geturl() {
         var geturl=vm.getUrlParam('oriApp');
-        if(geturl) {
-            //  console.log(location.origin+location.pathname+'?oriApp='+geturl);
-             vm.link=location.origin+location.pathname+'?oriApp='+geturl;
-        }else {
-          // console.log(location.origin+location.pathname);
-          vm.link=location.origin+location.pathname;
-        }
-       },  
-  }
+          if(geturl) {
+              //  console.log(location.origin+location.pathname+'?oriApp='+geturl);
+              vm.link=location.origin+location.pathname+'?oriApp='+geturl;
+          }else {
+            // console.log(location.origin+location.pathname);
+            vm.link=location.origin+location.pathname;
+          }
+        },  
+    }
 }
 </script>
 <style scoped>
-.contetn {
+.content {
   padding-bottom:60px;
 }
 </style>
