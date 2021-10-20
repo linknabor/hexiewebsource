@@ -326,7 +326,7 @@ router.beforeEach((to, from, next)=>{
   const viewArray = ['index', 'register', 'welfare', 'reset', 'version2']
   let pageName = to.matched[0].name
 
-  console.log("rtouer, pageName: " + pageName + ", isParent : " + isParent)
+  console.log("router, pageName: " + pageName + ", toPath:" + to.path + ", parent: " + to.matched[0].parent)
 
   //动态改变title
   if(!isParent && viewArray.indexOf(pageName)===-1) {
@@ -336,7 +336,7 @@ router.beforeEach((to, from, next)=>{
   }
 
   let version = ''
-  if(isParent || 'index'===pageName){
+  if(isParent || 'index'===pageName || pageName === undefined){
     let config = Vue.prototype.masterConfig
     let getUrlParam = Vue.prototype.getUrlParam
     let appid = getUrlParam('oriApp')
