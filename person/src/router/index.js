@@ -333,7 +333,7 @@ router.beforeEach((to, from, next)=>{
   }
 
   let version = ''
-  if('/'===toPath || 'version2'===toPath){
+  if('/'===toPath){
     let config = Vue.prototype.masterConfig
     let getUrlParam = Vue.prototype.getUrlParam
     let appid = getUrlParam('oriApp')
