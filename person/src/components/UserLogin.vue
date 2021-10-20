@@ -69,6 +69,8 @@ export default {
       } else {
         console.log("start user login");
         UserApi.login(o, param).then((response) => {
+          console.log('login response:')
+          console.log(response)
           let data = response.data;
           if (!data.success) {
             Common.removeParamFromUrl(["code"]);
