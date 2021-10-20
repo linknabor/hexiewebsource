@@ -32,7 +32,7 @@ Vue.prototype.basePageUrl=MasterConfig.C('basePageUrl');
 Vue.prototype.basePageUrlpay=MasterConfig.C('basePageUrlpay');
 Vue.prototype.dealWithAjaxData=dealWithAjaxData;
 
-Vue.prototype.testMode = true
+Vue.prototype.testMode = false
 //import Vconsole from 'vconsole';
 //Vue.prototype.$vConsole = new Vconsole();
 

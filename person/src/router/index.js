@@ -6,24 +6,20 @@ let router= new Router({
   // mode:'history',
   routes: [
     {
-      path: '/',
-      component: resolve=> require(['@/pages/index'],resolve),
-      children:[
-        {path:'',component:resolve=>require(['@/pages/index/index'],resolve),
-        meta: {
-          title:'个人中心'
-        }}
-      ]
+      path:'/',
+      name:'index',
+      component: resolve=>require(['@/pages/index/index'],resolve),
+      meta: {
+        title:'个人中心'
+      }
     },
     {
-      path: '/version2',
-      component: resolve=> require(['@/pages/index'],resolve),
-      children:[
-        {path:'',component:resolve=>require(['@/pages/index/Version2'],resolve),
-        meta: {
-          title:'个人中心'
-        }}
-      ]
+      path:'/version2',
+      name:'version2',
+      component: resolve=>require(['@/pages/index/Version2'],resolve),
+      meta: {
+        title:'个人中心'
+      }
     },
     {
       path:'/register',
@@ -319,21 +315,36 @@ let router= new Router({
 
 router.beforeEach((to, from, next)=>{
   
-  let toPath = to.path
   let pageName = to.matched[0].name
   const viewArray = ['index', 'register', 'welfare', 'reset', 'version2']
 
-  console.log("router, pageName: " + pageName + ", toPath:" + to.path)
-
   //动态改变title
-  if('/'!==toPath && '/version2'!==toPath && viewArray.indexOf(pageName)===-1) {
+  if(viewArray.indexOf(pageName)===-1) {
      if(!common.checkRegisterStatus()) {
        return
      }
   }
-
+  let version = ''
+  if('index'=== pageName){
+    let config = Vue.prototype.masterConfig
+    let getUrlParam = Vue.prototype.getUrlParam
+    let appid = getUrlParam('oriApp')
+    let kyappid = config.C('kyappid')   //昆亿乐居
+    let dcappid = config.C('dcappid')   //东辰物业
+    let nbappid = config.C('nbappid')   //测试用
+    console.log('router, oriApp : ' + appid)
+    if(appid!==kyappid && appid!==dcappid && appid!==nbappid){
+      version = 'version2'
+    }
+  }
   changeTitle(to.meta.title)
-  next()
+  if(version){
+    next({
+      path: '/'+version //不是以上3个公众号的，劫持后跳到新首页
+    })
+  } else {
+    next()
+  }
 });
 
 //动态改变title
