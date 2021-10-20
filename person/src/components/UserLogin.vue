@@ -67,12 +67,14 @@ export default {
           "&redirect_uri=" + encodeURIComponent(n) + end + "#wechat_redirect";
         location.href = url;
       } else {
-        console.log("start api login");
+        console.log("start user login");
         UserApi.login(o, param).then((response) => {
           let data = response.data;
           if (!data.success) {
             Common.removeParamFromUrl(["code"]);
-            Toast("请刷新重试。");
+            console.log('userLogin error, msg : ' + data.message)
+            Toast("登陆获取用户信息失败。" + data.message + "请刷新重试。")
+            return false
           }
           if (data.success && data.result == null) {
             this.reLogin();
