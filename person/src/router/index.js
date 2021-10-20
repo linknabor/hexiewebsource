@@ -325,11 +325,14 @@ router.beforeEach((to, from, next)=>{
   }
   const viewArray = ['index', 'register', 'welfare', 'reset', 'version2']
   let pageName = to.matched[0].name
+
+  console.log("rtouer, pageName: " + pageName + ", isParent : " + isParent)
+
   //动态改变title
   if(!isParent && viewArray.indexOf(pageName)===-1) {
-    //  if(!common.checkRegisterStatus()) {
-    //    return
-    //  }
+     if(!common.checkRegisterStatus()) {
+       return
+     }
   }
 
   let version = ''
