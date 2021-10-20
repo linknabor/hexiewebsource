@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import api from "@/api/LoginApi.js";
+import api from "@/api/UserApi.js";
 
 export default {
   name: "UserInit",
@@ -21,7 +21,7 @@ export default {
       var data = {
         oriApp: "wx95f46f41ca5e570e",
       };
-      api.login("8441", data)
+      api.login("125417", data)
       //   var data = {
       //     oriApp: 'wx315c7cb4080e5fd8',
       //   }
