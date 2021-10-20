@@ -37,6 +37,8 @@ export default {
       UserApi.getUserInfo()
         .then((response) => {
           let data = response.data;
+          console.log('getUserInfoResp :' + data.success)
+          console.log('getUserInfoResp :' + data.result)
           if (data.success && data.result != null) {
             Storage.set("userInfo", data.result)
             this.$emit("getUserInfo", data.result)
