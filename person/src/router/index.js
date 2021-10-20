@@ -332,27 +332,8 @@ router.beforeEach((to, from, next)=>{
      }
   }
 
-  let version = ''
-  if('/'===toPath){
-    let config = Vue.prototype.masterConfig
-    let getUrlParam = Vue.prototype.getUrlParam
-    let appid = getUrlParam('oriApp')
-    let kyappid = config.C('kyappid')   //昆亿乐居
-    let dcappid = config.C('dcappid')   //东辰物业
-    let nbappid = config.C('nbappid')   //测试用
-    console.log('router, oriApp : ' + appid)
-    if(appid!==kyappid && appid!==dcappid && appid!==nbappid){
-      version = 'version2'
-    }
-  }
   changeTitle(to.meta.title)
-  if(version){
-    next({
-      path: '/'+version //不是以上3个公众号的，劫持后跳到新首页
-    })
-  } else {
-    next()
-  }
+  next()
 });
 
 //动态改变title
