@@ -1,5 +1,7 @@
 <template>
     <div class="outer">
+        <div class="white-blank" v-show="showSkeleton==true"></div>
+        <van-skeleton title avatar :row="3" :loading="showSkeleton">
         <div>
             <van-popup v-model="showQrCode">
                 <vue-qr :text="qrCodeStr" :margin="20" :size="400"></vue-qr>
@@ -62,14 +64,14 @@
         </div>
         <div class="options">
             <div class="option-item">
-                <div class="option-icon icon-coupons"></div>
-                <div class="option-text">领券中心</div>
-                <div class="option-link" @click="getCoupons">点击领取<div class="link-chevron"></div></div>
+                <div class="option-icon icon-houses"></div>
+                <div class="option-text">我是业主</div>
+                <div class="option-link" @click="queryHouses">绑定房屋<div class="link-chevron"></div></div>
             </div>
             <div class="option-item">
-                <div class="option-icon icon-messages"></div>
-                <div class="option-text">我的消息</div>
-                <div class="option-link" @click="queryMessages">查看消息<div class="link-chevron"></div></div>
+                <div class="option-icon icon-coupons"></div>
+                <div class="option-text">我的发票</div>
+                <div class="option-link" @click="queryInvoice">查看发票<div class="link-chevron"></div></div>
             </div>
             <div class="option-item">
                 <div class="option-icon icon-pubs"></div>
@@ -77,9 +79,14 @@
                 <div class="option-link" @click="queryPubs">查看发布<div class="link-chevron"></div></div>
             </div>
             <div class="option-item">
-                <div class="option-icon icon-houses"></div>
-                <div class="option-text">我是业主</div>
-                <div class="option-link" @click="queryHouses">绑定房屋<div class="link-chevron"></div></div>
+                <div class="option-icon icon-messages"></div>
+                <div class="option-text">我的消息</div>
+                <div class="option-link" @click="queryMessages">查看消息<div class="link-chevron"></div></div>
+            </div>
+            <div class="option-item">
+                <div class="option-icon icon-coupons"></div>
+                <div class="option-text">领券中心</div>
+                <div class="option-link" @click="getCoupons">点击领取<div class="link-chevron"></div></div>
             </div>
             <div class="option-item">
                 <div class="option-icon icon-addresses"></div>
@@ -87,6 +94,7 @@
                 <div class="option-link">收获地址<div class="link-chevron"></div></div>
             </div>
         </div>
+        </van-skeleton>
         <user-info ref="userLogin" @getUserInfo="getUserInfo"></user-info>
     </div>
 </template>
@@ -94,8 +102,9 @@
 <script>
 import UserInfo from '@/components/UserInfo'
 import UserApi from "@/api/UserApi"
+import Bus from '@/api/bus.js'
 import VueQr from 'vue-qr'
-import { Overlay, Grid, GridItem, Image, Image as VanImage, Popup, Dialog } from 'vant'
+import { Overlay, Grid, GridItem, Image, Image as VanImage, Popup, Dialog, Skeleton } from 'vant'
 
 export default ({
 
@@ -107,10 +116,12 @@ export default ({
         [Image.name]: VanImage,
         [Popup.name]: Popup,
         [Overlay.name]: Overlay,
+        [Skeleton.name]: Skeleton,
     },
     data() {
         return {
             user: {},
+            showSkeleton: true,
             showOverlay: false,
             showQrCode: false,
             qrCodeStr: '',
@@ -130,12 +141,14 @@ export default ({
         // this.user = user
     },
     mounted() {
-        console.log(this.basePageUrl)
-        console.log(this.common.getoriApp)
     },
     methods: {
         getUserInfo(user){
             this.user = user
+            if(this.user) {
+                this.showSkeleton = false
+                Bus.$emit("sends", user.iconList)
+            }
         },
         shopOrder() {
             location.href=this.basePageUrlpay+'orderpay.html?'+this.common.getoriApp()+'#/special?type=1'
@@ -164,7 +177,10 @@ export default ({
             location.href = this.basePageUrl+'wuye/index.html?'+this.common.getoriApp()+'#/Myhouse'
         },
         queryAddresses() {
-            this.$router.push({ path: "/addresses" })
+            this.$router.push({path:"/addresses"})
+        },
+        queryInvoice() {
+            location.href = this.basePageUrl+'wuye/index.html?'+this.common.getoriApp()+'#/MyInvoice'
         },
         showQrcode() {
             let str = "?appid=" + this.user.appId + "&userid=" + this.user.wuyeId;
@@ -215,9 +231,13 @@ export default ({
 .outer {
     margin: 0;
     padding: 0;
-    min-height: 14rem;
+    min-height: 15.5rem;
     width: 100%;
     background-color: #fff;
+}
+.white-blank {
+    height: 1rem;
+    width: 100%;
 }
 .infos {
     width: 100%;

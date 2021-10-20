@@ -17,8 +17,13 @@ let router= new Router({
     },
     {
       path: '/version2',
-      name: 'version2',
-      component: resolve=>require(['@/pages/index/Version2'],resolve)
+      component: resolve=> require(['@/pages/index'],resolve),
+      children:[
+        {path:'',component:resolve=>require(['@/pages/index/Version2'],resolve),
+        meta: {
+          title:'个人中心'
+        }}
+      ]
     },
     {
       path:'/register',

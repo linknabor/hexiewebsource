@@ -36,7 +36,11 @@ var MasterConfig = function() {
 		oauthUrlPostSilent:"&response_type=code&scope=snsapi_base&state=123#wechat_redirect",
         baidu_map_key:"RUWUgrEEF5VjoaWsstMMZwOD",
 
-        is_debug:true
+        is_debug:false,
+
+        nbappid:'wxa48ca61b68163483',//奈博科技，测试用
+        kyappid:'wxa54bc90bdbc845a8',//昆亿
+        dcappid:'wxcfa72801fc101382'//东城
     },
 
     e = {};
@@ -45,38 +49,6 @@ var MasterConfig = function() {
     },
     e
 } ();
-//角色
-var Config = function() {
-    var t = {
-        download: {
-        },
-        pullload_text: {
-            load_text: "正在玩命的加载...",
-            no_orders: "没有更多的订单了...",
-            no_tuan_orders: "没有更多的团订单了...",
-            no_goods: "更多新品正在陆续推出..."
-        },
-        user_info: {
-            avatar: "https://www.e-shequ.cn/weixin/static/images/logo.jpg",
-            nickname: "游客",
-            levelname: "普通会员"
-        },
-        user_level:{
-            0 : "普通会员",
-            1 : "钻石会员",
-            2 : "大楼VIP"
-        },
-        coupon:{
-            seedImg:"https://www.e-shequ.cn/weixin/static/img/banner/banner_market_shuiguo.jpg"
-        }
-    },
-    e = {};
-    return e.C = function(e) {
-        return t[e]
-    },
-    e
-} ();
-
 
  // 请求状态码
 function dealWithAjaxData(o, e, i, r) {
@@ -181,7 +153,7 @@ function toRegisterAndBack(){
         appurl='';
     };
     if(cardService=='true'){
-        if(cardStatus == '1'||cardStatus==null || cardStatus=='0' ){
+        if(cardStatus == '1'||cardStatus==null || cardStatus=='0'){
             location.href=MasterConfig.C('basePageUrl')+"person/index.html?"+appurl+"#/welfare"
         }else {
             location.href=MasterConfig.C('basePageUrl')+"person/index.html?"+appurl+"#/register?comeFrom="+encodeURIComponent(n)+common.addParamHsah();
