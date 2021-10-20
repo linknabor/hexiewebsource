@@ -67,7 +67,7 @@ export default {
           "&redirect_uri=" + encodeURIComponent(n) + end + "#wechat_redirect";
         location.href = url;
       } else {
-        console.log("start user login");
+        console.log("start user login, code : " + o + "param: " + JSON.stringify(param));
         UserApi.login(o, param).then((response) => {
           console.log('login response:')
           console.log(response.data.success)
