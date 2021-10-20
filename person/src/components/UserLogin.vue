@@ -70,13 +70,14 @@ export default {
         console.log("start user login");
         UserApi.login(o, param).then((response) => {
           console.log('login response:')
-          console.log(response)
+          console.log(response.data.success)
+          console.log(response.data.message)
+          console.log(response.data.result)
           let data = response.data;
           if (!data.success) {
             Common.removeParamFromUrl(["code"]);
             console.log('userLogin error, msg : ' + data.message)
-            Toast("登陆获取用户信息失败。" + data.message + "请刷新重试。")
-            return false
+            Toast("登陆获取用户信息失败，请刷新重试。")
           }
           if (data.success && data.result == null) {
             this.reLogin();
