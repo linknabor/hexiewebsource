@@ -326,7 +326,7 @@ router.beforeEach((to, from, next)=>{
   console.log("router, pageName: " + pageName + ", toPath:" + to.path)
 
   //动态改变title
-  if('/'!==toPath && 'version2'!==toPath && viewArray.indexOf(pageName)===-1) {
+  if('/'!==toPath && '/version2'!==toPath && viewArray.indexOf(pageName)===-1) {
      if(!common.checkRegisterStatus()) {
        return
      }
