@@ -1,17 +1,20 @@
 <template>
   <div class="main">
-    <div class="header"></div>
-    <van-skeleton title :row="3" :loading="skeletonLoading" style="padding-top:1rem;">
+    <div class="white-blank" v-show="skeletonLoading==true"></div>
+    <van-skeleton title :row="3" :loading="skeletonLoading">
       <van-empty description="还没有申请过电子发票哦" v-if="invoiceList&&invoiceList.length===0"/>
+      <div class="header" v-show="skeletonLoading==false"></div>
       <div class="data-list">
-        <ul v-for="(invoice, index) in invoiceList" :key="index">
-          <li class="data">
-            <div class="data-row">申请日期：{{ invoice.apply_date }}</div>
-            <div class="data-row">发票抬头：{{ invoice.invoice_title }}</div>
-            <div class="data-row">交易金额：{{ invoice.tran_amt }}</div>
-            <span class="data-check"><a @click="viewDetail(index)">查看发票</a></span>
-          </li>
-        </ul>
+        <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+          <ul v-for="(invoice, index) in invoiceList" :key="index">
+            <li class="data">
+              <div class="data-row">申请日期：{{ invoice.apply_date }}</div>
+              <div class="data-row">发票抬头：{{ invoice.invoice_title }}</div>
+              <div class="data-row">交易金额：{{ invoice.tran_amt }}</div>
+              <span class="data-check"><a @click="viewDetail(index)">查看发票</a></span>
+            </li>
+          </ul>
+        </van-list>
       </div>
     </van-skeleton>
   </div>
@@ -19,33 +22,41 @@
 
 <script>
 import InvoiceApi from "@/api/InvoiceApi.js";
-import { Toast, Skeleton, Empty } from "vant";
+import { Toast, Skeleton, Empty, List } from "vant";
 
 export default {
   data() {
     return {
       invoiceList: [],
       skeletonLoading: true,
-      page: 0,
+      page: 1,
+      loading: false,
+      finished: false,
     }
   },
   components: {
     [Skeleton.name]: Skeleton,
-    [Empty.name]: Empty
+    [Empty.name]: Empty,
+    [List.name]: List,
   },
   mounted() {
-    this.getInvoiceList();
+    this.getInvoiceList()
   },
   methods: {
     getInvoiceList() {
-      InvoiceApi.getInvoice(this.page)
-        .then((response) => {
+      console.log('page:'+this.page)
+      InvoiceApi.getInvoice(this.page).then((response) => {
           this.skeletonLoading = false;
           if (response.data.success) {
-            this.invoiceList = response.data.result
+            if(response.data.result.length > 0) {
+              this.invoiceList = this.invoiceList.concat(response.data.result)
+              this.page += 1
+            } else {
+              this.finished = true
+            }
           }
-        })
-        .catch((error) => {
+          this.loading = false
+        }).catch((error) => {
           this.skeletonLoading = false;
           Toast(error);
         });
@@ -53,6 +64,10 @@ export default {
     viewDetail(index) {
         let pdf_addr = this.invoiceList[index].pdf_addr
         location.href=pdf_addr
+    },
+    onLoad() {
+      console.log('onload ....')
+      this.getInvoiceList()
     },
   },
 };
@@ -66,9 +81,13 @@ export default {
   min-height: 100vh;
   height: auto;
 }
+.white-blank {
+    height: 1rem;
+    width: 100%;
+}
 .header {
   height: 3vh;
-  widows: 100%;
+  width: 100%;
   background-color: #fafafa;
 }
 .data-list {
