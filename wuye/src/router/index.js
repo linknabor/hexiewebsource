@@ -253,8 +253,8 @@ const router= new VueRouter({
         }
       },
       {
-        path:'/queryInvoice',
-        name:'queryInvoice',
+        path:'/invoice',
+        name:'invoice',
         component:resolve=> require(['@/pages/invoice/InvoiceList'],resolve),
         meta:{
           title:'我的发票'
