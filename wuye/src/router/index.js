@@ -252,6 +252,14 @@ const router= new VueRouter({
           title:'维修订单明细'
         }
       },
+      {
+        path:'/queryInvoice',
+        name:'queryInvoice',
+        component:resolve=> require(['@/pages/invoice/InvoiceList'],resolve),
+        meta:{
+          title:'我的发票'
+        }
+      },
     ]
 });
 
@@ -263,7 +271,7 @@ router.beforeEach((to, from, next) => {
   if(viewArray.indexOf(pageName)===-1){
     if(!common.checkRegisterStatus()){
       return
-    }
+	  }
   }
   let version = ''
   if('index'===pageName){
