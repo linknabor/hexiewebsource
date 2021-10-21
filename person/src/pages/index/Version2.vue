@@ -30,7 +30,7 @@
                     <div class="point-text">我的优惠券</div>
                 </div>
                 <div class="points" @click="showQrcode">
-                    <div class="point-value"><van-image :src="require('../../assets/images/ownerScan.png')" height="0.3rem"></van-image></div>
+                    <div class="point-value"><van-image :src="require('../../assets/images/ownerScan.png')" height="0.23rem"></van-image></div>
                     <div class="point-text">业主码</div>
                 </div>
             </div>
