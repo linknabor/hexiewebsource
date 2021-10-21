@@ -6,7 +6,7 @@
             <van-popup v-model="showQrCode">
                 <vue-qr :text="qrCodeStr" :margin="20" :size="400"></vue-qr>
             </van-popup>
-            <van-overlay :show="showOverlay" @click="showOverlay = false" />
+            <van-overlay :show="showOverlay" />
         </div>
         <div class="infos">
             <div class="base-info" @click="queryMemberCard">
@@ -206,6 +206,7 @@ export default ({
             })
         },
         queryMemberCard() {
+            console.log('queryMemberCard')
             if(this.user.cardService){
                 //1新用户未领卡未激活
                 if(!this.user.tel && (this.user.cardStatus=='1'||this.user.cardStatus==null || this.user.cardStatus=='0')){
