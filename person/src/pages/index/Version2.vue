@@ -30,7 +30,7 @@
                     <div class="point-text">我的优惠券</div>
                 </div>
                 <div class="points" @click="showQrcode">
-                    <div class="point-value"><van-image :src="require('../../assets/images/ownerScan.png')" height="0.23rem"></van-image></div>
+                    <div class="point-value"><van-image :src="require('../../assets/images/ownerScan.png')" height="0.26rem" width="0.26rem"></van-image></div>
                     <div class="point-text">业主码</div>
                 </div>
             </div>
@@ -302,11 +302,11 @@ export default ({
     color: #FFFFFF;
 }
 .point-value {
-    font-size: 0.3rem;
+    font-size: 0.32rem;
     font-weight: bold;
 }
 .point-text {
-    font-size: 0.25rem;
+    font-size: 0.28rem;
     font-family: PingFangSC-Medium, sans-serif;
     font-weight: 500;
 }
