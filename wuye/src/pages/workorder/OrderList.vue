@@ -85,7 +85,7 @@ export default {
 }
 .header {
   height: 3vh;
-  widows: 100%;
+  width: 100%;
   background-color: #fafafa;
 }
 .data-list {
