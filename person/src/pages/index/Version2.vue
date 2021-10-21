@@ -149,7 +149,7 @@ export default ({
     methods: {
         setUser(user){
             this.user = user
-            if(this.user) {
+            if(this.user && this.user.id) {
                 this.showSkeleton = false
             }
         },
