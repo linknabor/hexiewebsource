@@ -91,7 +91,7 @@
             <div class="option-item">
                 <div class="option-icon icon-addresses"></div>
                 <div class="option-text">常用地址</div>
-                <div class="option-link">收获地址<div class="link-chevron"></div></div>
+                <div class="option-link" @click="queryAddresses">收货地址<div class="link-chevron"></div></div>
             </div>
         </div>
         </van-skeleton>

@@ -44,6 +44,10 @@
 .footer_shequ_guizhou {background-image: url('../assets/images/icon/footer_zenzhi.png')}
 .footer_person_guizhou {background-image: url('../assets/images/icon/footer_wode_selected.png')}
 .footer_group_guizhou{background-image: url('../assets/images/common/icon_shopping.png');}
+
+.overlay-loading{
+  margin-top: 3rem;
+}
 </style>
 
 <template>
