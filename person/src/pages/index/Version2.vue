@@ -30,7 +30,7 @@
                     <div class="point-text">我的优惠券</div>
                 </div>
                 <div class="points" @click="showQrcode">
-                    <div class="point-value"><van-image :src="require('../../assets/images/ownerScan.png')" width="0.35rem" height="0.35rem"></van-image></div>
+                    <div class="point-value"><van-image :src="require('../../assets/images/ownerScan.png')" height="0.23rem"></van-image></div>
                     <div class="point-text">业主码</div>
                 </div>
             </div>
@@ -183,7 +183,7 @@ export default ({
             this.$router.push({path:"/addresses"})
         },
         queryInvoice() {
-            location.href = this.basePageUrl+'wuye/index.html?'+this.common.getoriApp()+'#/MyInvoice'
+            location.href = this.basePageUrl+'wuye/index.html?'+this.common.getoriApp()+'#/invoice'
         },
         showQrcode() {
             let str = "?appid=" + this.user.appId + "&userid=" + this.user.wuyeId;
@@ -264,7 +264,7 @@ export default ({
     text-align: left;
     vertical-align: text-top;
     color: #fff;
-    font-size: 0.6rem;
+    font-size: 0.4rem;
     font-family: PingFangSC-Semibold, sans-serif;
     font-weight: 600;
     float: left;
@@ -302,11 +302,11 @@ export default ({
     color: #FFFFFF;
 }
 .point-value {
-    font-size: 0.4rem;
+    font-size: 0.3rem;
     font-weight: bold;
 }
 .point-text {
-    font-size: 0.26rem;
+    font-size: 0.25rem;
     font-family: PingFangSC-Medium, sans-serif;
     font-weight: 500;
 }
