@@ -193,16 +193,17 @@ export default ({
         activate() {
             this.showOverlay = true
             UserApi.activateMemberCard(this.user.appId).then((response)=>{
-                console.log(response)
                 this.showOverlay = false
                 if(response.data.success) {
                     location.href = response.data.result
                 } else {
                     Dialog({ message: response.data.message })
+                    return false
                 }
             }).catch((error)=>{
                 this.showOverlay = false
                 Dialog({ message: error })
+                return false
             })
         },
         queryMemberCard() {
@@ -219,9 +220,11 @@ export default ({
                     this.$router.push({ path: "/welfare" })
                 }else if(this.user.tel && this.user.cardStatus=='2') { //2 老用户领卡未激活
                     this.activate()
+                } else if (!this.user.tel) {
+                    this.$router.push({ path: "/bindphone" })
                 }
             }else {
-                this.$router.push({ path: "/bindphone" });
+                this.$router.push({ path: "/bindphone" })
             }
         },
     }
