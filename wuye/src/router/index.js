@@ -309,6 +309,14 @@ const router= new VueRouter({
           title:'缴费结果'
         }
       },
+      {
+        path:'/queryInvoice',
+        name:'queryInvoice',
+        component:resolve=> require(['@/pages/invoice/InvoiceList'],resolve),
+        meta:{
+          title:'我的发票'
+        }
+      },
     ]
 });
 

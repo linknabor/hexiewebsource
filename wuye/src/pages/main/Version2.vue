@@ -1,6 +1,7 @@
 <template>
     <div class="main">
-        <van-skeleton title :row="3" :loading="skeletonLoading" style="padding-top:2rem">
+        <div class="white-blank" v-show="skeletonLoading==true"></div>
+        <van-skeleton title :row="3" :loading="skeletonLoading">
         <div>
             <van-popup v-model="qrShow">
                 <vue-qr :text="qrImage" :margin="20" :size="275"></vue-qr>
@@ -116,13 +117,13 @@ export default ({
         [ImagePreview.name]: ImagePreview,
     },
     mounted(){
-        this.timer = setTimeout(()=>{   //设置延迟执行
-            this.skeletonLoading = false
-        },2000);
     },
     methods: {
         setUser(data){
             this.userInfo = data
+            if(this.userInfo && this.userInfo.id){
+                this.skeletonLoading = false
+            }
             if(this.userInfo.sectId && this.userInfo.sectId !== '0'){
                 this.sectName = this.userInfo.xiaoquName
             }
@@ -246,7 +247,10 @@ export default ({
     width: 100%;
     background-color: #F7F7F8;
 }
-
+.white-blank {
+    height: 1rem;
+    width: 100%;
+}
 .location{
     padding: 0.67rem 0 0 4.17%;
     &-image{
