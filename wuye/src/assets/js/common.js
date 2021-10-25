@@ -36,7 +36,7 @@ var MasterConfig = function() {
 		oauthUrlPostSilent:"&response_type=code&scope=snsapi_base&state=123#wechat_redirect",
         baidu_map_key:"RUWUgrEEF5VjoaWsstMMZwOD",
 
-        is_debug:true,
+        is_debug:false,
 
         nbappid:'wxa48ca61b68163483',//奈博科技，测试用
         kyappid:'wxa54bc90bdbc845a8',//昆亿
@@ -185,7 +185,7 @@ function toRegisterAndBack(){
         appurl='';
     };
     if(cardService=='true'){
-        if(cardStatus == '1'||cardStatus==null || cardStatus=='0' ){
+        if(cardStatus == '1'||cardStatus==null || cardStatus=='0' ||cardStatus==undefined ){
             location.href=MasterConfig.C('basePageUrl')+"person/index.html?"+appurl+"#/welfare"
         }else {
             location.href=MasterConfig.C('basePageUrl')+"person/index.html?"+appurl+"#/register?comeFrom="+encodeURIComponent(n)+common.addParamHsah();
