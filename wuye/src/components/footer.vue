@@ -80,7 +80,7 @@
     </footer>   
     <van-overlay :show="showOverlay">
     	<div class="overlay-loading">
-			  <van-loading type="spinner" color="#ff8a00" vertical>加载中...</van-loading>
+			  <!-- <van-loading type="spinner" color="#ff8a00" vertical>加载中...</van-loading> -->
     	</div>
     </van-overlay>
     
@@ -129,10 +129,10 @@ export default{
                          return
                     }
                     if(n.result!=null) {
-                      vm.showOverlay = false
                       vm.list=n.result.iconList;
                       Bus.$emit('sends',n.result);
                       vm.$emit("userInfo", n.result)
+                      vm.showOverlay = false
                       //存储cookie
                       vm.common.updatecookie(n.result.cardStatus,n.result.cardService,n.result.id,n.result.appid,n.result.cspId,n.result.sectId,n.result.cardPayService,n.result.bgImageList,n.result.wuyeTabsList,n.result.qrCode,n.result);
                       Storage.set('userInfo', n.result)
