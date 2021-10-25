@@ -51,12 +51,6 @@ Vue.prototype.basedhzj3Url = MasterConfig.C('basedhzj3Url');
 Vue.prototype.getUrlParam = getUrlParam;
 Vue.prototype.dealWithAjaxData = dealWithAjaxData;
 
-let ccappid = MasterConfig.C('ccappid')   //春川
-let hhappid = MasterConfig.C('hhappid')   //汇宏
-console.log('ccappid:' + ccappid)
-console.log('hhappid:' + hhappid)
-
-
 //import Vconsole from 'vconsole';
 // Vue.prototype.$vConsole = new Vconsole();
 
