@@ -109,7 +109,7 @@ export default{
       vm=this;
     },
     mounted(){
-      vm.initUserInfo();
+      vm.checkUserCache();
       vm.geturl();
     },
     updated(){
@@ -120,7 +120,17 @@ export default{
       [Overlay.name]: Overlay
     },
     methods: {
-
+         checkUserCache() {
+           let userInfo = Storage.get('userInfo')
+           console.log(userInfo)
+           if(!userInfo || userInfo.length===0) {
+             console.log('user is null, will login.')
+             reLogin()
+             return
+           } else {
+             vm.initUserInfo()
+           }
+         },
          initUserInfo(){
            vm.showOverlay = true
             let n = "GET",
