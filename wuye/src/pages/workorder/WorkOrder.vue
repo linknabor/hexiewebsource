@@ -85,14 +85,11 @@
         </div>
       </div>
     </div>
-    <van-popup v-model="showHotline" :style="{width: '90%', height: '72%', fontSize: '0.4rem'}" round :close-on-click-overlay="false">
-        <van-image
-          :src="require('../../assets/images/repair/outofservice.jpeg')"
-          fit="cover"
-        />
+    <van-popup v-model="showHotline" :style="{width: '90%', height: '60%', fontSize: '0.4rem'}" round :close-on-click-overlay="false">
+        <div class="hotline-image"></div>
         <div class="hotline">
-          请拨打报修值班电话：
-          <a :href="'tel:'+hotline" class="a_hotline">{{hotline}}</a>
+          请拨打值班报修热线：
+          <a :href="'tel:'+hotline" class="a-hotline">{{hotline}}</a>
         </div>
     </van-popup>
     </van-skeleton>
@@ -406,7 +403,9 @@ export default {
 };
 </script>
 
-<style  scoped>
+<style scoped lang='less'>
+@import "../../assets/less/mixin.less";
+
 #repairs {
     background-color: #fff;
     position: absolute;
@@ -551,7 +550,16 @@ display: inline-block;}
   margin: 4% 0 0 5%;
   font-size: 0.4rem;
 }
-.a_hotline {
+.a-hotline {
   color: #4994df;
+}
+.hotline-image {
+  margin: 1.2rem 0.8rem;
+  width: 5rem;
+  height: 4rem;
+  background-size: cover;
+  background-size: cover;
+  background-repeat: no-repeat;
+  .bg-image('../../assets/images/repair/outofservice')
 }
 </style>
