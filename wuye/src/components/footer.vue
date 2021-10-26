@@ -109,7 +109,7 @@ export default{
       vm=this;
     },
     mounted(){
-      vm.checkUserCache();
+      vm.initUserInfo();
       vm.geturl();
     },
     updated(){
