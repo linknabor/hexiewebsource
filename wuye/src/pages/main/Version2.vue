@@ -121,20 +121,6 @@ export default ({
         [PullRefresh.name]: PullRefresh,
         [ImagePreview.name]: ImagePreview,
     },
-    created(){
-        console.log('created...')
-        console.log('search: ' + location.search)
-        if(this.getUrlParam("code") && this.getUrlParam("appid") && this.getUrlParam("state")){
-            let oriApp = this.getUrlParam("oriApp")
-            let param = {}
-            if(oriApp) {
-                param = {
-                    oriApp: oriApp
-                }
-            }
-            this.$router.push({path:this.$route.path, query: param})
-        }
-    },
     mounted(){
     },
     methods: {
