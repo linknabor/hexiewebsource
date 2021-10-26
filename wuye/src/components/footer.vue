@@ -62,9 +62,9 @@
   margin-top: 3rem;
 }
 
-[v-cloak]{
-    display: none;
-}
+  [v-cloak]{
+      display: none;
+  }
 </style>
 
 <template>
