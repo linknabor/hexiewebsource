@@ -1,5 +1,10 @@
+<style scoped>
+    [v-cloak]{
+        display: none;
+    }
+</style>
 <template>
-    <div class="main">
+    <div class="main" v-cloak>
         <div class="white-blank" v-show="skeletonLoading==true"></div>
         <van-skeleton title :row="3" :loading="skeletonLoading">
         <div>
