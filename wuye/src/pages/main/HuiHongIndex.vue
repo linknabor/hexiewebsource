@@ -1,5 +1,10 @@
+<style scoped>
+    [v-cloak]{
+        display: none;
+    }
+</style>
 <template>
-    <div class="main">
+    <div class="main" v-cloak>
         <van-skeleton title :row="3" :loading="skeletonLoading" style="padding-top:2rem">
         <div>
             <van-popup v-model="qrShow">

@@ -62,10 +62,13 @@
   margin-top: 3rem;
 }
 
+[v-cloak]{
+    display: none;
+}
 </style>
 
 <template>
-	<div class="index">
+	<div class="index" v-cloak>
     <footer class="footer">
       <nav>
         <ul  >
