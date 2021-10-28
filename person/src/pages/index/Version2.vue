@@ -93,6 +93,13 @@
                 <div class="option-text">常用地址</div>
                 <div class="option-link" @click="queryAddresses">收货地址<div class="link-chevron"></div></div>
             </div>
+
+            <div class="option-item" v-show="user.officeTel">
+                <div class="option-icon icon-tel"></div>
+                <div class="option-text">物业电话</div>
+                <div class="option-link"><a :href="'tel:'+user.officeTel" class="a-hotline">{{user.officeTel}}</a></div>
+                
+            </div>
         </div>
         </van-skeleton>
         <foot @userInfo="setUser"></foot>
@@ -241,7 +248,7 @@ export default ({
 .outer {
     margin: 0;
     padding: 0;
-    min-height: 15rem;
+    min-height: 16.5rem;
     width: 100%;
     background-color: #fff;
 }
@@ -389,6 +396,9 @@ export default ({
 .icon-invoices {
     .bg-image('../../assets/images/index/fapiao');
 }
+.icon-tel {
+    .bg-image('../../assets/images/index/tel');
+}
 .option-text {
     margin: 0.05rem 0 0 0.19rem;
     color: #262626;
@@ -415,6 +425,9 @@ export default ({
     background-repeat: no-repeat;
     .bg-image('../../assets/images/index/chevron2');
     float: right;
+}
+.a-hotline {
+  color: #4994df;
 }
 </style>
 
