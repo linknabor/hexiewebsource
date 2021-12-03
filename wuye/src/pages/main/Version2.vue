@@ -17,14 +17,14 @@
                 <div class="location-image" @click="switchSect"></div>
                 <div class="location-text" @click="switchSect">{{this.sectName}}
                     <van-popover
-                        v-model="showBindTips"
+                        v-model="showSwitchTips"
                         :overlay="true"
-                        :offset="[-40, 15]"
+                        :offset="[-10, 15]"
                         :close="closeTips"
                         :closed="closeTips"
                         >
-                        <div style="margin: 0.3rem 0.3rem; width: 3rem; height: 0.85rem; font-size: 0.3rem">
-                            <span>{{bindTips}}</span>
+                        <div style="margin: 0.3rem 0.2rem; width: 2.5rem; font-size: 0.3rem">
+                            <span>{{switchSectTips}}</span>
                         </div>
                     </van-popover>
                 </div>
@@ -140,8 +140,8 @@ export default ({
             pageLoadingFinished: false,
             pageLoadError: false,
             pageRefreshing: false,
-            showBindTips: false,
-            bindTips: '',
+            showSwitchTips: false,
+            switchSectTips: '',
             showSectList: false,
             bindHouList: [],
         }
@@ -172,7 +172,7 @@ export default ({
         [Cell.name]: Cell,
     },
     mounted(){
-        this.getBindTips()
+        this.getSwitchSectTips()
     },
     methods: {
         setUser(data){
@@ -290,16 +290,15 @@ export default ({
             })
         },
         closeTips(){
-            console.log(111)
         },
-        getBindTips() {
-            TipsApi.getBindHouseTips().then((response)=>{
+        getSwitchSectTips() {
+            TipsApi.getSwitchSectTips('index').then((response)=>{
                 let data = response.data
                 console.log(data)
                 if(data && data.errorCode === 0){
                     if(data.result){
-                        this.showBindTips = true
-                        this.bindTips = data.result
+                        this.showSwitchTips = true
+                        this.switchSectTips = data.result
                     }
                 }
             }).catch((error)=>{
@@ -335,14 +334,24 @@ export default ({
             }
             BaseInfoApi.switchSect(param).then((response)=>{
                 let data = response.data
-                console.log(data)
                 if(data && data.errorCode === 0){
                     if(data.result) {
                         this.userInfo = data.result
-                        Storage.set('userInfo', n.result)
-                        updatecookie(n.result.cardStatus,n.result.cardService,n.result.id,n.result.appid,n.result.cspId,n.result.sectId,n.result.cardPayService,n.result.bgImageList,n.result.wuyeTabsList,n.result.qrCode,n.result);
+                        this.menuList = this.userInfo.menuList
+                        this.sectName = this.userInfo.xiaoquName
+                        if(!this.sectName) {
+                            this.sectName = '游客'
+                        }
+                        Storage.set('userInfo', data.result)
+                        this.common.updatecookie(data.result.cardStatus,data.result.cardService,data.result.id,data.result.appid,
+                        data.result.cspId,data.result.sectId,data.result.cardPayService,data.result.bgImageList,data.result.wuyeTabsList,
+                        data.result.qrCode,data.result);
                     }
+                } else {
+                    Toast(data.message)
                 }
+                this.showSectList = false
+                
             }).catch((error)=>{
                 console.log(error)
                 Toast(error)

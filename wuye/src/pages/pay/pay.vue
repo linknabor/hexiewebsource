@@ -12,6 +12,22 @@
       <mt-tab-item id="a">扫描账单</mt-tab-item> -->
       <mt-tab-item v-for="item in wuyeTabsList" :key="item.id" :id="item.value">{{item.name}}</mt-tab-item>
     </mt-navbar>
+    <div class="header" v-show="selected==='b'">
+        <div class="location">
+            <div class="location-image" @click="switchSect"><van-icon name="location-o" size="large"></van-icon></div>
+            <div class="location-text" @click="switchSect">{{this.sectName}}
+                <van-popover
+                    v-model="showSwitchTips"
+                    :overlay="true"
+                    :offset="[-70, 15]"
+                    >
+                    <div style="margin: 0.3rem 0.2rem; width: 2.5rem; font-size: 0.3rem">
+                        <span>{{switchTips}}</span>
+                    </div>
+                </van-popover>
+            </div>
+        </div>
+    </div>
     <mt-tab-container v-model="selected">
       <mt-tab-container-item id="a">
         <!-- 账单缴费开始-->
@@ -158,8 +174,36 @@
     </mt-tab-container>
     <!-- <Foot></Foot> -->
   </div>
-    <div  v-show="isshow"
-      style=" background: rgba(0,0,0,0.5);display: none;width: 100%;height: 100%;top: 0rem; position: absolute;"></div>
+   <div>
+      <van-popup v-model="showSectList" 
+          position="bottom"
+          closeable
+          :style="{ height: '100%' }"
+          :safe-area-inset-bottom="true"
+      >
+        <div class="sect-select">
+            <div class="sect-select-title">选择所在小区</div>
+            <div class="sect-select-current-text">当前小区</div>
+            <div class="sect-select-current-sect"><van-icon name="location" /><span class="sect-select-current-name">{{sectName}}</span></div>
+            <div class="sect-select-divider"></div>
+            <van-cell-group>
+                <van-cell v-for="(house, index) in bindHouList" :key="index" :title="house.sect_name" :border="true" @click="selectHouse(house)">
+                    <template slot="title">
+                        <div>
+                            <span>{{house.sect_name}}</span>
+                            <span>{{house.sect_addr}}</span>
+                        </div>
+                    </template>
+                    <template slot="label">
+                        <div>{{house.cell_addr}}</div>
+                    </template>
+                </van-cell>
+            </van-cell-group>
+        </div>
+    </van-popup>
+  </div>
+  <div  v-show="isshow"
+    style=" background: rgba(0,0,0,0.5);display: none;width: 100%;height: 100%;top: 0rem; position: absolute;"></div>
   </div>
 
 </template>
@@ -174,14 +218,17 @@ import Bill from "../../components/bill.vue";
 import moment from "../filter/datafromat";
 import cookie  from 'js-cookie';
 import Api from '@/api/api.js'
-import {Overlay, Loading, Dialog} from 'vant'
+import TipsApi from '@/api/TipSApi.js'
+import BaseInfoApi from '@/api/BaseInfoApi.js'
+import Storage from '@/assets/js/storage.js'
+
+import {Overlay, Loading, Dialog, Popover, Toast, Icon, CellGroup, Cell} from 'vant'
 
 export default {
   filters: {
     subString(value) {
       if(value != "" && value.length > 20){
         let addr = value.substring(value.length-20, value.length)
-        console.log(addr)
         addr = '…'+ addr
         return addr
       } else {
@@ -194,6 +241,11 @@ export default {
     Bill,
     [Overlay.name]: Overlay,
     [Loading.name]: Loading,
+    [Popover.name]: Popover,
+    [Toast.name]: Toast,
+    [Icon.name]: Icon,
+    [CellGroup.name]: CellGroup,
+    [Cell.name]: Cell,
   },
   computed: {
     //物业缴费总价
@@ -243,6 +295,7 @@ export default {
   },
   data() {
     return {
+      userInfo: {},
       isshow:false,
       version: "02",
       version1: "02",
@@ -316,13 +369,19 @@ export default {
       selectShow: false,
       showOverlay: false,	//遮罩
       officeTel: '',	//物业管理处电话
-      telList: []
+      telList: [],
+      sectName: '',
+      showSwitchTips: false,
+      switchTips: '',
+      showSectList: false,
+      bindHouList: [],
     };
   },
   watch: {
     selected(newv,old){
       isloadPage=false;
       if(newv=='b'){
+         this.getSwitchSectTips()
          vm.zong();
       }
     }
@@ -331,6 +390,7 @@ export default {
     vm = this;
   },
   mounted() {
+    this.initUser()
     vm.TabsList();
     vm.unitselect();
     vm.getHousin();
@@ -347,6 +407,10 @@ export default {
     // 判断是否是专业版
   },
   methods: {
+    initUser() {
+      this.userInfo = Storage.get("userInfo")
+      this.sectName = this.userInfo.xiaoquName
+    },
     TabsList() {//获取localstorage中的选项卡
       let wuyeTabs = window.localStorage.getItem("wuyeTabsList");
       vm.sectId = cookie.get('sectId');//
@@ -486,9 +550,10 @@ export default {
                       vm.reduceMode = vm.data.result.reduce_mode; //减免方式
                       vm.permit_skip_pay = vm.data.result.permit_skip_pay; //判断跳跃付款
                       if(vm.data.result.bill_info.length>0) {//不是空数组
-                          vm.billInfo = vm.data.result.bill_info; //物业缴费
+                        vm.billInfo = vm.data.result.bill_info; //物业缴费
                       }else {
-                          Dialog({message: '没有可以缴费的账单'})
+                        vm.billInfo = vm.data.result.bill_info
+                        Dialog({message: '没有可以缴费的账单'})
                       }
                       vm.billPage += 1;
                   }else {
@@ -1137,10 +1202,75 @@ export default {
       }
       //取反
       vm[a] = !vm[a];
-    }
-  }
+    },
 
-};
+    getSwitchSectTips() {
+            TipsApi.getSwitchSectTips('pay').then((response)=>{
+                let data = response.data
+                if(data && data.errorCode === 0){
+                    if(data.result){
+                        this.showSwitchTips = true
+                        this.switchTips = data.result
+                    }
+                }
+            }).catch((error)=>{
+                console.log(error)
+            })
+        },
+        switchSect() {
+            this.showSectList = true
+            this.getBindHouList()
+        },
+        getBindHouList() {
+            BaseInfoApi.queryHouseByUser().then((response)=>{
+                let data = response.data
+                if(data && data.errorCode === 0){
+                    if(data.result){
+                        this.bindHouList = data.result
+                    }
+                }
+            }).catch((error)=>{
+                console.log(error)
+                Toast(error)
+            })
+        },
+        selectHouse(house) {
+            let param = {
+                province: house.province_name,
+                city: house.city_name,
+                county: house.region_name,
+                sectId: house.sect_id,
+                sectName: house.sect_name,
+                cspId: house.csp_id
+            }
+            BaseInfoApi.switchSect(param).then((response)=>{
+                let data = response.data
+                if(data && data.errorCode === 0){
+                    if(data.result) {
+                        this.userInfo = data.result
+                        this.sectName = this.userInfo.xiaoquName
+                        if(!this.sectName) {
+                            this.sectName = '游客'
+                        }
+                        Storage.set('userInfo', data.result)
+                        this.common.updatecookie(data.result.cardStatus,data.result.cardService,data.result.id,data.result.appid,
+                        data.result.cspId,data.result.sectId,data.result.cardPayService,data.result.bgImageList,data.result.wuyeTabsList,
+                        data.result.qrCode,data.result);
+                        this.mine = true
+                        this.zong()
+                    }
+                } else {
+                    Toast(data.message)
+                }
+                this.showSectList = false
+                
+            }).catch((error)=>{
+                console.log(error)
+                Toast(error)
+            })
+        }
+    },
+}
 </script>
 <style>
 .mint-tab-item-label {
@@ -1152,7 +1282,32 @@ body {
   background: #eee;
 }
 </style>
-<style scoped>
+<style scoped lang="less">
+
+@import "../../assets/less/mixin.less";
+
+.header{
+    margin: 0.35rem 0.2rem 0rem 0.2rem;
+    width: 93%;
+    height: 0.28rem;
+    // background-color: #fff;
+}
+.location{
+    &-image{
+        float: left;
+        width: 0.25rem;
+        height: 0.28rem;
+    }
+    &-text{
+        margin-left: 0.15rem;
+        // margin-top: 0.04rem;
+        float: left;
+        text-align: left;
+        font-size: 0.28rem;
+        // color: #ff8a00;
+        color: #1989fa;
+    }
+}
 .selected {
   background: url("../../assets/images/common/icon_selected.png") no-repeat;
   background-size: 0.32rem;
@@ -1169,6 +1324,9 @@ body {
   position: relative;
   width: 92%;
   left: 4%;
+}
+.bill-item1 {
+  border: 0px solid #cdcdcb !important;
 }
 .classinput1 {
   text-align: left;
@@ -1333,11 +1491,10 @@ a {
 		overflow:auto;
 	} */
 .mint-tab-container {
-  /* margin: 0.2rem 0.3rem; */
   background: white;
   width: 94%;
   margin: auto;
-  margin: 0.2rem;
+  margin: 0.1rem 0.2rem 0.2rem 0.2rem;
   overflow: visible;
 }
 .btext {
@@ -1472,6 +1629,7 @@ a {
   width: 100%;
   position: relative;
   background: #eee;
+  border: 0px;
 }
 /* 滚动 */
 #divwuye {
@@ -1508,5 +1666,40 @@ a {
 }
 .link-tel{
   color: #0000EE;
+}
+.sect-select {
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
+
+    &-title {
+        margin: 0.4rem 0;
+        text-align: center;
+        font-weight: bolder;
+        font-size: 0.4rem;
+    }
+    &-current {
+        &-text  {
+            margin: 0.25rem 0.4rem;
+            font-size: 0.3rem;
+            color: #A9A9A9;
+        }
+        &-sect {
+            margin: 0rem 0.4rem;
+            font-size: 0.3rem;
+        }
+        &-name {
+            font-weight: 600;
+            font-size: 0.3rem;
+            vertical-align: text-top;
+        }
+    }
+    &-divider {
+        margin-top: 0.4rem;
+        height: 0.2rem;
+        width: 100%;
+        background-color: #F7F7F8;
+    }
 }
 </style>

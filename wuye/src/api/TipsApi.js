@@ -4,8 +4,8 @@ import Config from '@/util/config.js'
 let baseUrl = Config.baseUrl
 const tipsApi = {
 
-    getBindHouseTips() {
-        return http.get(baseUrl + 'tips/bindHouse', null)
+    getSwitchSectTips(param) {
+        return http.get(baseUrl + 'tips/switchSect/' + param, null)
     }
 
 }
