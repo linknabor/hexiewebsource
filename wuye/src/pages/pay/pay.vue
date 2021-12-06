@@ -12,6 +12,7 @@
       <mt-tab-item id="a">扫描账单</mt-tab-item> -->
       <mt-tab-item v-for="item in wuyeTabsList" :key="item.id" :id="item.value">{{item.name}}</mt-tab-item>
     </mt-navbar>
+    
     <div class="header" v-show="selected==='b'">
         <div class="location">
             <div class="location-image" @click="switchSect"><van-icon name="location-o" size="large"></van-icon></div>
@@ -19,7 +20,7 @@
                 <van-popover
                     v-model="showSwitchTips"
                     :overlay="true"
-                    :offset="[-70, 15]"
+                    :offset="[-10, 15]"
                     >
                     <div style="margin: 0.3rem 0.2rem; width: 2.5rem; font-size: 0.3rem">
                         <span>{{switchTips}}</span>
@@ -28,6 +29,7 @@
             </div>
         </div>
     </div>
+    <div style="width:100%; margin-top:10vh;" v-show="billInfo.length==0&&selected=='b'"><van-empty description="没有可以缴费的账单" /></div>
     <mt-tab-container v-model="selected">
       <mt-tab-container-item id="a">
         <!-- 账单缴费开始-->
@@ -222,7 +224,7 @@ import TipsApi from '@/api/TipSApi.js'
 import BaseInfoApi from '@/api/BaseInfoApi.js'
 import Storage from '@/assets/js/storage.js'
 
-import {Overlay, Loading, Dialog, Popover, Toast, Icon, CellGroup, Cell} from 'vant'
+import {Overlay, Loading, Dialog, Popover, Toast, Icon, CellGroup, Cell, Empty} from 'vant'
 
 export default {
   filters: {
@@ -246,6 +248,7 @@ export default {
     [Icon.name]: Icon,
     [CellGroup.name]: CellGroup,
     [Cell.name]: Cell,
+    [Empty.name]: Empty,
   },
   computed: {
     //物业缴费总价
@@ -553,14 +556,14 @@ export default {
                         vm.billInfo = vm.data.result.bill_info; //物业缴费
                       }else {
                         vm.billInfo = vm.data.result.bill_info
-                        Dialog({message: '没有可以缴费的账单'})
+                        // Dialog({message: '没有可以缴费的账单'})
                       }
                       vm.billPage += 1;
                   }else {
-                        Dialog({message: '没有可以缴费的账单'})
+                        // Dialog({message: '没有可以缴费的账单'})
                   }
               }else {
-                  Dialog({message: vm.data.message==null?"没有可以缴费的账单":vm.data.message})
+                  Dialog({message: vm.data.message})
               }
               vm.isshow=false;
               vm.showp = false;
