@@ -5,7 +5,7 @@
       <van-empty description="还没有申请过电子发票哦" v-if="invoiceList&&invoiceList.length===0"/>
       <div class="header" v-show="skeletonLoading==false"></div>
       <div class="data-list">
-        <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+        <van-list v-model="loading" :finished="finished" @load="onLoad">
           <ul v-for="(invoice, index) in invoiceList" :key="index">
             <li class="data">
               <div class="data-row">申请日期：{{ invoice.apply_date }}</div>
