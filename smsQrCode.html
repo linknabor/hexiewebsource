@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1,initial-scale=1,user-scalable=no"/>
+    <meta name="referrer" content="no-referrer"/>
+    <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="pragma" content="no-cache"/>
+    <meta http-equiv="expires" content="0"/>
+    <script src="./static/js/base64.js"></script>
+
+    <title>物业费明细</title>
+    
+</head>
+<body>
+    <style>
+        [v-cloak]{
+            display: none;
+        }
+    </style>
+    <div id="app" class="app" v-cloak>
+        <van-overlay :show="showOverlay" z-index="101">
+            <van-loading type="circle" color="#ff9834" vertical style="top:40vh"/>
+        </van-overlay>
+        <div class="outer">
+            <div class="title">
+                {{sectName}}
+            </div>
+            <div class="qrcode">
+                <img :src="qrCodeImg"></div>
+            </div>
+            <div class="description">
+                保存二维码，使用微信或支付宝扫码进行支付。
+            </div>
+            <div class="pay-logo">
+                <div>
+                    <img class="logo" src="./static/images/common/wechatlogo.png">
+                </div>
+                <div>
+                    <img class="logo logo-right" src="./static/images/common/alipaylogo.png">
+                </div>
+            </div>
+            <div class="pay-info">
+                <div>
+                    <span>支付金额: {{realityAmt}}元</span>
+                </div>
+            
+                <div class="reduce-info" v-if="reduceAmt>0">
+                    <span>（应收金额: {{feeAmt}}元</span>
+                    <span>优惠金额: {{reduceAmt}}元）</span>
+                </div>
+            </div>
+            <div class="tech-support">由合协管家提供技术支持</div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6/dist/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vant@2.12/lib/vant.min.js"></script>
+    <script src="https://unpkg.com/axios@0.21.4/dist/axios.min.js"></script>
+    <!-- 引入样式文件 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@2.12/lib/index.css" />
+    <script>
+
+        var baseUrl = /127|test/.test(location.origin)?'https://test.e-shequ.cn/weixin/':
+            /uat/.test(location.origin)?'https://uat.e-shequ.cn/hexie/weixin/' : 'https://www.e-shequ.cn/weixin/'
+
+        var serverUrl = /127|test/.test(location.origin)?'https://test.e-shequ.cn/wechat/hexie/wechat':
+            /uat/.test(location.origin)?'https://uat.e-shequ.cn/wechat/hexie/wechat' : 'https://www.e-shequ.cn/wechat/hexie/wechat/'
+
+            // var serverUrl = /127|test/.test(location.origin)?'http://127.0.0.1:86':
+            // /uat/.test(location.origin)?'https://uat.e-shequ.cn/wechat/hexie/wechat' : 'https://www.e-shequ.cn/wechat/hexie/wechat/'
+
+        function getParam(url, name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+            var r = url.match(reg);  //匹配目标参数
+            if (r != null) {
+                return unescape(r[2]);
+            } else {
+                return null;
+            }
+        }
+
+        const axiosInstance = axios.create({
+            baseURL: serverUrl,
+            timeout: 10000,
+        })
+
+        var app = new Vue({
+            el: '#app',
+            created() {
+                this.getUrlParam()
+            },
+            mounted() {
+                // this.showOverlay = false
+            },
+            filters: {
+                
+            },
+            data: {
+                showOverlay: true,
+                batchNo: '',
+                cellId: '',
+                appid: '',
+                payCell: [],
+                feeData: [],
+                sectName: '',
+                realityAmt: 0.00,   //实收
+                feeAmt: 0.00,   //应收
+                reduceAmt: 0.00, //优惠金额
+                loaded: false,
+                qrCodeImg: '',
+            },
+            watch: {
+
+                batchNo: {
+                    handler(newName, oldName) {
+                        if(newName) {
+                            this.queryQrCode() 
+                        }
+                        
+                　　},
+                　　immediate: true
+                },
+                loaded: {
+                    handler(newName, oldName) {
+                        if(newName) {
+                            setTimeout(() => {
+                                this.showOverlay = false    
+                            }, 500);
+                            
+                        }
+                        
+                　　},
+                // 　　immediate: true
+                }
+            },
+            methods: {
+                
+                getUrlParam() {
+                    let theRequest = {}
+                    let paramUrl = window.location.search.substr(1)
+                    let param = getParam(paramUrl, "param")
+                    if(!param){
+                        console.error('url param is empty !')
+                        return false
+                    }
+                    param = strAnsi2Unicode(decode64(param))
+                    let params = param.split("&");
+                    for(var i = 0; i < params.length; i ++) {
+                        theRequest[params[i].split("=")[0]]=unescape(params[i].split("=")[1]);
+                    }
+                    this.batchNo = theRequest.batch
+                    this.cellId = theRequest.cellId
+                    this.appid = theRequest.appid
+                },
+                queryQrCode(){
+                    let queryUrl = '/getFeeSmsPayQrCode'
+                    let params = new URLSearchParams()
+                    params.append('batchNo', this.batchNo)
+                    params.append('cellId', this.cellId)
+                    params.append('appid', this.appid)
+                    params.app
+                    axiosInstance({
+                        url: queryUrl,
+                        method: 'get',
+                        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                        params: params,
+                    }).then((response)=>{
+                        if(response.data.success) {
+                            this.realityAmt = this.formatFloat(response.data.result.reality_amt)    //实收
+                            this.feeAmt = this.formatFloat(response.data.result.total_fee_price) //应收
+                            this.reduceAmt = this.formatFloat(this.feeAmt - this.realityAmt)    //优惠金额
+                            this.sectName = response.data.result.sect_name //项目名称
+                            this.qrCodeImg = 'data:image/png;base64,' + response.data.result.image
+                            this.loaded = true
+                        } else {
+                            vant.Dialog({
+                                message: response.data.message
+                            })
+                            return false
+                        }
+                    }).catch((error)=>{ // 请求失败处理
+                        console.log(error)
+                        vant.Dialog({
+                            message: '连接服务器超时，请稍后再试！'
+                        })
+                        return false
+                    })
+                },
+                formatFloat(floatValue) {
+                    if(floatValue) {
+                        floatValue = parseFloat(floatValue)
+                        let decimalValue = floatValue.toFixed(2)
+                        return decimalValue
+                    }
+                    return floatValue
+                }
+
+            }
+        })
+    </script>
+    <style>
+        .app {
+            width: 100%;
+            min-height: 100vh;
+            margin: 0 0;
+            padding: 0 0;
+            background-color: #f09734;
+			touch-action: none !important;
+        }
+        .title {
+            padding-top: 1.5em;
+            width: 100%;
+            font-weight: 500;
+            font-size: 1.2em;
+            text-align: center;
+        }
+        .qrcode {
+            margin: 0.8em 4%;
+            width: 92%;
+            font-weight: 500;
+            font-size: 1.5em;
+            text-align: center;
+        }
+		.qrcode img {
+            width: 60%;
+        }
+        .description {
+            color: #fff;
+            margin: 0.8em 4%;
+            width: 92%;
+            font-weight: 500;
+            font-size: 1em;
+            text-align: center;
+        }
+        .pay-logo {
+            margin: 2em 0 2em 27.5%;
+            width: 72%;
+        }
+        .logo {
+            width: 4em;
+            height: 4em;
+            float: left;
+        }
+        .logo-right {
+            margin-left: 2.8em;
+        }
+        .pay-info {
+            padding-top: 5.5em;
+            width: 100%;
+            font-weight: 500;
+            font-size: 1.2em;
+            text-align: center;
+        }
+        .reduce-info {
+            padding-top: 0.5em;
+            width: 100%;
+            color: red;
+            font-size: 0.8em;
+            text-align: center;
+        }
+        .tech-support {
+            position:fixed;
+            text-align: center;
+            width: 100%;
+            font-size: 0.75em;
+            color: white;
+            display: block;
+            bottom: 4vh;
+        }
+        
+    </style>
+</body>
+</html>

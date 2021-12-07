@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1,initial-scale=1,user-scalable=no"/>
+    <meta name="referrer" content="no-referrer"/>
+    <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="pragma" content="no-cache"/>
+    <meta http-equiv="expires" content="0"/>
+    <script src="./static/js/base64.js"></script>
+
+    <title>物业费明细</title>
+    
+</head>
+<body>
+    <style>
+        [v-cloak]{
+            display: none;
+        }
+    </style>
+    <div id="app" class="app" v-cloak>
+        <van-overlay :show="showOverlay" z-index="101">
+            <van-loading type="circle" color="#ff9834" vertical style="top:40vh"/>
+        </van-overlay>
+        <div>
+        <div class="white-space"></div>
+        <div class="title-info">
+            <van-cell>
+                <template #title>
+                    <span class="csp-name">{{cspName}}</span>
+                    <span class="sect-name">{{sectName}}</span>
+					<span class="sect-tel" v-if="officeTel">小区管理处电话：<a :href="'tel:'+officeTel" style="color: #0570db;">{{officeTel}}</a></span>
+                </template>
+            </van-cell>
+        </div>
+        <div class="cell-info">
+            <cell-group :border="true">
+                <van-cell v-for="(cell, index) in payCell" :key="index">
+                    <template #title>
+                        <span class="cell-addr">{{cell.cell_addr}}</span>
+                        <span class="cell-square">{{cell.cnst_area}}㎡</span>
+                    </template>
+                </van-cell>
+            </cell-group>
+        </div>
+        <div class="fee-info">
+            <cell-group :border="true">
+                <van-collapse v-model="activeNames" @change="onChange">
+                    <div v-for="(item, index) in feeData" :key="index">
+                        <van-collapse-item  v-for="(subItem, i) in item.fee_name" :key="i" :title="subItem.service_fee_name" :value="subItem.totalFee|formatFloat" :name="index+','+i" >
+                            <van-cell :border="true" v-for="(subFee, j) in subItem.fee_detail" :key="j" :title="subFee.service_fee_cycle" :value="subFee.fee_price" title-style="font-size: 26rpx; color: #7d7d7d;"></van-cell>
+                        </van-collapse-item>
+                    </div>
+                </van-collapse>
+            </cell-group>
+        </div>
+        <div class="summary">
+            <van-cell :border="true" title="总计" title-style="color: #ff8a05; font-weight: bold;" :value="totalPrice" value-class="summary-value"></van-cell>
+        </div>
+        <div class="tel-text" v-if="officeTel">
+            如对欠费金额有疑问可拨打小区管理处电话咨询。
+        </div>
+        <div class="white-space2"></div>
+        <div class="tech-support" v-show="showPayBtn">由合协管家提供技术支持</div>
+        <van-goods-action :safe-area-inset-bottom="true">
+            <van-goods-action-button type="warning" text="获取支付二维码" @click="onConfirm"/>
+        </van-goods-action>
+        
+    </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6/dist/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vant@2.12/lib/vant.min.js"></script>
+    <script src="https://unpkg.com/axios@0.21.4/dist/axios.min.js"></script>
+    <!-- 引入样式文件 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@2.12/lib/index.css" />
+    <script>
+
+        var baseUrl = /127|test/.test(location.origin)?'https://test.e-shequ.cn/weixin/':
+            /uat/.test(location.origin)?'https://uat.e-shequ.cn/hexie/weixin/' : 'https://www.e-shequ.cn/weixin/'
+
+        var serverUrl = /127|test/.test(location.origin)?'https://test.e-shequ.cn/wechat/hexie/wechat':
+            /uat/.test(location.origin)?'https://uat.e-shequ.cn/wechat/hexie/wechat' : 'https://www.e-shequ.cn/wechat/hexie/wechat/'
+
+            // var serverUrl = /127|test/.test(location.origin)?'http://127.0.0.1:86':
+            // /uat/.test(location.origin)?'https://uat.e-shequ.cn/wechat/hexie/wechat' : 'https://www.e-shequ.cn/wechat/hexie/wechat/'
+
+        function getParam(url, name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+            var r = url.match(reg);  //匹配目标参数
+            if (r != null) {
+                return unescape(r[2]);
+            } else {
+                return null;
+            }
+        }
+
+        const axiosInstance = axios.create({
+            baseURL: serverUrl,
+            timeout: 10000,
+        })
+
+        var app = new Vue({
+            el: '#app',
+            created() {
+                this.getUrlParam()
+            },
+            mounted() {
+                // this.showOverlay = false
+            },
+            filters: {
+                formatFloat(floatValue) {
+                    if(floatValue) {
+                        floatValue = parseFloat(floatValue)
+                        let decimalValue = floatValue.toFixed(2)
+                        decimalValue = "小计￥" + decimalValue;
+                        return decimalValue
+                    }
+                    return floatValue
+                    
+                }
+            },
+            data: {
+                showOverlay: true,
+				showPayBtn: true,
+                encodedParam: '',
+                batchNo: '',
+                cellId: '',
+                appid: '',
+                payCell: [],
+                feeData: [],
+                sectName: '',
+                cspName: '',
+                officeTel: '',
+                totalPrice: 0.00,
+                loaded: false,
+                activeNames: [],
+            },
+            watch: {
+
+                batchNo: {
+                    handler(newName, oldName) {
+                        if(newName) {
+                            this.queryFee() 
+                        }
+                        
+                　　},
+                　　immediate: true
+                },
+                loaded: {
+                    handler(newName, oldName) {
+                        if(newName) {
+                            setTimeout(() => {
+                                this.showOverlay = false    
+                            }, 500);
+                            
+                        }
+                        
+                　　},
+                // 　　immediate: true
+                }
+            },
+            methods: {
+                onConfirm() {
+                    let url = "./smsQrCode.html?param=" + this.encodedParam
+//                    location.replace(url)
+					location.href = url
+                },
+                getUrlParam() {
+                    let theRequest = {}
+                    let paramUrl = window.location.search.substr(1)
+                    let param = getParam(paramUrl, "param")
+                    if(!param){
+                        console.error('url param is empty !')
+                        return false
+                    }
+                    this.encodedParam = param
+                    param = strAnsi2Unicode(decode64(param))
+                    let params = param.split("&");
+                    for(var i = 0; i < params.length; i ++) {
+                        theRequest[params[i].split("=")[0]]=unescape(params[i].split("=")[1]);
+                    }
+                    this.batchNo = theRequest.batch
+                    this.cellId = theRequest.cellId
+                    this.appid = theRequest.appid
+                },
+                queryFee(){
+                    let queryUrl = '/getFeeSmsBill'
+                    let params = new URLSearchParams()
+                    params.append('batchNo', this.batchNo)
+                    params.append('cellId', this.cellId)
+                    params.append('appid', this.appid)
+
+                    axiosInstance({
+                        url: queryUrl,
+                        method: 'get',
+                        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                        params: params,
+                    }).then((response)=>{
+                        if(response.data.success) {
+                            this.payCell = response.data.result.pay_cell
+                            this.feeData = response.data.result.fee_data
+                            this.totalPrice = response.data.result.total_fee_price
+                            this.sectName = response.data.result.sect_name
+                            this.officeTel = response.data.result.office_tel
+                            this.cspName = response.data.result.csp_name
+                            this.loaded = true
+                        } else {
+                            vant.Dialog({
+                                message: response.data.message
+                            })
+                            return false
+                        }
+                    }).catch((error)=>{ // 请求失败处理
+                        vant.Dialog({
+                            message: '连接服务器超时，请稍后再试！'
+                        })
+                        return false
+                    })
+                },
+                onChange(event){
+					// if(event.length>10) {
+					// 	this.showPayBtn = false
+					// } else {
+					// 	setTimeout(() => {
+                    //             this.showPayBtn = true  
+                    //      }, 300);
+					// }
+                }
+
+            }
+        })
+    </script>
+    <style>
+        .app {
+            width: 100%;
+            min-height: 100vh;
+            margin: 0 0;
+            padding: 0 0;
+            background: #F5F5F5;
+        }
+        .white-space {
+            height: 0.8em;
+            width: 100%;
+            background: #F5F5F5;
+        }
+        .white-space2 {
+            height: 85px;
+            width: 100%;
+            background: #F5F5F5;
+			clear: both;
+        }
+        .title-info {
+            width: 96%;
+            margin: 0.8em 2%;
+        }
+        .csp-name {
+            font-size: 1.4em;
+            font-weight: bold;
+        }
+        .sect-name {
+            /* margin-left: 1.2em; */
+            font-size: 1.1em;
+            width: 100%;
+            display: inline-block;
+            text-align: left;
+            word-break: break-all;
+            color: #969799;
+        }
+        .sect-tel {
+            /* margin-left: 1.2em; */
+            font-size: 0.95em;
+            width: 100%;
+            display: inline-block;
+            text-align: left;
+            word-break: break-all;
+        }
+        .cell-square {
+            width: 100%;
+            display: inline-block;
+            text-align: right;
+            word-break: break-all;
+            color: #969799;
+        }
+        .cell-info {
+            width: 96%;
+            margin: 0.8em 2%;
+            /* box-sizing:border-box; */
+            /* border: 1px solid #cecdc9; */
+        }
+        .cell-info .van-cell__value {
+            min-width: 25%;
+        }
+        .fee-info {
+            width: 96%;
+            margin: 0.8em 2%;
+        }
+        .summary {
+            box-sizing:border-box;
+            width: 96%;
+            margin: 0.8em 2%;
+        }
+        .summary-value {
+            color: #ff8a05;
+            font-weight: bold;
+        }
+        .tel-text {
+            width: 88%;
+            margin: 0.75em 6%;
+            color:  red;
+            font-size: 0.85em;
+        }
+        .tech-support {
+            position: fixed;
+            bottom: 50px;
+            text-align: center;
+            width: 100%;
+            font-size: 0.85em;
+            color: DarkGray;
+            display: block;
+        }
+        .van-goods-action {
+            background: #F5F5F5 !important;
+        }
+    </style>
+</body>
+</html>

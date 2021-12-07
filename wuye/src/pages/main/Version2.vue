@@ -14,8 +14,20 @@
         </div>
         <div class="header">
             <div class="location">
-                <div class="location-image"></div>
-                <div class="location-text">{{this.sectName}}</div>
+                <div class="location-image" @click="switchSect"></div>
+                <div class="location-text" @click="switchSect">{{this.sectName}}
+                    <van-popover
+                        v-model="showSwitchTips"
+                        :overlay="true"
+                        :offset="[-10, 15]"
+                        :close="closeTips"
+                        :closed="closeTips"
+                        >
+                        <div style="margin: 0.3rem 0.2rem; width: 2.5rem; font-size: 0.3rem">
+                            <span>{{switchSectTips}}</span>
+                        </div>
+                    </van-popover>
+                </div>
                 <div class="owner-text" @click="showQrcode" v-show="registered">业主码</div>
                 <div class="owner-image" @click="showQrcode" v-show="registered"></div>
             </div>
@@ -66,8 +78,35 @@
             </van-list>
             <van-empty description="还没有消息哦" image="search" image-size="1.8rem" v-if="noticeList.length==0"/>
         </van-pull-refresh>
-
         <div class="main-end"></div>
+        <div>
+            <van-popup v-model="showSectList" 
+                position="bottom"
+                closeable
+                :style="{ height: '100%' }"
+                :safe-area-inset-bottom="true"
+            >
+                <div class="sect-select">
+                    <div class="sect-select-title">选择所在小区</div>
+                    <div class="sect-select-current-text">当前小区</div>
+                    <div class="sect-select-current-sect"><van-icon name="location" /><span class="sect-select-current-name">{{sectName}}</span></div>
+                    <div class="sect-select-divider"></div>
+                    <van-cell-group>
+                        <van-cell v-for="(house, index) in bindHouList" :key="index" :title="house.sect_name" :border="true" @click="selectHouse(house)">
+                            <template slot="title">
+                                <div>
+                                    <span>{{house.sect_name}}</span>
+                                    <span>{{house.sect_addr}}</span>
+                                </div>
+                            </template>
+                            <template slot="label">
+                                <div>{{house.cell_addr}}</div>
+                            </template>
+                        </van-cell>
+                    </van-cell-group>
+                </div>
+            </van-popup>
+        </div>
         </van-skeleton>
         <foot @userInfo="setUser"></foot>
     </div>
@@ -77,8 +116,11 @@
 <script>
 import Foot from '@/components/footer.vue'
 import VueQr from 'vue-qr'
-import { Skeleton, Popup, Toast, Dialog, Empty, List, PullRefresh, ImagePreview } from 'vant'
+import { Skeleton, Popup, Toast, Dialog, Empty, List, PullRefresh, ImagePreview, Popover, Icon, CellGroup, Cell } from 'vant'
 import NoticeApi from '@/api/NoticeApi.js'
+import TipsApi from '@/api/TipSApi.js'
+import BaseInfoApi from '@/api/BaseInfoApi.js'
+import Storage from '@/assets/js/storage.js'
 
 export default ({
     data (){
@@ -97,7 +139,11 @@ export default ({
             pageLoading: false,
             pageLoadingFinished: false,
             pageLoadError: false,
-            pageRefreshing: false
+            pageRefreshing: false,
+            showSwitchTips: false,
+            switchSectTips: '',
+            showSectList: false,
+            bindHouList: [],
         }
     },
     watch: {
@@ -120,8 +166,13 @@ export default ({
         [List.name]: List,
         [PullRefresh.name]: PullRefresh,
         [ImagePreview.name]: ImagePreview,
+        [Popover.name]: Popover,
+        [Icon.name]: Icon,
+        [CellGroup.name]: CellGroup,
+        [Cell.name]: Cell,
     },
     mounted(){
+        this.getSwitchSectTips()
     },
     methods: {
         setUser(data){
@@ -202,7 +253,6 @@ export default ({
                     this.pageLoading = false
                     this.pageRefreshing = false
                     let data = response.data
-                    console.log(data)
                     if(data && data.errorCode === 0){
                         if(data.result && data.result.length ===0){
                             this.pageLoadingFinished = true
@@ -237,7 +287,75 @@ export default ({
             ImagePreview({
                 images: imageArr,
                 startPosition: index,
-            });
+            })
+        },
+        closeTips(){
+        },
+        getSwitchSectTips() {
+            TipsApi.getSwitchSectTips('index').then((response)=>{
+                let data = response.data
+                console.log(data)
+                if(data && data.errorCode === 0){
+                    if(data.result){
+                        this.showSwitchTips = true
+                        this.switchSectTips = data.result
+                    }
+                }
+            }).catch((error)=>{
+                console.log(error)
+            })
+        },
+        switchSect() {
+            this.showSectList = true
+            this.getBindHouList()
+        },
+        getBindHouList() {
+            BaseInfoApi.queryHouseByUser().then((response)=>{
+                let data = response.data
+                console.log(data)
+                if(data && data.errorCode === 0){
+                    if(data.result){
+                        this.bindHouList = data.result
+                    }
+                }
+            }).catch((error)=>{
+                console.log(error)
+                Toast(error)
+            })
+        },
+        selectHouse(house) {
+            let param = {
+                province: house.province_name,
+                city: house.city_name,
+                county: house.region_name,
+                sectId: house.sect_id,
+                sectName: house.sect_name,
+                cspId: house.csp_id
+            }
+            BaseInfoApi.switchSect(param).then((response)=>{
+                let data = response.data
+                if(data && data.errorCode === 0){
+                    if(data.result) {
+                        this.userInfo = data.result
+                        this.menuList = this.userInfo.menuList
+                        this.sectName = this.userInfo.xiaoquName
+                        if(!this.sectName) {
+                            this.sectName = '游客'
+                        }
+                        Storage.set('userInfo', data.result)
+                        this.common.updatecookie(data.result.cardStatus,data.result.cardService,data.result.id,data.result.appid,
+                        data.result.cspId,data.result.sectId,data.result.cardPayService,data.result.bgImageList,data.result.wuyeTabsList,
+                        data.result.qrCode,data.result);
+                    }
+                } else {
+                    Toast(data.message)
+                }
+                this.showSectList = false
+                
+            }).catch((error)=>{
+                console.log(error)
+                Toast(error)
+            })
         }
     },
 
@@ -500,5 +618,39 @@ export default ({
     width: 100%;
     height: 1.8rem;
 }
+.sect-select {
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
 
+    &-title {
+        margin: 0.4rem 0;
+        text-align: center;
+        font-weight: bolder;
+        font-size: 0.4rem;
+    }
+    &-current {
+        &-text  {
+            margin: 0.25rem 0.4rem;
+            font-size: 0.3rem;
+            color: #A9A9A9;
+        }
+        &-sect {
+            margin: 0rem 0.4rem;
+            font-size: 0.3rem;
+        }
+        &-name {
+            font-weight: 600;
+            font-size: 0.3rem;
+            vertical-align: text-top;
+        }
+    }
+    &-divider {
+        margin-top: 0.4rem;
+        height: 0.2rem;
+        width: 100%;
+        background-color: #F7F7F8;
+    }
+}
 </style>

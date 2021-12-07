@@ -16,7 +16,13 @@ const baseInfoApi = {
     },
     queryHouseByVersno(param){
         return Http.get(baseUrl + '/hexiehouse/' + param, null)
-    }
+    },
+    queryHouseByUser() {
+        return Http.get(baseUrl + '/hexiehouses', null)
+    },
+    switchSect(data) {
+        return Http.post(baseUrl + '/switchSect', data)
+    },
 
 }
 export default baseInfoApi
