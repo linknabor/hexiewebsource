@@ -20,8 +20,6 @@
                         v-model="showSwitchTips"
                         :overlay="true"
                         :offset="[-10, 15]"
-                        :close="closeTips"
-                        :closed="closeTips"
                         >
                         <div style="margin: 0.3rem 0.2rem; width: 2.5rem; font-size: 0.3rem">
                             <span>{{switchSectTips}}</span>
@@ -288,8 +286,6 @@ export default ({
                 images: imageArr,
                 startPosition: index,
             })
-        },
-        closeTips(){
         },
         getSwitchSectTips() {
             TipsApi.getSwitchSectTips('index').then((response)=>{
