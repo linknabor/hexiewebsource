@@ -16,7 +16,7 @@
     <div class="header" v-show="selected==='b'">
         <div class="location">
             <div class="location-image" @click="switchSect"><van-icon name="location-o" size="large"></van-icon></div>
-            <div class="location-text" @click="switchSect">{{this.sectName}}
+            <div class="location-text" @click="switchSect">{{this.sectName}}<span><a href="#" style="color: #1989fa">[切换]</a></span>
                 <van-popover
                     v-model="showSwitchTips"
                     :overlay="true"
@@ -1307,8 +1307,8 @@ body {
         float: left;
         text-align: left;
         font-size: 0.28rem;
-        // color: #ff8a00;
-        color: #1989fa;
+        color: #ff8a00;
+        // color: #1989fa;
     }
 }
 .selected {
