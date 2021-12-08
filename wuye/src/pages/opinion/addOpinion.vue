@@ -71,13 +71,13 @@
         addresses: [],
         page: 'main',
         operType: 'init', //init、add、search
+        sectId: '',
       };
     },
     components: {
       [Toast.name]: Toast,
       [Uploader.name]: Uploader,
       [Field.name]: Field,
-      [Dialog.name]: Dialog,
     },
     mounted() {
       var sectId = cookie.get('sectId');
@@ -85,12 +85,13 @@
         Dialog({ message: '未绑定房屋' });
         this.$router.push({path: '/Version2'})
       }
+      this.sectId = sectId
       this.getSect()
     },
     methods: {
 
       getSect() {
-        opinionApi.getAddr().then((response) => {
+        opinionApi.getAddr(this.sectId).then((response) => {
           let data = response.data
           if (data.result && data.success) {
             this.address = data.result[0];
@@ -155,7 +156,7 @@
       },
 
       dataAddress() {
-        opinionApi.getAddr().then((response) => {
+        opinionApi.getAddr(this.sectId).then((response) => {
           let data = response.data
           if (data.success && data.result) {
             this.addresses = data.result;

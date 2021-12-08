@@ -46,7 +46,7 @@
 <script>
   import opinionApi from "@/api/OpinionApi.js";
   import {List, PullRefresh, Uploader, ImagePreview, Empty, Dialog } from 'vant';
-  // import cookie  from 'js-cookie';
+  import cookie  from 'js-cookie';
 
   export default {
     name: "opinionList",
@@ -68,7 +68,6 @@
       [Uploader.name]: Uploader,
       [ImagePreview.Component.name]: ImagePreview.Component,
       [Empty.name]: Empty,
-      [Dialog.name]: Dialog,
     },
     mounted() {
       var sectId = cookie.get('sectId');
