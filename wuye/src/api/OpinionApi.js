@@ -32,8 +32,8 @@ const opinionApi = {
     return http.post4File(baseUrl + 'thread/upload', data)
   },
 
-  getAddr(){
-    return http.get(baseUrl + '/hexiehouses', null)
+  getAddr(param){
+    return http.get(baseUrl + '/hexiehouses?sectId=' + param, null)
   }
 
 
