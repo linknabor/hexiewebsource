@@ -1275,6 +1275,7 @@ export default {
                         this.billPage = 1  //页码重置
                         this.params.currentPage = 1
                         this.zong()
+                        isloadPage = false
                     }
                 } else {
                     Toast(data.message)
