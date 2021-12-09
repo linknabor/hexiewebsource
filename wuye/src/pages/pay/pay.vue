@@ -1261,6 +1261,7 @@ export default {
                         data.result.qrCode,data.result);
                         this.mine = true
                         this.zong()
+                        this.billPage =1  //页码重置
                     }
                 } else {
                     Toast(data.message)
