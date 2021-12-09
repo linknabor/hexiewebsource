@@ -384,8 +384,18 @@ export default {
     selected(newv,old){
       isloadPage=false;
       if(newv=='b'){
-         this.getSwitchSectTips()
-         vm.zong();
+        this.getSwitchSectTips()
+        this.billPage = 1  //页码重置
+        this.params.currentPage = 1
+        this.params.house_id = ''
+        if(!this.sectId){
+          this.userInfo = Storage.get("userInfo")
+          this.sectId = this.userInfo.sectId
+          this.params.sect_id = this.userInfo.sectId
+        } else {
+          this.params.sect_id = this.sectId
+        }
+        this.zong()
       }
     }
   },
@@ -591,7 +601,7 @@ export default {
         this.$route.query.userunit +
         "&regionname=" +
         this.$route.query.City;
-      vm.receiveData.getData(vm, url, "Datas", function() {
+        vm.receiveData.getData(vm, url, "Datas", function() {
             //判断是标准还是专业版
             // if (vm.Datas.result.sect_info[0].version == "01") {
             //   vm.getversion = vm.Datas.result.sect_info[0].version;
@@ -1260,6 +1270,10 @@ export default {
                         data.result.cspId,data.result.sectId,data.result.cardPayService,data.result.bgImageList,data.result.wuyeTabsList,
                         data.result.qrCode,data.result);
                         this.mine = true
+                        this.sectId = house.sect_id
+                        this.params.sect_id = this.sectId
+                        this.billPage = 1  //页码重置
+                        this.params.currentPage = 1
                         this.zong()
                     }
                 } else {
