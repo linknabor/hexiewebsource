@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1,initial-scale=1,user-scalable=no"/>
+    <meta name="referrer" content="no-referrer"/>
+    <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="pragma" content="no-cache"/>
+    <meta http-equiv="expires" content="0"/>
+    <title>申请电子收据成功</title>
+    
+</head>
+<body>
+    <style>
+        [v-cloak]{
+            display: none;
+        }
+    </style>
+    <div id="app" class="app" v-cloak>
+        <van-overlay :show="false" z-index="101">
+            <van-loading type="circle" color="#ff9834" vertical style="top:40vh"/>
+        </van-overlay>
+        <div class="qrcode">
+            <van-image
+                width="100px"
+                height="100px"
+                fit="contain"
+                src="./static/image/success.png"
+            />
+            </van>
+        </div>
+        <div class="desctext">申请成功，您申请的电子收据将通过公众号消息发送到您的手机，请注意查收！</div>
+        <div class="closebtn"><van-button plain hairline type="primary" size="large" @click="closePage">关闭</van-button></div>
+        
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6/dist/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vant@2.12/lib/vant.min.js"></script>
+    <script src="https://unpkg.com/axios@0.21.4/dist/axios.min.js"></script>
+    <!-- 引入样式文件 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@2.12/lib/index.css" />
+    <script>
+
+        var serverUrl = /127|test/.test(location.origin)?'https://test.e-shequ.cn/wechat/hexie/wechat':
+            /uat/.test(location.origin)?'https://uat.e-shequ.cn/wechat/hexie/wechat' : 'https://www.e-shequ.cn/wechat/hexie/wechat/'
+
+        let beginTime = new Date()
+
+        function getParam(url, name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+            var r = url.match(reg);  //匹配目标参数
+            if (r != null) {
+                return unescape(r[2]);
+            } else {
+                return null;
+            }
+        }
+        function makeCode (url) {
+            var qrcode = new QRCode(document.getElementById("qrcode"), {
+                width: 300,
+                height: 300,
+            });
+            qrcode.makeCode(url);
+        }
+
+        const axiosInstance = axios.create({
+            baseURL: serverUrl,
+            timeout: 10000,
+        })
+
+        var app = new Vue({
+            el: '#app',
+            created() {
+            },
+            mounted() {
+            },
+            data: {
+            },
+            watch: {
+            },
+            methods: {
+                closePage(){
+                    try {
+                        WeixinJSBridge.call('closeWindow')
+                    } catch (error) {
+                        document.addEventListener('WeixinJSBridgeReady', function(){ WeixinJSBridge.call('closeWindow'); }, false)
+                    }
+                    
+                }
+
+            }
+        })
+    </script>
+    <style>
+        .app {
+            width: 100%;
+            min-height: 100vh;
+            margin: 0 0;
+            padding: 0 0;
+            background: #F5F5F5;
+        }
+        .qrcode {
+            width: 100px;
+            margin: 0 auto;
+            padding-top: 8rem;
+        }
+        .desctext {
+            position: relative;
+            margin: 2rem 2rem;
+            text-align: center;
+            font-size: large;
+            font-weight: bold;
+        }
+        .closebtn {
+            position: relative;
+            margin: 8rem 2rem;
+            text-align: center;
+            font-size: large;
+        }
+        
+    </style>
+</body>
+</html>
