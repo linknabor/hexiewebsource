@@ -5,7 +5,7 @@ let baseUrl = Config.baseUrl
 const receiptApi = {
 
     getReceipt(param) {
-        return http.get(baseUrl + 'recept/detail', param, null)
+        return http.get(baseUrl + 'receipt/detail', param)
     }
 
 }

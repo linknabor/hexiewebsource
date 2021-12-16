@@ -1,91 +1,146 @@
 <template>
     <div class="main">
-        <div class="top"></div>
-        <div class="inner">
-            <div class="title-image"></div>
-            <div class="title">
-                <span class="title-text">电子收据</span>
-            </div>
-            <div class="csp"><span class="csp-text">上海很长名字的演示物业公司</span></div>
-            <div class="sect">
-                <span class="sect-text">很长名字小区得试一试啊哈哈哈哈</span>
-            </div>
-            <div class="sectaddr">
-                <span class="sectaddr-text">上海市浦东新区学林路xxxx弄11号</span>
-            </div>
-            <div class="mid-space"></div>
-            <div class="divide-line"></div>
-            <div class="paymethod">
-                <div class="paymethod-left">
-                    <span class="paymethod-text">支付方式</span>
+        <div class="white-blank" v-show="showSkeleton==true"></div>
+        <van-skeleton title :row="3" :loading="showSkeleton">
+            <div class="top"></div>
+            <div class="inner">
+                <div class="title-image"></div>
+                <div class="title">
+                    <span class="title-text">电子收据</span>
                 </div>
-                <div class="paymethod-right">
-                    <span class="paymethod-value">微信公众号</span>
+                <div class="csp"><span class="csp-text">{{receipt.csp_name}}</span></div>
+                <div class="sect">
+                    <span class="sect-text">{{receipt.sect_name}}</span>
                 </div>
-            </div>
-            <div class="trandetail">
-                <div class="trandetail-left">
-                    <span class="trandetail-text">交易时间</span>
-                </div>
-                <div class="trandetail-right">
-                    <span class="trandetail-value">2021-12-14 18:54:01</span>
-                </div>
-            </div>
-            <div class="trandetail">
-                <div class="trandetail-left">
-                    <span class="trandetail-text">交易金额</span>
-                </div>
-                <div class="trandetail-right">
-                    <span class="trandetail-value">255.00</span>
-                </div>
-            </div>
-            <div class="stamp"></div>
-            <div class="mid-space2"></div>
-            <div class="divide-line"></div>
-            <div class="details">
-                <div class="details-top"></div>
-                <div class="details-contents">
-                    <div class="content">
-                        <div class="content-left">
-                            <span class="content-text">收费内容</span>
-                        </div>
-                        <div class="content-right">
-                            <span class="content-value">2021年1月-2021年12月</span>
-                        </div>
+                <!-- <div class="sectaddr">
+                    <span class="sectaddr-text">{{receipt.cell_addr}}</span>
+                </div> -->
+                <div class="mid-space"></div>
+                <div class="divide-line"></div>
+                <div class="paymethod">
+                    <div class="paymethod-left">
+                        <span class="paymethod-text">支付方式</span>
                     </div>
-                    <div class="content">
-                        <div class="content-left">
-                            <span class="content-text">物业管理费</span>
-                        </div>
-                        <div class="content-right">
-                            <span class="content-value">￥1567.00</span>
-                        </div>
+                    <div class="paymethod-right">
+                        <span class="paymethod-value">{{receipt.pay_method}}</span>
                     </div>
-                    <div class="content">
-                        <div class="content-left">
-                            <span class="content-text">电梯水泵运行费</span>
-                        </div>
-                        <div class="content-right">
-                            <span class="content-value">￥2856.50</span>
-                        </div>
+                </div>
+                <div class="trandetail">
+                    <div class="trandetail-left">
+                        <span class="trandetail-text">交易时间</span>
                     </div>
-                    
+                    <div class="trandetail-right">
+                        <span class="trandetail-value">{{receipt.tran_date}}</span>
+                    </div>
+                </div>
+                <div class="trandetail">
+                    <div class="trandetail-left">
+                        <span class="trandetail-text">交易金额</span>
+                    </div>
+                    <div class="trandetail-right">
+                        <span class="trandetail-value">{{receipt.tran_amt}}</span>
+                    </div>
+                </div>
+                <div class="stamp">
+                    <div class="stamp-logo"></div>
+                </div>
+                <div class="mid-space2"></div>
+                <div class="divide-line"></div>
+                <div class="details">
+                    <div class="details-top"></div>
+                    <div class="details-contents" v-for="(detail, index) in receiptDetail" :key="index">
+                        <div class="content">
+                            <div class="content-left">
+                                <span class="content-text">{{detail.fee_description}}</span>
+                            </div>
+                            <div class="content-right">
+                                <span class="content-value"></span>
+                            </div>
+                        </div>
+                        <div class="content">
+                            <div class="content-left">
+                                <span class="content-text">{{detail.fee_name}}</span>
+                            </div>
+                            <div class="content-right">
+                                <span class="content-value">{{detail.tran_amt}}</span>
+                            </div>
+                        </div>
+                        <!-- <div class="content">
+                            <div class="content-left">
+                                <span class="content-text"></span>
+                            </div>
+                            <div class="content-right">
+                                <span class="content-value"></span>
+                            </div>
+                        </div> -->
+                        
+                    </div>
+                    <div class="details-bottom"></div>
                 </div>
             </div>
-        </div>
+        </van-skeleton>
     </div>
 </template>
 
 <script>
 import ReceiptApi from "@/api/ReceiptApi.js";
-import { Toast, Skeleton, Empty, List } from "vant";
+import { Dialog, Toast, Skeleton, Empty } from "vant";
 
 export default ({
     data() {
         return {
-            
+            showOverlay: false,
+            showSkeleton: true,
+            appid: '',
+            receiptId: '',
+            receipt: {},
+            receiptDetail: [],
         }
     },
+    components: {
+        [Toast.name]: Toast,
+        [Skeleton.name]: Skeleton,
+        [Empty.name]: Empty,
+    },
+    created() {
+        this.appid = this.getUrlParam("oriApp")
+        this.receiptId = this.$route.query.receiptId
+    },
+    mounted() {
+    },
+    watch: {
+        receiptId: {
+            handler(val){
+                if(val){
+                    this.getReceipt()
+                }
+            },
+            deep: true
+        },
+    },
+    methods: {
+        getReceipt() {
+            let params = {
+                appid: this.appid,
+                receiptId: this.receiptId,
+            }
+            ReceiptApi.getReceipt(params).then((response)=>{
+                console.log(response)
+                this.showSkeleton = false
+                if(response.data.success) {
+                    this.receipt = response.data.result.receipt
+                    this.receiptDetail = response.data.result.receiptDetail
+                } else {
+                    Dialog.alert({
+                        message: response.data.message
+                    })
+                }
+                
+            }).catch((error)=>{
+                console.log(error)
+            })
+        }
+    }
 })
 </script>
 
@@ -103,6 +158,7 @@ export default ({
 }
 .inner {
     margin: 0% 5% 0% 5%;
+    padding-bottom: 0.6rem;
     background-size: cover;
     background-repeat: no-repeat;
     min-height: 9.5rem;
@@ -131,7 +187,7 @@ export default ({
     }
 }
 .csp {
-    margin: 0 0 0 0.6rem;
+    margin: 0.25rem 0 0 0.6rem;
     height: 0.34rem;
     &-text {
         color: #989898;
@@ -232,7 +288,17 @@ export default ({
 }
 .mid-space2 {
     width: 100%;
-    height: 0.48rem;
+    height: 0.32rem;
+}
+.stamp {
+    margin: -0.6rem 2.94rem 0rem 2.94rem;
+    &-logo {
+        width: 0.96rem;
+        height: 0.68rem;
+        background-size: cover;
+        background-repeat: no-repeat;
+        .bg-image('../../assets/images/receipt/shouqi');
+    }
 }
 .details {
     margin: 0rem 0.44rem 0 0.44rem;
@@ -244,11 +310,18 @@ export default ({
     border-right: 1px dotted #C9C9C9;
     &-top {
         width: 100%;
-        height: 0.12rem;
+        height: 0.02rem;
+    }
+    &-bottom {
+        width: 100%;
+        height: 0.2rem;
+    }
+    &-contents {
+        margin-top: 0.2rem;
     }
 }
 .content {
-    margin: 0.24rem 0.16rem 0 0.16rem;
+    margin: 0.06rem 0.16rem 0 0.16rem;
     height: 0.34rem;
     &-text {
         color: #888888;
@@ -263,13 +336,17 @@ export default ({
         line-height: 0.34rem;
     }
     &-left {
-        width:42%; 
+        width:80%; 
         float: left;
     }
     &-right {
-        width:58%; 
+        width:20%; 
         float: right; 
         text-align: right;
     }
+}
+.white-blank {
+    height: 1rem;
+    width: 100%;
 }
 </style>
