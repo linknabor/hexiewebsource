@@ -7,7 +7,7 @@
     <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate"/>
     <meta http-equiv="pragma" content="no-cache"/>
     <meta http-equiv="expires" content="0"/>
-    <title>申请电子凭证</title>
+    <title>申请电子收据</title>
     
 </head>
 <body>
@@ -154,6 +154,7 @@
                         })
                         return false
                     }
+                    this.showOverlay = true
                     let queryUrl = '/receipt/trade'
                     let params = new URLSearchParams()
                     params.append('tradeWaterId', this.tradeWaterId)
@@ -180,10 +181,13 @@
                             })
                             return false
                         }
+                        this.showOverlay = false
+
                     }).catch((error)=>{ // 请求失败处理
                         vant.Dialog({
                             message: '连接超时，请稍后再试'
                         })
+                        this.showOverlay = false
                         return false
                     })
                 },
@@ -263,6 +267,40 @@
                             return false
                         }
                     }
+
+                    this.showOverlay = true
+                    let queryUrl = '/receipt/apply'
+                    let data  = {
+                        tradeWaterId: this.tradeWaterId,
+                        mobile: this.mobile,
+                        vericode: this.vericode,
+                        openid: this.openid,
+                        appid: this.appid,
+                    }
+                    axiosInstance({
+                        url: queryUrl,
+                        method: 'post',
+                        headers: {'Content-Type': 'application/json'},
+                        data: data,
+                    }).then((response)=>{
+                        if(response.data.success) {
+                            if("succeeded"===response.data.result) {
+                                window.location.href = './applyReceiptSuccess.html';
+                            }
+                        } else {
+                            this.showOverlay = false
+                            vant.Dialog({
+                                message: response.data.message
+                            })
+                            return false
+                        }
+                    }).catch((error)=>{ // 请求失败处理
+                        this.showOverlay = false
+                        vant.Dialog({
+                            message: '连接超时，请稍后再试'
+                        })
+                        return false
+                    })
                 }
             }
         })
