@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1,initial-scale=1,user-scalable=no"/>
+    <meta name="referrer" content="no-referrer"/>
+    <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="pragma" content="no-cache"/>
+    <meta http-equiv="expires" content="0"/>
+    <title>申请电子凭证</title>
+    
+</head>
+<body>
+    <style>
+        [v-cloak]{
+            display: none;
+        }
+    </style>
+    <div id="app" class="app" v-cloak>
+        <van-overlay :show="showOverlay" z-index="101">
+            <van-loading type="circle" color="#ff9834" vertical style="top:40vh"/>
+        </van-overlay>
+        <div class="white-space"></div>
+        <div class="trade_detail">
+            <van-cell title="交易日期"  :value="trade.tran_date"/>
+        </div>
+        <div class="trade_detail">
+            <van-cell title="交易金额"  :value="trade.total_amt"/>
+        </div>
+        <div class="trade_detail">
+            <van-cell title="支付方式"  :value="trade.pay_method"/>
+        </div>
+        <div class="white-space2"></div>
+        <div>
+            <van-field
+                v-model="mobile"
+                name="手机号码"
+                label="手机号码"
+                clearable
+                placeholder="手机号码"
+                @input="inputMobile"
+                maxlength="11"
+            />
+        </div>
+        <div style="width: 100%; height: 2vh;"></div>
+        <div>
+            <van-field
+                v-model="vericode"
+                v-show="showVericode"
+                center
+                clearable
+                label="短信验证码"
+                placeholder="请输入短信验证码"
+                maxlength="6"
+                >
+                <template #button>
+                    <van-button size="small" type="primary" @click="getVericode" v-show="showSendBtn">发送验证码</van-button>
+                    <van-button size="small" type="primary" @click="getVericode" disabled v-show="showSendBtn===false">重新发送({{timeout}})</van-button>
+                </template>
+            </van-field>
+        </div>
+        <div style="padding: 10px 0 0 15px;"><span style="color: red;font-size: 12px;">申请的电子收据将通过公众号消息发送</span></div>
+        <div class="tech-support">由合协管家提供技术支持</div>
+        <van-goods-action>
+            <van-goods-action-button type="warning" text="申请" @click="submit"/>
+        </van-goods-action>
+        </div>
+        
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6/dist/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vant@2.12/lib/vant.min.js"></script>
+    <script src="https://unpkg.com/axios@0.21.4/dist/axios.min.js"></script>
+    <!-- 引入样式文件 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@2.12/lib/index.css" />
+    <script>
+        // var serverUrl = /127|test/.test(location.origin)?'https://test.e-shequ.cn/wechat/hexie/wechat':
+        //     /uat/.test(location.origin)?'https://uat.e-shequ.cn/wechat/hexie/wechat' : 'https://www.e-shequ.cn/wechat/hexie/wechat/'
+
+            var serverUrl = /127|test/.test(location.origin)?'http://127.0.0.1:86':
+            /uat/.test(location.origin)?'https://uat.e-shequ.cn/wechat/hexie/wechat' : 'https://www.e-shequ.cn/wechat/hexie/wechat/'
+
+        const axiosInstance = axios.create({
+            baseURL: serverUrl,
+            timeout: 10000,
+        })
+
+        function getParam(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+            var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+            if (r != null) return unescape(r[2]); return null; //返回参数值
+        }
+        var app = new Vue({
+            el: '#app',
+            created() {
+            },
+            mounted() {
+                this.getUrlParam()
+                this.showOverlay = false
+            },
+            data: {
+                showOverlay: true,
+                showVericode: true,
+                showSendBtn: true,
+                token: '',
+                timeout: 60,
+                userMobile: '', //如果在hexie已经注册过，则这里有值。当这个值跟用户输入的值一样时，不需要输入验证码
+                mobile: '',
+                vericode: '',
+                tradeWaterId: '',
+                appid: '',
+                openid: '',
+                trade: {},
+            },
+            watch: {
+                tradeWaterId: {
+                    handler(newValue, oldValue) {
+                        if(newValue && newValue.length === 18) {
+                            this.getTrade()
+                        }
+                　　},
+                　　immediate: true
+                },
+                trade: {
+                    handler(newValue, oldValue) {
+                        if(newValue) {
+                            setTimeout(() => {
+                                this.showOverlay = false    
+                            }, 500);
+                        }
+                    }
+                }
+            },
+            methods: {
+                getUrlParam() {
+                    let location = window.location.search
+                    this.tradeWaterId = getParam("trade_water_id")
+                    this.openid = getParam("openid")
+                    this.appid = getParam("oriApp")
+                    this.userMobile = getParam("tel")
+                },
+                inputMobile(event) {
+                    if(event.length === 11 && event == this.userMobile) {
+                        this.showVericode = false
+                    } else {
+                        if(!this.showVericode) {
+                            this.showVericode = true
+                        }
+                    }
+                },
+                getTrade() {
+                    if(!this.tradeWaterId || this.tradeWaterId.length !== 18){
+                        vant.Dialog({
+                            message: '不正确的交易编号',
+                        })
+                        return false
+                    }
+                    let queryUrl = '/receipt/trade'
+                    let params = new URLSearchParams()
+                    params.append('tradeWaterId', this.tradeWaterId)
+                    params.append('appid', this.appid)
+
+                    axiosInstance({
+                        url: queryUrl,
+                        method: 'get',
+                        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                        params: params,
+                    }).then((response)=>{
+                        if(response.data.success) {
+                            let token = response.headers['Access-Control-Allow-Token']
+                            if(!token) {
+                                token = response.headers['access-control-allow-token']
+                            }
+                            if(response.data.result) {
+                                this.trade = response.data.result
+                                this.token = token
+                            }
+                        } else {
+                            vant.Dialog({
+                                message: response.data.message
+                            })
+                            return false
+                        }
+                    }).catch((error)=>{ // 请求失败处理
+                        vant.Dialog({
+                            message: '连接超时，请稍后再试'
+                        })
+                        return false
+                    })
+                },
+                getVericode () {
+                    console.log(this.vericode)
+                    if(!this.vericode || this.vericode.length !== 6){
+                        vant.Dialog({
+                            message: '请输入正确的短信验证码',
+                        })
+                        return false
+                    }
+                    if(!this.mobile || this.mobile.length !==11) {
+                        vant.Dialog({
+                            message: '请输入正确的手机号',
+                        })
+                        return false
+                    }
+                    this.showSendBtn = false
+                    this.timer()
+                    let queryUrl = '/getyzm1?trade_water_id='+this.tradeWaterId
+                    let data  = {
+                        type: 105,
+                        appid: this.appid,
+                        mobile: this.mobile,
+                    }
+                    axiosInstance({
+                        url: queryUrl,
+                        method: 'post',
+                        headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Token': this.token},
+                        data: data,
+                    }).then((response)=>{
+                        if(response.data.success) {
+                            if(response.data.result) {
+                                this.trade = response.data.result
+                            }
+                        } else {
+                            vant.Dialog({
+                                message: response.data.message
+                            })
+                            return false
+                        }
+                    }).catch((error)=>{ // 请求失败处理
+                        vant.Dialog({
+                            message: '连接超时，请稍后再试'
+                        })
+                        return false
+                    })
+                },
+                timer() {
+                    if(this.timeout > 0) {
+                        this.timeout --
+                        setTimeout(() => {
+                            this.timer()
+                        }, 1000);
+                        
+                    } else {
+                        this.showSendBtn = true
+                        this.timeout = 60
+                    }
+                },
+                submit() {
+                    let mobile = this.mobile
+                    let reg = /^1[3-9][0-9]\d{8}$/;
+                    if( !reg.test(mobile)){
+                        vant.Toast('请输入正确的手机号')
+                        return false
+                    }
+                    if(this.mobile != this.userMobile) {
+                        let vericode = this.vericode
+                        if(!vericode) {
+                            vant.Toast('请输入验证码')
+                            return false
+                        }
+                        vericode = vericode.trim()
+                        if(vericode.length !== 6) {
+                            vant.Toast('请输入正确的验证码')
+                            return false
+                        }
+                    }
+                }
+            }
+        })
+    </script>
+    <style>
+        .app {
+            width: 100%;
+            min-height: 100vh;
+            margin: 0 0;
+            padding: 0 0;
+            background: #F5F5F5;
+        }
+        .white-space {
+            width: 100%;
+            height: 2vh;
+            margin: 0 0;
+            padding: 0 0;
+            background: #F5F5F5;
+        }
+        .white-space2 {
+            width: 100%;
+            height: 10vh;
+            margin: 0 0;
+            padding: 0 0;
+            background: #F5F5F5;
+        }
+        .trade_detail {
+            width: 100%;
+            margin: 1px 0;
+        }
+        .tech-support {
+            position:fixed;
+            text-align: center;
+            width: 100%;
+            font-size: 0.85em;
+            color: DarkGray;
+            display: block;
+            bottom: 10vh;
+        }
+        .van-goods-action {
+            background: #F5F5F5 !important;
+        }
+    </style>
+</body>
+</html>
