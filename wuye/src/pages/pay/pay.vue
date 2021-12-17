@@ -389,7 +389,9 @@ export default {
         this.params.currentPage = 1
         this.params.house_id = ''
         if(!this.sectId){
-          this.userInfo = Storage.get("userInfo")
+          if(!this.userInfo) {
+            this.userInfo = Storage.get("userInfo")
+          }
           this.sectId = this.userInfo.sectId
           this.params.sect_id = this.userInfo.sectId
         } else {
@@ -422,7 +424,10 @@ export default {
   methods: {
     initUser() {
       this.userInfo = Storage.get("userInfo")
-      this.sectName = this.userInfo.xiaoquName
+      if(this.userInfo) {
+        this.sectName = this.userInfo.xiaoquName
+      }
+      
     },
     TabsList() {//获取localstorage中的选项卡
       let wuyeTabs = window.localStorage.getItem("wuyeTabsList");
@@ -452,6 +457,9 @@ export default {
             }
             vm.sectId=cookie.get('sectId'); //获取sectid
             vm.cardPayService =cookie.get('cardPayService');
+            Storage.set("userInfo", n.result)
+            this.userInfo = n.result
+            vm.initUser()
           },
           r = function(n) {
 
