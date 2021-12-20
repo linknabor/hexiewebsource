@@ -48,35 +48,32 @@
                 <div class="divide-line"></div>
                 <div class="details">
                     <div class="details-top"></div>
-                    <div class="details-contents" v-for="(detail, index) in receiptDetail" :key="index">
+                    <div class="details-contents" v-for="(details, key) in receiptDetail" :key="key">
                         <div class="content">
-                            <div class="content-left">
-                                <span class="content-text">{{detail.fee_description}}</span>
+                            <div class="content-title">
+                                <span class="content-title-text">{{key}}</span>
                             </div>
-                            <div class="content-right">
-                                <span class="content-value"></span>
+                            <div v-for="(detail, detailKey) in details" :key="detailKey">
+                                <div class="content-detail">
+                                    <span class="content-text">{{detail.fee_description}}</span>
+                                </div>
+                                <div class="content-detail">
+                                    <div class="content-detail-left">
+                                    <span class="content-text">{{detail.fee_name}}</span>
+                                </div>
+                                <div class="content-detail-right">
+                                    <span class="content-value">{{detail.tran_amt}}</span>
+                                </div>
+                                </div>
+                                
                             </div>
                         </div>
-                        <div class="content">
-                            <div class="content-left">
-                                <span class="content-text">{{detail.fee_name}}</span>
-                            </div>
-                            <div class="content-right">
-                                <span class="content-value">{{detail.tran_amt}}</span>
-                            </div>
-                        </div>
-                        <!-- <div class="content">
-                            <div class="content-left">
-                                <span class="content-text"></span>
-                            </div>
-                            <div class="content-right">
-                                <span class="content-value"></span>
-                            </div>
-                        </div> -->
-                        
                     </div>
                     <div class="details-bottom"></div>
                 </div>
+            </div>
+            <div class="hint">
+                <span class="hint-text">可在"个人中心"->"我的收据"中查看所有申请过的收据</span>
             </div>
         </van-skeleton>
     </div>
@@ -129,7 +126,7 @@ export default ({
                 this.showSkeleton = false
                 if(response.data.success) {
                     this.receipt = response.data.result.receipt
-                    this.receiptDetail = response.data.result.receiptDetail
+                    this.receiptDetail = response.data.result.details
                 } else {
                     Dialog.alert({
                         message: response.data.message
@@ -322,7 +319,6 @@ export default ({
 }
 .content {
     margin: 0.06rem 0.16rem 0 0.16rem;
-    height: 0.34rem;
     &-text {
         color: #888888;
         font-family: "PingFang SC";
@@ -335,14 +331,38 @@ export default ({
         font-size: 0.24rem;
         line-height: 0.34rem;
     }
-    &-left {
-        width:80%; 
-        float: left;
+    &-title {
+        width: 100%;
+        height: 0.36rem;
+        &-text {
+            color: black;
+            font-weight: bold;
+            font-family: "PingFang SC";
+            font-size: 0.24rem;
+            line-height: 0.34rem;
+        }
     }
-    &-right {
-        width:20%; 
-        float: right; 
-        text-align: right;
+    &-detail {
+        width: 100%;
+        height: 0.34rem;
+        &-left {
+            width:80%; 
+            float: left;
+        }
+        &-right {
+            width:20%; 
+            float: right; 
+            text-align: right;
+        } 
+    }
+      
+}
+.hint {
+    width: 90%;
+    margin: 0.1rem 2% 0.2rem 8%;
+    &-text {
+        color: red;
+        font-size: 0.22rem;
     }
 }
 .white-blank {
