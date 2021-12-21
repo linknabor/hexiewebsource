@@ -50,11 +50,11 @@
                     <div class="details-top"></div>
                     <div class="details-contents" v-for="(details, key) in receiptDetail" :key="key">
                         <div class="content">
-                            <div class="content-title">
+                            <div class="content-title" v-if="key">
                                 <span class="content-title-text">{{key}}</span>
                             </div>
                             <div v-for="(detail, detailKey) in details" :key="detailKey">
-                                <div class="content-detail">
+                                <div class="content-detail" v-if="detail.fee_description">
                                     <span class="content-text">{{detail.fee_description}}</span>
                                 </div>
                                 <div class="content-detail">
@@ -73,7 +73,7 @@
                 </div>
             </div>
             <div class="hint">
-                <span class="hint-text">可在"个人中心"->"我的收据"中查看所有申请过的收据</span>
+                <span class="hint-text">可在个人中心-><a href="#" style="color: #1E90FF" @click="myReceipt">我的收据</a>中查看所有申请过的收据</span>
             </div>
         </van-skeleton>
     </div>
@@ -101,6 +101,9 @@ export default ({
     },
     created() {
         this.appid = this.getUrlParam("oriApp")
+        if(!this.appid) {
+            this.appid = this.$route.query.appid
+        }
         this.receiptId = this.$route.query.receiptId
     },
     mounted() {
@@ -136,6 +139,9 @@ export default ({
             }).catch((error)=>{
                 console.log(error)
             })
+        },
+        myReceipt() {
+            this.$router.push({path: '/myReceipt', query:{}})
         }
     }
 })

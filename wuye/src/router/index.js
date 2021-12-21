@@ -268,6 +268,14 @@ const router= new VueRouter({
           title:'电子收据'
         }
       },
+      {
+        path:'/myReceipt',
+        name:'myReceipt',
+        component:resolve=> require(['@/pages/receipt/receiptList'],resolve),
+        meta:{
+          title:'我的收据'
+        }
+      },
     ]
 });
 
@@ -279,7 +287,7 @@ router.beforeEach((to, from, next) => {
   if(viewArray.indexOf(pageName)===-1){
     if(!common.checkRegisterStatus()){
       return
-  }
+  	}
   }
   let version = ''
   if('index'===pageName){
