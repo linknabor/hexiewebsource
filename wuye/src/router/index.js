@@ -325,6 +325,14 @@ const router= new VueRouter({
           title:'电子收据'
         }
       },
+      {
+        path:'/myReceipt',
+        name:'myReceipt',
+        component:resolve=> require(['@/pages/receipt/receiptList'],resolve),
+        meta:{
+          title:'我的收据'
+        }
+      },
     ]
 });
 

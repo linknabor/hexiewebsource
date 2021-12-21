@@ -2,16 +2,16 @@
   <div class="main">
     <div class="white-blank" v-show="skeletonLoading==true"></div>
     <van-skeleton title :row="3" :loading="skeletonLoading">
-      <van-empty description="还没有申请过电子发票哦" v-if="invoiceList&&invoiceList.length===0"/>
+      <van-empty description="还没有申请过电子收据哦" v-if="receiptList&&receiptList.length===0"/>
       <div class="header" v-show="skeletonLoading==false"></div>
       <div class="data-list">
         <van-list v-model="loading" :finished="finished" @load="onLoad">
-          <ul v-for="(invoice, index) in invoiceList" :key="index">
+          <ul v-for="(receipt, index) in receiptList" :key="index">
             <li class="data">
-              <div class="data-row">申请日期：{{ invoice.apply_date }}</div>
-              <div class="data-row">发票抬头：{{ invoice.invoice_title }}</div>
-              <div class="data-row">交易金额：{{ invoice.tran_amt }}</div>
-              <span class="data-check"><a @click="viewDetail(index)">查看发票</a></span>
+              <div class="data-row">交易日期：{{ receipt.tran_date }}</div>
+              <div class="data-row">交易金额：{{ receipt.tran_amt }}</div>
+              <div class="data-row">所在小区：{{ receipt.sect_name }}</div>
+              <span class="data-check"><a @click="viewDetail(receipt)">查看收据</a></span>
             </li>
           </ul>
         </van-list>
@@ -21,13 +21,13 @@
 </template>
 
 <script>
-import InvoiceApi from "@/api/InvoiceApi.js";
+import ReceiptApi from "@/api/ReceiptApi.js";
 import { Toast, Skeleton, Empty, List } from "vant";
 
 export default {
   data() {
     return {
-      invoiceList: [],
+      receiptList: [],
       skeletonLoading: true,
       page: 1,
       loading: false,
@@ -40,16 +40,15 @@ export default {
     [List.name]: List,
   },
   mounted() {
-    this.getInvoiceList()
+    this.getReceiptList()
   },
   methods: {
-    getInvoiceList() {
-      console.log('page:'+this.page)
-      InvoiceApi.getInvoice(this.page).then((response) => {
+    getReceiptList() {
+      ReceiptApi.getReceiptByUser(this.page).then((response) => {
           this.skeletonLoading = false;
           if (response.data.success) {
             if(response.data.result.length > 0) {
-              this.invoiceList = this.invoiceList.concat(response.data.result)
+              this.receiptList = this.receiptList.concat(response.data.result)
               this.page += 1
             } else {
               this.finished = true
@@ -62,13 +61,14 @@ export default {
           Toast(error);
         });
     },
-    viewDetail(index) {
-        let pdf_addr = this.invoiceList[index].pdf_addr
-        location.href=pdf_addr
+    viewDetail(receipt) {
+      let appid = receipt.appid
+      let receiptId = receipt.receipt_id
+      this.$router.push({path: '/receipt', query:{appid: appid, receiptId: receiptId}})   
     },
     onLoad() {
       console.log('onload ....')
-      this.getInvoiceList()
+      this.getReceiptList()
     },
   },
 };
