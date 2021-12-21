@@ -405,7 +405,7 @@ export default ({
     .bg-image('../../assets/images/index/fapiao');
 }
 .icon-receipts {
-    .bg-image('../../assets/images/index/lingquan');
+    .bg-image('../../assets/images/index/shouju');
 }
 .icon-tel {
     .bg-image('../../assets/images/index/tel');
