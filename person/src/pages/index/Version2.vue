@@ -68,10 +68,15 @@
                 <div class="option-text">我是业主</div>
                 <div class="option-link" @click="queryHouses">绑定房屋<div class="link-chevron"></div></div>
             </div>
-             <div class="option-item">
+            <div class="option-item">
                 <div class="option-icon icon-invoices"></div>
                 <div class="option-text">我的发票</div>
                 <div class="option-link" @click="queryInvoice">查看发票<div class="link-chevron"></div></div>
+            </div>
+            <div class="option-item">
+                <div class="option-icon icon-receipts"></div>
+                <div class="option-text">我的收据</div>
+                <div class="option-link" @click="queryReceipt">查看收据<div class="link-chevron"></div></div>
             </div>
             <div class="option-item">
                 <div class="option-icon icon-pubs"></div>
@@ -191,6 +196,9 @@ export default ({
         },
         queryInvoice() {
             location.href = this.basePageUrl+'wuye/index.html?'+this.common.getoriApp()+'#/invoice'
+        },
+        queryReceipt() {
+            location.href = this.basePageUrl+'wuye/index.html?'+this.common.getoriApp()+'#/myReceipt'
         },
         queryOrders() {
 
@@ -395,6 +403,9 @@ export default ({
 }
 .icon-invoices {
     .bg-image('../../assets/images/index/fapiao');
+}
+.icon-receipts {
+    .bg-image('../../assets/images/index/lingquan');
 }
 .icon-tel {
     .bg-image('../../assets/images/index/tel');
