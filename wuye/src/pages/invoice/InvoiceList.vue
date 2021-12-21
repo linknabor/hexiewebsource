@@ -53,7 +53,9 @@ export default {
               this.page += 1
             } else {
               this.finished = true
-              Toast('没有更多了')
+              if(this.page > 2) {
+                Toast('没有更多了')
+              }
             }
           }
           this.loading = false

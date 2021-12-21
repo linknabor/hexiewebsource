@@ -8,6 +8,7 @@
         <van-list v-model="loading" :finished="finished" @load="onLoad">
           <ul v-for="(receipt, index) in receiptList" :key="index">
             <li class="data">
+              <div class="data-row">收据编号：{{ receipt.receipt_id }}</div>
               <div class="data-row">交易日期：{{ receipt.tran_date }}</div>
               <div class="data-row">交易金额：{{ receipt.tran_amt }}</div>
               <div class="data-row">所在小区：{{ receipt.sect_name }}</div>
@@ -52,7 +53,9 @@ export default {
               this.page += 1
             } else {
               this.finished = true
-              Toast('没有更多了')
+              if(this.page > 2) {
+                Toast('没有更多了')
+              }
             }
           }
           this.loading = false
@@ -62,7 +65,7 @@ export default {
         });
     },
     viewDetail(receipt) {
-      let appid = receipt.appid
+      let appid = this.getUrlParam("oriApp")
       let receiptId = receipt.receipt_id
       this.$router.push({path: '/receipt', query:{appid: appid, receiptId: receiptId}})   
     },

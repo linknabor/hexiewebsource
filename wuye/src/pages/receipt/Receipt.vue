@@ -25,7 +25,7 @@
                         <span class="paymethod-value">{{receipt.pay_method}}</span>
                     </div>
                 </div>
-                <div class="trandetail">
+               <div class="trandetail">
                     <div class="trandetail-left">
                         <span class="trandetail-text">交易时间</span>
                     </div>
@@ -42,7 +42,8 @@
                     </div>
                 </div>
                 <div class="stamp">
-                    <div class="stamp-logo"></div>
+                    <div class="stamp-logo" v-show="receipt.receipt_status=='0'"></div>
+                    <div class="stamp-logo4del" v-show="receipt.receipt_status=='1'"></div>
                 </div>
                 <div class="mid-space2"></div>
                 <div class="divide-line"></div>
@@ -101,9 +102,6 @@ export default ({
     },
     created() {
         this.appid = this.getUrlParam("oriApp")
-        if(!this.appid) {
-            this.appid = this.$route.query.appid
-        }
         this.receiptId = this.$route.query.receiptId
     },
     mounted() {
@@ -125,7 +123,6 @@ export default ({
                 receiptId: this.receiptId,
             }
             ReceiptApi.getReceipt(params).then((response)=>{
-                console.log(response)
                 this.showSkeleton = false
                 if(response.data.success) {
                     this.receipt = response.data.result.receipt
@@ -294,13 +291,21 @@ export default ({
     height: 0.32rem;
 }
 .stamp {
-    margin: -0.6rem 2.94rem 0rem 2.94rem;
+    position: absolute;
+    margin: -0.6rem 2.3rem 0rem 2.3rem;
     &-logo {
-        width: 0.96rem;
-        height: 0.68rem;
+        width: 2.4rem;
+        height: 1.7rem;
         background-size: cover;
         background-repeat: no-repeat;
         .bg-image('../../assets/images/receipt/shouqi');
+    }
+    &-logo4del {
+        width: 2.4rem;
+        height: 1.7rem;
+        background-size: cover;
+        background-repeat: no-repeat;
+        .bg-image('../../assets/images/receipt/zuofei');
     }
 }
 .details {
@@ -351,6 +356,7 @@ export default ({
     &-detail {
         width: 100%;
         height: 0.34rem;
+        margin-top: 0.12rem;
         &-left {
             width:80%; 
             float: left;
