@@ -1681,6 +1681,7 @@ a {
 }
 .hint2{
   color: #ff1a1a;
+  margin: -0.1rem 0 0.2rem 2.2rem;
   font-size: 0.28rem;
   text-align: left;
   width: 55vw;
