@@ -1364,7 +1364,7 @@ a {
 .input-row .classinput {
   padding-right: 0.36rem;
   /* user-select: none; */
-  left: 0.6rem;
+  left: 0.3rem;
   position: relative;
 }
 
@@ -1384,7 +1384,7 @@ a {
   background-color: #fff;
   font-size: 0.25rem;
   box-sizing: border-box;
-  left: 0.6rem;
+  left: 0.3rem;
   position: relative;
 }
 .input-row {
@@ -1424,7 +1424,7 @@ a {
 	}
 .classc {
   position: absolute;
-  right: -0.5rem;
+  right: 0rem;
   /* top: 0.04rem; */
   color: #ccc;
 }
@@ -1518,9 +1518,9 @@ a {
 	} */
 .mint-tab-container {
   background: white;
-  width: 94%;
+  width: 96%;
   margin: auto;
-  margin: 0.1rem 0.2rem 0.2rem 0.2rem;
+  margin: 0.1rem 2% 0.2rem 2%;
   overflow: visible;
 }
 .btext {
@@ -1675,13 +1675,12 @@ a {
 }
 .hint{
   color: #ff1a1a;
-  margin:-0.3rem 0 0.2rem 0.1rem;
+  margin:-0.3rem 0 0.2rem 0rem;
   height: 0.2rem;
   font-size: 0.28rem;
 }
 .hint2{
   color: #ff1a1a;
-  margin: -0.1rem 0 0.2rem 2.3rem;
   font-size: 0.28rem;
   text-align: left;
   width: 55vw;
