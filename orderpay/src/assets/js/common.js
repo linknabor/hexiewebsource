@@ -241,11 +241,15 @@ window.common = {
             a = "userInfo?oriApp="+getUrlParam('oriApp'),
             i = null,
             e = function(n) {
-                var duration = new Date().getTime()/1000 + 3600*24*30;
-                for(var j=0;j<n.result.bgImageList.length;j++){
-                    setCookie(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl,duration)
-                } 
-                location.reload();
+                if(n.success) {
+                    var duration = new Date().getTime()/1000 + 3600*24*30;
+                    for(var j=0;j<n.result.bgImageList.length;j++){
+                        setCookie(n.result.bgImageList[j].type,n.result.bgImageList[j].imgUrl,duration)
+                    } 
+                    if(n.result.length > 0) {
+                        location.reload();
+                    }
+                }
             },
             r = function() { 
             };

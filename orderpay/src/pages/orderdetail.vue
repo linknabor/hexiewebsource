@@ -1,58 +1,98 @@
 <template>
-  <div>
+  <div class="outer">
+    <div class="blank-row"></div>
+    <div class="blank-row"></div>
     <div class="adorder">
-      <div class="order-number fs13 plr15">订单编号&nbsp;{{order.orderNo}}</div>
 
-      <div class="p15">
-        <img class="fl order-picture" :src="order.productThumbPic" />
-        <div class="ov pb15 fs14">{{order.productName}}</div>
-        <div class="ov pb15 lite-divider" style="color:#3b3937">
-          <span class="fl fs13">总计&nbsp;¥{{order.price}}</span>
-          <span class="fr fs13 highlight">共{{order.count}}个商品</span>
-        </div>
+      <div>
+          <van-popup v-model="showQrCode">
+              <vue-qr :text="qrCodeStr" :margin="20" :size="400"></vue-qr>
+          </van-popup>
+          <van-overlay :show="showOverlay" />
       </div>
+      <van-card
+        :num="order.count"
+        :price="`${order.price}`"
+        :title="order.productName"
+        :thumb="order.productThumbPic"
+      />
 
-      <div class="plr15 divider">
-        <div class="section-title" style="padding-left: 0px;">收货信息</div>
-        <div class="item pt15">
-          <label>收货地址</label>
-          <span class="value">{{order.address}}</span>
+      <van-cell-group :border="false">
+        <div class="blank-row"></div>
+        <van-cell title="订单信息" :border="false" title-class="title-info"/>
+        <van-cell title="订单号" v-show="order.orderNo" :value="order.orderNo" :border="false"/>
+        <van-cell title="订单总价" :value="order.price" :border="false"/>
+        <van-cell title="订单状态" :value="order.statusStr" :border="false"/>
+        <div class="oper-btns">
+          <van-button color="#ff8a00" size="mini" @click="orderPay(order)" v-show="order.status==0">继续支付</van-button>
+          <van-button color="#ff8a00" size="mini" @click="orderCancel(order)" v-show="order.status==0">取消订单</van-button>
+          <van-button color="#ff8a00" size="mini" @click="orderConfirm(order)" v-show="order.status==5">确认收货</van-button>
+          <van-button color="#ff8a00" size="mini" @click="checkLogisics(order)" v-show="order.status==5">查看物流</van-button>
+          <van-button color="#ff8a00" size="mini" @click="comment(order)" v-show="order.status==6&&order.pingjiaStatus!=1">评价商品</van-button>
         </div>
-        <div class="item">
-          <label>收货时间</label>
-          <span class="value">{{timeStr}}</span>
-        </div>
-        <div class="item">
-          <label>备注</label>
-          <span class="value">{{order.memo}}</span>
-        </div>
-        <div class="item">
-          <label>联系人</label>
-          <span class="value">{{order.receiverName}}</span>
-        </div>
-        <div class="item">
-          <label>手机号</label>
-          <span class="value">{{order.tel}}</span>
-        </div>
-      </div>
+      </van-cell-group>
 
-      <div class="p15 order-item divider">
+      <van-cell-group :border="false" v-if="order.orderType!=4">
+        <div class="blank-row"></div>
+        <van-cell title="收货信息" :border="false" title-class="title-info"/>
+        <van-cell title="联系人" :value="order.receiverName" :border="false"/>
+        <van-cell title="联系方式" :value="order.tel" :border="false"/>
+        <van-cell title="收货时间" :value="timeStr" :border="false"/>
+        <van-cell title="收货地址" :border="false">
+          <template slot="label">
+            {{order.address}}
+          </template>
+        </van-cell>
+      </van-cell-group>
+      
+      <van-cell-group :border="false" v-if="order.orderType==4">
+        <div class="blank-row"></div>
+        <van-cell title="取货信息" :border="false" title-class="title-info"/>
+        <van-cell title="取货联系人（团长）" :value="order.receiverName" :border="false"/>
+        <van-cell title="联系方式" :value="order.tel" :border="false"/>
+        <van-cell title="取货地址" :border="false">
+          <template slot="label">
+            {{order.address}}
+          </template>
+        </van-cell>
+        <van-cell title="取货码" :border="false" >
+          <template slot>
+            <a href="#" style="color: #1989fa" @click="showQrcode">展示</a>
+          </template>
+        </van-cell>
+      </van-cell-group>
+      
+      <van-cell-group :border="false" v-if="order.status == 5">
+        <div class="blank-row"></div>
+        <van-cell title="物流信息" :border="false" title-class="title-info"/>
+        <van-cell title="快递公司" :value="order.logisticName" :border="false"/>
+        <van-cell title="快递单号" :value="order.logisticNo" :border="false"/>
+      </van-cell-group>
+
+      <van-cell-group :border="false" v-if="order.orderType==4">
+        <div class="blank-row"></div>
+        <van-cell title="团购信息" :border="false" title-class="title-info"/>
+        <div style="margin-left: 0.3rem;">
+          <van-button color="#ff8a00" size="mini" @click="gotoGroupDetail(order)">团购详情</van-button>
+        </div>
+      </van-cell-group>
+      <div class="blank-row"></div>
+      <div class="blank-row"></div>
+      <div class="blank-row"></div>
+
+      <!-- <div class="p15 order-item divider">
         <div class="section-title" style="padding-left: 0px;">订单状态</div>
         <div class="pt15 fs13" style="line-height:23px">
           <span class="highlight fs14">{{order.statusStr}}</span>
-          <!--unpaid-->
           <div class="lite-btn fs13 fr" v-show="order.status==0" @click="orderPay(order)">付款</div>
           <div class="btn-plain fr" v-show="order.status==0" @click="orderCancel(order)">取消订单</div>
-          <!--unrecieved-->
           <div class="lite-btn fs13 fr" v-show="order.status==5" @click="orderConfirm(order)">确认收货</div>
-          <!--  -->
           <div
             class="lite-btn fs13 fr"
             style="margin-right: 5px;"
             v-show="order.status==5"
             @click="checkLogisics(order)"
           >查看物流</div>
-          <!--recieved-->
           <span v-show="order.status==6&&order.pingjiaStatus!=1">
             <div class="lite-btn fs13 fr" @click="comment(order)">评价商品</div>
           </span>
@@ -65,36 +105,35 @@
           <div class="ov fs14">快递公司：{{order.logisticName}}</div>
           <div class="ov fs14">快递单号：{{order.logisticNo}}</div>
         </div>
-      </div>
-
-      <div class="p15 order-item divider" style="height: 60px;" v-if="order.orderType==4">
+        <div class="p15 order-item divider" style="height: 60px;" v-if="order.orderType==4">
         <div class="section-title" style="padding-left: 0px; padding-top: 0px;">团购详情</div>
         <div class="pt15 fs13" style="line-height:23px; padding-top: 5px;">
           <div class="lite-btn fs13 fr" @click="gotoGroupDetail(order)">团购详情</div>
         </div>
       </div>
       <div style="margin-bottom: 2rem;"></div>
+      </div> -->
     </div>
   </div>
 </template>
 
 <script>
 let vm;
-import { MessageBox } from "mint-ui";
+import { Card, Cell, CellGroup, Divider, Button, Dialog, Popup } from 'vant';
+import VueQr from 'vue-qr';
 import wx from "weixin-js-sdk";
 export default {
   data() {
     return {
       order: {},
       orderId: "",
-      //    orderId:7651,
-      timeStr: "" //收货时间
+      timeStr: "", //收货时间
+      showQrCode: false,
+      qrCodeStr: '',
     };
   },
   created() {
     vm = this;
-    //    let url = location.href.split('#')[0];
-    //     vm.receiveData.wxconfig(vm,wx,['chooseWXPay'],url);
   },
   mounted() {
     if (vm.$route.query.orderId) {
@@ -103,12 +142,18 @@ export default {
     if (vm.getUrlParam("orderId")) {
       vm.orderId = vm.getUrlParam("orderId");
     }
-    let url = location.href.split("#")[0];
+    location.href.split("#")[0];
     vm.orders();
   },
-
-  components: {},
-
+  components: {
+    VueQr,
+    [Card.name]: Card,
+    [Cell.name]: Cell,
+    [CellGroup.name]: CellGroup,
+    [Divider.name]: Divider,
+    [Button.name]: Button,
+    [Popup.name]: Popup,
+  },
   methods: {
     getUrlParam(name) {
       var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
@@ -175,10 +220,10 @@ export default {
     },
     // 取消订单
     orderCancel(order) {
-      MessageBox.confirm("确定要取消订单?")
-        .then(action => {
-          if (action == "confirm") {
-            //确认的回调
+      Dialog.confirm({
+        message: "确定要取消订单?",
+      }).then(() => {
+          //确认的回调
             vm.receiveData.getData(
               vm,
               "/cancelOrder/" + order.id,
@@ -193,7 +238,6 @@ export default {
                 }
               }
             );
-          }
         })
         .catch(err => {
           if (err == "cancel") {
@@ -204,10 +248,10 @@ export default {
     },
     // 确定收货
     orderConfirm(order) {
-      MessageBox.confirm("确定要已收货?")
-        .then(action => {
-          if (action == "confirm") {
-            vm.receiveData.getData(
+      Dialog.confirm({
+        message: "确定要已收货?",
+      }).then(() => {
+          vm.receiveData.getData(
               vm,
               "/signOrder/" + order.id,
               "n",
@@ -220,7 +264,6 @@ export default {
                 }
               }
             );
-          }
         })
         .catch(err => {
           if (err == "cancel") {
@@ -246,7 +289,13 @@ export default {
         "hxrgroups.html?"+vm.common.getoriApp()+"#/rgroupinvite?ruleId=" +
         order.groupRuleId +
         "&share=1";
-     }
+     },
+     //展示取货二维码
+     showQrcode() {
+          let str = "?orderId=" + this.orderId
+          this.showQrCode = true
+          this.qrCodeStr = str
+      },
   },
 
   computed: {}
@@ -254,13 +303,30 @@ export default {
 </script>
 
 <style  scoped>
-.adorder {
-  position:absolute;
+
+.blank-row {
   width: 100%;
-  height: 100%;
+  height: 2vh;
+}
+.title-info {
+  color: #a6937c;
+  font-weight: 600;
+}
+.status-text {
+  margin-top: 0.1rem;
+}
+.oper-btns {
+  margin-right: 0.3rem;
+  display: flex;
+  justify-content: end;
+}
+.outer {
+  position:absolute;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  min-height: 100%;
   background-color: #fff;
-  overflow:auto;
-  
 }
 /* 头部 */
 .fs13 {
