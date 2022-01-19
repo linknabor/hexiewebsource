@@ -1,14 +1,13 @@
 <template>
   <div class="outer">
+    <div class="blank-row" v-show="showSkeleton"></div>
+    <div class="blank-row" v-show="showSkeleton"></div>
+    <van-skeleton title :row="3" :loading="showSkeleton">
     <div class="blank-row"></div>
-    <div class="blank-row"></div>
-    <div class="adorder">
-
       <div>
           <van-popup v-model="showQrCode">
               <vue-qr :text="qrCodeStr" :margin="20" :size="400"></vue-qr>
           </van-popup>
-          <van-overlay :show="showOverlay" />
       </div>
       <van-card
         :num="order.count"
@@ -79,47 +78,13 @@
       <div class="blank-row"></div>
       <div class="blank-row"></div>
       <div class="blank-row"></div>
-
-      <!-- <div class="p15 order-item divider">
-        <div class="section-title" style="padding-left: 0px;">订单状态</div>
-        <div class="pt15 fs13" style="line-height:23px">
-          <span class="highlight fs14">{{order.statusStr}}</span>
-          <div class="lite-btn fs13 fr" v-show="order.status==0" @click="orderPay(order)">付款</div>
-          <div class="btn-plain fr" v-show="order.status==0" @click="orderCancel(order)">取消订单</div>
-          <div class="lite-btn fs13 fr" v-show="order.status==5" @click="orderConfirm(order)">确认收货</div>
-          <div
-            class="lite-btn fs13 fr"
-            style="margin-right: 5px;"
-            v-show="order.status==5"
-            @click="checkLogisics(order)"
-          >查看物流</div>
-          <span v-show="order.status==6&&order.pingjiaStatus!=1">
-            <div class="lite-btn fs13 fr" @click="comment(order)">评价商品</div>
-          </span>
-        </div>
-      </div>
-
-      <div class="p15 order-item" v-if="order.status == 5">
-        <div class="section-title">物流信息</div>
-        <div class="ov fs14 ptb15">
-          <div class="ov fs14">快递公司：{{order.logisticName}}</div>
-          <div class="ov fs14">快递单号：{{order.logisticNo}}</div>
-        </div>
-        <div class="p15 order-item divider" style="height: 60px;" v-if="order.orderType==4">
-        <div class="section-title" style="padding-left: 0px; padding-top: 0px;">团购详情</div>
-        <div class="pt15 fs13" style="line-height:23px; padding-top: 5px;">
-          <div class="lite-btn fs13 fr" @click="gotoGroupDetail(order)">团购详情</div>
-        </div>
-      </div>
-      <div style="margin-bottom: 2rem;"></div>
-      </div> -->
-    </div>
+    </van-skeleton>
   </div>
 </template>
 
 <script>
 let vm;
-import { Card, Cell, CellGroup, Divider, Button, Dialog, Popup } from 'vant';
+import { Card, Cell, CellGroup, Divider, Button, Dialog, Popup, Skeleton } from 'vant';
 import VueQr from 'vue-qr';
 import wx from "weixin-js-sdk";
 export default {
@@ -130,6 +95,7 @@ export default {
       timeStr: "", //收货时间
       showQrCode: false,
       qrCodeStr: '',
+      showSkeleton: true,
     };
   },
   created() {
@@ -153,6 +119,7 @@ export default {
     [Divider.name]: Divider,
     [Button.name]: Button,
     [Popup.name]: Popup,
+    [Skeleton.name]: Skeleton,
   },
   methods: {
     getUrlParam(name) {
@@ -164,6 +131,8 @@ export default {
     orders() {
       vm.receiveData.getData(vm, "/getOrder/" + vm.orderId, "n", function() {
         if (vm.n.success) {
+          console.log("s:"+vm.n.success)
+          vm.showSkeleton = false
           vm.order = vm.n.result;
           vm.timeStr = vm.getTimeStr();
         } else {
@@ -327,128 +296,5 @@ export default {
   width: 100%;
   min-height: 100%;
   background-color: #fff;
-}
-/* 头部 */
-.fs13 {
-  font-size: 13px;
-}
-.plr15 {
-  padding: 0 15px;
-}
-.order-number {
-  display: inline-block;
-  margin-top: 15px;
-  height: 24px;
-  line-height: 24px;
-  border: 1px solid #d4cfc8;
-  color: #a6937c;
-  border-top-right-radius: 20px;
-  border-bottom-right-radius: 20px;
-}
-/* 商品 */
-.p15 {
-  padding: 15px;
-}
-.order-picture {
-  width: 75px;
-  height: 75px;
-  margin-right: 15px;
-  border: 1px solid #d4cfc8;
-}
-.fs14 {
-  font-size: 14px;
-}
-.pb15 {
-  padding-bottom: 15px;
-}
-.ov {
-  overflow: hidden;
-  /* padding: 1px; */
-}
-.section-title,
-.lite-divider {
-  border-bottom: 1px solid #d4cfc8;
-}
-.fs13 {
-  font-size: 13px;
-}
-.highlight {
-  color: #ff8a00;
-}
-/* 收货地址 */
-.divider {
-  border-bottom: 10px solid #f7f7f2;
-}
-.section-title {
-  display: block;
-  font-size: 13px;
-  color: #a6937c;
-  padding-top: 15px;
-  padding-bottom: 7px;
-  border-bottom: 1px solid #d4cfc8;
-}
-.item {
-  overflow: hidden;
-  margin-bottom: 15px;
-  font-size: 14px;
-  margin-top: 4px;
-}
-label {
-  display: inline-block;
-  width: 75px;
-  color: #3b3937;
-}
-.value {
-  float: right;
-  display: block;
-  margin-left: 15px;
-  color: #666;
-  width: 200px;
-}
-/* 订单状态 */
-.order-item .btn-plain,
-.order-item .lite-btn {
-  height: 23px;
-  line-height: 23px;
-}
-.lite-btn {
-  display: inline-block;
-  padding: 0 15px;
-  color: #fff;
-  font-size: 12px;
-  height: 24px;
-  line-height: 24px;
-  background-color: #ff8a00;
-  border-radius: 3px;
-}
-.order-item .btn-plain {
-  margin-right: 10px;
-  padding: 0 15px;
-  color: #888;
-}
-.order-item .btn-plain,
-.order-item .lite-btn {
-  height: 23px;
-  line-height: 23px;
-}
-
-.btn-plain {
-  display: inline-block;
-  padding: 0 20px;
-  height: 27px;
-  line-height: 27px;
-  color: #3b3937;
-  border-radius: 3px;
-  border: 1px solid #bfbfbf;
-}
-
-/* 物流信息 */
-.section-title,
-.lite-divider {
-  border-bottom: 1px solid #d4cfc8;
-  padding-left: 15px;
-}
-.fs14 {
-  font-size: 14px;
 }
 </style>
