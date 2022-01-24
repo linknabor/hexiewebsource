@@ -41,7 +41,7 @@
             </div>
           </div>
           <div class="tc mt2">
-            <div class="addr_btn_plain" @click="toAddAddress">新增收货地址</div>
+            <!-- <div class="addr_btn_plain" @click="toAddAddress">新增收货地址</div> -->
             <br />
           </div>
         </div>
@@ -232,6 +232,7 @@
             class="menu-link fs14 addr_detail"
             v-show="checkedAddress.receiveName"
           >
+            <span style="color: #3b3937" id="infoname">付款人：</span>
             <span style="color: #3b3937" id="infoname">{{
               checkedAddress.receiveName
             }}</span>
@@ -310,8 +311,21 @@
             >¥&nbsp;{{ amount }}</span
           >
         </div>
-
-        <div class="info-wrap bgwhite">
+        
+        <div class="addr_area" v-if="areaItem.areaLeader">
+            <div class="addr-top">&nbsp;</div>
+            <div class="addr_detail">
+              <span style="color: #3b3937" id="infoname">发货人：</span>
+              <span style="color: #3b3937" id="infoname">{{areaItem.areaLeader}}</span>
+              <span style="margin-left: 15px; color: #3b3937" id="infotel">{{areaItem.areaLeaderTel}}</span>
+              <div class="addr_location" id="infoaddr">
+                  {{areaItem.areaLeaderAddr}}
+              </div>
+            
+            </div>
+            <div class="addr-f">&nbsp;</div>
+        </div>
+        <!-- <div class="info-wrap bgwhite">
           <div class="section-title">收货时间</div>
           <a
             href="javascript:void(0)"
@@ -321,7 +335,7 @@
           >
             <i class="address_icon time-icon fl"></i>{{ datechoooser.time }}</a
           >
-        </div>
+        </div> -->
 
         <div class="bgwhite">
           <div class="fs15" style="height: 30px; padding: 15px 0 5px 15px">
@@ -408,6 +422,7 @@ export default {
       type: this.$route.query.type /**3默认特卖*/,
       product: {},
       rule: { limitNumOnce: 10, price: 0 },
+      areaItem: {},
       address: {},
       checkedAddress: {},
       count: 1, //数量
@@ -548,6 +563,7 @@ export default {
           if (vm.res.success) {
             vm.product = vm.res.result.product;
             vm.rule = vm.res.result.rule;
+            vm.areaItem = vm.res.result.rgroupAreaItem;
             if (vm.res.result.address) {
               vm.checkedAddress = vm.res.result.address;
             }
@@ -709,7 +725,7 @@ export default {
     //新增地址
     //初始地址
     dataAddress() {
-      vm.receiveData.getData(vm, "/addresses", "data", function () {
+      vm.receiveData.getData(vm, "/addresses?module=rgroup", "data", function () {
         if (vm.data.success) {
           vm.addresses = vm.data.result;
           vm.showm = true;
@@ -1049,6 +1065,16 @@ export default {
 </script>
 
 <style  scoped>
+.leader {
+  height: 30px;
+  line-height: 30px;
+  width: 100%;
+}
+.leader-addr {
+  height: 90px;
+  line-height: 20px;
+  width: 100%;
+}
 .zzmb {
   z-index: 100000;
   position: absolute;

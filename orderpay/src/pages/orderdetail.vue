@@ -5,8 +5,15 @@
     <van-skeleton title :row="3" :loading="showSkeleton">
     <div class="blank-row"></div>
       <div>
-          <van-popup v-model="showQrCode">
-              <vue-qr :text="qrCodeStr" :margin="20" :size="400"></vue-qr>
+          <van-popup v-model="showQrCode" :style="{width: '70%'}">
+              
+              <vue-qr :text="qrCodeStr" :margin="40" :size="400" ></vue-qr>
+              <div class="qrCodeText" @click="viewBarCode">轻触查看收货码数字</div>
+          </van-popup>
+          <van-popup v-model="showBarCode" position="left" :style="{ width: '100%', height: '100%' }" :lazy-render="false" :closeable="true">
+            <div>
+                <img id="barcode" v-show="showQrCode" class="barCodeImage"/>
+            </div>
           </van-popup>
       </div>
       <van-card
@@ -15,9 +22,9 @@
         :title="order.productName"
         :thumb="order.productThumbPic"
       />
-
       <van-cell-group :border="false">
         <div class="blank-row"></div>
+        
         <van-cell title="订单信息" :border="false" title-class="title-info"/>
         <van-cell title="订单号" v-show="order.orderNo" :value="order.orderNo" :border="false"/>
         <van-cell title="订单总价" :value="order.price" :border="false"/>
@@ -47,16 +54,16 @@
       <van-cell-group :border="false" v-if="order.orderType==4">
         <div class="blank-row"></div>
         <van-cell title="取货信息" :border="false" title-class="title-info"/>
-        <van-cell title="取货联系人（团长）" :value="order.receiverName" :border="false"/>
-        <van-cell title="联系方式" :value="order.tel" :border="false"/>
+        <van-cell title="取货联系人（团长）" :value="order.groupLeader" :border="false"/>
+        <van-cell title="联系方式" :value="order.groupLeaderTel" :border="false"/>
         <van-cell title="取货地址" :border="false">
           <template slot="label">
-            {{order.address}}
+            {{order.groupLeaderAddr}}
           </template>
         </van-cell>
-        <van-cell title="取货码" :border="false" >
+        <van-cell title="取货码" :border="false" v-show="order.orderNo" >
           <template slot>
-            <a href="#" style="color: #1989fa" @click="showQrcode">展示</a>
+            <a href="#" style="color: #1989fa" @click="showQrcode()">展示</a>
           </template>
         </van-cell>
       </van-cell-group>
@@ -87,6 +94,7 @@ let vm;
 import { Card, Cell, CellGroup, Divider, Button, Dialog, Popup, Skeleton } from 'vant';
 import VueQr from 'vue-qr';
 import wx from "weixin-js-sdk";
+var JsBarcode = require('jsbarcode');
 export default {
   data() {
     return {
@@ -94,6 +102,7 @@ export default {
       orderId: "",
       timeStr: "", //收货时间
       showQrCode: false,
+      showBarCode: false,
       qrCodeStr: '',
       showSkeleton: true,
     };
@@ -131,7 +140,6 @@ export default {
     orders() {
       vm.receiveData.getData(vm, "/getOrder/" + vm.orderId, "n", function() {
         if (vm.n.success) {
-          console.log("s:"+vm.n.success)
           vm.showSkeleton = false
           vm.order = vm.n.result;
           vm.timeStr = vm.getTimeStr();
@@ -258,13 +266,26 @@ export default {
         "hxrgroups.html?"+vm.common.getoriApp()+"#/rgroupinvite?ruleId=" +
         order.groupRuleId +
         "&share=1";
-     },
-     //展示取货二维码
-     showQrcode() {
-          let str = "?orderId=" + this.orderId
-          this.showQrCode = true
-          this.qrCodeStr = str
-      },
+    },
+    //展示取货二维码
+    showQrcode() {
+      let str = "?orderNo=" + this.order.orderNo
+      this.qrCodeStr = str
+      this.showQrCode = true
+    },
+    initBarCode() {
+      var orderNo = this.order.orderNo
+      JsBarcode("#barcode", orderNo, {
+        format: "pharmacode",
+        height:30,
+        displayValue: true,
+        fontSize: 15
+      });
+    },
+    viewBarCode() {
+      this.showBarCode = true
+      this.initBarCode()
+    }
   },
 
   computed: {}
@@ -296,5 +317,12 @@ export default {
   width: 100%;
   min-height: 100%;
   background-color: #fff;
+}
+.qrCodeText {
+  padding-bottom: 0.5rem;
+  text-align: center;
+}
+.barCodeImage {
+  margin-top: 40%;
 }
 </style>
