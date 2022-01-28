@@ -8,7 +8,7 @@
           <van-popup v-model="showQrCode" :style="{width: '70%'}">
               
               <vue-qr :text="qrCodeStr" :margin="40" :size="400" ></vue-qr>
-              <div class="qrCodeText" @click="viewBarCode">轻触查看收货码数字</div>
+              <div class="qrCodeText" @click="viewBarCode">轻触查看取件码数字</div>
           </van-popup>
           <van-popup v-model="showBarCode" position="left" :style="{ width: '100%', height: '100%' }" :lazy-render="false" :closeable="true">
             <div>
@@ -32,19 +32,19 @@
         <div class="oper-btns">
           <van-button color="#ff8a00" size="mini" @click="orderPay(order)" v-show="order.status==0">继续支付</van-button>
           <van-button color="#ff8a00" size="mini" @click="orderCancel(order)" v-show="order.status==0">取消订单</van-button>
-          <van-button color="#ff8a00" size="mini" @click="orderConfirm(order)" v-show="order.status==5">确认收货</van-button>
+          <van-button color="#ff8a00" size="mini" @click="orderConfirm(order)" v-show="order.status==5">确认收件</van-button>
           <van-button color="#ff8a00" size="mini" @click="checkLogisics(order)" v-show="order.status==5">查看物流</van-button>
           <van-button color="#ff8a00" size="mini" @click="comment(order)" v-show="order.status==6&&order.pingjiaStatus!=1">评价商品</van-button>
         </div>
       </van-cell-group>
 
-      <van-cell-group :border="false" v-if="order.orderType!=4">
+      <van-cell-group :border="false">
         <div class="blank-row"></div>
-        <van-cell title="收货信息" :border="false" title-class="title-info"/>
+        <van-cell title="收件信息" :border="false" title-class="title-info"/>
         <van-cell title="联系人" :value="order.receiverName" :border="false"/>
         <van-cell title="联系方式" :value="order.tel" :border="false"/>
-        <van-cell title="收货时间" :value="timeStr" :border="false"/>
-        <van-cell title="收货地址" :border="false">
+        <van-cell title="收件时间" :value="timeStr" :border="false"/>
+        <van-cell title="收件地址" :border="false">
           <template slot="label">
             {{order.address}}
           </template>
@@ -53,22 +53,22 @@
       
       <van-cell-group :border="false" v-if="order.orderType==4">
         <div class="blank-row"></div>
-        <van-cell title="取货信息" :border="false" title-class="title-info"/>
-        <van-cell title="取货联系人（团长）" :value="order.groupLeader" :border="false"/>
+        <van-cell title="取件信息" :border="false" title-class="title-info"/>
+        <van-cell title="取件联系人（团长）" :value="order.groupLeader" :border="false"/>
         <van-cell title="联系方式" :value="order.groupLeaderTel" :border="false"/>
-        <van-cell title="取货地址" :border="false">
+        <van-cell title="取件地址" :border="false">
           <template slot="label">
             {{order.groupLeaderAddr}}
           </template>
         </van-cell>
-        <van-cell title="取货码" :border="false" v-show="order.orderNo" >
+        <van-cell title="取件码" :border="false" v-show="order.orderNo" >
           <template slot>
             <a href="#" style="color: #1989fa" @click="showQrcode()">展示</a>
           </template>
         </van-cell>
       </van-cell-group>
       
-      <van-cell-group :border="false" v-if="order.status == 5">
+      <van-cell-group :border="false" v-if="order.orderType!=4 && order.status == 5">
         <div class="blank-row"></div>
         <van-cell title="物流信息" :border="false" title-class="title-info"/>
         <van-cell title="快递公司" :value="order.logisticName" :border="false"/>
@@ -78,7 +78,7 @@
       <van-cell-group :border="false" v-if="order.orderType==4">
         <div class="blank-row"></div>
         <van-cell title="团购信息" :border="false" title-class="title-info"/>
-        <div style="margin-left: 0.3rem;">
+        <div class="oper-btns">
           <van-button color="#ff8a00" size="mini" @click="gotoGroupDetail(order)">团购详情</van-button>
         </div>
       </van-cell-group>
@@ -182,7 +182,7 @@ export default {
             }
           });
         } else {
-          alert("支付请求失败，请稍后重试！");
+          alert("支付请求失败，请稍后再试！");
         }
       });
     },
@@ -211,7 +211,7 @@ export default {
                   order.statusStr = "已取消";
                   alert("订单已取消");
                 } else {
-                  alert("支付取消失败，请稍后重试！");
+                  alert("取消失败，请稍后再试！");
                 }
               }
             );
@@ -226,7 +226,7 @@ export default {
     // 确定收货
     orderConfirm(order) {
       Dialog.confirm({
-        message: "确定要已收货?",
+        message: "确定要收件?",
       }).then(() => {
           vm.receiveData.getData(
               vm,
@@ -237,7 +237,7 @@ export default {
                   order.status = 6;
                   order.statusStr = "已签收";
                 } else {
-                  alert("支付签收失败，请稍后重试！");
+                  alert("签收失败，请稍后重试！");
                 }
               }
             );
@@ -306,6 +306,9 @@ export default {
 }
 .oper-btns {
   margin-right: 0.3rem;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   justify-content: end;
 }
