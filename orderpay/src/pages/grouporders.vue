@@ -51,7 +51,7 @@
           >团购进行中</span>
           <span
             class="fr fs13 highlight"
-            v-show="order.orderStatus !=2 && order.groupStatus==2"
+            v-show="order.orderStatus !=2 && (order.groupStatus==2 || order.groupStatus==4 || order.groupStatus==5)"
           >团购成功</span>
           <span
             class="fr fs13 highlight"
