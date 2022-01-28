@@ -33,7 +33,7 @@
           <van-button color="#ff8a00" size="mini" @click="orderPay(order)" v-show="order.status==0">继续支付</van-button>
           <van-button color="#ff8a00" size="mini" @click="orderCancel(order)" v-show="order.status==0">取消订单</van-button>
           <van-button color="#ff8a00" size="mini" @click="orderConfirm(order)" v-show="order.status==5">确认收件</van-button>
-          <van-button color="#ff8a00" size="mini" @click="checkLogisics(order)" v-show="order.status==5">查看物流</van-button>
+          <van-button color="#ff8a00" size="mini" @click="checkLogisics(order)" v-show="order.status==5 && order.orderType!=4">查看物流</van-button>
           <van-button color="#ff8a00" size="mini" @click="comment(order)" v-show="order.status==6&&order.pingjiaStatus!=1">评价商品</van-button>
         </div>
       </van-cell-group>
@@ -305,11 +305,12 @@ export default {
   margin-top: 0.1rem;
 }
 .oper-btns {
+  margin-left: 0.3rem;
   margin-right: 0.3rem;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
-  display: flex;
+  /* display: flex; */
   justify-content: end;
 }
 .outer {
