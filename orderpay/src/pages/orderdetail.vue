@@ -278,7 +278,7 @@ export default {
         format: "pharmacode",
         height:30,
         displayValue: true,
-        fontSize: 15
+        fontSize: 12
       });
     },
     viewBarCode() {
