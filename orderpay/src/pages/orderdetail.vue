@@ -269,13 +269,12 @@ export default {
     },
     //展示取货二维码
     showQrcode() {
-      let str = "?orderNo=" + this.order.orderNo
-      this.qrCodeStr = str
+      this.qrCodeStr = this.order.id
       this.showQrCode = true
     },
     initBarCode() {
-      var orderNo = this.order.orderNo
-      JsBarcode("#barcode", orderNo, {
+      var orderId = this.order.id
+      JsBarcode("#barcode", orderId, {
         format: "pharmacode",
         height:30,
         displayValue: true,
