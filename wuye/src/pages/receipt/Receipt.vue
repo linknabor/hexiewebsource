@@ -66,15 +66,20 @@
                                     <span class="content-value">{{detail.tran_amt}}</span>
                                 </div>
                                 </div>
-                                
+
                             </div>
                         </div>
                     </div>
                     <div class="details-bottom"></div>
                 </div>
+
+              <div class="trandetail-tips" v-if="receipt.tips_desc">
+                <div class="tips-left"><van-icon size="18px" name="volume-o"></van-icon></div>
+                <div class="tips-right"><span>{{receipt.tips_desc}}</span></div>
+              </div>
             </div>
             <div class="hint">
-                <span class="hint-text">可在个人中心-><a href="#" style="color: #1E90FF" @click="myReceipt">我的收据</a>中查看所有申请过的收据</span>
+              <span class="hint-text">可在个人中心-><a href="#" style="color: #1E90FF" @click="myReceipt">我的收据</a>中查看所有申请过的收据</span>
             </div>
         </van-skeleton>
     </div>
@@ -82,7 +87,7 @@
 
 <script>
 import ReceiptApi from "@/api/ReceiptApi.js";
-import { Dialog, Toast, Skeleton, Empty } from "vant";
+import { Dialog, Toast, Skeleton, Empty, Icon } from "vant";
 
 export default ({
     data() {
@@ -99,6 +104,7 @@ export default ({
         [Toast.name]: Toast,
         [Skeleton.name]: Skeleton,
         [Empty.name]: Empty,
+        [Icon.name]: Icon,
     },
     created() {
         this.appid = this.getUrlParam("oriApp")
@@ -132,7 +138,7 @@ export default ({
                         message: response.data.message
                     })
                 }
-                
+
             }).catch((error)=>{
                 console.log(error)
             })
@@ -183,7 +189,7 @@ export default ({
         line-height: 0.44rem;
         letter-spacing: 100;
         // text-indent: 100;
-        
+
     }
 }
 .csp {
@@ -246,12 +252,12 @@ export default ({
         line-height: 0.4rem;
     }
     &-left {
-        width:50%; 
+        width:50%;
         float: left;
     }
     &-right {
-        width:50%; 
-        float: right; 
+        width:50%;
+        float: right;
         text-align: right;
     }
 }
@@ -273,14 +279,19 @@ export default ({
         line-height: 0.4rem;
     }
     &-left {
-        width:50%; 
+        width:50%;
         float: left;
     }
     &-right {
-        width:50%; 
-        float: right; 
+        width:50%;
+        float: right;
         text-align: right;
     }
+  &-tips {
+    margin: 0.15rem 0.5rem;
+    color: darkblue;
+    font-size: 0.24rem;
+  }
 }
 .mid-space {
     width: 100%;
@@ -358,16 +369,16 @@ export default ({
         height: 0.34rem;
         margin-top: 0.12rem;
         &-left {
-            width:80%; 
+            width:80%;
             float: left;
         }
         &-right {
-            width:20%; 
-            float: right; 
+            width:20%;
+            float: right;
             text-align: right;
-        } 
+        }
     }
-      
+
 }
 .hint {
     width: 90%;
@@ -380,5 +391,16 @@ export default ({
 .white-blank {
     height: 1rem;
     width: 100%;
+}
+
+.tips {
+  &-left {
+    float: left;
+    width: 7%
+  }
+  &-right {
+    float: left;
+    width: 90%
+  }
 }
 </style>
