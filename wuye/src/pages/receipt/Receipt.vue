@@ -74,7 +74,7 @@
                 </div>
 
               <div class="trandetail-tips" v-if="receipt.tips_desc">
-                <div class="tips-left"><van-icon size="18px" name="volume-o"></van-icon></div>
+                <div class="tips-left"><van-icon size="16px" name="volume-o"></van-icon></div>
                 <div class="tips-right"><span>{{receipt.tips_desc}}</span></div>
               </div>
             </div>
@@ -400,7 +400,8 @@ export default ({
   }
   &-right {
     float: left;
-    width: 90%
+    width: 90%;
+    font-size: 0.25rem;
   }
 }
 </style>
