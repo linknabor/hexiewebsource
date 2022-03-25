@@ -312,7 +312,7 @@
           >
         </div>
         
-        <div class="addr_area" v-if="areaItem.areaLeader">
+        <div class="addr_area" v-if="checkedAddress.id!=0 && areaItem.areaLeader">
             <div class="addr-top">&nbsp;</div>
             <div class="addr_detail">
               <span style="color: #3b3937" id="infoname">发货人：</span>
@@ -564,9 +564,7 @@ export default {
             vm.product = vm.res.result.product;
             vm.rule = vm.res.result.rule;
             vm.areaItem = vm.res.result.rgroupAreaItem;
-            if (vm.res.result.address) {
-              vm.checkedAddress = vm.res.result.address;
-            }
+            vm.checkedAddress = vm.res.result.address;
             vm.issuspend();
             vm.queryCoupon();
             vm.computeAmount();
@@ -953,8 +951,8 @@ export default {
     },//显示支付
 
     onlinePay() {
-      if (this.addresses == null || this.addresses.length == 0) {
-        alert("您暂未绑定房屋，请前往“我是业主”进行操作。点击确定进行绑定房屋操作。");
+      if (this.checkedAddress && this.checkedAddress.id == 0) {
+        alert("您暂未绑定房屋，点击确定后进行绑定房屋操作。");
         location.href =
           vm.basePageUrl +
           "wuye/index.html?" +
