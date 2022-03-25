@@ -215,7 +215,7 @@
         </div>
         <div style="background: white; height: 15px; width: 100%">&nbsp;</div>
         <!-- 新增地址 -->
-        <div class="addr_area" @click="showAddress">
+        <div class="addr_area" >
           <div class="addr-top">&nbsp;</div>
           <div style="text-align: center; background-color: #f7f7f1">
             <a
@@ -223,7 +223,7 @@
               class="btn-plain add_btn_style"
               v-show="!checkedAddress.receiveName"
               style=""
-              >选择收货地址</a
+              >暂无收货地址</a
             >
           </div>
 
@@ -953,14 +953,13 @@ export default {
     },//显示支付
 
     onlinePay() {
-      let sectId = cookie.get("sectId");
-      if (sectId == "" || sectId == "null" || sectId == 0 || sectId == null) {
-        alert("您暂未绑定房屋，请前往“我是业主”进行操作，感谢！");
+      if (this.addresses == null || this.addresses.length == 0) {
+        alert("您暂未绑定房屋，请前往“我是业主”进行操作。点击确定进行绑定房屋操作。");
         location.href =
           vm.basePageUrl +
           "wuye/index.html?" +
           vm.common.getoriApp() +
-          "#/myhouse";
+          "#/myhouse?ruleId="+this.ruleId;
         return false;
       }
       if (vm.paying) {
