@@ -215,7 +215,7 @@
         </div>
         <div style="background: white; height: 15px; width: 100%">&nbsp;</div>
         <!-- 新增地址 -->
-        <div class="addr_area" >
+        <div class="addr_area" @click="showAddress">
           <div class="addr-top">&nbsp;</div>
           <div style="text-align: center; background-color: #f7f7f1">
             <a
