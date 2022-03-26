@@ -569,7 +569,7 @@ export default {
             vm.queryCoupon();
             vm.computeAmount();
           } else {
-            alert("订单处理中，请稍后再试！");
+            //alert("订单处理中，请稍后再试！");
           }
         }
       );
