@@ -853,7 +853,7 @@ export default {
     },
     showAddress() {
       if(this.checkedAddress && this.checkedAddress.id == 0) {
-        alert("您尚未绑定房屋，点击确定后进行绑定房屋操作。");
+        alert("您尚未添加地址，点击确定后进行添加。");
         location.href =
           vm.basePageUrl +
           "wuye/index.html?" +
@@ -961,7 +961,7 @@ export default {
 
     onlinePay() {
       if (this.checkedAddress && this.checkedAddress.id == 0) {
-        alert("您尚未绑定房屋，点击确定后进行绑定房屋操作。");
+        alert("您尚未添加地址，点击确定后进行添加。");
         location.href =
           vm.basePageUrl +
           "wuye/index.html?" +
