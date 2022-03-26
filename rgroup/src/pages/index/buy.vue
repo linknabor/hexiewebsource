@@ -852,6 +852,15 @@ export default {
       vm.suggestions = [];
     },
     showAddress() {
+      if(this.checkedAddress && this.checkedAddress.id == 0) {
+        alert("您尚未绑定房屋，点击确定后进行绑定房屋操作。");
+        location.href =
+          vm.basePageUrl +
+          "wuye/index.html?" +
+          vm.common.getoriApp() +
+          "#/checkPay?ruleId="+this.ruleId;
+        return false;
+      }
       //隐藏主页面
       vm.shouyin = false;
       vm.showd = true;
@@ -952,12 +961,12 @@ export default {
 
     onlinePay() {
       if (this.checkedAddress && this.checkedAddress.id == 0) {
-        alert("您暂未绑定房屋，点击确定后进行绑定房屋操作。");
+        alert("您尚未绑定房屋，点击确定后进行绑定房屋操作。");
         location.href =
           vm.basePageUrl +
           "wuye/index.html?" +
           vm.common.getoriApp() +
-          "#/myhouse?ruleId="+this.ruleId;
+          "#/checkPay?ruleId="+this.ruleId;
         return false;
       }
       if (vm.paying) {
