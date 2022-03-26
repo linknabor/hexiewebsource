@@ -89,6 +89,9 @@
 
 			}
 		},
+		mounted(){
+			// console.log(this.ruleId)
+		},
 		data(){
 			return{
 				showOverlay: false, //遮罩
@@ -105,7 +108,7 @@
 				version: 99,	//0面积绑定，1户号绑定
 				verno: '',	//户号
 				telList: [],
-
+				ruleId: this.$route.query.ruleId
 			}
 		},
 		methods: {
@@ -219,7 +222,13 @@
 								Dialog.alert({
 									message: '绑定房屋成功'
 								}).then(() => {
-									this.$router.push("/myhouse")
+									if(this.ruleId && this.ruleId!=0) {
+										location.href = vm.basePageUrl + "hxrgroups.html?" + vm.common.getoriApp() + "#/buy?type=4&ruleId=" + this.ruleId
+        								return false
+									} else {
+										this.$router.push("/myhouse")
+									}
+									
 								}).catch((error)=>{
 									Toast(error)
 									this.showOverlay = false
