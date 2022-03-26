@@ -728,7 +728,7 @@ export default {
           vm.addresses = vm.data.result;
           vm.showm = true;
         } else {
-          alert("获取地址信息失败！");
+          //alert("获取地址信息失败！");
           vm.addresses = [];
           vm.showm = false;
         }
