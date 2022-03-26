@@ -90,7 +90,7 @@
 			}
 		},
 		mounted(){
-			// console.log(this.ruleId)
+			// console.log(this.basePageUrl + "hxrgroups.html?" + this.common.getoriApp() + "#/buy?type=4&ruleId=" + this.ruleId)
 		},
 		data(){
 			return{
@@ -223,7 +223,9 @@
 									message: '绑定房屋成功'
 								}).then(() => {
 									if(this.ruleId && this.ruleId!=0) {
-										location.href = vm.basePageUrl + "hxrgroups.html?" + vm.common.getoriApp() + "#/buy?type=4&ruleId=" + this.ruleId
+										let page = this.basePageUrl + "hxrgroups.html?" + this.common.getoriApp() + "#/buy?type=4&ruleId=" + this.ruleId
+										console.log("page:" + page)
+										location.href = page
         								return false
 									} else {
 										this.$router.push("/myhouse")
