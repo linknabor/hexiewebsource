@@ -41,7 +41,7 @@
             </div>
           </div>
           <div class="tc mt2">
-            <!-- <div class="addr_btn_plain" @click="toAddAddress">新增收货地址</div> -->
+            <div class="addr_btn_plain" @click="toAddAddress">新增收货地址</div>
             <br />
           </div>
         </div>
@@ -65,14 +65,13 @@
                 v-model="submitAddress.tel"
               />
             </div>
-            <div @click="showRegion" class="input-wrap lite-divider menu-link">
+            <!-- <div @click="showRegion" class="input-wrap lite-divider menu-link">
               <span class="fl fs15" style="color: #3b3937">所在地区</span>
-              <!-- -->
               <span class="fr fs14" style="color: #aeaeae" v-if="!distinct"
                 >请选择所在地区</span
               >
               <span class="fr fs14" v-if="distinct">{{ distinct }}</span>
-            </div>
+            </div> -->
             <!-- 选择省  市 县-->
             <div v-if="selectRegion == true">
               <div class="tc">
@@ -125,12 +124,12 @@
                 class="input-wrap lite-divider menu-link"
                 @click="showLocation"
               >
-                <span class="fl fs15">小区或大厦</span>
+                <span class="fl fs15">所在小区或大厦</span>
                 <span
                   class="fr fs14"
                   style="color: #aeaeae"
                   v-if="submitAddress.xiaoquName == ''"
-                  >请输入小区或大厦</span
+                  >请选择所在小区或大厦</span
                 >
                 <span class="fr fs14" v-if="submitAddress.xiaoquName">{{
                   submitAddress.xiaoquName
@@ -158,28 +157,9 @@
           </div>
         </div>
         <!--	使用高德地图搜索-->
-        <div style="background-color: #fffff8" v-if="currentPage == 'location'">
-          <div class="location-wrap">
-            <div class="location-input-wrap">
-              <div class="location-i">
-                <input
-                  placeholder="请输入小区名称"
-                  class="location-input"
-                  v-model="suggestLocation"
-                />
-              </div>
-              <i
-                class="location-btn-cancel"
-                @click="cancelLocation"
-                v-if="suggestLocation"
-              ></i>
-            </div>
-            <span class="location-btn-ensure" @click="submitLocation"
-              >确定</span
-            >
-          </div>
+        <div v-if="currentPage == 'location'">
           <div class="location-empty-tip" v-if="!suggestions.length">
-            准确的小区、街道或大厦名称能加快送货速度
+            请选择要配送的小区
           </div>
           <div v-if="suggestions.length">
                 <div
@@ -190,10 +170,11 @@
                 >
                     <span
                     style="position: relative; font-color: #cccccc; font-size: 16px"
-                    >{{ suggestion._name }} - {{ suggestion._address }}</span
+                    >{{ suggestion.sect_name_frst }} - {{ suggestion.sect_addr_frst }}</span
                     >
                 </div>
            </div>
+           <div class="sel-sect-hint">点击选择所在小区</div>
         </div>
       </div>
       <!-- 主页面 -->
@@ -223,7 +204,7 @@
               class="btn-plain add_btn_style"
               v-show="!checkedAddress.receiveName"
               style=""
-              >暂无收货地址</a
+              >添加收货地址</a
             >
           </div>
 
@@ -312,7 +293,7 @@
           >
         </div>
         
-        <div class="addr_area" v-if="checkedAddress.id!=0 && areaItem.areaLeader">
+        <!-- <div class="addr_area" v-if="checkedAddress.id!=0 && areaItem.areaLeader">
             <div class="addr-top">&nbsp;</div>
             <div class="addr_detail">
               <span style="color: #3b3937" id="infoname">发货人：</span>
@@ -324,7 +305,7 @@
             
             </div>
             <div class="addr-f">&nbsp;</div>
-        </div>
+        </div> -->
         <!-- <div class="info-wrap bgwhite">
           <div class="section-title">收货时间</div>
           <a
@@ -409,10 +390,11 @@
 <script>
 let vm;
 import wx from "weixin-js-sdk";
-import cookie from "js-cookie";
+
 export default {
   data() {
     return {
+      user: {},
       Mask:this.$route.query.Mask||false,//显示支付
       searchBarFixed: false,
       currentPage: "xinzen",
@@ -423,6 +405,7 @@ export default {
       product: {},
       rule: { limitNumOnce: 10, price: 0 },
       areaItem: {},
+      areaItems: [],
       address: {},
       checkedAddress: {},
       count: 1, //数量
@@ -563,7 +546,9 @@ export default {
           if (vm.res.success) {
             vm.product = vm.res.result.product;
             vm.rule = vm.res.result.rule;
+            vm.user = vm.res.result.userInfo;
             vm.areaItem = vm.res.result.rgroupAreaItem;
+            vm.areaItems = vm.res.result.areaItems;
             vm.checkedAddress = vm.res.result.address;
             vm.issuspend();
             vm.queryCoupon();
@@ -723,7 +708,7 @@ export default {
     //新增地址
     //初始地址
     dataAddress() {
-      vm.receiveData.getData(vm, "/addresses?module=rgroup", "data", function () {
+      vm.receiveData.getData(vm, "/rgroupAddresses/" + vm.ruleId, "data", function () {
         if (vm.data.success) {
           vm.addresses = vm.data.result;
           vm.showm = true;
@@ -807,16 +792,20 @@ export default {
     },
     //选择小区
     showLocation() {
-      if (
-        vm.submitAddress.city == "" ||
-        vm.submitAddress.county == "" ||
-        vm.submitAddress.province == ""
-      ) {
-        alert("请先选择你所在的区域");
-      } else {
+      
+        vm.receiveData.getData(vm, "/rgroup/sect/" + vm.ruleId,
+        "data",
+        function () {
+          if (vm.data.success) {
+            vm.suggestions = vm.data.result;
+            console.log(vm.suggestions)
+          } else {
+            vm.suggestions = [];
+          }
+        }
+      );
         vm.suggestions = [];
         vm.currentPage = "location";
-      }
     },
     //小区数据
     getSuggestion() {
@@ -833,34 +822,20 @@ export default {
         }
       );
     },
-    //点击叉叉
-    cancelLocation() {
-      vm.suggestLocation = "";
-      vm.currentPage = "xinzen";
-    },
-    //点击确定
-    submitLocation() {
-      vm.submitAddress.xiaoquName = vm.suggestLocation;
-      vm.submitAddress.amapId = vm.suggestion._id;
-      vm.submitAddress.amapDetailAddr = vm.suggestion.detailaddress;
-      vm.currentPage = "xinzen";
-    },
+
     //选中小区地址
     chooseLocation(suggestion) {
-      vm.suggestion = suggestion;
-      vm.suggestLocation = suggestion._name;
-      vm.suggestions = [];
+      vm.submitAddress.sectId = suggestion.sect_id
+      vm.submitAddress.xiaoquName = suggestion.sect_name_frst
+      vm.submitAddress.amapDetailAddr = suggestion.sect_addr_frst
+      vm.submitAddress.sectName = suggestion.sect_name_frst
+      vm.submitAddress.sectAddr = suggestion.sect_addr_frst
+      vm.submitAddress.cspId = suggestion.csp_id
+      vm.submitAddress.cspName = suggestion.csp_name
+      
+      vm.currentPage = "xinzen";
     },
     showAddress() {
-      if(this.checkedAddress && this.checkedAddress.id == 0) {
-        alert("您尚未添加地址，点击确定后进行添加。");
-        location.href =
-          vm.basePageUrl +
-          "wuye/index.html?" +
-          vm.common.getoriApp() +
-          "#/checkPay?ruleId="+this.ruleId;
-        return false;
-      }
       //隐藏主页面
       vm.shouyin = false;
       vm.showd = true;
@@ -873,21 +848,40 @@ export default {
     },
     //点击新增 显示添加地址样式
     toAddAddress() {
+      common.checkRegisterStatus();
       vm.showm = false;
       vm.showz = true;
+      let userName = this.user.realName
+      if(!userName) {
+        userName = this.user.name
+      }
+      if(!userName) {
+        userName = this.user.nickname
+      }
+      if(!userName) {
+        userName = ""
+      }
+      let tel = this.user.tel
+      if(!tel) {
+        tel = ""
+      } 
+
       vm.submitAddress = {
-        receiveName: "", //联系人
-        tel: "", //手机
+        receiveName: userName, //联系人
+        tel: tel, //手机
         provinceId: 0,
         province: "", //省
         cityId: 0,
         city: "", //市
         countyId: 0,
         county: "", //县
-        xiaoquName: "", //小区
-        amapId: 0,
-        amapDetailAddr: "", //小区地址 例如：三林路128弄"
-        homeAddress: "", //例如：1号楼402室
+        xiaoquName: "",
+        sectId: "",
+        sectName:"",
+        amapDetailAddr:"",
+        homeAddress: "",
+        cspId: "",
+        cspName: "",
       };
       vm.distinct = "";
       vm.suggestLocation = "";
@@ -904,13 +898,18 @@ export default {
       addr.countyId = vm.submitAddress.countyId;
       addr.county = vm.submitAddress.county;
       addr.xiaoquName = vm.submitAddress.xiaoquName;
-      addr.detailAddress =
-        vm.submitAddress.amapDetailAddr + vm.submitAddress.homeAddress;
+      addr.detailAddress = vm.submitAddress.amapDetailAddr + vm.submitAddress.homeAddress;
       addr.amapDetailAddr = vm.submitAddress.amapDetailAddr;
       addr.amapId = vm.submitAddress.amapId;
       addr.main = vm.isDefault;
+      addr.sectId = vm.submitAddress.sectId;
+      addr.sectAddr = vm.submitAddress.sectAddr;
+      addr.cspId = vm.submitAddress.cspId;
+      addr.cspName = vm.submitAddress.cspName;
       vm.zzshow = true;
-      vm.receiveData.postData(vm, "/addAddress", addr, "n", function () {
+
+      if(confirm("确认要保存当前地址吗？")){
+        vm.receiveData.postData(vm, "/addAddress4Rgroup", addr, "n", function () {
         if (vm.n.success) {
           vm.addresses.push(vm.n.result);
           vm.checkedAddress = vm.n.result;
@@ -920,33 +919,32 @@ export default {
             vm.shouyin = true;
           }
         } else {
-          alert(vm.n.message == null ? "地址保存失败，请重试！" : vm.n.message);
+          alert(vm.n.message == null ? "保存地址失败，请重试！" : vm.n.message);
         }
         $("#zzmb").hide();
       });
+
+      }
+      
     },
     //保存
     addAddressa() {
-      if (
-        vm.submitAddress.province == "" ||
-        vm.submitAddress.city == "" ||
-        vm.submitAddress.county == ""
-      ) {
-        alert("请选择地址！");
-        return;
-      }
-      if (
-        vm.submitAddress.amapDetailAddr == "" ||
-        vm.submitAddress.receiveName == "" ||
-        vm.submitAddress.tel == "" ||
-        vm.submitAddress.homeAddress == ""
-      ) {
-        alert("请填写完整相关信息！");
-        return;
+      
+      if(vm.submitAddress.receiveName == "" || vm.submitAddress.tel == "") {
+        alert("请填写联系人信息");
+        return false;
       }
       if (!/^1[3-9][0-9]\d{8}$/.test(vm.submitAddress.tel)) {
-        alert("请填写正确的手机号！");
-        return;
+        alert("请填写正确的手机号");
+        return false;
+      }
+      if(vm.submitAddress.amapDetailAddr == "") {
+        alert("请选择所在小区");
+        return false;
+      }
+      if (vm.submitAddress.homeAddress == "") {
+        alert("请填写楼栋门牌号");
+        return false;
       }
       vm.saveAddress();
     },
@@ -960,13 +958,9 @@ export default {
     },//显示支付
 
     onlinePay() {
+      common.checkRegisterStatus();
       if (this.checkedAddress && this.checkedAddress.id == 0) {
         alert("您尚未添加地址，点击确定后进行添加。");
-        location.href =
-          vm.basePageUrl +
-          "wuye/index.html?" +
-          vm.common.getoriApp() +
-          "#/checkPay?ruleId="+this.ruleId;
         return false;
       }
       if (vm.paying) {
@@ -1703,5 +1697,14 @@ img {
     -moz-animation-delay: 0.2s;
     -o-animation-delay: 0.2s;
     animation-delay: 0.2s;
+}
+.sel-sect-hint {
+  width: 100%;
+  position: absolute;
+  text-align: center;
+  font-size: 0.35rem;
+  color: grey;
+  bottom: 0.75rem;
+
 }
 </style>
