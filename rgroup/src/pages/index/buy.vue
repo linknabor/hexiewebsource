@@ -924,6 +924,8 @@ export default {
         $("#zzmb").hide();
       });
 
+      } else {
+        vm.zzshow = false;
       }
       
     },
