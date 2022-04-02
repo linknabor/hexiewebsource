@@ -39,6 +39,7 @@
           <textarea class="address-text" @blur="fixScroll" placeholder="输入公共部位地址" v-model="pubAddress">
           </textarea>
         </div>
+		<span style="color:red">如：3号楼1楼大厅<span>
       </div>
       
       <div class="custom_menu">
