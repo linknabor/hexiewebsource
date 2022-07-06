@@ -3,7 +3,6 @@ window.onload = function(){
       为了以后好算,比如，你测量的一个宽度是100px,就可以写为1rem,以及1px=0.01rem等等*/
     getRem(750,100)
     let sys = getSys()
-    console.log('operator sys : ' + sys)
     if('android' === sys){
         rem4Android()
     }

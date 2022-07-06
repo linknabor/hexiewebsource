@@ -204,9 +204,32 @@ export default ({
 
         },
         showQrcode() {
-            let str = "?appid=" + this.user.appId + "&userid=" + this.user.wuyeId;
-            this.showQrCode = true
-            this.qrCodeStr = str
+            let user = this.user
+            // console.log(user)
+            if(!user.wuyeId) {
+                this.showOverlay = true
+                UserApi.getWuyeId().then((response)=>{
+                    this.showOverlay = false
+                    if(response.data.success) {
+                        console.log(response)
+                        let wuyeId = response.data.result
+                        let str = "?appid=" + this.user.appId + "&userid=" + wuyeId + "&tel=" + this.user.tel + "&openid=" + this.user.openid
+                        this.showQrCode = true
+                        this.qrCodeStr = str
+                    } else {
+                        Dialog({ message: response.data.message })
+                        return false
+                    }
+                }).catch((error)=>{
+                    this.showOverlay = false
+                    Dialog({ message: error })
+                    return false
+                })
+            } else {
+                let str = "?appid=" + this.user.appId + "&userid=" + this.user.wuyeId + "&tel=" + this.user.tel + "&openid=" + this.user.openid
+                this.showQrCode = true
+                this.qrCodeStr = str
+            }
         },
         activate() {
             this.showOverlay = true

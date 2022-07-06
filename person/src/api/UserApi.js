@@ -21,6 +21,9 @@ const api = {
     activateMemberCard(param) {  //激活会员卡
         return http.get(baseUrl + '/card/activateUrlOnMenu' + '?oriApp=' +param, null)
     },
+    getWuyeId() {   //获取物业id
+        return http.get(baseUrl + '/wuyeId', null)
+    },
 }
 
 export default api;
