@@ -372,7 +372,7 @@ export default ({
 }
 .orders-title {
     margin: 0.5rem 0 0 0.4rem;
-    width: 1.36rem;
+    // width: 1.36rem;
     color: #292929;
     font-weight: 600;
     font-family: PingFangSC-Medium, sans-serif;
