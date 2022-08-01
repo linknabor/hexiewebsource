@@ -17,7 +17,7 @@
                         <input type="tel" placeholder="请输入手机号码" class="fr fs14 hidden-input pr15" v-model="user.tel"/>
                     </div>
                    <div class="input-wrap lite-divider">
-                        <input placeholder="输入验证码" class="fl fs14 hidden-input" style="padding-bottom: 15px;text-align: left;margin-bottom: 6px;" v-model="captcha"/>
+                        <input placeholder="输入验证码" class="fl fs14 hidden-input" style="padding-bottom: 15px;text-align: left;margin-bottom: 6px;" v-model="captcha" maxlength="6"/>
                         <span class="fr btn-plain" style="margin-top: 10px;" :class="{useless:yzmstr!='获取验证码'&&yzmstr!='重新获取'}" @click="getCaptcha">{{yzmstr}}</span>
                    </div> 
                    <div class="messages">{{message}}</div>
