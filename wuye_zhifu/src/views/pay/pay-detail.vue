@@ -398,7 +398,7 @@
 				<h4 class="qufapiao" v-show="show_invoice_flag==1">申请的电子发票预计在3个工作日内通过短信发送至您手机上,请注意查收</h4>
 			</form>
 			<!-- 支付按钮 -->
-			<div class="card " v-show="bindhouse">
+			<!-- <div class="card " v-show="bindhouse">
 				<div class="ov item" >
 					<span  class="fl">是否自动绑定为该房屋的业主：</span>
 					<div class="ov fl  ml">
@@ -411,7 +411,7 @@
 						<input type="radio" id="checkbox_a2" name="flag" value="0"  v-model="bind_switch" class="chk_1"  />
 					</div>
 				</div>
-			</div>
+			</div> -->
 
 			<!-- 贵州银行卡支付 -->
 			<div class="Manner" v-show="cardPayService == 'true' && support_card_pay=='1'">
@@ -550,7 +550,7 @@
 				is_create_qrcode:'',//是否开启工作人员收费
 				support_card_pay:'',
 				version:'',
-				bind_switch:'1',
+				bind_switch:'0',
 				reduceMoney:'0',
 
 				selected:this.$route.query.selected,//查询缴费显示工作人员收费
