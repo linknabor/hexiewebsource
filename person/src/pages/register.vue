@@ -46,7 +46,6 @@
 <script>
 let vm;
 let Token;
-import axios from 'axios';
 import ageess from './ageess';
 export default {
    data () {
@@ -69,9 +68,8 @@ export default {
    },
    mounted() {
        vm.getUserInfo();
-       vm.getComeFrom()
    },
-    
+   
    methods: {
         getUserInfo() {
             var n = "GET",
@@ -82,12 +80,24 @@ export default {
                 Token=xhr.getResponseHeader('Access-Control-Allow-Token');
             },
             e = function(n) {
-                 if(n.success&&n.result==null) {
-                       reLogin();
-                 }     
+                if(n.success&&n.result==null) {
+                    console.log('no user info, will reLogin !')
+                    reLogin();
+                }     
                 vm.user = n.result;
-                if(vm.common.hasRegister()) {
-                    vm.$router.push({path:'/'})
+                vm.getComeFrom()
+                if(vm.user.tel && vm.user.tel!='null') {
+                    console.log('user registered, will forward ! ')
+                    vm.common.updateUserStatus(n.result);
+                    var forwardPage = "";
+                    if(vm.comeFrom){
+                        forwardPage = vm.comeFrom;
+                    } else {
+                        // let oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
+                        forwardPage = vm.basePageUrl+'person/index.html?'+vm.common.getoriApp();
+                    }
+                    console.log('forward page : ' + forwardPage);
+                    location.href = forwardPage;
                 }
             },
             r = function() {};
@@ -204,7 +214,7 @@ export default {
                 var idx = url.lastIndexOf('#');
                 var hash=url.substring(idx);
                 vm.comeFrom =comeFrom +''+hash;
-                console.log(hash)
+                console.log(vm.comeFrom)
         }
    },
    components: {
