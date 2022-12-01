@@ -197,12 +197,7 @@ export default {
             if (vm.coupon != null) {
                 order.couponId = vm.coupon.id;
             }    
-            let sectId = cookie.get('sectId');
-            if(sectId == "" || sectId == 'null' || sectId == 0 || sectId == null) {
-                alert('您暂未绑定房屋，请前往“我是业主”进行操作，感谢！')
-                location.href=vm.basePageUrl+'wuye/index.html?'+vm.common.getoriApp()+'#/myhouse'
-                return false;
-            }
+            
             vm.zzshow=true;
             vm.receiveData.postData(vm,'/createOrder',order,'n',function(){
                 if(vm.n.success) {
