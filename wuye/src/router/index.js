@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 const router= new VueRouter({
+    //路由
     routes: [
         {
             path: '/',
@@ -165,8 +166,6 @@ const router= new VueRouter({
         }
       },
       //新的业主意见 end
-
-
       {
             path:'/mysteward',
             name:'mysteward',
