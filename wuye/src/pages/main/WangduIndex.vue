@@ -116,9 +116,9 @@ import Foot from '@/components/footer.vue'
 import VueQr from 'vue-qr'
 import { Skeleton, Popup, Toast, Dialog, Empty, List, PullRefresh, ImagePreview, Popover, Icon, CellGroup, Cell } from 'vant'
 import NoticeApi from '@/api/NoticeApi.js'
-import TipsApi from '@/api/TipSApi.js'
 import BaseInfoApi from '@/api/BaseInfoApi.js'
 import Storage from '@/assets/js/storage.js'
+import TipsApi from '@/api/TipsApi.js'
 
 export default ({
     data (){
