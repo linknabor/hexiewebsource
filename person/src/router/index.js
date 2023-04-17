@@ -22,6 +22,14 @@ let router= new Router({
       }
     },
     {
+      path:'/wangdu',
+      name:'wangdu',
+      component: resolve=>require(['@/pages/index/WangDuIndex'],resolve),
+      meta: {
+        title:'个人中心'
+      }
+    },
+    {
       path:'/register',
       name:'register',
       component: resolve=>require(['@/pages/register'],resolve),
@@ -316,13 +324,13 @@ let router= new Router({
 router.beforeEach((to, from, next)=>{
   
   let pageName = to.matched[0].name
-  const viewArray = ['index', 'register', 'welfare', 'reset', 'version2']
+  const viewArray = ['index', 'register', 'welfare', 'reset', 'version2', 'wangdu']
 
   //动态改变title
   if(viewArray.indexOf(pageName)===-1) {
      if(!common.checkRegisterStatus()) {
        return
-     }
+  }
   }
   let version = ''
   if('index'=== pageName){
@@ -333,9 +341,15 @@ router.beforeEach((to, from, next)=>{
     let dcappid = config.C('dcappid')   //东辰物业
     let nbappid = config.C('nbappid')   //测试用
     let hhappid = config.C('hhappid')   //汇虹物业
+    let wdappids = config.C('wdappids')
     console.log('router, oriApp : ' + appid)
     if(appid!==kyappid && appid!==dcappid && appid!==nbappid ){
       version = 'version2'
+    }
+    if(wdappids && wdappids.length>0) {
+      if(wdappids.includes(appid)) {
+        version = 'wangdu'
+      }
     }
   }
   changeTitle(to.meta.title)
