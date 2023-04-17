@@ -116,7 +116,7 @@ import Foot from '@/components/footer.vue'
 import VueQr from 'vue-qr'
 import { Skeleton, Popup, Toast, Dialog, Empty, List, PullRefresh, ImagePreview, Popover, Icon, CellGroup, Cell } from 'vant'
 import NoticeApi from '@/api/NoticeApi.js'
-import TipsApi from '@/api/TipsApi.js'
+import TipsApi from '@/api/TipSApi.js'
 import BaseInfoApi from '@/api/BaseInfoApi.js'
 import Storage from '@/assets/js/storage.js'
 
@@ -414,7 +414,7 @@ export default ({
     height: 2.71rem;
     background-size: cover;
     background-repeat: no-repeat;
-    .bg-image('../../assets/images/index/index_bg');
+    .bg-image('../../assets/images/index/index_wd');
 }
 
 .icons {

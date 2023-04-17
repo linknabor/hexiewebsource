@@ -220,7 +220,7 @@ import Bill from "../../components/bill.vue";
 import moment from "../filter/datafromat";
 import cookie  from 'js-cookie';
 import Api from '@/api/api.js'
-import TipsApi from '@/api/TipSApi.js'
+import TipsApi from '@/api/TipsApi.js'
 import BaseInfoApi from '@/api/BaseInfoApi.js'
 import Storage from '@/assets/js/storage.js'
 

@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 const router= new VueRouter({
+    //路由
     routes: [
         {
             path: '/',
@@ -21,7 +22,12 @@ const router= new VueRouter({
         {
           path: '/huihong',
           name: 'huihong',
-          component: resolve=>require(['@/pages/main/HuihongIndex'],resolve)
+          component: resolve=>require(['@/pages/main/HuiHongIndex'],resolve)
+        },
+        {
+          path: '/wangdu',
+          name: 'wangdu',
+          component: resolve=>require(['@/pages/main/WangDuIndex'],resolve)
         },
         {
             path:'/message',
@@ -160,8 +166,6 @@ const router= new VueRouter({
         }
       },
       //新的业主意见 end
-
-
       {
             path:'/mysteward',
             name:'mysteward',
@@ -320,7 +324,7 @@ const router= new VueRouter({
       {
         path:'/receipt',
         name:'receipt',
-        component:resolve=> require(['@/pages/receipt/receipt'],resolve),
+        component:resolve=> require(['@/pages/receipt/Receipt'],resolve),
         meta:{
           title:'电子收据'
         }
@@ -336,7 +340,7 @@ const router= new VueRouter({
     ]
 });
 
-const viewArray = ['index', 'register', 'sms_notification', 'receipt', 'version2', 'version3', 'huihong','indexCar', 'queryCarPay', 'addCar', 'queryCarList','carPay','carPaySuccess','carPayDetail']
+const viewArray = ['index', 'register', 'sms_notification', 'receipt', 'version2', 'version3', 'huihong','wangdu','indexCar', 'queryCarPay', 'addCar', 'queryCarList','carPay','carPaySuccess','carPayDetail']
 //路由的钩子函数，
 //在每一次路由跳转之前会进入这个方法 to：到哪去  from：从哪来 next() 调用这个方法来完成这个钩子函数
 router.beforeEach((to, from, next) => {
@@ -356,6 +360,7 @@ router.beforeEach((to, from, next) => {
     let nbappid = config.C('nbappid')   //测试用
     let ccappid = config.C('ccappid')   //春川
     let hhappid = config.C('hhappid')   //汇宏
+    let wdappid = config.C('wdappids')   //旺度
     console.log('router, oriApp : ' + appid)
     if(appid!==kyappid && appid!==dcappid && appid!==nbappid){
       version = 'version2'
@@ -366,6 +371,11 @@ router.beforeEach((to, from, next) => {
     if(appid===hhappid){
       version = 'huihong'
 	}
+    if(wdappid && wdappid.length > 0) {
+      if(wdappid.includes(appid)) {
+        version = 'wangdu'
+  }
+    }
   }
   //动态改变title
   changeTitle(to.meta.title)
