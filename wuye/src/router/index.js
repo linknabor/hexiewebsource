@@ -21,12 +21,12 @@ const router= new VueRouter({
         {
           path: '/huihong',
           name: 'huihong',
-          component: resolve=>require(['@/pages/main/HuihongIndex'],resolve)
+          component: resolve=>require(['@/pages/main/HuiHongIndex'],resolve)
         },
         {
           path: '/wangdu',
           name: 'wangdu',
-          component: resolve=>require(['@/pages/main/WangduIndex'],resolve)
+          component: resolve=>require(['@/pages/main/WangDuIndex'],resolve)
         },
         {
             path:'/message',
@@ -268,7 +268,7 @@ const router= new VueRouter({
       {
         path:'/receipt',
         name:'receipt',
-        component:resolve=> require(['@/pages/receipt/receipt'],resolve),
+        component:resolve=> require(['@/pages/receipt/Receipt'],resolve),
         meta:{
           title:'电子收据'
         }
