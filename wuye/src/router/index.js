@@ -24,6 +24,11 @@ const router= new VueRouter({
           component: resolve=>require(['@/pages/main/HuihongIndex'],resolve)
         },
         {
+          path: '/wangdu',
+          name: 'wangdu',
+          component: resolve=>require(['@/pages/main/WangduIndex'],resolve)
+        },
+        {
             path:'/message',
             name:'message',
             component:resolve=> require(['@/pages/main/message'],resolve)
@@ -285,9 +290,9 @@ const viewArray = ['index', 'register', 'sms_notification', 'version2', 'version
 router.beforeEach((to, from, next) => {
   let pageName = to.matched[0].name
   if(viewArray.indexOf(pageName)===-1){
-    if(!common.checkRegisterStatus()){
-      return
-  	}
+    // if(!common.checkRegisterStatus()){
+    //   return
+  	// }
   }
   let version = ''
   if('index'===pageName){
@@ -299,6 +304,7 @@ router.beforeEach((to, from, next) => {
     let nbappid = config.C('nbappid')   //测试用
     let ccappid = config.C('ccappid')   //春川
     let hhappid = config.C('hhappid')   //汇宏
+    let wdappid = config.C('wdappids')   //旺度
     console.log('router, oriApp : ' + appid)
     if(appid!==kyappid && appid!==dcappid && appid!==nbappid){
       version = 'version2'
@@ -306,8 +312,13 @@ router.beforeEach((to, from, next) => {
     if(appid===ccappid) {
       version = 'version3'
     }
-    if(appid===hhappid){
+    if(appid===hhappid) {
       version = 'huihong'
+    }
+    if(wdappid && wdappid.length > 0) {
+      if(wdappid.includes(appid)) {
+        version = 'wangdu'
+      }
     }
   }
   //动态改变title
