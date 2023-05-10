@@ -20,8 +20,6 @@
                         v-model="showSwitchTips"
                         :overlay="true"
                         :offset="[-10, 15]"
-                        :close="closeTips"
-                        :closed="closeTips"
                         >
                         <div style="margin: 0.3rem 0.2rem; width: 2.5rem; font-size: 0.3rem">
                             <span>{{switchSectTips}}</span>
@@ -173,6 +171,13 @@ export default ({
         [Cell.name]: Cell,
     },
     mounted(){
+
+        const originColor = getComputedStyle(document.documentElement).getPropertyValue('--origin-color');
+        document.documentElement.style.setProperty('--primary-color', originColor);
+
+        const originSelIcon = getComputedStyle(document.documentElement).getPropertyValue('--origin-icon-selected');
+        document.documentElement.style.setProperty('--primary-icon-selected', originSelIcon);
+
         this.timer = setTimeout(()=>{   //设置延迟执行
             this.skeletonLoading = false
         },2000);

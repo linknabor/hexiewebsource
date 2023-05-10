@@ -171,6 +171,11 @@ export default ({
     },
     mounted(){
         this.getSwitchSectTips()
+        const secondaryColor = getComputedStyle(document.documentElement).getPropertyValue('--secondary-color');
+        document.documentElement.style.setProperty('--primary-color', secondaryColor);
+
+        const secondarySelIcon = getComputedStyle(document.documentElement).getPropertyValue('--secondary-icon-selected');
+        document.documentElement.style.setProperty('--primary-icon-selected', secondarySelIcon);
     },
     methods: {
         setUser(data){
