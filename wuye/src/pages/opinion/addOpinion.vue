@@ -189,7 +189,7 @@
     bottom: 0;
     left: 5%;
     right: 5%;
-    background-color: #ff8a00;
+    background-color: var(--primary-color);
     line-height: 50px;
     color: white;
   }
@@ -227,7 +227,7 @@
     width: 70%;
     overflow: hidden;
     height: 16px;
-    color: #ff8a00;
+    color: var(--primary-color);
     font-size: 15px;
   }
 

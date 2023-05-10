@@ -106,10 +106,10 @@ export default {
 }
 .data-check {
   padding: 0.1rem 0.1rem;
-  border: 1px solid #ff8a00;
+  border: 1px solid var(--primary-color);
   border-radius: 0.2rem;
   margin-left: 75%;
-  color: #ff8a00;
+  color: var(--primary-color);
 }
 
 </style>

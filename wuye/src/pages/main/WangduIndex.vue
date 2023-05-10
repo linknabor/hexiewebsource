@@ -274,7 +274,6 @@ export default ({
             this.getNotice();
         },
         noticeDetail(url){
-            console.log(url)
             if(!url){
                 Toast("未配置跳转链接")
                 return
@@ -290,7 +289,6 @@ export default ({
         getSwitchSectTips() {
             TipsApi.getSwitchSectTips('index').then((response)=>{
                 let data = response.data
-                console.log(data)
                 if(data && data.errorCode === 0){
                     if(data.result){
                         this.showSwitchTips = true
@@ -308,7 +306,6 @@ export default ({
         getBindHouList() {
             BaseInfoApi.queryHouseByUser().then((response)=>{
                 let data = response.data
-                console.log(data)
                 if(data && data.errorCode === 0){
                     if(data.result){
                         this.bindHouList = data.result

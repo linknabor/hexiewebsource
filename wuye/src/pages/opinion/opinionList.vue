@@ -228,7 +228,7 @@
     height: 35px;
     margin-right: 0;
     line-height: 35px;
-    background: #ff8a00;
+    background: var(--primary-color);
     text-align: center;
     font-size: 14px;
     float: left;
