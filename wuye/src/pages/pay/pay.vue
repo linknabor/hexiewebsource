@@ -1536,7 +1536,7 @@ a {
     color:#fff;
     border-radius: 5px;
     font-size:0.3rem;
-    background:url("../../assets/images/house/paymoney.png") no-repeat center;
+    background-color: var(--primary-color);
 }
 /*footbtn end*/
 
