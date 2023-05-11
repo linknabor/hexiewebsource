@@ -1,7 +1,7 @@
 //开发环境
 var MasterConfig = function() {
     var t = {
-        baseUrl: /127|test/.test(location.origin)?'https://test.e-shequ.cn/wechat/hexie/wechat/':
+        baseUrl: /127|test/.test(location.origin)?'http://127.0.0.1:86/':
         /uat/.test(location.origin)?'https://uat.e-shequ.cn/wechat/hexie/wechat/':
         'https://www.e-shequ.cn/wechat/hexie/wechat/',
         
@@ -39,7 +39,9 @@ var MasterConfig = function() {
         is_debug:true,
 
         kyappid:'wxa54bc90bdbc845a8',//昆亿
-        dcappid:'wxcfa72801fc101382'//东城
+        dcappid:'wxcfa72801fc101382',//东城
+        wdappids: ['wxb456783456123457', 'wxb456783456123458'],//旺都
+
     },
 
     e = {};
@@ -347,6 +349,8 @@ window.common = {
     },
     /**变更才需要重设置*/
     updateUserStatus(user) {
+		var userStr = JSON.stringify(user);
+        localStorage.setItem('userInfo', userStr);
         var duration = new Date().getTime()/1000 + 3600*24*30;
         setCookie("UID", user.uid,  duration);
         setCookie("currentAddrId", user.currentAddrId, duration);
@@ -365,6 +369,13 @@ window.common = {
             setCookie('sectId',sectId,duration);
             setCookie('cardPayService',cardPayService,duration);
             setCookie('qrCode',qrCode,duration);
+			if(result.id){
+				setCookie("UID", result.id, duration);
+			}
+			if(result.tel){
+				setCookie("tel", result.tel, duration);
+			}
+			
             console.log(result);
             for(var j=0;j<bgImageList.length;j++){
                 common.localSet(bgImageList[j].type,bgImageList[j].imgUrl)
@@ -478,5 +489,5 @@ window.common = {
 
 };
 Getofficial();
-checkCodeAndLogin();
-// export {common,MasterConfig,getUrlParam} 
+// checkCodeAndLogin();
+export {common,MasterConfig,getUrlParam} 
