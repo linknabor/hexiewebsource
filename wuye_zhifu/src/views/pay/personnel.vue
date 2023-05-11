@@ -101,7 +101,7 @@ export default {
     position: absolute;
     width: 100%;
     height: 100%;
-    background-color: #f09734;
+    background-color: var(--primary-color);
 }
 .title {
     margin-top: 1.5rem;
