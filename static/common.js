@@ -39,7 +39,8 @@ var MasterConfig = function() {
         is_debug:true,
 
         kyappid:'wxa54bc90bdbc845a8',//昆亿
-        dcappid:'wxcfa72801fc101382'//东城
+        dcappid:'wxcfa72801fc101382',//东城
+		wdappids: ['wxb456783456123457', 'wxb456783456123458', 'wxa48ca61b68163483'],//旺都
     },
 
     e = {};
