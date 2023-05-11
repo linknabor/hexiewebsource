@@ -170,9 +170,7 @@ export default ({
         [Cell.name]: Cell,
     },
     mounted(){
-        console.log('wangdu index ...')
         var secondaryColor = getComputedStyle(document.documentElement).getPropertyValue('--secondary-color');
-        console.log('secondaryColor:' + secondaryColor)
         document.documentElement.style.setProperty('--primary-color', secondaryColor);
 
         var secondarySelIcon = getComputedStyle(document.documentElement).getPropertyValue('--secondary-icon-selected');
