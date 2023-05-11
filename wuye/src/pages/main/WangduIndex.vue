@@ -170,11 +170,12 @@ export default ({
         [Cell.name]: Cell,
     },
     mounted(){
-        const secondaryColor = getComputedStyle(document.documentElement).getPropertyValue('--secondary-color');
+        console.log('wangdu index ...')
+        var secondaryColor = getComputedStyle(document.documentElement).getPropertyValue('--secondary-color');
         console.log('secondaryColor:' + secondaryColor)
         document.documentElement.style.setProperty('--primary-color', secondaryColor);
 
-        const secondarySelIcon = getComputedStyle(document.documentElement).getPropertyValue('--secondary-icon-selected');
+        var secondarySelIcon = getComputedStyle(document.documentElement).getPropertyValue('--secondary-icon-selected');
         document.documentElement.style.setProperty('--primary-icon-selected', secondarySelIcon);
         // this.getSwitchSectTips()
         
