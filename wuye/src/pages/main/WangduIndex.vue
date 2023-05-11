@@ -172,7 +172,6 @@ export default ({
     mounted(){
         const secondaryColor = getComputedStyle(document.documentElement).getPropertyValue('--secondary-color');
         console.log('secondaryColor:' + secondaryColor)
-        alert(secondaryColor)
         document.documentElement.style.setProperty('--primary-color', secondaryColor);
 
         const secondarySelIcon = getComputedStyle(document.documentElement).getPropertyValue('--secondary-icon-selected');
