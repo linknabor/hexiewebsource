@@ -106,10 +106,12 @@ function dealWithAjaxData(o, e, i, r) {
 //没授权在授权登录
 function reLogin() {
 	setTimeout(function(){
-		console.log("waiting 1s for relogin.")
+		console.log("waiting 1s for relogin.");
+        setCookie("UID", "", 0);
+        setCookie("SESSION", "", 0);
+        localStorage.removeItem('userInfo');
+        common.login(!0)
 	},500)
-    setCookie("UID", "", 0),
-    common.login(!0)
 }
 // 读取cookie方法
 function getCookie(e) {
