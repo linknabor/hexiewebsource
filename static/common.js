@@ -348,6 +348,8 @@ window.common = {
     },
     /**变更才需要重设置*/
     updateUserStatus(user) {
+		var userStr = JSON.stringify(user);
+        localStorage.setItem('userInfo', userStr);
         var duration = new Date().getTime()/1000 + 3600*24*30;
         setCookie("UID", user.uid,  duration);
         setCookie("currentAddrId", user.currentAddrId, duration);
@@ -366,6 +368,13 @@ window.common = {
             setCookie('sectId',sectId,duration);
             setCookie('cardPayService',cardPayService,duration);
             setCookie('qrCode',qrCode,duration);
+			if(result.id){
+				setCookie("UID", result.id, duration);
+			}
+			if(result.tel){
+				setCookie("tel", result.tel, duration);
+			}
+			
             console.log(result);
             for(var j=0;j<bgImageList.length;j++){
                 common.localSet(bgImageList[j].type,bgImageList[j].imgUrl)

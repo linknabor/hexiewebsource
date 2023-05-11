@@ -104,7 +104,7 @@
 	  	return {
 			dataArr:[],
 			login:true,
-			bgImage:this.common.GetImages('5'),
+			bgImage:'',
 			userInfo: {},
 	  	}
 	  },
@@ -113,7 +113,13 @@
 	  },
 	  mounted(){//查看房子列表
 	  	// this.common.checkRegisterStatus();
+		vm.showList();
+		let bgImage = this.common.GetImages('5')
+		if(bgImage) {
+			this.bgImage = bgImage
+		}
 		let userInfo = Storage.get('userInfo')
+		console.log(userInfo)
 		if(userInfo) {
 			this.userInfo = userInfo
 			let wdappids = this.is_config.C('wdappids')
@@ -132,7 +138,6 @@
 			}
 			
 		}
-		vm.showList();
 	  },
 	  methods:{
 	  	showList(){
