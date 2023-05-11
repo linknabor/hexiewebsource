@@ -362,6 +362,8 @@ router.beforeEach((to, from, next) => {
     let hhappid = config.C('hhappid')   //汇宏
     let wdappid = config.C('wdappids')   //旺度
 
+    console.log('wdappid:' + wdappid)
+
     console.log('router, oriApp : ' + appid)
     if(appid!==kyappid && appid!==dcappid && appid!==nbappid){
       version = 'version2'
@@ -373,10 +375,12 @@ router.beforeEach((to, from, next) => {
       version = 'huihong'
 	}
     if(wdappid && wdappid.length > 0) {
-      if(wdappid.includes(appid)) {
+      console.log('appid:' + appid)
+      if(wdappid.indexOf(appid)>-1) {
         version = 'wangdu'
   }
     }
+    console.log('router, version : ' + version)
   }
   //动态改变title
   changeTitle(to.meta.title)
