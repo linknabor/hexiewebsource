@@ -189,7 +189,24 @@ export default {
   },
   methods: {
     getUserInfo() {
-      this.userInfo = Storage.get('userInfo')
+      let userInfo = Storage.get('userInfo')
+      if(userInfo) {
+        this.userInfo = userInfo
+        let wdappids = this.is_config.C('wdappids')
+        console.log(wdappids)
+        if(wdappids.indexOf(userInfo.appId)>-1) {
+          const secondaryColor = getComputedStyle(document.documentElement).getPropertyValue('--secondary-color');
+          console.log(secondaryColor)
+          document.documentElement.style.setProperty('--primary-color', secondaryColor);
+          const secondarySelIcon = getComputedStyle(document.documentElement).getPropertyValue('--secondary-icon-selected');
+          document.documentElement.style.setProperty('--primary-icon-selected', secondarySelIcon);
+        } else {
+          const originColor = getComputedStyle(document.documentElement).getPropertyValue('--origin-color');
+          document.documentElement.style.setProperty('--primary-color', originColor);
+          const originSelIcon = getComputedStyle(document.documentElement).getPropertyValue('--origin-icon-selected');
+          document.documentElement.style.setProperty('--primary-icon-selected', originSelIcon);
+        }
+      }
     },
     initInfo() {
         this.showOverlay = true
