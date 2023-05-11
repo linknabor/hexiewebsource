@@ -16,7 +16,7 @@ export default {
     
   },
   mounted() {
-    
+    console.log('加载 app.vue')
   },
   beforeDestroy(){
      
@@ -33,5 +33,14 @@ export default {
   }
    body {
     -webkit-tap-highlight-color: transparent;
+  }
+  :root {
+    --origin-color: #ff8a00;
+    --primary-color: #ff8a00;
+    --secondary-color: #d01120;
+
+    --origin-icon-selected: url("~@/assets/images/common/icon_selected.png");
+    --primary-icon-selected: url("~@/assets/images/common/icon_selected.png");
+    --secondary-icon-selected: url("~@/assets/images/common/icon_selected_ngs.png");
   }
 </style>

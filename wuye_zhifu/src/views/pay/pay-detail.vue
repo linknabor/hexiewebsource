@@ -46,14 +46,14 @@
 	color: #7d7d7d;
 }
 .coupon{
-	color: #ff8a05;
+	color: var(--primary-color);
 }
 .payCount{
 	padding: 0 0.2rem;
 	height: 1.2rem;
 	line-height: 1.2rem;
 	/* background-color: #f6f7f1; */
-	color: #ff8a05;
+	color: var(--primary-color);
 	border:1px solid #cecdc9;
 	margin-top: 0.3rem;
 }
@@ -77,7 +77,7 @@
 	font-size: 0.3rem;
 }
 .paycolor {
-	background-color: #F69C05;
+	background-color: var(--primary-color);
 }
 .btn-fix {
 	position: fixed;
@@ -94,7 +94,7 @@
 	color: #fff;
 	width:3rem;
 	border-radius: 5px;
-	background-color: #F69C05;
+	background-color: var(--primary-color);
 	font-size:0.3rem;
 }
 
@@ -143,7 +143,7 @@
     text-align: center;
     font-size: 0.4rem;
     border-radius: 5px;
-    background-color: #ff8a05;
+    background-color: var(--primary-color);
     padding: 1px 0 0 0;
     vertical-align: text-top;
 }
@@ -220,7 +220,7 @@
     width: 100%;
     text-align: center;
     font-size:0.4rem;
-    background-color: #ff8a05;
+    background-color: var(--primary-color);
     padding: 1px 0 0 0;
     vertical-align: text-top;
 }
@@ -605,6 +605,27 @@
 		mounted(){
 			// vm.common.checkRegisterStatus();
 			// this.initSession4Test();
+			var userStr = localStorage.getItem('userInfo');
+			var userInfo = {}
+			if(userStr) {
+				userInfo = JSON.parse(userStr)
+				if(wdappids.indexOf(userInfo.appid)>-1) {
+					const secondaryColor = getComputedStyle(document.documentElement).getPropertyValue('--secondary-color');
+					document.documentElement.style.setProperty('--primary-color', secondaryColor);
+					const secondarySelIcon = getComputedStyle(document.documentElement).getPropertyValue('--secondary-icon-select');
+					document.documentElement.style.setProperty('--primary-icon-select', secondarySelIcon);
+					const secondarySelecttedIcon = getComputedStyle(document.documentElement).getPropertyValue('--secondary-icon-selectted');
+					document.documentElement.style.setProperty('--primary-icon-selectted', secondarySelecttedIcon);
+
+				} else {
+					const originColor = getComputedStyle(document.documentElement).getPropertyValue('--origin-color');
+					document.documentElement.style.setProperty('--primary-color', originColor);
+					const originSelIcon = getComputedStyle(document.documentElement).getPropertyValue('--origin-icon-select');
+					document.documentElement.style.setProperty('--primary-icon-select', originSelIcon);
+					const secondarySelecttedIcon = getComputedStyle(document.documentElement).getPropertyValue('--secondary-icon-selectted');
+					document.documentElement.style.setProperty('--primary-icon-selectted', secondarySelecttedIcon);
+				}
+			}
 			this.getBillDetail();
 			if(vm.cardPayService == 'true'){
 				this.getBankCard();

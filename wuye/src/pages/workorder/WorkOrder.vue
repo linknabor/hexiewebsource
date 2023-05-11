@@ -190,7 +190,24 @@ export default {
   },
   methods: {
     getUserInfo() {
-      this.userInfo = Storage.get('userInfo')
+      let userInfo = Storage.get('userInfo')
+      if(userInfo) {
+        this.userInfo = userInfo
+        let wdappids = this.is_config.C('wdappids')
+        console.log(wdappids)
+        if(wdappids.indexOf(userInfo.appId)>-1) {
+          const secondaryColor = getComputedStyle(document.documentElement).getPropertyValue('--secondary-color');
+          console.log(secondaryColor)
+          document.documentElement.style.setProperty('--primary-color', secondaryColor);
+          const secondarySelIcon = getComputedStyle(document.documentElement).getPropertyValue('--secondary-icon-selected');
+          document.documentElement.style.setProperty('--primary-icon-selected', secondarySelIcon);
+        } else {
+          const originColor = getComputedStyle(document.documentElement).getPropertyValue('--origin-color');
+          document.documentElement.style.setProperty('--primary-color', originColor);
+          const originSelIcon = getComputedStyle(document.documentElement).getPropertyValue('--origin-icon-selected');
+          document.documentElement.style.setProperty('--primary-icon-selected', originSelIcon);
+        }
+      }
     },
     initInfo() {
         this.showOverlay = true
@@ -423,7 +440,7 @@ export default {
   padding: 10px 15px;height: 16px;font-size: 16px;}
 .topLineLeft {float: left;color: #7e6b5a;}
 .topLineRight {text-align: right;float: right;width: 70%;
-  overflow: hidden;height: 16px;color: #ff8a00;}
+  overflow: hidden;height: 16px;color: var(--primary-color);}
 .custom-menu{display: block;margin:0 15px;color: #3b3937;
   line-height: 30px;padding: 5px 4px;overflow: hidden;}
 .lite-divider {border-bottom: 1px solid #d4cfc8;}
@@ -503,10 +520,10 @@ display: inline-block;}
 .locations {line-height: 20px; margin: 10px 10px 10px 0}
 
 .check {
-  color: #f60;
+  color: var(--primary-color);
   border-right: 1px solid #ddd;
   border-left: 1px solid #ddd;
-  border-top: 2px solid #f60;
+  border-top: 2px solid var(--primary-color);
   background: #fff;
 }
 .btn {
@@ -517,7 +534,7 @@ display: inline-block;}
   color: #fff !important;
   font-size: 15px;
   text-align: center;
-  background-color: #ff8a00;
+  background-color: var(--primary-color);
   border-radius: 3px;
   outline: none;
   border: none;

@@ -429,7 +429,7 @@
     height: 35px;
     margin-left: 1%;
     line-height: 35px;
-    background: #ff8a00;
+    background: var(--primary-color);
     text-align: center;
     overflow: hidden;
     padding: 1px;

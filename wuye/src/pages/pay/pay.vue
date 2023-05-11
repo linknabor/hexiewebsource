@@ -1330,12 +1330,12 @@ body {
         float: left;
         text-align: left;
         font-size: 0.28rem;
-        color: #ff8a00;
-        // color: #1989fa;
+        color: var(--primary-color);
     }
 }
 .selected {
-  background: url("../../assets/images/common/icon_selected.png") no-repeat;
+  //../../assets/images/common/icon_selected.png
+  background: var(--primary-icon-selected) no-repeat;
   background-size: 0.32rem;
   background-position: center;
 }
@@ -1499,7 +1499,7 @@ a {
   width: 80%;
   overflow:hidden;
   background-size: 310px;
-  background:url("../../assets/images/house/paymoney.png") no-repeat;
+  background-color: var(--primary-color);
   background-position: -11px center;
     line-height: 0.8rem;
     border-radius: 5px;
@@ -1550,14 +1550,14 @@ a {
 }
 
 .mint-navbar .mint-tab-item.is-selected {
-  border-bottom: 1.5px solid #ff8a00;
+  border-bottom: 1.5px solid var(--primary-color);
   margin-bottom: 0;
-  color: #ff8a00;
+  color: var(--primary-color);
 }
 
 .lite-divider {
   border-bottom: 1px solid #d4cfc8;
-  -padding-left: 0.15rem;
+  padding-left: 0.15rem;
   overflow: hidden;
   padding: 1px;
   margin-top: 35px;
@@ -1592,7 +1592,7 @@ a {
 .subBtn {
   height: 0.88rem;
   line-height: 0.88rem;
-  background-color: #ff8a00;
+  background-color: var(--primary-color);
   font-size: 0.3rem;
   color: white;
   width: 6rem;

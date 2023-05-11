@@ -8,7 +8,7 @@
 		position: fixed;         
 		bottom: 0;
 		height: 49px;         
-		background-color:#ff8a00;         
+		background-color: var(--primary-color);         
 		color:white;letter-spacing: 2px;
 		width: 100%;line-height: 49px;text-align: center;
 		overflow: hidden;     
@@ -98,12 +98,14 @@
 <script>
 	let vm;
 	import { MessageBox, Toast } from 'mint-ui';
+	import Storage from '../../assets/js/storage.js'
 	export default {
 	  data(){
 	  	return {
 			dataArr:[],
 			login:true,
 			bgImage:this.common.GetImages('5'),
+			userInfo: {},
 	  	}
 	  },
 	  created(){
@@ -111,7 +113,26 @@
 	  },
 	  mounted(){//查看房子列表
 	  	// this.common.checkRegisterStatus();
-	  	vm.showList();
+		let userInfo = Storage.get('userInfo')
+		if(userInfo) {
+			this.userInfo = userInfo
+			let wdappids = this.is_config.C('wdappids')
+			console.log(wdappids)
+			if(wdappids.indexOf(userInfo.appId)>-1) {
+				const secondaryColor = getComputedStyle(document.documentElement).getPropertyValue('--secondary-color');
+				console.log(secondaryColor)
+				document.documentElement.style.setProperty('--primary-color', secondaryColor);
+				const secondarySelIcon = getComputedStyle(document.documentElement).getPropertyValue('--secondary-icon-selected');
+				document.documentElement.style.setProperty('--primary-icon-selected', secondarySelIcon);
+			} else {
+				const originColor = getComputedStyle(document.documentElement).getPropertyValue('--origin-color');
+				document.documentElement.style.setProperty('--primary-color', originColor);
+				const originSelIcon = getComputedStyle(document.documentElement).getPropertyValue('--origin-icon-selected');
+				document.documentElement.style.setProperty('--primary-icon-selected', originSelIcon);
+			}
+			
+		}
+		vm.showList();
 	  },
 	  methods:{
 	  	showList(){

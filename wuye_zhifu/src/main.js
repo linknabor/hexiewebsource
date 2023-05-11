@@ -20,6 +20,7 @@ import cookie from 'js-cookie'
 
 Vue.prototype.common = common;
 Vue.prototype.getUrlParam = getUrlParam;
+Vue.prototype.masterConfig = MasterConfig;
 Vue.prototype.baseUrl = MasterConfig.C('baseUrl');
 Vue.prototype.basePageUrl = MasterConfig.C('basePageUrl');
 Vue.prototype.basePageUrlpay = MasterConfig.C('basePageUrlpay');

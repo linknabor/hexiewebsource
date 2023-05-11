@@ -39,6 +39,7 @@ var MasterConfig = function() {
         is_debug:true,
 
         kyappid:'wx95f46f41ca5e570e1',
+        wdappids: ['wxa48ca61b68163483', 'wxb456783456123457', 'wxb456783456123458'],//旺都
     },
 
     e = {};

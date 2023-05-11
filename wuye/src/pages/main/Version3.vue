@@ -131,6 +131,13 @@ export default ({
         [GridItem.name]: GridItem,
     },
     mounted(){
+
+        const originColor = getComputedStyle(document.documentElement).getPropertyValue('--origin-color');
+        document.documentElement.style.setProperty('--primary-color', originColor);
+
+        const originSelIcon = getComputedStyle(document.documentElement).getPropertyValue('--origin-icon-selected');
+        document.documentElement.style.setProperty('--primary-icon-selected', originSelIcon);
+
         this.timer = setTimeout(()=>{   //设置延迟执行
             this.skeletonLoading = false  
         },2000)

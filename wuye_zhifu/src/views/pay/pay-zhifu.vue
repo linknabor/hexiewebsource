@@ -534,7 +534,7 @@ export default {
     margin-bottom:0.3rem;
 }
 .Color {
-    color:#F39B2E;
+    color: var(--primary-color);
 }
 .wcolor {
     color :#D5D2D2;
@@ -559,8 +559,8 @@ ul li:last-of-type {
 .pay-div .can-use{
 		width: 1.35rem;
 		height: 0.45rem;
-		border:1px solid #ff8a05;
-		color:#ff8a05;
+		border:1px solid var(--primary-color);
+		color: var(--primary-color);
 		font:0.22rem/0.45rem "";
 		text-align: center;
 		margin-left: 0.2rem;
@@ -584,7 +584,7 @@ ul li:last-of-type {
     padding:0 0.3rem 0 0.4rem;
 }
 .icon{
-    background:url('../../assets/image/icon_select.png');
+    background: var(--primary-icon-select);
     background-size: cover;
     position:absolute;
     width: 0.43rem;
@@ -594,7 +594,7 @@ ul li:last-of-type {
     margin-left: -0.6rem;
 }
 .iconShow{
-    background:url('../../assets/image/icon_selectted.png');
+    background: var(--primary-icon-selectted);
     background-size: cover;
     z-index: 5;
 }
@@ -607,7 +607,7 @@ ul li:last-of-type {
 }	
 .detail-left .upton-name{
     /*font:0.34rem/0.78rem "";*/
-    color: #ff8a00;
+    color: var(--primary-color);
     font-size: 0.4rem;
     font-weight: 600;
     letter-spacing: 0.08rem;
@@ -641,7 +641,7 @@ ul li:last-of-type {
     margin-top: .1rem;
 }
 .btn{
-    background-color:#ff8a00; 
+    background-color: var(--primary-color); 
     color:#fff;
     width: 6.7rem;
     height: 0.75rem;
@@ -685,7 +685,7 @@ ul li:last-of-type {
     text-align: center;
     color: #fff;
     line-height: 0.9rem;
-    background-color: #F69C05;
+    background-color: var(--primary-color);
 }
 .posb {
      position: absolute;

@@ -2,7 +2,7 @@
 	<div class="main">
 		<van-overlay :show="showOverlay">
 			<div class="overlay-loading">
-				<van-loading type="spinner" color="#ff8a00" vertical>处理中...</van-loading>
+				<van-loading type="spinner" color="var(--primary-color)" vertical>处理中...</van-loading>
 			</div>
 		</van-overlay>
 		<div class="white-space"></div>
@@ -55,7 +55,7 @@
 			</van-cell-group>
 			
 			<van-goods-action :safe-area-inset-bottom="true" v-if="(version==='0'&&selCell)||(version==='1'&&verno)">
-				<van-goods-action-button color="#ff8a00" type="warning" text="绑定房屋" @click="onBindSubmit"/>
+				<van-goods-action-button color="var(--primary-color)" type="warning" text="绑定房屋" @click="onBindSubmit"/>
 			</van-goods-action>
 		</div>
 	</div>

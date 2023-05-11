@@ -178,7 +178,6 @@
 <script>
 let vm;
 import wx from "weixin-js-sdk";
-import { MessageBox } from "mint-ui";
 export default {
   data() {
     return {

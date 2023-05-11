@@ -4,7 +4,7 @@
 		position: fixed;         
 		bottom: 0;
 		height: 49px; overflow: hidden;        
-		background-color:#ff8a00;         
+		background-color: var(--primary-color);         
 		color:white;letter-spacing: 2px;
 		width: 100%;line-height:49px;text-align: center;     
 	}
