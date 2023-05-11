@@ -8,7 +8,7 @@
 		position: fixed;         
 		bottom: 0;
 		height: 49px;         
-		background-color:#ff8a00;         
+		background-color: var(--primary-color);         
 		color:white;letter-spacing: 2px;
 		width: 100%;line-height: 49px;text-align: center;
 		overflow: hidden;     
