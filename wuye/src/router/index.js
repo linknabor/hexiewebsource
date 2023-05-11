@@ -305,8 +305,6 @@ router.beforeEach((to, from, next) => {
     let hhappid = config.C('hhappid')   //汇宏
     let wdappid = config.C('wdappids')   //旺度
 
-    alert(wdappid)
-
     console.log('router, oriApp : ' + appid)
     if(appid!==kyappid && appid!==dcappid && appid!==nbappid){
       version = 'version2'
@@ -318,9 +316,7 @@ router.beforeEach((to, from, next) => {
       version = 'huihong'
     }
     if(wdappid && wdappid.length > 0) {
-      alert(1)
       if(wdappid.includes(appid)) {
-        alert(2)
         version = 'wangdu'
       }
     }
