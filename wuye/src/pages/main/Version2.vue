@@ -455,6 +455,8 @@ export default ({
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
+    width: 100%;
+    width: 100%;
 
 }
 
