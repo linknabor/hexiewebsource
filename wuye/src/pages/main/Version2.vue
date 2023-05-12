@@ -451,6 +451,13 @@ export default ({
     
 }
 
+.menu-detail {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+
+}
+
 .menu-row {
     width: 24%;
     display: flex;
@@ -510,12 +517,14 @@ export default ({
     height: 0.84rem;
     background-size: cover;
     background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
 }
 
 .icon-text{
-    margin-left: -0.1rem;
+    // margin-left: -0.1rem;
     font-size: 0.26rem;
-    text-align: left;
+    // text-align: left;
 }
 
 .icon-layer-down{
