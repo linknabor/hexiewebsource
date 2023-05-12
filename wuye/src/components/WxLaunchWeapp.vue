@@ -4,7 +4,7 @@
         </wx-open-launch-weapp> -->
         <!-- <div id="launch-btn" :username="menu.oriId" :path="menu.url" @launch="success" @error="launchError" ref="launchBtn"></div> -->
     <!-- </li> -->
-    <div name="lauch">
+    <div name="lauch" style="font-size:0.84rem">
     </div>
 </template>
 <script>
@@ -57,7 +57,7 @@ export default {
         initBtn(){
             let screenWidth = document.documentElement.clientWidth  //取出屏幕宽度
             let realSize = screenWidth/10*0.98  //屏宽除以10*0.98
-            let realMarginLeft = screenWidth/10*0.25
+            // let realMarginLeft = screenWidth/10*0.25
             let btnImage = this.menu.image
             let btnText = `<button class="mini-btn-`+this.menu.code+`"></button>
             <style>
@@ -69,7 +69,6 @@ export default {
                     background-size: cover;
                     background-repeat: no-repeat;
                     background-color: transparent;
-                    margin-left: `+realMarginLeft+`px;
                     background-image: url('` + btnImage + `');
                 }
             </style>`
