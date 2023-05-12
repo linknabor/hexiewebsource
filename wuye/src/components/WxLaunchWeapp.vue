@@ -1,9 +1,13 @@
 <template>
-    <li name="lauch" class="van-icon" style="font-size:0.98rem">
+    <!-- <li name="lauch" class="van-icon" style="font-size:0.98rem"> -->
         <!-- <wx-open-launch-weapp id="launch-btn" :username="menu.oriId" :path="menu.url" @launch="success" @error="launchError" ref="launch-btn">
         </wx-open-launch-weapp> -->
         <!-- <div id="launch-btn" :username="menu.oriId" :path="menu.url" @launch="success" @error="launchError" ref="launchBtn"></div> -->
-    </li>
+    <!-- </li> -->
+    <div class="menu-row">
+        <div class="menu-detail" name="lauch">
+        </div>
+    </div>
 </template>
 <script>
 import WxSDK from 'weixin-js-sdk'
