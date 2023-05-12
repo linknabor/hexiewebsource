@@ -4,9 +4,7 @@
         </wx-open-launch-weapp> -->
         <!-- <div id="launch-btn" :username="menu.oriId" :path="menu.url" @launch="success" @error="launchError" ref="launchBtn"></div> -->
     <!-- </li> -->
-    <div class="menu-row">
-        <div class="menu-detail" name="lauch">
-        </div>
+    <div name="lauch">
     </div>
 </template>
 <script>
