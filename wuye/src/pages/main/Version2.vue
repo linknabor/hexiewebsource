@@ -39,7 +39,8 @@
                     {'icon-layer-down-other': index%4!==0 && index >= 4}
                     ]"
                     @click="gotoPage(menu.url, menu.status, menu.code)">
-                    <div class="icon" :style="{'background-image': 'url('+menu.image+')'}"></div>
+                    <div class="icon" :style="{'background-image': 'url('+menu.image+')'}" v-if="menu.type==0"></div>
+                    <wx-launch-weapp v-if="menu.type==1" :menu="menu"></wx-launch-weapp>
                     <span class="icon-text">{{menu.name}}</span>
                 </li>
             </ul>
@@ -114,6 +115,7 @@
 <script>
 import Foot from '@/components/footer.vue'
 import VueQr from 'vue-qr'
+import WxLaunchWeapp from '@/components/WxLaunchWeapp'
 import { Skeleton, Popup, Toast, Dialog, Empty, List, PullRefresh, ImagePreview, Popover, Icon, CellGroup, Cell } from 'vant'
 import NoticeApi from '@/api/NoticeApi.js'
 import TipsApi from '@/api/TipsApi.js'
@@ -156,6 +158,7 @@ export default ({
     },
     components: {
         'foot': Foot,
+        'wx-launch-weapp': WxLaunchWeapp,
         VueQr,
         [Skeleton.name]: Skeleton,
         [Popup.name]: Popup,

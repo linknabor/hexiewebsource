@@ -45,6 +45,7 @@
 <script>
 	let vm;
 	import { MessageBox } from 'mint-ui';
+	import Storage from '@/assets/js/storage.js' 
 
 	export default {
 	  components:{},
@@ -108,6 +109,16 @@
 					vm.receiveData.postData(vm,url2,{},'res',function(){
 					if(vm.res.success){
 						if(vm.res.result !== null) {
+							var result = vm.res.result
+							console.log(result)
+							let userInfo = Storage.get('userInfo')
+							if(userInfo){
+								userInfo.sectId = result.sect_id
+								userInfo.cspId = result.csp_id
+								userInfo.xiaoquName = result.sect_name
+								Storage.set('userInfo', userInfo)
+							}
+
 							MessageBox.alert('添加房子成功',wuye_myhouse.url).then( action =>{
 									vm.$router.push("/myhouse")
 								})
