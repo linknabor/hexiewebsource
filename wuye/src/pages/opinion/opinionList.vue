@@ -47,7 +47,6 @@
   import opinionApi from "@/api/OpinionApi.js";
   import {List, PullRefresh, Uploader, ImagePreview, Empty, Dialog } from 'vant';
   import Storage from '../../assets/js/storage.js';
-  import cookie  from 'js-cookie';
 
   export default {
     name: "opinionList",
@@ -72,12 +71,16 @@
       [Empty.name]: Empty,
     },
     mounted() {
-      var sectId = cookie.get('sectId');
-      if(sectId == '0' || sectId == null || sectId == 'null') {
-        Dialog({ message: '未绑定房屋' });
-        this.$router.push({path: '/Version2'})
-      }
       let userInfo = Storage.get('userInfo')
+      var sectId = userInfo.sectId
+      if(sectId == '0' || sectId == null || sectId == 'null') {
+        Dialog.alert({
+          message: '未绑定房屋',
+        }).then(() => {
+          this.$router.go(-1);
+        });
+      }
+      
       if(userInfo) {
         this.userInfo = userInfo
         let wdappids = this.is_config.C('wdappids')
