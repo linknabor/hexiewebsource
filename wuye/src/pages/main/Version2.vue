@@ -30,7 +30,7 @@
                 <div class="owner-image" @click="showQrcode" v-show="registered"></div>
             </div>
         </div>
-        <div :class="activeIconClass">
+        <!-- <div :class="activeIconClass">
             <ul>
                 <li v-for="(menu, index) in menuList" :key="index"
                     :class="[{'icon-layer-upon-first':index%4===0 && index < 4 },
@@ -44,6 +44,17 @@
                     <span class="icon-text">{{menu.name}}</span>
                 </li>
             </ul>
+        </div> -->
+        <div class="index-menu">
+            <div v-for="(menu, index) in menuList" :key="index"
+                class="menu-row"
+                @click="gotoPage(menu.url, menu.status, menu.code)">
+                <div class="menu-detail">
+                    <div class="icon" :style="{'background-image': 'url('+menu.image+')'}" v-if="menu.type==0"></div>
+                    <wx-launch-weapp v-if="menu.type==1" :menu="menu"></wx-launch-weapp>
+                    <span class="icon-text">{{menu.name}}</span>
+                </div>
+            </div>
         </div>
         <div :class="activeMomHeaderclass">
             <span class="moments-header-text">我的圈子</span>
@@ -424,6 +435,28 @@ export default ({
     background-size: cover;
     background-repeat: no-repeat;
     .bg-image('../../assets/images/index/index_bg');
+}
+
+.index-menu {
+    top: 1.25rem;
+    margin: 0 4%;
+    background-color: #fff;
+    position: absolute;
+    width: 92%;
+    // height: 3rem;
+    border-radius: 0.16rem;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    
+}
+
+.menu-row {
+    width: 24%;
+    display: flex;
+    justify-content: center;
+    align-self: center;
+    padding: 0.15rem 0 0.25rem 0;
 }
 
 .icons {
