@@ -426,8 +426,20 @@ export default {
       this.userInfo = Storage.get("userInfo")
       if(this.userInfo) {
         this.sectName = this.userInfo.xiaoquName
+        let wdappids = this.is_config.C('wdappids')
+        if(wdappids.indexOf(userInfo.appId)>-1) {
+          const secondaryColor = getComputedStyle(document.documentElement).getPropertyValue('--secondary-color');
+          console.log(secondaryColor)
+          document.documentElement.style.setProperty('--primary-color', secondaryColor);
+          const secondarySelIcon = getComputedStyle(document.documentElement).getPropertyValue('--secondary-icon-selected');
+          document.documentElement.style.setProperty('--primary-icon-selected', secondarySelIcon);
+        } else {
+          const originColor = getComputedStyle(document.documentElement).getPropertyValue('--origin-color');
+          document.documentElement.style.setProperty('--primary-color', originColor);
+          const originSelIcon = getComputedStyle(document.documentElement).getPropertyValue('--origin-icon-selected');
+          document.documentElement.style.setProperty('--primary-icon-selected', originSelIcon);
+        }
       }
-      
     },
     TabsList() {//获取localstorage中的选项卡
       let wuyeTabs = window.localStorage.getItem("wuyeTabsList");
