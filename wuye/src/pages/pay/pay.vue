@@ -423,9 +423,10 @@ export default {
   },
   methods: {
     initUser() {
-      this.userInfo = Storage.get("userInfo")
-      if(this.userInfo) {
-        this.sectName = this.userInfo.xiaoquName
+      let userInfo = Storage.get("userInfo")
+      this.userInfo = userInfo
+      if(userInfo) {
+        this.sectName = userInfo.xiaoquName
         let wdappids = this.is_config.C('wdappids')
         if(wdappids.indexOf(userInfo.appId)>-1) {
           const secondaryColor = getComputedStyle(document.documentElement).getPropertyValue('--secondary-color');
