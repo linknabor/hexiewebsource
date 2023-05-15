@@ -610,7 +610,8 @@
 			if(userStr) {
 				userInfo = JSON.parse(userStr)
 				let wdappids = this.masterConfig.C('wdappids')
-				if(wdappids.indexOf(userInfo.appid)>-1) {
+				console.log('wdappids:' + wdappids)
+				if(wdappids.indexOf(userInfo.appId)>-1) {
 					const secondaryColor = getComputedStyle(document.documentElement).getPropertyValue('--secondary-color');
 					document.documentElement.style.setProperty('--primary-color', secondaryColor);
 					const secondarySelIcon = getComputedStyle(document.documentElement).getPropertyValue('--secondary-icon-select');
