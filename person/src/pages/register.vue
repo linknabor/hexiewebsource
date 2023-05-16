@@ -85,6 +85,7 @@ export default {
                     reLogin();
                 }     
                 vm.user = n.result;
+                let userInfo = vm.user
                 let wdappids = vm.masterConfig.C('wdappids')
                 console.log(wdappids)
                 if(wdappids.indexOf(userInfo.appId)>-1) {
