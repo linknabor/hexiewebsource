@@ -184,7 +184,7 @@ export default {
 }
 .fonter {
     overflow: hidden;
-    border: 1px solid #F08500;
+    border: 1px solid var(--primary-color);
     border-radius: 0.3rem;
     position: absolute;
     bottom:0;
@@ -198,7 +198,7 @@ export default {
     line-height: 50px;
     text-align: center;
     letter-spacing: 2px;
-    background-color: #F08500;
+    background-color: var(--primary-color);
     color: #fff;
 }
 .fonter .spleft {
