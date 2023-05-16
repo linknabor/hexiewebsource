@@ -85,7 +85,7 @@ export default {
                     reLogin();
                 }     
                 vm.user = n.result;
-                let wdappids = masterConfig.C('wdappids')
+                let wdappids = this.masterConfig.C('wdappids')
                 console.log(wdappids)
                 if(wdappids.indexOf(userInfo.appId)>-1) {
                     const secondaryColor = getComputedStyle(document.documentElement).getPropertyValue('--secondary-color');
