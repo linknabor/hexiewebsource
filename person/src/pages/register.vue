@@ -85,6 +85,15 @@ export default {
                     reLogin();
                 }     
                 vm.user = n.result;
+                let wdappids = masterConfig.C('wdappids')
+                console.log(wdappids)
+                if(wdappids.indexOf(userInfo.appId)>-1) {
+                    const secondaryColor = getComputedStyle(document.documentElement).getPropertyValue('--secondary-color');
+                    document.documentElement.style.setProperty('--primary-color', secondaryColor);
+                } else {
+                    const originColor = getComputedStyle(document.documentElement).getPropertyValue('--origin-color');
+                    document.documentElement.style.setProperty('--primary-color', originColor);
+                }
                 vm.getComeFrom()
                 if(vm.user.tel && vm.user.tel!='null') {
                     console.log('user registered, will forward ! ')
@@ -319,7 +328,7 @@ export default {
 .submit-btn {
     height: 44px;
     line-height: 44px;
-    background: #ff8a00;
+    background: var(--primary-color);
     text-align: center;
 }
 .fs16 {
@@ -375,10 +384,10 @@ export default {
 	font-size: 0.3rem;
     color: #fff;
     text-align: center;
-    background-color:#F08500;
+    background-color: var(--primary-color);
     display: inline-block;
 }
 .btn-agree .ageecolor {
-    color:#F08500;
+    color: var(--primary-color);
 }
 </style>
