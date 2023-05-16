@@ -46,7 +46,7 @@
 <script>
   import opinionApi from "@/api/OpinionApi.js";
   import {List, PullRefresh, Uploader, ImagePreview, Empty, Dialog } from 'vant';
-  import cookie  from 'js-cookie';
+  import Storage from '../../assets/js/storage.js';
 
   export default {
     name: "opinionList",
@@ -60,6 +60,7 @@
         loadError: false,
         show: true,
         showEmpty:false,
+        userInfo: {},
       }
     },
     components: {
@@ -70,11 +71,35 @@
       [Empty.name]: Empty,
     },
     mounted() {
-      var sectId = cookie.get('sectId');
+      let userInfo = Storage.get('userInfo')
+      var sectId = userInfo.sectId
       if(sectId == '0' || sectId == null || sectId == 'null') {
-        Dialog({ message: '未绑定房屋' });
-        this.$router.push({path: '/Version2'})
+        Dialog.alert({
+          message: '未绑定房屋',
+        }).then(() => {
+          this.$router.go(-1);
+        });
       }
+      
+      if(userInfo) {
+        this.userInfo = userInfo
+        let wdappids = this.is_config.C('wdappids')
+        console.log(wdappids)
+        if(wdappids.indexOf(userInfo.appId)>-1) {
+          const secondaryColor = getComputedStyle(document.documentElement).getPropertyValue('--secondary-color');
+          console.log(secondaryColor)
+          document.documentElement.style.setProperty('--primary-color', secondaryColor);
+          const secondarySelIcon = getComputedStyle(document.documentElement).getPropertyValue('--secondary-icon-selected');
+          document.documentElement.style.setProperty('--primary-icon-selected', secondarySelIcon);
+        } else {
+          const originColor = getComputedStyle(document.documentElement).getPropertyValue('--origin-color');
+          document.documentElement.style.setProperty('--primary-color', originColor);
+          const originSelIcon = getComputedStyle(document.documentElement).getPropertyValue('--origin-icon-selected');
+          document.documentElement.style.setProperty('--primary-icon-selected', originSelIcon);
+        }
+        
+      }
+      
     },
 
     methods: {
@@ -228,7 +253,7 @@
     height: 35px;
     margin-right: 0;
     line-height: 35px;
-    background: #ff8a00;
+    background: var(--primary-color);
     text-align: center;
     font-size: 14px;
     float: left;

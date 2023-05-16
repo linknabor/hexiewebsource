@@ -29,7 +29,7 @@
 	.subBtn{
 		height: 0.88rem;
 		line-height: 0.88rem;
-		background-color: #ff8a00;
+		background-color: var(--primary-color);
 		font-size: 0.3rem;
 		color: white;
 		width: 6.9rem;

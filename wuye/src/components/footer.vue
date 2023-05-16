@@ -58,6 +58,14 @@
 .footer_person_guizhou {background-image: url('../assets/images/icon/footer_wode.png')}
 .footer_group_guizhou{background-image: url('../assets/images/common/icon_pindan.png');}
 
+
+/* 光明 */
+.footer_fuwu_guangming {background-image: url('../assets/images/icon/fang.png')}
+.footer_wuye_guangming {background-image: url('../assets/images/icon/wu.png')}
+.footer_person_guangming {background-image: url('../assets/images/icon/my.png')}
+.footer_group_guangming{background-image: url('../assets/images/icon/cai.png')}
+
+
 .overlay-loading{
   margin-top: 3rem;
 }

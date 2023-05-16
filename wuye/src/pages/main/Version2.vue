@@ -30,7 +30,7 @@
                 <div class="owner-image" @click="showQrcode" v-show="registered"></div>
             </div>
         </div>
-        <div :class="activeIconClass">
+        <!-- <div :class="activeIconClass">
             <ul>
                 <li v-for="(menu, index) in menuList" :key="index"
                     :class="[{'icon-layer-upon-first':index%4===0 && index < 4 },
@@ -39,10 +39,22 @@
                     {'icon-layer-down-other': index%4!==0 && index >= 4}
                     ]"
                     @click="gotoPage(menu.url, menu.status, menu.code)">
-                    <div class="icon" :style="{'background-image': 'url('+menu.image+')'}"></div>
+                    <div class="icon" :style="{'background-image': 'url('+menu.image+')'}" v-if="menu.type==0"></div>
+                    <wx-launch-weapp v-if="menu.type==1" :menu="menu"></wx-launch-weapp>
                     <span class="icon-text">{{menu.name}}</span>
                 </li>
             </ul>
+        </div> -->
+        <div class="index-menu">
+            <div v-for="(menu, index) in menuList" :key="index"
+                class="menu-row"
+                @click="gotoPage(menu.url, menu.status, menu.code)">
+                <div class="menu-detail">
+                    <div class="icon" :style="{'background-image': 'url('+menu.image+')'}" v-if="menu.type==0"></div>
+                    <wx-launch-weapp v-if="menu.type==1" :menu="menu"></wx-launch-weapp>
+                    <span class="icon-text">{{menu.name}}</span>
+                </div>
+            </div>
         </div>
         <div :class="activeMomHeaderclass">
             <span class="moments-header-text">我的圈子</span>
@@ -114,9 +126,10 @@
 <script>
 import Foot from '@/components/footer.vue'
 import VueQr from 'vue-qr'
+import WxLaunchWeapp from '@/components/WxLaunchWeapp'
 import { Skeleton, Popup, Toast, Dialog, Empty, List, PullRefresh, ImagePreview, Popover, Icon, CellGroup, Cell } from 'vant'
 import NoticeApi from '@/api/NoticeApi.js'
-import TipsApi from '@/api/TipSApi.js'
+import TipsApi from '@/api/TipsApi.js'
 import BaseInfoApi from '@/api/BaseInfoApi.js'
 import Storage from '@/assets/js/storage.js'
 
@@ -156,6 +169,7 @@ export default ({
     },
     components: {
         'foot': Foot,
+        'wx-launch-weapp': WxLaunchWeapp,
         VueQr,
         [Skeleton.name]: Skeleton,
         [Popup.name]: Popup,
@@ -171,6 +185,12 @@ export default ({
     },
     mounted(){
         this.getSwitchSectTips()
+        const originColor = getComputedStyle(document.documentElement).getPropertyValue('--origin-color');
+        document.documentElement.style.setProperty('--primary-color', originColor);
+
+        const originSelIcon = getComputedStyle(document.documentElement).getPropertyValue('--origin-icon-selected');
+        document.documentElement.style.setProperty('--primary-icon-selected', originSelIcon);
+        
     },
     methods: {
         setUser(data){
@@ -417,6 +437,37 @@ export default ({
     .bg-image('../../assets/images/index/index_bg');
 }
 
+.index-menu {
+    top: 1.25rem;
+    margin: 0 4%;
+    background-color: #fff;
+    position: absolute;
+    width: 92%;
+    // height: 3rem;
+    border-radius: 0.16rem;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    
+}
+
+.menu-detail {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100%;
+    height: 100%;
+
+}
+
+.menu-row {
+    width: 24%;
+    display: flex;
+    justify-content: center;
+    align-self: center;
+    padding: 0.15rem 0 0.25rem 0;
+}
+
 .icons {
     top: 1.25rem;
     margin: 0 4%;
@@ -468,12 +519,14 @@ export default ({
     height: 0.84rem;
     background-size: cover;
     background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
 }
 
 .icon-text{
-    margin-left: -0.1rem;
+    // margin-left: -0.1rem;
     font-size: 0.26rem;
-    text-align: left;
+    // text-align: left;
 }
 
 .icon-layer-down{

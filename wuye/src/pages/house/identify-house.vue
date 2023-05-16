@@ -33,7 +33,7 @@
 	color: #e2f5ff;
 	font-size: .28rem;
 	padding: .14rem 0;
-	background-color:#ff8138;
+	background-color: var(--primary-color);
 	border-radius: 4px;
 	letter-spacing: .02rem;
 	padding-left: .02rem;
@@ -45,7 +45,7 @@
 	color: #e2f5ff;
 	font-size: .28rem;
 	padding: .14rem 0;
-	background-color:#ff8138;
+	background-color: var(--primary-color);
 	border-radius: 4px;
 	letter-spacing: .02rem;
 	padding-left: .02rem;

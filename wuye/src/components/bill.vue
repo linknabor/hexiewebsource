@@ -2,24 +2,24 @@
   <!-- 确定选中的状态   点击radio改变状态,emmit一个事件 -->
   <div>
     <!-- 专业版 -->
-    <div
-      class="bill-item1 ov1"
+      <div
+        class="bill-item1 ov1"
       v-if="version=='02'"
-      v-for="(item,index) in billInfo"
+        v-for="(item,index) in billInfo"
       @click="select(index,version)"
-    >
+      >
       <div class="select-item1 fl1" :class="{selected:item.selected,'payed':item.pay_status!='02'}"></div>
-      <div class="fl1 info1">
-			<p class="top1 ov1">
-				<span class="title1 fl1">{{item.service_fee_name}}</span>
-				<span class="price1 fr1">￥{{item.fee_price}}</span>
-			</p>
-			<p class="bottom1 ov1">
-				<span class="addr1 fl1">{{item.pay_cell_addr}}</span>
-				<span class="date1 fr1 data-height1">{{item.service_fee_cycle}}</span>
-			</p>
-		</div>	
-    </div>
+        <div class="fl1 info1">
+          <p class="top1 ov1">
+            <span class="title1 fl1">{{item.service_fee_name}}</span>
+            <span class="price1 fr1">￥{{item.fee_price}}</span>
+          </p>
+          <p class="bottom1 ov1">
+            <span class="addr1 fl1">{{item.pay_cell_addr}}</span>
+            <span class="date1 fr1 data-height1">{{item.service_fee_cycle}}</span>
+          </p>
+        </div>	
+      </div>
     <!-- 标准版 -->
     <div
       class="bill-item ov"
@@ -76,8 +76,8 @@ export default {
         this.billInfo,
         this.otherBillinfo
       );
-    }
-  }
+        }
+      }
 };
 </script>
 <style>
@@ -125,7 +125,7 @@ export default {
 }
 
 .top .price {
-  color: #ff8a00;
+  color: var(--primary-color);
 }
 
 .bottom {
@@ -161,7 +161,7 @@ export default {
 }
 
 .selected {
-	background: url('../assets/images/common/icon_selected.png') no-repeat ;
+	background: var(--primary-icon-selected) no-repeat ;
 	background-size: 0.32rem;
    background-position: center;
 }
@@ -195,7 +195,7 @@ padding: 0.2rem 0.3rem 0.1rem;
 }
 
 .top1 .price1{
-	color:#ff8a00;
+	color: var(--primary-color);
 }
 
 .bottom1{

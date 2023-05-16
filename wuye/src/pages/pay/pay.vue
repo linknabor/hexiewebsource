@@ -220,7 +220,7 @@ import Bill from "../../components/bill.vue";
 import moment from "../filter/datafromat";
 import cookie  from 'js-cookie';
 import Api from '@/api/api.js'
-import TipsApi from '@/api/TipSApi.js'
+import TipsApi from '@/api/TipsApi.js'
 import BaseInfoApi from '@/api/BaseInfoApi.js'
 import Storage from '@/assets/js/storage.js'
 
@@ -423,11 +423,24 @@ export default {
   },
   methods: {
     initUser() {
-      this.userInfo = Storage.get("userInfo")
-      if(this.userInfo) {
-        this.sectName = this.userInfo.xiaoquName
+      let userInfo = Storage.get("userInfo")
+      this.userInfo = userInfo
+      if(userInfo) {
+        this.sectName = userInfo.xiaoquName
+        let wdappids = this.is_config.C('wdappids')
+        if(wdappids.indexOf(userInfo.appId)>-1) {
+          const secondaryColor = getComputedStyle(document.documentElement).getPropertyValue('--secondary-color');
+          console.log(secondaryColor)
+          document.documentElement.style.setProperty('--primary-color', secondaryColor);
+          const secondarySelIcon = getComputedStyle(document.documentElement).getPropertyValue('--secondary-icon-selected');
+          document.documentElement.style.setProperty('--primary-icon-selected', secondarySelIcon);
+        } else {
+          const originColor = getComputedStyle(document.documentElement).getPropertyValue('--origin-color');
+          document.documentElement.style.setProperty('--primary-color', originColor);
+          const originSelIcon = getComputedStyle(document.documentElement).getPropertyValue('--origin-icon-selected');
+          document.documentElement.style.setProperty('--primary-icon-selected', originSelIcon);
+        }
       }
-      
     },
     TabsList() {//获取localstorage中的选项卡
       let wuyeTabs = window.localStorage.getItem("wuyeTabsList");
@@ -1330,12 +1343,12 @@ body {
         float: left;
         text-align: left;
         font-size: 0.28rem;
-        color: #ff8a00;
-        // color: #1989fa;
+        color: var(--primary-color);
     }
 }
 .selected {
-  background: url("../../assets/images/common/icon_selected.png") no-repeat;
+  //../../assets/images/common/icon_selected.png
+  background: var(--primary-icon-selected) no-repeat;
   background-size: 0.32rem;
   background-position: center;
 }
@@ -1499,7 +1512,7 @@ a {
   width: 80%;
   overflow:hidden;
   background-size: 310px;
-  background:url("../../assets/images/house/paymoney.png") no-repeat;
+  background-color: var(--primary-color);
   background-position: -11px center;
     line-height: 0.8rem;
     border-radius: 5px;
@@ -1536,7 +1549,7 @@ a {
     color:#fff;
     border-radius: 5px;
     font-size:0.3rem;
-    background:url("../../assets/images/house/paymoney.png") no-repeat center;
+    background-color: var(--primary-color);
 }
 /*footbtn end*/
 
@@ -1550,14 +1563,14 @@ a {
 }
 
 .mint-navbar .mint-tab-item.is-selected {
-  border-bottom: 1.5px solid #ff8a00;
+  border-bottom: 1.5px solid var(--primary-color);
   margin-bottom: 0;
-  color: #ff8a00;
+  color: var(--primary-color);
 }
 
 .lite-divider {
   border-bottom: 1px solid #d4cfc8;
-  -padding-left: 0.15rem;
+  padding-left: 0.15rem;
   overflow: hidden;
   padding: 1px;
   margin-top: 35px;
@@ -1592,7 +1605,7 @@ a {
 .subBtn {
   height: 0.88rem;
   line-height: 0.88rem;
-  background-color: #ff8a00;
+  background-color: var(--primary-color);
   font-size: 0.3rem;
   color: white;
   width: 6rem;

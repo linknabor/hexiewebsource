@@ -276,7 +276,7 @@ export default {
     font-size: 18px;
 }
 .highlight {
-    color: #ff8a00;
+    color: var(--primary-color);
 }
  .fold-btn {
     height: 32px;
@@ -300,7 +300,7 @@ export default {
 	font-size: 30px;
 	background-position: 35px center;
 	background-size: 35px;
-	color: #ff8a00;
+	color: var(--primary-color);
 }
 .info-wrap {
     padding: 4px;
@@ -325,7 +325,7 @@ export default {
     color: #fff!important;
     font-size: 15px;
     text-align: center;
-    background-color: #ff8a00;
+    background-color: var(--primary-color);
     border-radius: 3px;
     outline: none;
     border: none;

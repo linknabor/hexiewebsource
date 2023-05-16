@@ -4,9 +4,10 @@
   width: 100%;
   height: 100vh;
 }
-.font-head img {
+.font-head {
   width: 100%;
   height: 1.1rem;
+  background-color: var(--primary-color);
 }
 .font-head-sousuo {
   width: 86%;
@@ -105,7 +106,7 @@
 <template>
   <div class="font">
     <div class="font-head">
-      <img src="../../assets/images/house/font-bg.png" />
+      <!-- <img src="../../assets/images/house/font-bg.png" /> -->
       <div class="font-head-sousuo">
         <div class="sousuo-l" @click="location()">
           <div class="select" id="city">

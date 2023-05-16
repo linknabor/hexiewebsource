@@ -5,31 +5,46 @@
 </style>
 <template>
     <div class="main" v-cloak>
-        <van-skeleton title :row="3" :loading="skeletonLoading" style="padding-top:2rem">
-        <div class="banner-swiper">
-            <swiper :options="swiperOption" ref="mySwiper" v-if="bannerList.length>0">
-                <swiper-slide v-for="item in bannerList" :key="item.id">
-                    <div class="banner">
-                        <a :href="item.bannerUrl" >
-                            <img class="banner" :src="item.picture" alt="">
-                        </a>                  
-                    </div> 
-                </swiper-slide>
-                <div class="swiper-pagination" slot="pagination"></div>       
-            </swiper>
+        <div class="white-blank" v-show="skeletonLoading==true"></div>
+        <van-skeleton title :row="3" :loading="skeletonLoading">
+        <div>
+            <van-popup v-model="qrShow">
+                <vue-qr :text="qrImage" :margin="20" :size="275"></vue-qr>
+            </van-popup>
         </div>
-
-        <div class="menu-grid">
+        <div class="header">
+            <div class="location">
+                <div class="location-image" @click="switchSect"></div>
+                <div class="location-text" @click="switchSect">{{this.sectName}}
+                    <van-popover
+                        v-model="showSwitchTips"
+                        :overlay="true"
+                        :offset="[-10, 15]"
+                        >
+                        <div style="margin: 0.3rem 0.2rem; width: 2.5rem; font-size: 0.3rem">
+                            <span>{{switchSectTips}}</span>
+                        </div>
+                    </van-popover>
+                </div>
+                <div class="owner-text" @click="showQrcode" v-show="registered">业主码</div>
+                <div class="owner-image" @click="showQrcode" v-show="registered"></div>
+            </div>
+        </div>
+        <div :class="activeIconClass">
             <ul>
-                <van-grid :column-num="3" :border="false" icon-size="0.9rem" class="grid-frame">
-                    <van-grid-item v-for="(menu, index) in menuList" :key="index" :icon="menu.image" :text="menu.name" 
-                        @click="gotoPage(menu.url, menu.status, menu.code)"
-                    />
-                </van-grid>
-
+                <li v-for="(menu, index) in menuList" :key="index"
+                    :class="[{'icon-layer-upon-first':index%4===0 && index < 4 },
+                    {'icon-layer-upon-other': index%4!==0 && index < 4},
+                    {'icon-layer-down-first': index%4===0 && index >= 4},
+                    {'icon-layer-down-other': index%4!==0 && index >= 4}
+                    ]"
+                    @click="gotoPage(menu.url, menu.status, menu.code)">
+                    <div class="icon" :style="{'background-image': 'url('+menu.image+')'}"></div>
+                    <span class="icon-text">{{menu.name}}</span>
+                </li>
             </ul>
         </div>
-        <div class="moments-header">
+        <div :class="activeMomHeaderclass">
             <span class="moments-header-text">我的圈子</span>
         </div>
         <van-pull-refresh v-model="pageRefreshing" @refresh="onRefresh" loosing-text="加载中">
@@ -37,18 +52,21 @@
                 <div class="moments" v-for="(notice, index) in noticeList" :key="index">
                     <div class="moment-title">
                         <div :class="[{'sys-notice-image': notice.noticeType===9||notice.noticeType===10},
-                            {'wuye-notice-image': notice.noticeType===0||notice.noticeType===1||notice.noticeType===2||notice.noticeType===3},
-                            {'moment-notice-image': notice.noticeType===11}]" >
+                            {'wuye-notice-image': notice.noticeType===0||notice.noticeType===1
+                            || notice.noticeType===2||notice.noticeType===3},
+                            {'moment-notice-image': notice.noticeType===11},
+                            {'option-notice-image': notice.noticeType=== 12 || notice.noticeType===13
+                            ||notice.noticeType===14||notice.noticeType=== 15||notice.noticeType=== 16 }]" >
                         </div>
                         <span class="head-sect">{{notice.creator}}</span>
                     </div>
                     <div class="moment-content" @click="notice.noticeType!==11&&noticeDetail(notice.url)">
                         <div class="content-text" v-for="(msg, key) in notice.showMsg" :key="key">{{msg}}</div>
-                        <div class="content-image" 
+                        <div class="content-image"
                                 v-for="(image, key) in notice.thumbnailImgList" :key="key">
                                     <div :class="[{'content-image-view': notice.thumbnailImgList.length===1},
                                 {'content-image-view-multi': notice.thumbnailImgList.length>=2&&key!==2},
-                                {'content-image-view-triple': notice.thumbnailImgList.length>2&&key===2}]" 
+                                {'content-image-view-triple': notice.thumbnailImgList.length>2&&key===2}]"
                                 :style="{'background-image': 'url('+image+')'}" @click="notice.noticeType===11&&showImage(notice.imgList, key)"></div>
                             </div>
                             <div style="clear: both"></div>
@@ -58,23 +76,49 @@
             </van-list>
             <van-empty description="还没有消息哦" image="search" image-size="1.8rem" v-if="noticeList.length==0"/>
         </van-pull-refresh>
-        
         <div class="main-end"></div>
+        <div>
+            <van-popup v-model="showSectList" 
+                position="bottom"
+                closeable
+                :style="{ height: '100%' }"
+                :safe-area-inset-bottom="true"
+            >
+                <div class="sect-select">
+                    <div class="sect-select-title">选择所在小区</div>
+                    <div class="sect-select-current-text">当前小区</div>
+                    <div class="sect-select-current-sect"><van-icon name="location" /><span class="sect-select-current-name">{{sectName}}</span></div>
+                    <div class="sect-select-divider"></div>
+                    <van-cell-group>
+                        <van-cell v-for="(house, index) in bindHouList" :key="index" :title="house.sect_name" :border="true" @click="selectHouse(house)">
+                            <template slot="title">
+                                <div>
+                                    <span>{{house.sect_name}}</span>
+                                    <span>{{house.sect_addr}}</span>
+                                </div>
+                            </template>
+                            <template slot="label">
+                                <div>{{house.cell_addr}}</div>
+                            </template>
+                        </van-cell>
+                    </van-cell-group>
+                </div>
+            </van-popup>
+        </div>
         </van-skeleton>
         <foot @userInfo="setUser"></foot>
     </div>
-    
+
 </template>
 
 <script>
 import Foot from '@/components/footer.vue'
 import VueQr from 'vue-qr'
-import {swiper,swiperSlide} from 'vue-awesome-swiper'
-import 'swiper/dist/css/swiper.css'
-import { Skeleton, Popup, Toast, Dialog, Empty, List, PullRefresh, ImagePreview, Grid, GridItem } from 'vant'
+import { Skeleton, Popup, Toast, Dialog, Empty, List, PullRefresh, ImagePreview, Popover, Icon, CellGroup, Cell } from 'vant'
 import NoticeApi from '@/api/NoticeApi.js'
-import BannerApi from '@/api/BannerApi.js'
-
+import TipsApi from '@/api/TipsApi.js'
+import BaseInfoApi from '@/api/BaseInfoApi.js'
+import Storage from '@/assets/js/storage.js'
 
 export default ({
     data (){
@@ -83,7 +127,6 @@ export default ({
             sectName: '',
             userInfo: {},
             menuList: [],
-            bannerList: [],
             noticeList: [],
             activeIconClass: 'icons',
             activeMomHeaderclass: 'moments-header',
@@ -95,14 +138,10 @@ export default ({
             pageLoadingFinished: false,
             pageLoadError: false,
             pageRefreshing: false,
-            swiperOption:{
-                autoplay: true,
-                delay: 1000,
-                direction: 'horizontal',
-                pagination: {
-                    el: '.swiper-pagination'
-                },
-            },
+            showSwitchTips: false,
+            switchSectTips: '',
+            showSectList: false,
+            bindHouList: [],
         }
     },
     watch: {
@@ -118,8 +157,6 @@ export default ({
     components: {
         'foot': Foot,
         VueQr,
-        swiper,
-        swiperSlide,
         [Skeleton.name]: Skeleton,
         [Popup.name]: Popup,
         [Toast.name]: Toast,
@@ -127,25 +164,26 @@ export default ({
         [List.name]: List,
         [PullRefresh.name]: PullRefresh,
         [ImagePreview.name]: ImagePreview,
-        [Grid.name]: Grid,
-        [GridItem.name]: GridItem,
+        [Popover.name]: Popover,
+        [Icon.name]: Icon,
+        [CellGroup.name]: CellGroup,
+        [Cell.name]: Cell,
     },
     mounted(){
+        var secondaryColor = getComputedStyle(document.documentElement).getPropertyValue('--secondary-color');
+        document.documentElement.style.setProperty('--primary-color', secondaryColor);
 
-        const originColor = getComputedStyle(document.documentElement).getPropertyValue('--origin-color');
-        document.documentElement.style.setProperty('--primary-color', originColor);
-
-        const originSelIcon = getComputedStyle(document.documentElement).getPropertyValue('--origin-icon-selected');
-        document.documentElement.style.setProperty('--primary-icon-selected', originSelIcon);
-
-        this.timer = setTimeout(()=>{   //设置延迟执行
-            this.skeletonLoading = false  
-        },2000)
-        this.getBanner()
+        var secondarySelIcon = getComputedStyle(document.documentElement).getPropertyValue('--secondary-icon-selected');
+        document.documentElement.style.setProperty('--primary-icon-selected', secondarySelIcon);
+        // this.getSwitchSectTips()
+        
     },
     methods: {
         setUser(data){
             this.userInfo = data
+            if(this.userInfo && this.userInfo.id){
+                this.skeletonLoading = false
+            }
             if(this.userInfo.sectId && this.userInfo.sectId !== '0'){
                 this.sectName = this.userInfo.xiaoquName
             }
@@ -169,7 +207,7 @@ export default ({
         gotoPage(url, status, code){
             if(status!==1){
                 Toast("当前功能尚未开通。")
-                return 
+                return
             }
             if(!code){
                 Toast("当前功能尚未开通。")
@@ -188,17 +226,14 @@ export default ({
             } else {
                 this.$router.push({path: url, query:{}})
             }
-            
+
         },
         gotoRepair(url) {
             let user = this.userInfo
             if(!user.sectId || user.sectId===0 || user.sectName === null){
                 Dialog({message: '您暂未绑定房屋，请前往“我是业主”\r\n进行操作！'})
                 return
-            }else  if(user.cfgParam==null || user.cfgParam.ONLINE_REPAIR == undefined||user.cfgParam.ONLINE_REPAIR==='0') {
-                Dialog({message: '当前所在小区未开启当前业务'})
-                return
-            } else  if(!user.repairService) {
+            }else  if(!user.repairService) {
                 Dialog({message: '当前所在小区未开启当前业务'})
                 return
             } else {
@@ -211,7 +246,7 @@ export default ({
         },
         gotoHref(url){
             location.href = this.basePageUrlpay + url + this.common.getoriApp()
-            // location.href = this.basePageUrl + url + this.common.getoriApp()
+            location.href = this.basePageUrl + url + this.common.getoriApp()
         },
         gotoEvoucher(url){
             location.href = this.basePageUrl + url + this.common.getoriApp()+'#/cardrollindex'
@@ -239,36 +274,12 @@ export default ({
                 })
             }, 1000)
         },
-        getBanner(){
-            setTimeout(() => {
-                BannerApi.getBanner().then((response)=>{
-                    this.pageLoading = false
-                    this.pageRefreshing = false
-                    let data = response.data
-                    if(data && data.errorCode === 0){
-                        console.log(data.result)
-                        if(data.result && data.result.length ===0){
-                            this.pageLoadingFinished = true
-                        }else {
-                            this.bannerList = data.result
-                        }
-                    }else {
-                        console.log(data.error)
-                        this.pageLoadError = true
-                    }
-                }).catch((err)=>{
-                    console.log(err)
-                    this.pageLoadError = true
-                })
-            }, 100)
-        },
         onRefresh(){
             this.pageLoadingFinished = false;
             this.pageLoading = true;
             this.getNotice();
         },
         noticeDetail(url){
-            console.log(url)
             if(!url){
                 Toast("未配置跳转链接")
                 return
@@ -279,7 +290,71 @@ export default ({
             ImagePreview({
                 images: imageArr,
                 startPosition: index,
-            });
+            })
+        },
+        getSwitchSectTips() {
+            TipsApi.getSwitchSectTips('index').then((response)=>{
+                let data = response.data
+                if(data && data.errorCode === 0){
+                    if(data.result){
+                        this.showSwitchTips = true
+                        this.switchSectTips = data.result
+                    }
+                }
+            }).catch((error)=>{
+                console.log(error)
+            })
+        },
+        switchSect() {
+            this.showSectList = true
+            this.getBindHouList()
+        },
+        getBindHouList() {
+            BaseInfoApi.queryHouseByUser().then((response)=>{
+                let data = response.data
+                if(data && data.errorCode === 0){
+                    if(data.result){
+                        this.bindHouList = data.result
+                    }
+                }
+            }).catch((error)=>{
+                console.log(error)
+                Toast(error)
+            })
+        },
+        selectHouse(house) {
+            let param = {
+                province: house.province_name,
+                city: house.city_name,
+                county: house.region_name,
+                sectId: house.sect_id,
+                sectName: house.sect_name,
+                cspId: house.csp_id
+            }
+            BaseInfoApi.switchSect(param).then((response)=>{
+                let data = response.data
+                if(data && data.errorCode === 0){
+                    if(data.result) {
+                        this.userInfo = data.result
+                        this.menuList = this.userInfo.menuList
+                        this.sectName = this.userInfo.xiaoquName
+                        if(!this.sectName) {
+                            this.sectName = '游客'
+                        }
+                        Storage.set('userInfo', data.result)
+                        this.common.updatecookie(data.result.cardStatus,data.result.cardService,data.result.id,data.result.appid,
+                        data.result.cspId,data.result.sectId,data.result.cardPayService,data.result.bgImageList,data.result.wuyeTabsList,
+                        data.result.qrCode,data.result);
+                    }
+                } else {
+                    Toast(data.message)
+                }
+                this.showSectList = false
+                
+            }).catch((error)=>{
+                console.log(error)
+                Toast(error)
+            })
         }
     },
 
@@ -294,7 +369,10 @@ export default ({
     width: 100%;
     background-color: #F7F7F8;
 }
-
+.white-blank {
+    height: 1rem;
+    width: 100%;
+}
 .location{
     padding: 0.67rem 0 0 4.17%;
     &-image{
@@ -339,7 +417,7 @@ export default ({
     height: 2.71rem;
     background-size: cover;
     background-repeat: no-repeat;
-    .bg-image('../../assets/images/index/index_bg');
+    .bg-image('../../assets/images/index/index_wd');
 }
 
 .icons {
@@ -412,7 +490,7 @@ export default ({
     text-align: left;
     font-weight: bolder;
     font-size: 0.38rem;
-    margin: 0.25rem 0 0.3rem 0.4rem;
+    margin: 2.1rem 0 0.2rem 0.4rem;
 }
 
 .moments-header-single {
@@ -428,18 +506,18 @@ export default ({
     // height: 6.28rem;
     margin: 0rem 4% 0rem 4%;
     background-color: #FFFFFF;
-    // border-radius: 0.16rem;
+    border-radius: 0.16rem;
 }
 
 .moment-title{
-    padding: 0.4rem 0 0 0.3rem;
+    padding: 0.2rem 0 0 0.3rem;
     width: 100%;
     position: relative;
 }
 
 .sys-notice-image{
-    width: 0.86rem;
-    height: 0.86rem;
+    width: 0.7rem;
+    height: 0.7rem;
     background-size: cover;
     background-repeat: no-repeat;
     .bg-image('../../assets/images/index/syshead_logo');
@@ -447,16 +525,26 @@ export default ({
 }
 
 .wuye-notice-image{
-    width: 0.86rem;
-    height: 0.86rem;
+    width: 0.7rem;
+    height: 0.7rem;
     background-size: cover;
     background-repeat: no-repeat;
     .bg-image('../../assets/images/index/xiaoxi');
     display: inline-block;
 }
+
+.option-notice-image {
+  width: 0.7rem;
+  height: 0.6rem;
+  background-size: cover;
+  background-repeat: no-repeat;
+  .bg-image('../../assets/images/index/option');
+  display: inline-block;
+}
+
 .moment-notice-image{
-    width: 0.86rem;
-    height: 0.86rem;
+    width: 0.7rem;
+    height: 0.7rem;
     background-size: cover;
     background-repeat: no-repeat;
     .bg-image('../../assets/images/index/moments_logo');
@@ -464,8 +552,8 @@ export default ({
 }
 
 .head-sect{
-    margin-top: 0.22rem;
-    margin-left: 0.2rem;
+    margin-top: 0.15rem;
+    margin-left: 0.1rem;
     color: #C793F7;
     text-align: left;
     font-size: 0.3rem;
@@ -474,23 +562,24 @@ export default ({
 }
 
 .moment-content{
-    margin: 0.3rem 0 0 0.3rem;
+    margin: 0.1rem 0 0 0.3rem;
     width: 100%;
 }
 
 .content-text{
     text-align: left;
     color: #292929;
-    font-size: 0.32rem;
+    font-size: 0.25rem;
     width: 90%;
+    padding-top: 0.05rem;
 }
 .content-image{
-    margin-top: 0.3rem;
+    margin-top: 0.15rem;
     height: auto;
 }
 .content-image-view {
-    width: 4.38rem;
-    height: 2.5rem;
+    width: 3rem;
+    height: 1.5rem;
     border-radius: 0.16rem;
     background-size: cover;
     background-repeat: no-repeat;
@@ -516,11 +605,11 @@ export default ({
     clear:both;
 }
 .pub-date{
-    margin: 0.26rem 0 0.3rem 0.32rem;
+    margin: 0.15rem 0 0.15rem 0.32rem;
     color: #BFBEB9;
     text-align: left;
-    font-size: 0.26rem;
-    padding-bottom: 0.4rem;
+    font-size: 0.24rem;
+    padding-bottom: 0.2rem;
     width: 1.3rem;
     height: 0.24rem;
 }
@@ -528,18 +617,39 @@ export default ({
     width: 100%;
     height: 1.8rem;
 }
-.banner {
+.sect-select {
     width: 100%;
-}
-.banner img{
-    width: 100%;
-}
-.menu-grid {
-    margin: 0 0.25rem;
-    
-}
-.banner-swiper {
-    margin: 0.25rem 0.25rem;
-}
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
 
+    &-title {
+        margin: 0.4rem 0;
+        text-align: center;
+        font-weight: bolder;
+        font-size: 0.4rem;
+    }
+    &-current {
+        &-text  {
+            margin: 0.25rem 0.4rem;
+            font-size: 0.3rem;
+            color: #A9A9A9;
+        }
+        &-sect {
+            margin: 0rem 0.4rem;
+            font-size: 0.3rem;
+        }
+        &-name {
+            font-weight: 600;
+            font-size: 0.3rem;
+            vertical-align: text-top;
+        }
+    }
+    &-divider {
+        margin-top: 0.4rem;
+        height: 0.2rem;
+        width: 100%;
+        background-color: #F7F7F8;
+    }
+}
 </style>

@@ -38,7 +38,8 @@ var MasterConfig = function() {
 
         is_debug:true,
 
-        kyappid:'wx95f46f41ca5e570e1',
+        kyappid:'wx95f46f41ca5e570e1'
+
     },
 
     e = {};
