@@ -46,6 +46,10 @@ module.exports = {
         test: /\.js$/,
         loader: 'babel-loader',
         include: [resolve('src'), resolve('test')]
+      },{
+        test: /\.mjs$/,
+        loader: 'babel-loader',
+        include: [resolve('node_modules/@vant/popperjs/dist/index.esm.mjs')]
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
