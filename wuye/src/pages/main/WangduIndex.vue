@@ -74,7 +74,7 @@
                     <div class="pub-date">{{notice.noticeDate}}</div>
                 </div>
             </van-list>
-            <van-empty description="还没有消息哦" image="search" image-size="1.8rem" v-if="noticeList.length==0"/>
+            <van-empty description="还没有消息哦" image="https://www.e-shequ.cn/weixin/static/images/wuye/empty_wd.png" image-size="1.8rem" v-if="noticeList.length==0"/>
         </van-pull-refresh>
         <div class="main-end"></div>
         <div>
