@@ -81,9 +81,9 @@
       <nav>
         <ul>
           <li ref="listli" v-for="item in list" :key="item.id" >
-            <a v-if="item.appId='wx5b1a7c252c3cbc26'" ref="lista" :href='item.iconLink' style="font-size: 10px;" class="nav-controller" :class="item.iconLink==link?'active':''">
+            <a v-if="wdappid.indexOf(item.appId)>-1" ref="lista" :href='item.iconLink' style="font-size: 10px;" class="nav-controller" :class="item.iconLink==link?'active':''">
               <i :class="item.iconClass"></i>
-                {{item.appId}}<span v-if="'物管家'==item.iconName" style="font-size: 8px; white-space: nowrap;">(业主尊享)</span>
+                {{item.iconName}}<span v-if="'物管家'==item.iconName" style="font-size: 8px; white-space: nowrap;">(业主尊享)</span>
             </a>
             <a v-else ref="lista" :href='item.iconLink' style="font-size: 10px;" class="nav-controller" :class="item.iconLink==link?'active':''">
               <i :class="item.iconClass"></i>
@@ -114,7 +114,8 @@ export default{
         list:[],
         link:'',
         userInfo:{},
-        showOverlay: false	//遮罩
+        showOverlay: false,	//遮罩
+        wdappid: [],
       }
     },
     created() {
@@ -123,6 +124,7 @@ export default{
     mounted(){
       vm.initUserInfo();
       vm.geturl();
+      this.wdappid = this.is_config.C('wdappids')
     },
     updated(){
       vm.getclass();
