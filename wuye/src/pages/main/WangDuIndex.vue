@@ -223,6 +223,8 @@ export default ({
                 this.gotoHref(url)
             } else if ('evoucher'===code){
                 this.gotoEvoucher(url)
+            } else if ('nanning' ===code) { 
+                location.href = url
             } else {
                 this.$router.push({path: url, query:{}})
             }
