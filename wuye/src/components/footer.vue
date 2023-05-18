@@ -79,11 +79,15 @@
 	<div class="index" v-cloak>
     <footer class="footer">
       <nav>
-        <ul  >
+        <ul>
           <li ref="listli" v-for="item in list" :key="item.id" >
-            <a ref="lista" :href='item.iconLink' class="nav-controller" :class="item.iconLink==link?'active':''">
+            <a v-if="item.appId='wx5b1a7c252c3cbc26'" ref="lista" :href='item.iconLink' style="font-size: 10px;" class="nav-controller" :class="item.iconLink==link?'active':''">
               <i :class="item.iconClass"></i>
-              {{item.iconName}}
+                {{item.appId}}<span v-if="'物管家'==item.iconName" style="font-size: 8px; white-space: nowrap;">(业主尊享)</span>
+            </a>
+            <a v-else ref="lista" :href='item.iconLink' style="font-size: 10px;" class="nav-controller" :class="item.iconLink==link?'active':''">
+              <i :class="item.iconClass"></i>
+                {{item.iconName}}
             </a>
           </li>
         </ul>
