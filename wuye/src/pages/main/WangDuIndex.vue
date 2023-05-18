@@ -522,7 +522,7 @@ export default ({
     height: 0.7rem;
     background-size: cover;
     background-repeat: no-repeat;
-    .bg-image('../../assets/images/index/syshead_logo');
+    .bg-image('../../assets/images/index/wdhead_logo');
     display: inline-block;
 }
 
