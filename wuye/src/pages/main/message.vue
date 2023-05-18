@@ -12,18 +12,21 @@
                 </span>
 	        </div>
 
-             <div class="msg_content"  v-html="message.content"></div>
+             <div class="msg_content" ref='my-element' v-html="message.content"></div>
         </div>
    </div>
 </template>
 
 <script>
 let vm;
+import { ImagePreview } from 'vant'
 export default {
    data () {
        return {
            messageID:this.$route.query.messageId,
            message:{},
+           htmls: {},
+           image: '',
            // title:'资讯信息'
        };
    },
@@ -31,7 +34,25 @@ export default {
        vm=this;
    },
    mounted() {
-       vm.query();
+        vm.query();
+   },
+   beforeDestroy() {
+        const myElement = this.$refs['my-element'];
+        myElement.removeEventListener('click', this.showImage);
+  },
+  watch: {
+    htmls: {
+        handler(val){
+            if(val.length > 0){
+                const myElement = this.$refs['my-element'];
+                if(this.image){
+                    myElement.addEventListener('click', this.showImage.bind(this, this.image));
+                }
+                
+            }
+        },
+        deep: true
+    }
    },
    methods: {
       query() {
@@ -60,14 +81,24 @@ export default {
              vm.receiveData.getData(vm,url,'data',function(){
                  if(vm.data.success) {
                       if(vm.data.result !=null) {
-                              vm.message=vm.data.result
-                         }
+                         vm.message=vm.data.result
+                         vm.htmls = vm.message.content
+                         vm.image = vm.message.image
+                      }
                  }else {
                       alert("加载消息失败！");
                  }
                 
             })
-       }
+       },
+       showImage(image){
+            var imgs = [];
+            imgs.push(image)
+            ImagePreview({
+                images: imgs,
+                startPosition: 0,
+            })
+        },
    },
    components: {},
    computed: {},
