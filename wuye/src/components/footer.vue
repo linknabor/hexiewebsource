@@ -60,10 +60,10 @@
 
 
 /* 光明 */
-.footer_fuwu_guangming {background-image: url('../assets/images/icon/fang.png')}
-.footer_wuye_guangming {background-image: url('../assets/images/icon/wu.png')}
-.footer_person_guangming {background-image: url('../assets/images/icon/my.png')}
-.footer_group_guangming{background-image: url('../assets/images/icon/cai.png')}
+.footer_fuwu_guangming {background-image: url('../assets/images/icon/fang.png'); background-size: 30px 30px; padding: 2px 0;}
+.footer_wuye_guangming {background-image: url('../assets/images/icon/wu.png'); background-size: 30px 30px; padding: 2px 0;}
+.footer_person_guangming {background-image: url('../assets/images/icon/my.png'); background-size: 30px 30px; padding: 2px 0;}
+.footer_group_guangming{background-image: url('../assets/images/icon/cai.png'); background-size: 30px 30px; padding: 2px 0;}
 
 
 .overlay-loading{
@@ -83,8 +83,9 @@
           <li ref="listli" v-for="item in list" :key="item.id" >
             <a v-if="wdappid.indexOf(item.appId)>-1" ref="lista" :href='item.iconLink' style="font-size: 10px;" class="nav-controller" :class="item.iconLink==link?'active':''">
               <i :class="item.iconClass"></i>
-                {{item.iconName}}<span v-if="'物管家'==item.iconName" style="font-size: 8px; white-space: nowrap;">(业主尊享)</span>
-            </a>
+                <span v-if="'物管家'==item.iconName" style="color: #ff002a;">{{item.iconName}}</span><span v-if="'物管家'==item.iconName" style="font-size: 8px; white-space: nowrap; color: #ff002a;">(业主尊享)</span>
+                <span v-else>{{item.iconName}}</span>
+              </a>
             <a v-else ref="lista" :href='item.iconLink' style="font-size: 10px;" class="nav-controller" :class="item.iconLink==link?'active':''">
               <i :class="item.iconClass"></i>
                 {{item.iconName}}
