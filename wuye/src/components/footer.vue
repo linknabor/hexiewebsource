@@ -81,7 +81,7 @@
       <nav>
         <ul>
           <li ref="listli" v-for="item in list" :key="item.id" >
-            <a v-if="wdappid.indexOf(item.appId)>-1" ref="lista" :href='item.iconLink' style="font-size: 10px;" class="nav-controller" :class="item.iconLink==link?'active':''">
+            <a v-if="wdappid.indexOf(item.appId)>-1" ref="lista" :href='item.iconLink' style="font-size: 14px;" class="nav-controller" :class="item.iconLink==link?'active':''">
               <i :class="item.iconClass"></i>
                 <span v-if="'物管家'==item.iconName" style="color: #ff002a;">{{item.iconName}}</span><span v-if="'物管家'==item.iconName" style="font-size: 8px; white-space: nowrap; color: #ff002a;">(业主尊享)</span>
                 <span v-else>{{item.iconName}}</span>
