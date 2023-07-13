@@ -606,6 +606,7 @@
 			// vm.common.checkRegisterStatus();
 			// this.initSession4Test();
 			var userStr = localStorage.getItem('userInfo');
+			console.log('userStr:' + userStr)
 			var userInfo = {}
 			if(userStr) {
 				userInfo = JSON.parse(userStr)
