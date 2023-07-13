@@ -93,13 +93,13 @@
           </li>
         </ul>
       </nav>
-    </footer>   
+    </footer>
     <van-overlay :show="showOverlay">
     	<div class="overlay-loading">
 			  <!-- <van-loading type="spinner" color="#ff8a00" vertical>加载中...</van-loading> -->
     	</div>
     </van-overlay>
-    
+
 	</div>
 </template>
 
@@ -149,7 +149,7 @@ export default{
          initUserInfo(){
            vm.showOverlay = true
             let n = "GET",
-                a = "userInfo?oriApp="+vm.getUrlParam('oriApp'),
+                a = "userInfo?oriApp="+vm.getUrlParam('oriApp')+"&token=" + vm.getUrlParam("token"),
                 i = null,
                 e = function(n) {
                     if(n.success&&n.result==null) {
@@ -182,7 +182,7 @@ export default{
                     //       vm.common.localSet('wuyeTabsList',JSON.stringify(n.result.wuyeTabsList));
                     // }
                 },
-                r = function() { 
+                r = function() {
                    vm.showOverlay = false
                 };
             this.common.invokeApi(n, a, i, null, e, r);
@@ -194,7 +194,7 @@ export default{
          }
          for(var i=0;i<vm.$refs.listli.length;i++) {
             vm.$refs.listli[i].style.width=100/vm.$refs.listli.length+'%'
-         } 
+         }
        },
        geturl() {
         var geturl=vm.getUrlParam('oriApp');
@@ -206,6 +206,6 @@ export default{
        },
 
     }
-    
+
 }
 </script>
