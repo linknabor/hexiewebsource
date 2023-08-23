@@ -10,7 +10,7 @@
         </div>
         <div class="infos">
             <div class="base-info" @click="queryMemberCard">
-                <div class="user-name">{{user.name}} 
+                <div class="user-name">{{user.name}}
                     <div class="chevron">
                         <van-image :src="require('../../assets/images/index/chevron@2x.png')" width="0.18rem" height="0.3rem"></van-image>
                     </div>
@@ -103,7 +103,7 @@
                 <div class="option-icon icon-tel"></div>
                 <div class="option-text">物业电话</div>
                 <div class="option-link"><a :href="'tel:'+user.officeTel" class="a-hotline">{{user.officeTel}}</a></div>
-                
+
             </div>
         </div>
         </van-skeleton>
@@ -186,7 +186,7 @@ export default ({
             this.$router.push({path:'/notices'})
         },
         queryPubs() {
-            this.$router.push({path:'/myPublish'})
+          location.href = this.basePageUrl+'wuye/index.html?'+this.common.getoriApp()+'#/opinionList'
         },
         queryHouses() {
             location.href = this.basePageUrl+'wuye/index.html?'+this.common.getoriApp()+'#/Myhouse'

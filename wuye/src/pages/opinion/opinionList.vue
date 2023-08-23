@@ -1,66 +1,63 @@
 <template>
-  <div id="words">
+  <div>
     <van-empty v-show="showEmpty" description="您还没有提过意见"/>
-    <div v-show="show">
-      <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
+    <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
+      <div v-show="show" class="main">
 
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad" :error.sync="loadError">
-          <div class="p15" v-for="thread in threads">
-            <div class="ov" style="width: 100%;">
-              <div><img class="fl thread-picture" :src="thread.userHead"/></div>
-              <div class="thread_user_name">{{ thread.userName }}</div>
-              <div class="thread_user_addr">{{ thread.userSectName }}</div>
-            </div>
-            <div class="ov pt15" @click="gotoDetail(thread.threadId)">{{ thread.threadContent }}</div>
-
-            <div class="preview_img_layer">
-              <div v-for="(previewurl,index) in thread.previewLink">
-                <div class="sub_img_layer" @click="viewSrcImg(thread.imgUrlLink);">
-                  <img class="preview_img" :src="previewurl"/>
-                </div>
+          <div class="p15" v-for="interact in interacts">
+            <div class="ov">
+              <div><img class="fl thread-picture" :src="interact.user_head"/></div>
+              <div class="thread_user_name">
+                <van-cell style="padding: 0" :title="interact.user_name" :label="interact.sect_name"/>
               </div>
+            </div>
+            <div class="pt15">
+              {{ interact.ex_content }}
+            </div>
+
+            <div class="pictures">
+              <img v-for="(previewurl) in interact.thumbnailLink"
+                   @click="viewSrcImg(interact.imgUrlLink);" :src="previewurl"/>
             </div>
 
             <div class="threadDate">
-              <img class="timeImg"
-                   src="../../assets/images/common/icon_time_gray.png"/>&nbsp;{{ thread.formattedDateTime }}
-              <div class="threadCount" style="text-align: right;" @click="gotoDetail(thread.threadId)">
-                <img class="timeImg"
-                     src="../../assets/images/common/icon_comment_gray.png"/>&nbsp;{{ thread.commentsCount }}
+              <van-icon name="underway-o" size="14px" style="position: relative;top: 2px"/>
+              &nbsp;{{ interact.formattedDateTime }}
+              <div class="threadCount" style="text-align: right;" @click="gotoDetail(interact.interact_id)">
+                <van-icon name="other-pay" size="14px"
+                          style="position: relative;top: 2px"/>&nbsp;{{ interact.comments_count }}
               </div>
             </div>
-
           </div>
         </van-list>
-      </van-pull-refresh>
+      </div>
+    </van-pull-refresh>
+    <div class="pull-btn">
+      <van-icon slot="right-icon" name="add" size="50px" @click="goPullOpinion"/>
     </div>
-    <div style="position: fixed; bottom:0.5px; width: 100%; color: white;">
-      <div class="submit-btn-black" @click="gotoBack" style="width: 25%">返回</div>
-      <div class="submit-btn-orange" @click="newOpinion" style="width: 73%">我要发布</div>
-    </div>
-
-
   </div>
 </template>
 
 <script>
   import opinionApi from "@/api/OpinionApi.js";
-  import {List, PullRefresh, Uploader, ImagePreview, Empty, Dialog } from 'vant';
+  import {List, PullRefresh, Uploader, ImagePreview, Empty, Dialog, Button, Cell, Icon} from 'vant';
   import Storage from '../../assets/js/storage.js';
 
   export default {
     name: "opinionList",
     data() {
       return {
-        threads: [],//评论数据
-        page: 0, //页数
+        interacts: [],//评论数据
+        page: 1, //页数
         loading: false,
         finished: false,
         refreshing: false,
         loadError: false,
         show: true,
-        showEmpty:false,
+        showEmpty: false,
         userInfo: {},
+        zflag: true,
       }
     },
     components: {
@@ -69,25 +66,26 @@
       [Uploader.name]: Uploader,
       [ImagePreview.Component.name]: ImagePreview.Component,
       [Empty.name]: Empty,
+      [Button.name]: Button,
+      [Cell.name]: Cell,
+      [Icon.name]: Icon,
     },
     mounted() {
       let userInfo = Storage.get('userInfo')
       var sectId = userInfo.sectId
-      if(sectId == '0' || sectId == null || sectId == 'null') {
+      if (sectId === '0' || sectId == null || sectId === 'null') {
         Dialog.alert({
           message: '未绑定房屋',
         }).then(() => {
           this.$router.go(-1);
         });
       }
-      
-      if(userInfo) {
+
+      if (userInfo) {
         this.userInfo = userInfo
         let wdappids = this.is_config.C('wdappids')
-        console.log(wdappids)
-        if(wdappids.indexOf(userInfo.appId)>-1) {
+        if (wdappids.indexOf(userInfo.appId) > -1) {
           const secondaryColor = getComputedStyle(document.documentElement).getPropertyValue('--secondary-color');
-          console.log(secondaryColor)
           document.documentElement.style.setProperty('--primary-color', secondaryColor);
           const secondarySelIcon = getComputedStyle(document.documentElement).getPropertyValue('--secondary-icon-selected');
           document.documentElement.style.setProperty('--primary-icon-selected', secondarySelIcon);
@@ -97,29 +95,28 @@
           const originSelIcon = getComputedStyle(document.documentElement).getPropertyValue('--origin-icon-selected');
           document.documentElement.style.setProperty('--primary-icon-selected', originSelIcon);
         }
-        
       }
-      
     },
 
     methods: {
       onLoad() {
         setTimeout(() => {
-          this.getThreadList()
+          this.getInteractList()
         }, 1000);
       },
 
-      getThreadList() {
+      getInteractList() {
         let param = {
-          threadCategory: '9'
+          exGroup: '1,2', //投诉、建议
+          curr_page: this.page,
         }
-        opinionApi.getThreadList('n', this.page, param).then((response) => {
+        opinionApi.getInteractList(param).then((response) => {
           this.loading = false
           this.refreshing = false
           let data = response.data
           if (data && data.success) {
             if (data.result.length > 0) {
-              this.threads = this.threads.concat(data.result);
+              this.interacts = this.interacts.concat(data.result);
               this.page++
             } else {
               this.finished = true
@@ -128,7 +125,7 @@
             this.loadError = true
           }
 
-          if (this.threads.length == 0) {
+          if (this.interacts.length === 0) {
             this.show = false
             this.showEmpty = true
           }
@@ -136,27 +133,22 @@
       },
       onRefresh() {
         this.finished = false;
-
         // 重新加载数据
         // 将 loading 设置为 true，表示处于加载状态
         this.loading = true;
         this.onLoad();
       },
 
-      gotoDetail(threadId) {
-        this.$router.push({path: '/opinionDetail', query: {'threadId': threadId}})
-      },
-
-      newOpinion() {
-        this.$router.push({path: '/addOpinion'})
-      },
-
-      gotoBack() {
-        this.$router.push({path: '/'})
+      gotoDetail(interactId) {
+        this.$router.push({path: '/opinionDetail', query: {'interactId': interactId}})
       },
 
       viewSrcImg(imgs) {
         ImagePreview(imgs)
+      },
+
+      goPullOpinion() {
+        this.$router.push({path: '/addOpinion'})
       }
     }
 
@@ -164,42 +156,38 @@
 </script>
 
 <style scoped>
-  #words {
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    overflow: auto;
+  .main {
+    width: 100%;
+    min-height: 100vh;
+    height: auto;
+    overflow: hidden;
+  }
+
+  .pictures {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+    grid-auto-rows: 90px;
+    grid-gap: 5px;
+    margin-left: 50px;
+  }
+
+  .pictures img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 5px;
   }
 
   .thread-picture {
     width: 42px;
     height: 42px;
-    margin-right: 15px;
-    border: 1px solid #d4cfc8;
-    border-radius: 42px;
+    margin-right: 10px;
+    border-radius: 10px;
   }
 
   .thread_user_name {
-    font-size: 14px;
-    margin-top: 10.5px;
-    color: #3b3937;
-    height: 21px;
-    line-height: 21x;
-    width: 45%;
     float: left;
-  }
-
-  .thread_user_addr {
-    margin: 10.5px 0px 0px 0px;
-    color: #666;
-    float: left;
-    font-size: 12px;
-    height: 21px;
-    line-height: 21x;
-    text-align: right;
-    width: 33%;
+    font-weight: bold;
   }
 
   .ov {
@@ -210,69 +198,36 @@
   .p15 {
     padding: 15px;
     font-size: 13px;
-    border-bottom: 1px solid #d4cfc8;
+    border-bottom: 1px solid #EBEDF0;
   }
 
   .pt15 {
-    padding-top: 15px;
-    padding-bottom: 15px;
-    color: #3b3937;
+    padding: 5px 5px 10px 50px;
     word-wrap: break-word;
     overflow: hidden;
     font-size: 13px;
+    height: auto;
+    min-height: 20px;
+    line-height: 20px;
   }
 
   .threadDate {
-    font-size: 13px;
+    font-size: 12px;
     color: #a6937c;
-    line-height: 23px;
     width: 100%;
-  }
-
-  .timeImg {
-    width: 13px;
-    height: 13px;
+    padding-left: 50px;
+    margin-top: 10px;
   }
 
   .threadCount {
     float: right;
-    padding-right: 15px;
+    padding-right: 60px;
   }
 
-  .submit-btn-black {
-    height: 35px;
-    margin-left: 1%;
-    line-height: 35px;
-    background: #3b3738;
-    text-align: center;
-    font-size: 14px;
-    float: left;
-  }
-
-  .submit-btn-orange {
-    height: 35px;
-    margin-right: 0;
-    line-height: 35px;
-    background: var(--primary-color);
-    text-align: center;
-    font-size: 14px;
-    float: left;
-  }
-
-  .preview_img_layer {
-    float: left;
-    width: 100%;
-  }
-
-  .sub_img_layer {
-    float: left;
-    padding-bottom: 15px;
-    width: 32%;
-    margin-right: 1%;
-  }
-
-  .preview_img_layer {
-    float: left;
-    width: 100%;
+  .pull-btn {
+    position: fixed;
+    color: var(--primary-color);
+    top: 75vh;
+    left: 80%;
   }
 </style>

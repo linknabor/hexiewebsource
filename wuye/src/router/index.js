@@ -144,7 +144,7 @@ const router= new VueRouter({
         name:'opinionList',
         component:resolve=> require(['@/pages/opinion/opinionList'], resolve),
         meta:{
-          title:'我的意见'
+          title:'我的投诉建议'
         }
       },
 
@@ -153,7 +153,7 @@ const router= new VueRouter({
         name:'addOpinion',
         component:resolve=> require(['@/pages/opinion/addOpinion'], resolve),
         meta:{
-          title:'我的意见'
+          title:'发布建议'
         }
       },
 
@@ -162,33 +162,8 @@ const router= new VueRouter({
         name:'opinionDetail',
         component:resolve=> require(['@/pages/opinion/opinionDetail'], resolve),
         meta:{
-          title:'我的意见'
+          title:'我的建议'
         }
-      },
-      //新的业主意见 end
-      {
-            path:'/mysteward',
-            name:'mysteward',
-            component:resolve=> require(['@/pages/suggest/mysteward'],resolve),
-            meta:{
-              title:''
-            }
-      },
-      {
-            path:'/threadDetail',
-            name:'threadDetail',
-            component:resolve=> require(['@/pages/suggest/threadDetail'],resolve),
-            meta:{
-              title:''
-            }
-      },
-      {
-            path:'/maintain',
-            name:'maintain',
-            component:resolve=> require(['@/pages/suggest/maintain'],resolve),
-            meta:{
-              title:''
-            }
       },
       {
             path:'/catalog',

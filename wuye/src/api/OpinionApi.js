@@ -4,36 +4,43 @@ import Config from '@/util/config.js'
 let baseUrl = Config.baseUrl
 const opinionApi = {
 
-  getThreadList(filter, page, data) {
-    return http.post(baseUrl + 'thread/getThreadList/' + filter + '/' + page, data)
+  getInteractList(data) {
+    return http.post(baseUrl + 'interact/getInteractList', data)
   },
 
-  getThread(data) {
-    return http.post(baseUrl + 'thread/getThreadByThreadId', data)
+  getInteract(data) {
+    return http.post(baseUrl + 'interact/getInteractInfo', data)
   },
 
-  saveThread(data) {
-    return http.post(baseUrl + 'thread/addThread', data)
+  saveInteract(data) {
+    return http.post(baseUrl + 'interact/addInteract', data)
   },
 
-  delThread(data) {
-    return http.post(baseUrl + 'thread/deleteThread', data)
+  delInteract(data) {
+    return http.post(baseUrl + 'interact/deleteInteract', data)
+  },
+
+  getCommentList(data) {
+    return http.post(baseUrl + 'interact/getCommentByInteractId', data)
   },
 
   delComment(data) {
-    return http.post(baseUrl + 'thread/deleteComment', data)
+    return http.post(baseUrl + 'interact/deleteComment', data)
   },
 
   addComment(data) {
-    return http.post(baseUrl + 'thread/addComment', data)
+    return http.post(baseUrl + 'interact/addComment', data)
   },
 
   upload(data){
-    return http.post4File(baseUrl + 'thread/upload', data)
+    return http.post4File(baseUrl + 'interact/upload', data)
   },
 
   getAddr(param){
     return http.get(baseUrl + '/hexiehouses?sectId=' + param, null)
+  },
+  getInteractType(){
+    return http.get(baseUrl + '/interact/getInteractType', null)
   }
 
 

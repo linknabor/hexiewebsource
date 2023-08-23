@@ -78,20 +78,6 @@ let router= new Router({
       }
     },
     {
-      path:'/myPublish',
-      name:'myPublish',
-      component:resolve=> require(['@/pages/communities/myPublish'],resolve),
-      meta: {
-        title:'我的发布'
-      }
-    },
-    {
-      path:'/threadDetail',
-      name:'threadDetail',
-      component:resolve=> require(['@/pages/communities/threadDetail'],resolve),
-     
-    },
-    {
       path:'/addresses',
       name:'addresses',
       component:resolve=> require(['@/pages/addresses'],resolve),
@@ -111,7 +97,7 @@ let router= new Router({
       path:'/operatorOrdersDetail',
       name:'operatorOrdersDetail',
       component:resolve=> require(['@/pages/myRepair/operatorOrdersDetail'],resolve),
-    
+
     },
     {
       path:'/operatorRepairSuccess',
@@ -322,7 +308,7 @@ let router= new Router({
 //在每一次路由跳转之前会进入这个方法 to：到哪去  from：从哪来 next() 调用这个方法来完成这个钩子函数
 
 router.beforeEach((to, from, next)=>{
-  
+
   let pageName = to.matched[0].name
   const viewArray = ['index', 'register', 'welfare', 'reset', 'version2', 'wangdu']
 

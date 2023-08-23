@@ -1,102 +1,98 @@
 <template>
-  <div>
+  <div class="main">
     <van-overlay :show="show">
-      <van-loading vertical >加载中...</van-loading>
+      <van-loading vertical>加载中...</van-loading>
     </van-overlay>
-    <div class="cssTitle">
-      <div class="fl">
-        <img class="fl comment-post-picture" :src="thread.userHead"/>
+    <div class="p15">
+      <div class="ov">
+        <div><img class="fl thread-picture" :src="interact.user_head"/></div>
+        <div class="thread_user_name">
+          <van-cell style="padding: 0" :title="interact.user_name" :label="interact.sect_name" />
+        </div>
       </div>
-      <div class="thread_user_head">{{ thread.userName }}</div>
-    </div>
 
-    <div class="" v-for="(thumbnailurl,index) in thread.thumbnailLink">
-      <div class="cssMain" @click="viewSrcImg(thread.imgUrlLink)">
-        <img class="sub_img_layer" :src="thumbnailurl"/>
+      <div class="pt15">
+        {{ interact.ex_content }}
+      </div>
+
+      <div class="pictures">
+        <img v-for="(thumbnailurl) in interact.thumbnailLink"
+             @click="viewSrcImg(interact.imgUrlLink);" :src="thumbnailurl"/>
+      </div>
+
+      <div class="threadDate">
+        <van-icon name="underway-o" size="14px" style="position: relative;top: 2px"/>
+        &nbsp;{{ interact.formattedDateTime }}
+        <div class="threadCount" style="text-align: right;" v-show="interact.isThreadOwner === 'true'">
+          <div @click="delInteract">删除</div>
+        </div>
       </div>
     </div>
 
-    <div class="cssHead">{{ thread.threadContent }}</div>
-
-    <div class="cssTime fl">
-      <img class="cssTimeImg"
-           src="../../assets/images/common/icon_time_gray.png"/>&nbsp;{{ thread.formattedDateTime }}
-    </div>
-
-    <div class="cssDel" v-show="thread.isThreadOwner == 'true'">
-      <div class="cssDelText" @click="delThread">删除</div>
-    </div>
-
-    <div class="cssLine">&nbsp;</div>
 
     <div id="total_comments" class="comments_title">
-      <div class="fl commentsText">评论</div>
+      <div class="fl commentsText">评论 {{interact.comments_count}}</div>
     </div>
-
-    <div class="cssDetail" v-for="(comment,index) in comments">
-      <div class="cssDetailSub">
-        <div class="cssDetailImg">
-          <img class="cssDetailImgTxt" :src="comment.commentUserHead"/>
+    <div class="p15" v-for="(comment,index) in comments">
+      <div class="ov">
+        <div><img class="fl thread-picture" :src="comment.comment_user_head"/></div>
+        <div class="thread_user_name">
+          <van-cell style="padding: 10px 0 5px 1px" :title="comment.comment_user_name" />
         </div>
-        <div style="width: 79%" class="fl">
-          <div class="comments_user_name">{{ comment.commentUserName }}</div>
-          <div class="comments_user_count">{{ comment.commentContent }}
-          </div>
-          <!-- ------------ -->
-          <div class="preview_img_layer">
-            <div v-for="(items,indexc) in comment.previewLink">
-              <div class="sub_img_layer" @click="viewSrcImg(comment.imgUrlLink);">
-                <img class="preview_img" :src="items"/>
-              </div>
-            </div>
-          </div>
-          <!-- ------------ -->
-          <div class="cssDetailTime">
-            <img style="width: 12px; " src="../../assets/images/common/icon_time_gray.png"/>&nbsp;
-            {{ comment.fmtCommentDateTime }}
-          </div>
-          <div class="cssDetailDel">
-            <div style="float: right" v-show="comment.isCommentOwner == 'true'">
-              <div class="cssDetailDelTxt" @click="delComment(comment,index)">删除</div>
-            </div>
-          </div>
-          <div class="fl">&nbsp;</div>
-        </div>
-        <div style="width: 100%;" class="cssLine fl">&nbsp;</div>
       </div>
-    </div>
 
-    <div class="butt">
-      <div id="input" class="cssReply">
-        <textarea name="comment_content" class="comment_input" placeholder="回复" v-model="commentContent"></textarea>
+      <div class="pt15">
+        {{ comment.comment_content }}
+      </div>
+
+      <div class="pictures">
+        <img v-for="(items) in comment.thumbnailLink"
+             @click="viewSrcImg(comment.imgUrlLink);" :src="items"/>
+      </div>
+
+      <div class="fl threadDate">
+        <van-icon name="underway-o" size="14px" style="position: relative;top: 2px"/>
+        &nbsp;{{ comment.fmtCommentDateTime }}
+        <div class="threadCount" style="text-align: right;" v-show="comment.isCommentOwner === 'true'">
+          <div @click="delComment(comment,index)">删除</div>
+        </div>
+      </div>
+      <div>&nbsp;</div>
+    </div>
+    <div style="height: 150px">&nbsp;</div>
+
+    <div class="cssBottom">
+      <div class="butt">
+        <textarea name="comment_content" class="comment_input" placeholder="发表评论" v-model="commentContent"></textarea>
         <div class="submit-btn" @click="saveComment" style="width:20%; color: white;">发送</div>
+        <div class="loadImg">
+          <van-uploader v-model="fileList" :before-delete="delImgs" :max-count="3"/>
+        </div>
       </div>
     </div>
 
-    <div class="loadImg">
-      <van-uploader v-model="fileList" :after-read="uploadImgs" :before-delete="delImgs"/>
-    </div>
     <user-info @getUserInfo="getUserInfo"></user-info>
   </div>
 </template>
 
 <script>
   import opinionApi from "@/api/OpinionApi.js";
-  import {ImagePreview, Toast, Uploader, Overlay, Loading, Dialog} from 'vant'
+  import {ImagePreview, Toast, Uploader, Overlay, Loading, Dialog, Cell, Image, Icon} from 'vant'
   import UserInfo from "@/components/UserInfo";
+
   export default {
     name: "",
     data() {
       return {
-        threadId: this.$route.query.threadId,
-        thread: {},
-        comments: [],
+        interactId: this.$route.query.interactId,
+        interact: {}, //主信息
+        comments: [], //回复列表
         commentContent: '', //回复内容
-        attachmentUrl: '',
-        upImgs:[],
-        fileList:[],
+        attachmentUrl: [], //上传后的图片地址
+        fileList: [], //上传图片原地址
+        page:1, //回复分页
         show: false,
-        userInfo: [],
+        userInfo: {}
       }
     },
     components: {
@@ -105,54 +101,69 @@
       [Overlay.name]: Overlay,
       [Loading.name]: Loading,
       [ImagePreview.Component.name]: ImagePreview.Component,
+      [Cell.name]: Cell,
+      [Image.name]: Image,
+      [Icon.name]: Icon,
       "user-info": UserInfo,
     },
     mounted() {
-      this.getThread();
+      this.getInteractInfo();
     },
 
     methods: {
       getUserInfo(result) {
         this.userInfo = result;
         var sectId = this.userInfo.sectId;
-        if(sectId == '0' || sectId == null || sectId == 'null') {
-          Dialog({ message: '未绑定房屋' });
+        if (sectId === '0' || sectId == null || sectId === 'null') {
+          Dialog({message: '未绑定房屋'});
           this.$router.push({path: '/Version2'})
         }
       },
-      getThread() {
+      getInteractInfo() {
         this.show = true
         setTimeout(() => {
-          this.threadList();
+          this.interactDetail();
+          this.getCommentList();
           this.show = false
         }, 2000);
       },
 
-      threadList() {
+      interactDetail() {
         let param = {
-          threadId: this.threadId,
+          interactId: this.interactId,
         }
-        opinionApi.getThread(param).then((response) => {
+        opinionApi.getInteract(param).then((response) => {
           let data = response.data
           if (data && data.success) {
-            this.thread = data.result;
-            this.comments = this.thread.comments;
+            this.interact = data.result;
+          }
+        })
+      },
+      getCommentList() {
+        let param = {
+          interactId: this.interactId,
+          page: this.page
+        }
+        opinionApi.getCommentList(param).then((response) => {
+          let data = response.data
+          if (data && data.success) {
+            this.comments = data.result;
           }
         })
       },
 
-      delThread() {
+      delInteract() {
         this.show = true
         let param = {
-          threadId: this.threadId,
+          interactId: this.interactId,
         }
-        opinionApi.delThread(param).then((response) => {
+        opinionApi.delInteract(param).then((response) => {
           let data = response.data
           if (data && data.success) {
-            Toast("删除成功")
+            Toast.success("删除成功")
             this.$router.push({path: '/opinionList'})
           } else {
-            Toast("删除发布信息失败，请重试！")
+            Toast.fail("删除发布信息失败，请重试！")
           }
           this.show = false
         })
@@ -161,8 +172,8 @@
       delComment(comment, index) {
         this.show = true
         let param = {
-          commentId: comment.commentId,
-          threadId: comment.threadId
+          commentId: comment.comment_id,
+          interactId: comment.parent_id
         }
         opinionApi.delComment(param).then((response) => {
           let data = response.data
@@ -175,47 +186,55 @@
         })
       },
 
-      saveComment() {
+      async saveComment() {
         if (!this.commentContent) {
-          Toast("回复内容不为空")
+          Toast.fail("回复内容不为空");
           return;
         }
-
         this.show = true
+        for (let i = 0; i < this.fileList.length; i++) {
+          await this.uploadServerImgs(this.fileList[i]);
+        }
+        await this.saveCommentInfo();
+      },
+
+      saveCommentInfo() {
         let str = ""
-        if(this.upImgs.length > 0) {
-          str = this.upImgs.join() + ","
+        if (this.attachmentUrl.length > 0) {
+          str = this.attachmentUrl.join() + ","
         }
 
+        if(this.fileList.length !== this.attachmentUrl.length) {
+          Toast.fail("上传照片失败，请重试");
+          return;
+        }
         let param = {
-          commentContent: this.commentContent,
-          threadId: this.threadId,
-          attachmentUrl: str
+          comment_content: this.commentContent,
+          interact_id: this.interactId,
+          attachment_urls: str
         }
         opinionApi.addComment(param).then((response) => {
-          let data = response.data
+          let data = response.data;
           if (data && data.success) {
-            this.comments.push(data.result)
-            this.commentContent = ''
-            this.attachmentUrl = ''
-            this.fileList = ''
+            this.comments.unshift(data.result);
+            this.commentContent = '';
+            this.fileList = [];
+            this.attachmentUrl = [];
           } else {
-            Toast("发布信息保存失败，请重试！")
+            Toast.fail("发布信息保存失败，请重试！")
           }
           this.show = false
         })
       },
 
-      uploadImgs(file) {
-        file.status = 'uploading';
-        file.message = '上传中...';
-
+      //上传到服务器
+      async uploadServerImgs(file) {
         let data = new FormData();
         data.append("picture", file.file);
-        opinionApi.upload(data).then((response) => {
+        await opinionApi.upload(data).then((response) => {
           let data = response.data
           if (data && data.success) {
-            this.upImgs.push(data.result)
+            this.attachmentUrl.push(data.result)
             file.status = 'done';
           } else {
             file.status = 'failed';
@@ -225,11 +244,10 @@
       },
 
       delImgs(file, detail) {
-        this.upImgs.splice(detail.index, 1)
         this.fileList.splice(detail.index, 1)
       },
 
-      viewSrcImg(imgs){
+      viewSrcImg(imgs) {
         ImagePreview(imgs)
       },
     }
@@ -237,54 +255,74 @@
 </script>
 
 <style scoped>
-  .cssTitle {
+  .main {
+    width: 100%;
+    min-height: 100vh;
+    height: auto;
     overflow: hidden;
-    padding-left: 15px;
-    padding-bottom: 15px;
-    font-size: 14px;
-    padding-top: 15px
   }
 
-  .fl {
-    float: left;
+  .p15 {
+    padding: 5px 15px;
+    font-size: 13px;
+    border-bottom: 1px solid #EBEDF0;
   }
 
-  .comment-post-picture {
+  .ov {
+    overflow: hidden;
+    padding: 1px;
+  }
+
+  .thread-picture {
     width: 42px;
     height: 42px;
-    margin-right: 15px;
-    border: 1px solid #d4cfc8;
-    border-radius: 42px;
+    margin-right: 10px;
+    border-radius: 10px;
   }
 
-  .thread_user_head {
+  .thread_user_name {
     float: left;
-    margin-top: 10.5px;
-    font-size: 14px;
-    color: #393b37;
+    font-weight: bold;
   }
 
-  .cssHead {
-    overflow: hidden;
-    padding-left: 15px;
-    padding-bottom: 15px;
-    font-size: 13px;
-    color: #3b3937;
+  .pt15 {
+    padding: 5px 5px 10px 50px;
     word-wrap: break-word;
-  }
-
-  .cssTime {
     overflow: hidden;
-    padding-left: 15px;
-    padding-bottom: 15px;
     font-size: 13px;
-    color: #a6937c;
-    line-height: 23px
+    height: auto;
+    min-height: 20px;
+    line-height: 20px;
   }
 
-  .cssTimeImg {
-    width: 13px;
-    height: 13px;
+  .pictures {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+    grid-auto-rows: 90px;
+    grid-gap: 5px;
+    margin-left: 50px;
+  }
+
+  .pictures img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 5px;
+  }
+
+  .threadDate {
+    font-size: 12px;
+    color: #a6937c;
+    width: 100%;
+    padding-left: 50px;
+    padding-top: 10px;
+    line-height: 20px;
+    padding-bottom: 5px;
+  }
+
+  .threadCount {
+    float: right;
+    padding-right: 60px;
   }
 
   .comments_title {
@@ -299,114 +337,17 @@
     color: #888
   }
 
-  .cssLine {
-    padding-top: 15px;
-    border-bottom: 5px solid #f9f9e9;
-  }
-
-  .cssDel {
-    position: relative;
-    overflow: hidden;
-    padding: 1px;
-    float: right;
-  }
-
-  .cssDelText {
-    font-size: 13px;
-    padding-right: 25px;
-    color: #a6937c;
-    text-align: right;
-    line-height: 23px
-  }
-
-  .cssDetail {
-    overflow: hidden;
-  }
-
-  .cssDetailSub {
-    padding-top: 15px;
-    width: 100%;
-    min-height: 100px;
-    float: left;
-    padding-left: 15px;
-    overflow: hidden;
-  }
-
-  .cssDetailImg {
-    padding-bottom: 15px;
-    font-size: 14px;
-    float: left;
-    width: 15%;
-  }
-
-  .cssDetailImgTxt {
-    width: 35px;
-    height: 35px;
-    margin-right: 15px;
-    border: 1px solid #d4cfc8;
-    border-radius: 35px;
-    float: left;
-  }
-
-  .comments_user_name {
-    font-size: 14px;
-    color: #3b3937;
-    margin: 5px 0px 15px 0px;
-  }
-
-  .comments_user_count {
-    color: #3b3937;
-    word-wrap: break-word;
-    overflow: hidden;
-    font-size: 13px;
-  }
-
-  .preview_img_layer {
-    float: left;
-    width: 100%;
-  }
-
-  .sub_img_layer {
-    float: left;
-    padding-bottom: 10px;
-    width: 32%;
-    margin-right: 1%;
-  }
-
-  .cssDetailTime {
-    font-size: 12px;
-    padding-top: 15px;
-    float: left;
-    color: #888;
-  }
-
-  .cssDetailDel {
-    padding-top: 15px;
-    font-size: 12px;
-    color: #a6937c;
-    float: right;
-  }
-
-  .cssDetailDelTxt {
-    font-size: 12px;
-    padding-right: 25px;
-    color: grey;
-    text-align: right
-  }
-
   .butt {
-    overflow: hidden;
-    margin-top: 10px;
-  }
-
-  .cssReply {
-    float: left;
-    top: 10px;
     background-color: white;
     width: 98%;
-    text-align: center;
-    border: 1px;
     margin-left: 2%;
+  }
+
+  .cssBottom{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 150px;
   }
 
   .comment_input {
@@ -416,13 +357,17 @@
     width: 70%;
     display: block;
     height: 35px;
-    line-height: 35px;
+    line-height: 15px;
     outline: none;
     border: 1px solid #d4cfc8;
     border-radius: 4px;
     padding: 0 10px;
     vertical-align: middle;
-    font-size: 15px;
+    font-size: 14px;
+  }
+
+  .comment_input::placeholder {
+    line-height: 35px;
   }
 
   .submit-btn {
@@ -435,6 +380,7 @@
     padding: 1px;
     font-size: 14px;
     float: left;
+    border-radius: 5px;
   }
 
   .loadImg {
@@ -444,15 +390,7 @@
     padding-left: 0.2rem;
   }
 
-  .cssMain{
-    overflow: hidden;
-    padding: 1px;
-    padding-bottom: 15px;
-    font-size: 14px;
-    padding-left: 15px;
-  }
-
-  .van-loading{
+  .van-loading {
     position: absolute;
     top: 50%;
     left: 45%;
