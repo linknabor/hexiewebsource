@@ -59,12 +59,13 @@
       </div>
       <div style="height: 35px;">&nbsp;</div>
     </div>
-    <div style="height: 150px">&nbsp;</div>
+    <div style="height: 180px">&nbsp;</div>
 
     <div class="cssBottom">
-      <div class="butt">
-        <textarea name="comment_content" class="comment_input" placeholder="发表评论" v-model="commentContent"></textarea>
-        <div class="submit-btn" @click="saveComment" style="width:20%; color: white;">发送</div>
+      <div class="but">
+        <van-field v-model="commentContent" clearable placeholder="发表评论" use-button-slot class="comment_input" type="textarea" maxlength="100">
+          <van-button slot="button" class="submit-btn" size="normal" type="primary" @click="saveComment">发送</van-button>
+        </van-field>
         <div class="loadImg">
           <van-uploader v-model="fileList" :before-delete="delImgs" :max-count="3" preview-size="70px" upload-text="拍照上传"/>
         </div>
@@ -77,7 +78,7 @@
 
 <script>
   import opinionApi from "@/api/OpinionApi.js";
-  import {ImagePreview, Toast, Uploader, Overlay, Loading, Dialog, Cell, Image, Icon} from 'vant'
+  import {ImagePreview, Toast, Uploader, Overlay, Loading, Dialog, Cell, Image, Icon, Field, Button} from 'vant'
   import UserInfo from "@/components/UserInfo";
 
   export default {
@@ -92,7 +93,8 @@
         fileList: [], //上传图片原地址
         page:1, //回复分页
         show: false,
-        userInfo: {}
+        userInfo: {},
+        autosize: {minHeight: 40},
       }
     },
     components: {
@@ -104,6 +106,8 @@
       [Cell.name]: Cell,
       [Image.name]: Image,
       [Icon.name]: Icon,
+      [Field.name]: Field,
+      [Button.name]: Button,
       "user-info": UserInfo,
     },
     mounted() {
@@ -178,6 +182,7 @@
           let data = response.data
           if (data && data.success) {
             this.comments.splice(index, 1);
+            this.interact.comments_count = this.interact.comments_count - 1;
           } else {
             Toast("删除回复信息失败，请重试！")
           }
@@ -223,6 +228,7 @@
             this.commentContent = '';
             this.fileList = [];
             this.attachmentUrl = [];
+            this.interact.comments_count = this.interact.comments_count + 1;
           } else {
             Toast.fail("发布信息保存失败，请重试！")
           }
@@ -371,7 +377,7 @@
     font-size: 13px;
   }
 
-  .butt {
+  .but {
     background-color: white;
     width: 98%;
     margin-left: 2%;
@@ -381,23 +387,12 @@
     position: fixed;
     bottom: 0;
     width: 100%;
-    height: 150px;
+    height: 180px;
   }
 
   .comment_input {
-    text-align: left;
-    float: left;
-    overflow: hidden;
-    width: 70%;
-    display: block;
-    height: 35px;
-    line-height: 15px;
-    outline: none;
-    border: 1px solid #d4cfc8;
-    border-radius: 4px;
-    padding: 0 10px;
-    vertical-align: middle;
-    font-size: 14px;
+    background-color: #f0f1f4 !important;
+    height: 60px;
   }
 
   .comment_input::placeholder {
@@ -405,16 +400,11 @@
   }
 
   .submit-btn {
-    height: 35px;
-    margin-left: 1%;
-    line-height: 35px;
+    width: 75px;
+    height: 38px;
     background: var(--primary-color);
-    text-align: center;
-    overflow: hidden;
-    padding: 1px;
-    font-size: 14px;
-    float: left;
     border-radius: 5px;
+    border: 0;
   }
 
   .loadImg {
@@ -430,7 +420,4 @@
     left: 45%;
   }
 
-  .van-uploader__upload{
-    background-color: #ebedf0 !important;
-  }
 </style>
