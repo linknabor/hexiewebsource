@@ -156,13 +156,20 @@ const router= new VueRouter({
           title:'发布建议'
         }
       },
-
       {
         path:'/opinionDetail',
         name:'opinionDetail',
         component:resolve=> require(['@/pages/opinion/opinionDetail'], resolve),
         meta:{
           title:'我的建议'
+        }
+      },
+      {
+        path:'/opinionScore',
+        name:'opinionScore',
+        component:resolve=> require(['@/pages/opinion/opinionScore'], resolve),
+        meta:{
+          title:'投诉建议评价'
         }
       },
       {

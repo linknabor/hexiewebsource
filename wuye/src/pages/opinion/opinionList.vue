@@ -12,7 +12,7 @@
                 <van-cell style="padding: 0" :title="interact.user_name" :label="interact.sect_name"/>
               </div>
             </div>
-            <div class="pt15">
+            <div class="pt15" @click="gotoDetail(interact.interact_id)">
               {{ interact.ex_content }}
             </div>
 
@@ -129,7 +129,9 @@
             this.show = false
             this.showEmpty = true
           }
-        })
+        }).catch((error) => {
+          this.finished = true
+        });
       },
       onRefresh() {
         this.finished = false;

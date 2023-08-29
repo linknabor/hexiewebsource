@@ -24,7 +24,7 @@
       </van-popup>
 
       <van-cell-group title="内容描述">
-        <van-field v-model="ex_content" type="textarea" maxlength="200" show-word-limit placeholder="说点什么..."/>
+        <van-field v-model="ex_content" type="textarea" maxlength="100" show-word-limit placeholder="说点什么..."/>
       </van-cell-group>
 
       <van-cell-group title="上传照片">

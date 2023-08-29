@@ -41,6 +41,10 @@ const opinionApi = {
   },
   getInteractType(){
     return http.get(baseUrl + '/interact/getInteractType', null)
+  },
+
+  saveInteractGrade(data) {
+    return http.post(baseUrl + 'interact/grade', data)
   }
 
 

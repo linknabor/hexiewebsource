@@ -41,7 +41,7 @@
         </div>
       </div>
 
-      <div class="pt15">
+      <div class="pt15" v-if="comment.comment_content != ''">
         {{ comment.comment_content }}
       </div>
 
@@ -173,7 +173,6 @@
         this.show = true
         let param = {
           commentId: comment.comment_id,
-          interactId: comment.parent_id
         }
         opinionApi.delComment(param).then((response) => {
           let data = response.data
@@ -189,6 +188,10 @@
       async saveComment() {
         if (!this.commentContent) {
           Toast.fail("回复内容不为空");
+          return;
+        }
+        if(this.commentContent.length > 100) {
+          Toast.fail("回复内容过长");
           return;
         }
         this.show = true

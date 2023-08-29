@@ -39,14 +39,14 @@
           <textarea class="address-text" @blur="fixScroll" placeholder="输入公共部位地址" v-model="pubAddress">
           </textarea>
         </div>
-		<span style="color:red">如：3号楼1楼大厅<span>
+		  <span style="color:red">如：3号楼1楼大厅</span>
       </div>
-      
+
       <div class="custom_menu">
         <div class="wenti">
           问题描述
         </div>
-        
+
         <div>
           <textarea class="text" @blur="fixScroll" placeholder="输入问题描述内容..." v-model="memo">
           </textarea>
@@ -345,7 +345,7 @@ export default {
            }else {
                if(regionType==1) {
                    if(vm.submitAddress.provinceId!=regionId || city.length ==0) {
-                     vm.getRegions(2,regionId)  
+                     vm.getRegions(2,regionId)
                    }else {
                        vm.regions=vm.citys;
                    }
@@ -365,7 +365,7 @@ export default {
                     vm.submitAddress.county=regionName;
                     vm.submitAddress.countyId=regionId;
                     vm.distinct=vm.submitAddress.province+vm.submitAddress.city+vm.submitAddress.county;
-                    vm.currentRegionType=1;  
+                    vm.currentRegionType=1;
                     vm.selectRegion="false";
                }
            }
@@ -408,9 +408,9 @@ export default {
             this.showOverlay = false
             Dialog({message: '报修失败,请重试'})
           }
-          
+
         }
-      }).catch(()=>{ 
+      }).catch(()=>{
         this.showOverlay = false
         Dialog({message: '报修失败,请重试'})
       })
