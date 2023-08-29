@@ -9,7 +9,7 @@
             <div class="ov">
               <div><img class="fl thread-picture" :src="interact.user_head"/></div>
               <div class="thread_user_name">
-                <van-cell style="padding: 0" :title="interact.user_name" :label="interact.sect_name"/>
+                <van-cell style="padding: 0" :title="interact.user_name" title-class="custom-title" :label="interact.sect_name" label-class="custom-label"/>
               </div>
             </div>
             <div class="pt15" @click="gotoDetail(interact.interact_id)">
@@ -163,8 +163,18 @@
     min-height: 100vh;
     height: auto;
     overflow: hidden;
+    font-size: 16px;
   }
 
+  .custom-title{
+    margin: 0;
+    font-size: 15px;
+  }
+
+  .custom-label{
+    margin: 0;
+    font-size: 13px;
+  }
   .pictures {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
@@ -183,7 +193,7 @@
   .thread-picture {
     width: 42px;
     height: 42px;
-    margin-right: 10px;
+    margin-right: 8px;
     border-radius: 10px;
   }
 
@@ -207,23 +217,26 @@
     padding: 5px 5px 10px 50px;
     word-wrap: break-word;
     overflow: hidden;
-    font-size: 13px;
+    font-size: 15px;
     height: auto;
     min-height: 20px;
     line-height: 20px;
+    font-weight: 400;
   }
 
   .threadDate {
-    font-size: 12px;
+    font-size: 13px;
     color: #a6937c;
     width: 100%;
     padding-left: 50px;
     margin-top: 10px;
+    font-weight: 400;
   }
 
   .threadCount {
     float: right;
-    padding-right: 60px;
+    padding-right: 80px;
+    font-size: 13px;
   }
 
   .pull-btn {

@@ -7,7 +7,7 @@
       <div class="ov">
         <div><img class="fl thread-picture" :src="interact.user_head"/></div>
         <div class="thread_user_name">
-          <van-cell style="padding: 0" :title="interact.user_name" :label="interact.sect_name" />
+          <van-cell style="padding: 0" :title="interact.user_name" title-class="custom-title" :label="interact.sect_name" label-class="custom-label"/>
         </div>
       </div>
 
@@ -33,15 +33,15 @@
     <div id="total_comments" class="comments_title">
       <div class="fl commentsText">评论 {{interact.comments_count}}</div>
     </div>
-    <div class="p15" v-for="(comment,index) in comments">
+    <div class="p151" v-for="(comment,index) in comments">
       <div class="ov">
         <div><img class="fl thread-picture" :src="comment.comment_user_head"/></div>
         <div class="thread_user_name">
-          <van-cell style="padding: 10px 0 5px 1px" :title="comment.comment_user_name" />
+          <van-cell style="padding: 1px 0 5px 1px" :title="comment.comment_user_name" />
         </div>
       </div>
 
-      <div class="pt15" v-if="comment.comment_content != ''">
+      <div class="pt151" v-if="comment.comment_content != ''">
         {{ comment.comment_content }}
       </div>
 
@@ -57,7 +57,7 @@
           <div @click="delComment(comment,index)">删除</div>
         </div>
       </div>
-      <div>&nbsp;</div>
+      <div style="height: 35px;">&nbsp;</div>
     </div>
     <div style="height: 150px">&nbsp;</div>
 
@@ -66,7 +66,7 @@
         <textarea name="comment_content" class="comment_input" placeholder="发表评论" v-model="commentContent"></textarea>
         <div class="submit-btn" @click="saveComment" style="width:20%; color: white;">发送</div>
         <div class="loadImg">
-          <van-uploader v-model="fileList" :before-delete="delImgs" :max-count="3"/>
+          <van-uploader v-model="fileList" :before-delete="delImgs" :max-count="3" preview-size="70px" upload-text="拍照上传"/>
         </div>
       </div>
     </div>
@@ -124,8 +124,7 @@
         setTimeout(() => {
           this.interactDetail();
           this.getCommentList();
-          this.show = false
-        }, 2000);
+        }, 1000);
       },
 
       interactDetail() {
@@ -150,6 +149,7 @@
             this.comments = data.result;
           }
         })
+        this.show = false
       },
 
       delInteract() {
@@ -263,12 +263,28 @@
     min-height: 100vh;
     height: auto;
     overflow: hidden;
+    font-size: 16px;
+  }
+
+  .custom-title{
+    margin: 0;
+    font-size: 15px;
+  }
+
+  .custom-label{
+    margin: 0;
+    font-size: 13px;
   }
 
   .p15 {
     padding: 5px 15px;
     font-size: 13px;
-    border-bottom: 1px solid #EBEDF0;
+  }
+
+  .p151 {
+    padding: 5px 15px;
+    font-size: 13px;
+    border-bottom: 1px solid #eff0f4;
   }
 
   .ov {
@@ -279,7 +295,7 @@
   .thread-picture {
     width: 42px;
     height: 42px;
-    margin-right: 10px;
+    margin-right: 8px;
     border-radius: 10px;
   }
 
@@ -292,10 +308,23 @@
     padding: 5px 5px 10px 50px;
     word-wrap: break-word;
     overflow: hidden;
-    font-size: 13px;
+    font-size: 15px;
     height: auto;
     min-height: 20px;
     line-height: 20px;
+    font-weight: 400;
+  }
+
+  .pt151 {
+    padding: 5px 5px 10px 50px;
+    word-wrap: break-word;
+    overflow: hidden;
+    font-size: 15px;
+    height: auto;
+    min-height: 20px;
+    line-height: 20px;
+    margin-top: -20px;
+    font-weight: 400;
   }
 
   .pictures {
@@ -314,22 +343,23 @@
   }
 
   .threadDate {
-    font-size: 12px;
+    font-size: 13px;
     color: #a6937c;
     width: 100%;
     padding-left: 50px;
     padding-top: 10px;
     line-height: 20px;
     padding-bottom: 5px;
+    font-weight: 400;
   }
 
   .threadCount {
     float: right;
-    padding-right: 60px;
+    padding-right: 80px;
   }
 
   .comments_title {
-    margin: 15px 4% 0 4%;
+    margin: 10px 4% 0 4%;
     height: 15px;
     border-bottom: 1px solid #d4cfc8;
     padding-bottom: 5px;
@@ -337,7 +367,8 @@
 
   .commentsText {
     line-height: 15px;
-    color: #888
+    color: #888;
+    font-size: 13px;
   }
 
   .butt {
@@ -397,5 +428,9 @@
     position: absolute;
     top: 50%;
     left: 45%;
+  }
+
+  .van-uploader__upload{
+    background-color: #ebedf0 !important;
   }
 </style>
