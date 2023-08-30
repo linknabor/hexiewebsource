@@ -2,15 +2,15 @@
   <div class="main" v-show="showMore">
     <van-notice-bar left-icon="flower-o">提交评价或建议，为本次处理结果打分。</van-notice-bar>
     <div class="css-head">
-      <van-cell-group title="我的投诉建议" style="font-size: 16px">
+      <van-cell-group title="我的投诉建议" :border="false">
         <van-cell :title="interactInfo.ex_content" title-class="css-cell-title"/>
       </van-cell-group>
     </div>
     <div class="css-grade">
-      <van-cell-group title="您对本次处理满意吗？">
+      <van-cell-group title="您对本次处理满意吗？" :border="false">
         <div style="text-align: center;margin: 30px 50px">
           <van-rate :readonly="isAssess" v-model="interactInfo.grade" size="30px" @change="onChangeRate"/>
-          <span style="position: relative;top: -3px;left: 15px">{{ rateTex }}</span>
+          <span style="position: relative;top: -8px;left: 15px;font-size: 16px">{{ rateTex }}</span>
         </div>
 
         <van-field :readonly="isAssess" v-model="interactInfo.feedback" clearable
