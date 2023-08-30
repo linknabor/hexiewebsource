@@ -327,7 +327,7 @@
     height: auto;
     min-height: 20px;
     line-height: 20px;
-    margin-top: -30px;
+    margin-top: -25px;
     font-weight: 400;
   }
 

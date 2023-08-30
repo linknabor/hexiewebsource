@@ -8,8 +8,8 @@
     </div>
     <div class="css-grade">
       <van-cell-group title="您对本次处理满意吗？">
-        <div style="text-align: center;margin: 20px 50px">
-          <van-rate :readonly="isAssess" v-model="interactInfo.grade" size="25px" @change="onChangeRate"/>
+        <div style="text-align: center;margin: 30px 50px">
+          <van-rate :readonly="isAssess" v-model="interactInfo.grade" size="30px" @change="onChangeRate"/>
           <span style="position: relative;top: -3px;left: 15px">{{ rateTex }}</span>
         </div>
 
@@ -62,7 +62,7 @@
           if (data && data.success) {
             this.interactInfo = data.result;
             this.showMore = true;
-            if (this.interactInfo.grade) {
+            if (this.interactInfo.grade && this.interactInfo.grade !== 0) {
               this.isAssess = true;
               this.onChangeRate(this.interactInfo.grade);
             }
