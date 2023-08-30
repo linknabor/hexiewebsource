@@ -168,19 +168,20 @@
 
   .custom-title{
     margin: 0;
-    font-size: 15px;
+    font-size: 16px;
+    color: #606784;
   }
 
   .custom-label{
     margin: 0;
-    font-size: 13px;
+    font-size: 14px;
   }
   .pictures {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+    grid-template-columns: 1fr 1fr 1fr;
     grid-auto-rows: 90px;
     grid-gap: 5px;
-    margin-left: 50px;
+    margin-left: 55px;
   }
 
   .pictures img {
@@ -191,10 +192,10 @@
   }
 
   .thread-picture {
-    width: 42px;
-    height: 42px;
-    margin-right: 8px;
-    border-radius: 10px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 5px;
   }
 
   .thread_user_name {
@@ -214,10 +215,10 @@
   }
 
   .pt15 {
-    padding: 5px 5px 10px 50px;
+    padding: 5px 5px 10px 55px;
     word-wrap: break-word;
     overflow: hidden;
-    font-size: 15px;
+    font-size: 16px;
     height: auto;
     min-height: 20px;
     line-height: 20px;

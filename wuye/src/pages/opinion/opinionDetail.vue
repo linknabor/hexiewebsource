@@ -22,10 +22,8 @@
 
       <div class="threadDate">
         <van-icon name="underway-o" size="14px" style="position: relative;top: 2px"/>
-        &nbsp;{{ interact.formattedDateTime }}
-        <div class="threadCount" style="text-align: right;" v-show="interact.isThreadOwner === 'true'">
-          <div @click="delInteract">删除</div>
-        </div>
+        {{ interact.formattedDateTime }}
+        <van-icon v-show="interact.isThreadOwner === 'true'" name="delete-o" size="16px" color="#606784" style="position: relative;left: 15px;top: 3px" @click="delInteract"/>
       </div>
     </div>
 
@@ -37,7 +35,7 @@
       <div class="ov">
         <div><img class="fl thread-picture" :src="comment.comment_user_head"/></div>
         <div class="thread_user_name">
-          <van-cell style="padding: 1px 0 5px 1px" :title="comment.comment_user_name" />
+          <van-cell style="padding: 1px 0 5px 1px" :title="comment.comment_user_name" title-class="custom-title"/>
         </div>
       </div>
 
@@ -52,10 +50,8 @@
 
       <div class="fl threadDate">
         <van-icon name="underway-o" size="14px" style="position: relative;top: 2px"/>
-        &nbsp;{{ comment.fmtCommentDateTime }}
-        <div class="threadCount" style="text-align: right;" v-show="comment.isCommentOwner === 'true'">
-          <div @click="delComment(comment,index)">删除</div>
-        </div>
+        {{ comment.fmtCommentDateTime }}
+        <van-icon v-show="comment.isCommentOwner === 'true'" name="delete-o" size="16px" color="#606784" style="position: relative;left: 15px;top: 3px" @click="delComment(comment,index)"/>
       </div>
       <div style="height: 35px;">&nbsp;</div>
     </div>
@@ -78,7 +74,7 @@
 
 <script>
   import opinionApi from "@/api/OpinionApi.js";
-  import {ImagePreview, Toast, Uploader, Overlay, Loading, Dialog, Cell, Image, Icon, Field, Button} from 'vant'
+  import {ImagePreview, Toast, Uploader, Overlay, Loading, Dialog, Cell, Image, Icon, Field, Button, SwipeCell} from 'vant'
   import UserInfo from "@/components/UserInfo";
 
   export default {
@@ -108,6 +104,7 @@
       [Icon.name]: Icon,
       [Field.name]: Field,
       [Button.name]: Button,
+      [SwipeCell.name]: SwipeCell,
       "user-info": UserInfo,
     },
     mounted() {
@@ -182,7 +179,7 @@
           let data = response.data
           if (data && data.success) {
             this.comments.splice(index, 1);
-            this.interact.comments_count = this.interact.comments_count - 1;
+            this.interact.comments_count = this.comments.length;
           } else {
             Toast("删除回复信息失败，请重试！")
           }
@@ -228,7 +225,7 @@
             this.commentContent = '';
             this.fileList = [];
             this.attachmentUrl = [];
-            this.interact.comments_count = this.interact.comments_count + 1;
+            this.interact.comments_count = this.comments.length;
           } else {
             Toast.fail("发布信息保存失败，请重试！")
           }
@@ -274,12 +271,13 @@
 
   .custom-title{
     margin: 0;
-    font-size: 15px;
+    font-size: 16px;
+    color: #606784;
   }
 
   .custom-label{
     margin: 0;
-    font-size: 13px;
+    font-size: 14px;
   }
 
   .p15 {
@@ -299,10 +297,10 @@
   }
 
   .thread-picture {
-    width: 42px;
-    height: 42px;
-    margin-right: 8px;
-    border-radius: 10px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 5px;
   }
 
   .thread_user_name {
@@ -311,10 +309,10 @@
   }
 
   .pt15 {
-    padding: 5px 5px 10px 50px;
+    padding: 5px 5px 10px 55px;
     word-wrap: break-word;
     overflow: hidden;
-    font-size: 15px;
+    font-size: 16px;
     height: auto;
     min-height: 20px;
     line-height: 20px;
@@ -322,23 +320,23 @@
   }
 
   .pt151 {
-    padding: 5px 5px 10px 50px;
+    padding: 5px 5px 10px 55px;
     word-wrap: break-word;
     overflow: hidden;
-    font-size: 15px;
+    font-size: 16px;
     height: auto;
     min-height: 20px;
     line-height: 20px;
-    margin-top: -20px;
+    margin-top: -30px;
     font-weight: 400;
   }
 
   .pictures {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+    grid-template-columns: 1fr 1fr 1fr;
     grid-auto-rows: 90px;
     grid-gap: 5px;
-    margin-left: 50px;
+    margin-left: 55px;
   }
 
   .pictures img {

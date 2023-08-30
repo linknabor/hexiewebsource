@@ -12,7 +12,7 @@
       </van-cell-group>
 
       <van-cell-group title="内容类型">
-        <van-field readonly clickable label="选择类型" is-link :value="ex_type_cn"
+        <van-field readonly required clickable label="选择类型" is-link :value="ex_type_cn"
           placeholder="点击选择类型" @click="showPicker = true"/>
       </van-cell-group>
 
@@ -29,7 +29,7 @@
 
       <van-cell-group title="上传照片">
         <div style="padding: 5px 15px">
-          <van-uploader v-model="fileList" :before-delete="delImgs"/>
+          <van-uploader upload-text="上传照片" v-model="fileList" :before-delete="delImgs"/>
         </div>
       </van-cell-group>
 

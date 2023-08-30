@@ -2,23 +2,18 @@
   <div class="main" v-show="showMore">
     <van-notice-bar left-icon="flower-o">提交评价或建议，为本次处理结果打分。</van-notice-bar>
     <div class="css-head">
-      <van-cell-group title="我的投诉建议">
-        <van-cell :title="interactInfo.ex_content"/>
+      <van-cell-group title="我的投诉建议" style="font-size: 16px">
+        <van-cell :title="interactInfo.ex_content" title-class="css-cell-title"/>
       </van-cell-group>
     </div>
     <div class="css-grade">
       <van-cell-group title="您对本次处理满意吗？">
         <div style="text-align: center;margin: 20px 50px">
-          <van-button :disabled="isAssess" class="vio-grade" :class="{'active' : interactInfo.grade === '0'}"
-                      @click="clickGrade('0')">不满意
-          </van-button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <van-button :disabled="isAssess" class="vio-grade next" :class="{'active' : interactInfo.grade === '1'}"
-                      @click="clickGrade('1')">
-            满意
-          </van-button>
+          <van-rate :readonly="isAssess" v-model="interactInfo.grade" size="25px" @change="onChangeRate"/>
+          <span style="position: relative;top: -3px;left: 15px">{{ rateTex }}</span>
         </div>
 
-        <van-field v-show="showDesc" :readonly="isAssess" v-model="interactInfo.feedback" class="desc_input" clearable
+        <van-field :readonly="isAssess" v-model="interactInfo.feedback" clearable
                    type="textarea" maxlength="100"
                    show-word-limit placeholder="说点什么..."/>
       </van-cell-group>
@@ -31,7 +26,7 @@
 
 <script>
   import opinionApi from "@/api/OpinionApi.js";
-  import {Cell, CellGroup, NoticeBar, Button, Field, Dialog, Toast} from 'vant';
+  import {Cell, CellGroup, NoticeBar, Button, Field, Dialog, Toast, Rate} from 'vant';
 
   export default {
     name: "opinionScore",
@@ -42,6 +37,7 @@
         showDesc: false,
         isAssess: false,
         showMore: false,
+        rateTex: '',
       }
     },
     components: {
@@ -50,8 +46,8 @@
       [NoticeBar.name]: NoticeBar,
       [Button.name]: Button,
       [Field.name]: Field,
-      [Dialog.name]: Dialog,
       [Toast.name]: Toast,
+      [Rate.name]: Rate,
     },
     mounted() {
       this.getInteractInfo();
@@ -68,6 +64,7 @@
             this.showMore = true;
             if (this.interactInfo.grade) {
               this.isAssess = true;
+              this.onChangeRate(this.interactInfo.grade);
             }
             if (this.interactInfo.feedback) {
               this.showDesc = true;
@@ -75,13 +72,17 @@
           }
         })
       },
-      clickGrade(score) {
-        this.interactInfo.grade = score;
-        if ('0' === score) {
-          this.showDesc = true;
-        } else {
-          this.showDesc = false;
-          this.interactInfo.feedback = '';
+      onChangeRate(value) {
+        if (1 === value) {
+          this.rateTex = "非常差";
+        } else if (2 === value) {
+          this.rateTex = "差";
+        } else if (3 === value) {
+          this.rateTex = "一般";
+        } else if (4 === value) {
+          this.rateTex = "满意";
+        } else if (5 === value) {
+          this.rateTex = "非常满意";
         }
       },
       saveGrade() {
@@ -90,13 +91,20 @@
         }).then(() => {
           let param = {
             interactId: this.interactId,
-            grade: this.interactId.grade,
+            grade: this.interactInfo.grade,
             feedback: this.interactInfo.feedback
           }
           opinionApi.saveInteractGrade(param).then((response) => {
             let data = response.data
+            console.log(data && data.success)
             if (data && data.success) {
               this.interactInfo = data.result;
+              if (this.interactInfo.grade) {
+                this.isAssess = true;
+              }
+              if (this.interactInfo.feedback) {
+                this.showDesc = true;
+              }
             } else {
               Toast.fail(data.message)
             }
@@ -142,22 +150,6 @@
     padding-left: 20px;
   }
 
-  .vio-grade {
-    width: 80px;
-    height: 35px;
-    background-color: #DCDEE0;
-  }
-
-  .vio-grade.active {
-    color: white;
-    border: 1px solid var(--primary-color);
-    background-color: var(--primary-color);
-  }
-
-  textarea {
-    background: #F2F3F5 !important;
-  }
-
   .submit-btn {
     position: absolute;
     bottom: 20px;
@@ -166,5 +158,13 @@
     border-radius: 20px;
     border: 0;
     background-color: var(--primary-color);
+  }
+
+  .van-cell-group__title{
+    font-size: 16px;
+  }
+
+  .css-cell-title{
+    font-size: 15px;
   }
 </style>
