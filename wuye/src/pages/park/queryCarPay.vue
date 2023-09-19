@@ -163,7 +163,7 @@
   .data-detail {
     background-color: white;
     margin: 0.2rem 0.1rem;
-    height: 3.3rem;
+    height: 3.8rem;
     border-radius: 0.3rem;
   }
 
