@@ -20,6 +20,8 @@
     </div>
 
     <van-button v-if="!isAssess" type="primary" block class="submit-btn" @click="saveGrade">提交</van-button>
+
+    <user-info @getUserInfo="getUserInfo"></user-info>
   </div>
 </template>
 
@@ -27,6 +29,7 @@
 <script>
   import opinionApi from "@/api/OpinionApi.js";
   import {Cell, CellGroup, NoticeBar, Button, Field, Dialog, Toast, Rate} from 'vant';
+  import UserInfo from "@/components/UserInfo";
 
   export default {
     name: "opinionScore",
@@ -38,6 +41,7 @@
         isAssess: false,
         showMore: false,
         rateTex: '',
+        userInfo: {},
       }
     },
     components: {
@@ -48,11 +52,15 @@
       [Field.name]: Field,
       [Toast.name]: Toast,
       [Rate.name]: Rate,
+      "user-info": UserInfo,
     },
     mounted() {
       this.getInteractInfo();
     },
     methods: {
+      getUserInfo(result) {
+        this.userInfo = result;
+      },
       getInteractInfo() {
         let param = {
           interactId: this.interactId,
