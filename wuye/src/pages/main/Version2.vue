@@ -446,7 +446,7 @@ export default ({
     // height: 3rem;
     border-radius: 0.16rem;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     flex-wrap: wrap;
     
 }
@@ -466,6 +466,7 @@ export default ({
     justify-content: center;
     align-self: center;
     padding: 0.15rem 0 0.25rem 0;
+    margin-left: 0.05rem;
 }
 
 .icons {
