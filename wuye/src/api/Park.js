@@ -4,8 +4,8 @@ import Config from '@/util/config.js'
 let baseUrl = Config.baseUrl
 const ParkApi = {
 
-  getIndexCar() {
-    return http.get(baseUrl + '/park/getIndexCar', null)
+  getIndexCar(param) {
+    return http.get(baseUrl + '/park/getIndexCar', param)
   },
 
   getParkList(param) {

@@ -2,7 +2,7 @@
 
   <div class="main">
     <van-overlay :show="show_overlay">
-      <van-loading type="spinner" />
+      <van-loading type="spinner"/>
     </van-overlay>
     <van-skeleton title :row="3" :loading="loading">
       <div v-if="showFlag">
@@ -14,17 +14,18 @@
             <div class="data-park-left">停车场:</div>
             <div class="data-park-right" @click="goMap">
               <van-icon name="location"/>
-              <span class="data-park-txt">{{selectParkName}}</span>
+              <span class="data-park-txt">{{ selectParkName }}</span>
               <van-icon name="arrow"/>
             </div>
             <div style="clear:both"></div>
           </div>
 
-            <plateNumber @getPlateLicense="getPlateLicense" :mat="formData" :butName="butName" :isShowCheck="0"></plateNumber>
+          <plateNumber @getPlateLicense="getPlateLicense" :mat="formData" :butName="butName"
+                       :isShowCheck="0"></plateNumber>
 
           <div>
             <div class="carList" v-for="(item, index) in carList" :key="index" @click="clickCar(item.car_no)">
-              {{item.car_no}} >
+              {{ item.car_no }} >
             </div>
           </div>
 
@@ -40,7 +41,7 @@
         <div class="data-bottom">
           <div class="data-bottom-title">计费规则：</div>
           <div class="data-bottom-text" v-for="(item, index) in ruleList" :key="index">
-            <span>. {{item.ruleName}}</span>
+            <span>. {{ item.ruleName }}</span>
           </div>
         </div>
       </div>
@@ -60,7 +61,8 @@
                   @load="onLoad"
         >
           <div v-for="(item, index) in parkList" :key="index">
-            <van-cell :title="item.park_name" icon="location-o" :label="item.park_addr" center is-link @click="checkCell(item)"/>
+            <van-cell :title="item.park_name" icon="location-o" :label="item.park_addr" center is-link
+                      @click="checkCell(item)"/>
           </div>
         </van-list>
       </div>
@@ -90,23 +92,26 @@
   import UserApi from "@/api/api.js"
   import ParkApi from "@/api/Park.js"
   import Storage from "@/util/storage.js"
+  import {Base64} from 'js-base64'
 
   export default {
     name: "indexCar",
     data() {
       return {
+        oriParam: this.$route.query.param,
+        oriParkId: '',
         show_overlay: true,
         loading: true,
         showFlag: true,
         searchValue: '',
         listLoading: false,
         finished: false,
-        butName:'查询缴费',
+        butName: '查询缴费',
 
-        addCarImg:require('../../assets/img/addcar.png'),
-        queryCarImg:require('../../assets/img/querycar.png'),
+        addCarImg: require('../../assets/img/addcar.png'),
+        queryCarImg: require('../../assets/img/querycar.png'),
 
-        formData:{
+        formData: {
           commonCard: '1',
           num0: '',
           num1: '',
@@ -118,18 +123,18 @@
           num7: ''
         },
 
-        selectCarNo:'',
+        selectCarNo: '',
 
-        selectParkId:'',
-        selectParkName:'',
+        selectParkId: '',
+        selectParkName: '',
 
-        carList:[],
+        carList: [],
 
-        parkInfo:'',
+        parkInfo: '',
 
-        parkList:[],
+        parkList: [],
 
-        ruleList:[],
+        ruleList: [],
       }
     },
     components: {
@@ -157,7 +162,8 @@
     mounted() {
       this.show_overlay = true
       this.loading = true
-      //this.initSession4Test()
+      this.getParam()
+      this.initSession4Test()
       this.getUserInfo()
       this.initCar()
       this.loading = false
@@ -168,37 +174,64 @@
         var data = {
           oriApp: "wx95f46f41ca5e570e",
         };
-        UserApi.login("8456", data)
+        UserApi.login("163275", data)
       },
 
       getUserInfo() {
         UserApi.getUserInfo().then((response) => {
-            let data = response.data;
-            if (data.success && data.result != null) {
-              Storage.set("userInfo", data.result)
-              this.$emit("getUserInfo", data.result)
-            } else {
-              this.$refs.userLogin.login();
-            }
-          })
+          let data = response.data;
+          if (data.success && data.result != null) {
+            Storage.set("userInfo", data.result)
+            this.$emit("getUserInfo", data.result)
+          } else {
+            this.$refs.userLogin.login();
+          }
+        })
           .catch((error) => {
             Toast(error);
           });
       },
 
+      getParam() {
+        if(this.oriParam === undefined) {
+          return;
+        }
+        let theRequest = {};
+        let param = Base64.decode(this.oriParam);
+        let params = param.split("&");
+        for (let i = 0; i < params.length; i++) {
+          theRequest[params[i].split("=")[0]] = decodeURI(params[i].split("=")[1]);
+        }
+        if(theRequest.parkId !== '' && theRequest.parkId !== undefined) {
+          this.oriParkId = theRequest.parkId;
+        }
+      },
+
       initCar() {
-        ParkApi.getIndexCar().then((response) => {
+        if (this.oriParkId === undefined) {
+          this.oriParkId = "";
+        }
+        let param = {
+          parkId: this.oriParkId
+        }
+        ParkApi.getIndexCar(param).then((response) => {
           let data = response.data
-          if(data && data.success) {
+          if (data && data.success) {
             this.carList = data.result.carList
             this.parkInfo = data.result.parkInfo
             this.selectParkName = this.parkInfo.park_name;
             this.selectParkId = this.parkInfo.park_id;
             this.ruleList = this.parkInfo.ruleList
-            if(this.carList.length > 0) {
-              let car_no = this.carList[0].car_no
-              this.clickCar(car_no)
-            }
+
+            // if (this.carList.length > 0) {
+            //   let car_no = this.carList[0].car_no
+            //   this.carList.forEach((item,index)=>{
+            //     if(item.is_default === '1') {
+            //       car_no = item.car_no
+            //     }
+            //   })
+            //   this.clickCar(car_no)
+            // }
           }
         })
       },
@@ -223,7 +256,7 @@
         }
         ParkApi.getParkList(param).then((response) => {
           let data = response.data
-          if(data && data.success) {
+          if (data && data.success) {
             this.parkList = data.result
           }
           this.show_overlay = false
@@ -249,13 +282,13 @@
       clickCar(car_no) {
         this.selectCarNo = car_no
         var strs = car_no.split("")
-        if(strs.length === 7) {
-          this.formData.commonCard ='1'
+        if (strs.length === 7) {
+          this.formData.commonCard = '1'
         } else {
-          this.formData.commonCard ='2'
+          this.formData.commonCard = '2'
         }
-        for(var i=0; i<strs.length; i++) {
-          this.formData['num'+i] = strs[i]
+        for (var i = 0; i < strs.length; i++) {
+          this.formData['num' + i] = strs[i]
         }
       },
 

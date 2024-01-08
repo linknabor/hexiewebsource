@@ -89,7 +89,6 @@
       this.getPayInfo()
     },
     methods: {
-
       reTime() {
         time++
         this.newDate = this.formatOutput()
@@ -131,7 +130,7 @@
           let data = response.data
           if (data && data.success) {
             this.obj = data.result
-            time = this.obj.park_time / 1000 || parseInt(Math.random() * 3600)
+            time = this.obj.park_time
             this.reTime()
           }
           this.show_overlay = false
@@ -146,7 +145,8 @@
         this.show_overlay = true
         let param = {
           car_no: this.carNo,
-          park_id: this.parkId
+          park_id: this.parkId,
+          record_id: this.obj.record_id
         }
         ParkApi.getPrePaying(param).then((response) => {
           let data = response.data

@@ -252,7 +252,7 @@ const router= new VueRouter({
         name:'queryCarPay',
         component:resolve=> require(['@/pages/park/queryCarPay'],resolve),
         meta:{
-          title:'停车费记录'
+          title:'停车记录'
         }
       },
       {
@@ -261,14 +261,6 @@ const router= new VueRouter({
         component:resolve=> require(['@/pages/park/addCar'],resolve),
         meta:{
           title:'添加车牌'
-        }
-      },
-      {
-        path:'/queryCarList',
-        name:'queryCarList',
-        component:resolve=> require(['@/pages/park/queryCarList'],resolve),
-        meta:{
-          title:'车辆信息'
         }
       },
       {

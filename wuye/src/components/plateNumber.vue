@@ -2,28 +2,10 @@
   <div id="page">
     <div class="wrap">
       <div class="radio-box">
-        <label class="flex-items-center">
-          <img v-if="formData.commonCard === '1'"
-               src="../assets/images/park/icon_chose_s@2x.png"
-               alt="">
-          <img v-else
-               src="../assets/images/park/icon_chose_n@2x.png"
-               alt="">
-          <input type="radio"
-                 v-model="formData.commonCard"
-                 value="1" />普通车牌
-        </label>
-        <label class="flex-items-center">
-          <img v-if="formData.commonCard === '2'"
-               src="../assets/images/park/icon_chose_s@2x.png"
-               alt="">
-          <img v-else
-               src="../assets/images/park/icon_chose_n@2x.png"
-               alt="">
-          <input type="radio"
-                 v-model="formData.commonCard"
-                 value="2" />新能源车牌
-        </label>
+        <van-radio-group v-model="formData.commonCard" direction="horizontal">
+          <van-radio name="1" checked-color="#ED6A0C">普通车牌</van-radio>
+          <van-radio name="2" checked-color="#ED6A0C">新能源车牌</van-radio>
+        </van-radio-group>
       </div>
       <div class="card-header">车牌号码：</div>
       <div class="num-box">
@@ -42,7 +24,7 @@
 
       <div class="css-checked" v-if="isShowCheck === 1">
         <div class="css-checked-title">设置为默认车辆:</div>
-        <div class="css-checked-button"><van-switch v-model="checked" size="25"/></div>
+        <div class="css-checked-button"><van-switch active-color="#ED6A0C" v-model="formData.is_default" size="25"/></div>
       </div>
 
       <div class="submit-box">
@@ -211,12 +193,11 @@
   </div>
 </template>
 <script>
-  import {Switch} from 'vant';
+  import {Switch, RadioGroup, Radio} from 'vant';
 
   export default {
     data () {
       return {
-        checked: false,
         formData: this.mat,
         allKeyWord: {
           _1: [1, 2, 3, 4, 5, 6, 7],
@@ -245,6 +226,8 @@
     },
     components: {
       [Switch.name]: Switch,
+      [RadioGroup.name]: RadioGroup,
+      [Radio.name]: Radio,
     },
     methods: {
       clickFirstWrap () {
@@ -307,7 +290,7 @@
             return
           }
         }
-        this.$emit('getPlateLicense',plateLicense, this.checked)
+        this.$emit('getPlateLicense',plateLicense, this.formData.is_default)
       },
       palindrome (str) {
         let arr = str.split('');
@@ -472,11 +455,7 @@
         border-radius: 0.25rem;
         font-size: 0.3rem;
         margin-top: 0.4rem;
-        background: linear-gradient(
-          320deg,
-          rgba(74, 144, 226, 1) 0%,
-          rgba(101, 172, 248, 1) 100%
-        );
+        background: #ED6A0C;
         border: 0;
         color: #fff;
       }
