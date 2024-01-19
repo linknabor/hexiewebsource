@@ -44,6 +44,10 @@
             <span>. {{ item.ruleName }}</span>
           </div>
         </div>
+
+        <div style="margin-top: -1.2rem;text-align: center;font-size: 0.3rem;color: blue;">
+          <van-icon name="info-o" style="position: relative;top: 0.05rem" /><span @click="queryBillCar">交包月停车费？</span>
+        </div>
       </div>
 
       <div id="mapList" v-if="!showFlag">
@@ -298,6 +302,15 @@
 
       queryPay() {
         this.$router.push('/queryCarPay');
+      },
+
+      queryBillCar() {
+        this.$router.push({
+          path: '/queryBillCar',
+          query: {
+            parkId: this.selectParkId
+          }
+        })
       },
 
       getLoginUser(data) {
