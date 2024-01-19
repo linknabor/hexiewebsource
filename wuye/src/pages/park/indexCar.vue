@@ -167,7 +167,7 @@
       this.show_overlay = true
       this.loading = true
       this.getParam()
-      this.initSession4Test()
+      //this.initSession4Test()
       this.getUserInfo()
       this.initCar()
       this.loading = false
