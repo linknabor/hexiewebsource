@@ -127,7 +127,11 @@
       },
 
       onNeedInvoice() {
-        this.invoiceTitleType = '01';
+        if(this.needInvoice === '0') {
+          this.invoiceTitleType = '';
+        } else {
+          this.invoiceTitleType = '01';
+        }
         this.invoiceTitle = '';
         this.creditCode ='';
         this.errorTitle = '';
