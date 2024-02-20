@@ -155,16 +155,19 @@
           }
         }
 
-        this.$router.push({
-          path: '/carBillPaying',
-          query: {
-            invoiceTitleType : this.invoiceTitleType,
-            creditCode : this.creditCode,
-            invoiceTitle : this.invoiceTitle,
-            billIds : this.billIds,
-            reduceMode: this.reduceMode,
-          }
-        })
+        window.location.href = this.basePageUrl + "parkBillPay.html?invoiceTitleType=" + this.invoiceTitleType + "&creditCode=" + this.creditCode
+          + "&invoiceTitle=" + this.invoiceTitle + "&billIds=" + this.billIds + "&reduceMode=" + this.reduceMode
+
+        // this.$router.push({
+        //   path: '/carBillPaying',
+        //   query: {
+        //     invoiceTitleType : this.invoiceTitleType,
+        //     creditCode : this.creditCode,
+        //     invoiceTitle : this.invoiceTitle,
+        //     billIds : this.billIds,
+        //     reduceMode: this.reduceMode,
+        //   }
+        // })
       }
     }
   }
