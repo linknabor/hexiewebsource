@@ -226,16 +226,6 @@
             this.selectParkName = this.parkInfo.park_name;
             this.selectParkId = this.parkInfo.park_id;
             this.ruleList = this.parkInfo.ruleList
-
-            // if (this.carList.length > 0) {
-            //   let car_no = this.carList[0].car_no
-            //   this.carList.forEach((item,index)=>{
-            //     if(item.is_default === '1') {
-            //       car_no = item.car_no
-            //     }
-            //   })
-            //   this.clickCar(car_no)
-            // }
           }
         })
       },
@@ -243,13 +233,14 @@
         this.finished = true
       },
       getPlateLicense(data, checked) {
-        this.$router.push({
-          path: '/carPay',
-          query: {
-            carNo: data,
-            parkId: this.selectParkId
-          }
-        })
+        window.location.href = this.basePageUrl + "parkPay.html?carNo=" + data + "&parkId=" + this.selectParkId
+        // this.$router.push({
+        //   path: '/carPay',
+        //   query: {
+        //     carNo: data,
+        //     parkId: this.selectParkId
+        //   }
+        // })
       },
 
       goMap() {
