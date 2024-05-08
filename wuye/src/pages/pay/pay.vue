@@ -59,7 +59,7 @@
       </mt-tab-container-item>
       <mt-tab-container-item id="b" >
         <!-- 物业缴费开始 -->
-        <div class="btext" v-show="sectId==0 || sectId== null || sectId == 'null'">
+        <div class="btext" v-show="(sectId==0 || sectId== null || sectId == 'null') && showBindHouse">
           <div >业主未绑定房屋,请点击下方"我是业主"前往绑定</div>
           <div class="bhouse" @click="Myhouse">我是业主</div>
         </div>
@@ -155,7 +155,7 @@
             @itemClick="itemClick"
           ></Bill>
         </div>
-        <div style="wdith:100%;height:1.2rem;background:#eee;"></div>
+        <div style="width:100%;height:1.2rem;background:#eee;"></div>
         <div class="btn-fixed" id="st" v-show="showt">
           <div
             v-show="quan"
@@ -378,6 +378,7 @@ export default {
       switchTips: '',
       showSectList: false,
       bindHouList: [],
+      showBindHouse: true,  //是否显示绑定房屋的按钮和提示
     };
   },
   watch: {
@@ -440,6 +441,10 @@ export default {
           const originSelIcon = getComputedStyle(document.documentElement).getPropertyValue('--origin-icon-selected');
           document.documentElement.style.setProperty('--primary-icon-selected', originSelIcon);
         }
+        let ccappid = this.is_config.C('ccappid')
+        if(ccappid == userInfo.appId) {
+          this.showBindHouse = false
+        }
       }
     },
     TabsList() {//获取localstorage中的选项卡
@@ -471,7 +476,7 @@ export default {
             vm.sectId=cookie.get('sectId'); //获取sectid
             vm.cardPayService =cookie.get('cardPayService');
             Storage.set("userInfo", n.result)
-            this.userInfo = n.result
+            vm.userInfo = n.result
             vm.initUser()
           },
           r = function(n) {
