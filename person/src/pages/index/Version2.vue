@@ -63,7 +63,7 @@
             </div>
         </div>
         <div class="options">
-            <div class="option-item">
+            <div class="option-item" v-show="showBindHouse">
                 <div class="option-icon icon-houses"></div>
                 <div class="option-text">我是业主</div>
                 <div class="option-link" @click="queryHouses">绑定房屋<div class="link-chevron"></div></div>
@@ -139,6 +139,7 @@ export default ({
             showOverlay: false,
             showQrCode: false,
             qrCodeStr: '',
+            showBindHouse: true,
         }
     },
     created() {
@@ -163,6 +164,10 @@ export default ({
             this.user = user
             if(this.user && this.user.id) {
                 this.showSkeleton = false
+                let ccappid = this.masterConfig.C('ccappid')
+                if(ccappid == user.appId) {
+                    this.showBindHouse = false
+                }
             }
         },
         shopOrder() {
