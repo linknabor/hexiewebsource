@@ -47,7 +47,7 @@
 }
 .unitinput {
   position: relative;
-  width:93%;
+  width: 93%;
   float: left;
   height: 100%;
   border: none;
@@ -111,7 +111,8 @@
         <div class="sousuo-l" @click="location()">
           <div class="select" id="city">
             <span class="iconfont icon-dingwei iconspan"></span>
-            {{regionname}}</div>
+            {{ regionname }}
+          </div>
         </div>
         <div class="sousuo-r">
           <!-- 查询小区 -->
@@ -139,9 +140,11 @@
         <div
           class="body-b"
           :data-idd="item.id"
-          v-tap="{fn:alertFN,name:item.name,id:item.id}"
-          style="font-size: 0.26rem;color: #5a5a5a;"
-        >{{item.name}}</div>
+          v-tap="{ fn: alertFN, name: item.name, id: item.id }"
+          style="font-size: 0.26rem; color: #5a5a5a"
+        >
+          {{ item.name }}
+        </div>
       </div>
     </div>
   </div>
@@ -151,7 +154,8 @@ let vm;
 let timer;
 import wx from "weixin-js-sdk";
 import "../../tap.js";
-import receiveData from "../../assets/js/receiveData";
+import UserApi from '@/api/api.js'
+import {Dialog} from 'vant'
 
 export default {
   data() {
@@ -163,24 +167,28 @@ export default {
       query: {
         //查询缴费数据
         sect: "", //小区
-      }
-    };
+      },
+      jsApiList: ['getLocation']
+    }
+  },
+  components: {
   },
   created() {
     vm = this;
   },
   mounted() {
     // vm.locationcitys();
-    let url2 = location.href.split("#")[0];
-    var data = {
-                vm:vm,
-                wx:wx,
-                apiList:['getLocation'],
-                url:url2
-            }
-    vm.receiveData.wxconfig(data);
+    // let url2 = location.href.split("#")[0];
+    // var data = {
+    //     vm:vm,
+    //     wx:wx,
+    //     apiList:['getLocation'],
+    //     url:url2
+    // }
+    // vm.receiveData.wxconfig(data);
+    this.initWxConfig()
 
-    vm.city();
+    // vm.city();
     // vm.initSession4Test();
   },
   directives:{
@@ -193,6 +201,55 @@ export default {
       }
   },
   methods: {
+    initWxConfig(){
+      let currPageUrl = location.href.split("#")[0];
+      UserApi.getUrlJsSign({ url: currPageUrl }).then((response) => {
+            let n = response.data
+            let success = n.success
+            if (!success) {
+                return false
+            }
+            let result = n.result  //接口返回的嵌入数据
+            let jsApiList = this.jsApiList
+            wx.config({
+                debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+                appId: result.appId, // 必填，公众号的唯一标识
+                timestamp: result.timestamp, // 必填，生成签名的时间戳
+                nonceStr: result.nonceStr, // 必填，生成签名的随机串
+                signature: result.signature,// 必填，签名，见附录1
+                jsApiList, // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+                openTagList: [],
+            })
+            wx.ready(() => {
+                console.log('weixin init ready.')
+                wx.checkJsApi({
+                  jsApiList,
+                  success: function(res) {
+                    console.log(res)
+                  }
+                })
+                wx.getLocation({
+                  type: "wgs84",
+                  success: function(res) {
+                    let latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+                    let longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+                    vm.getRegionurl(longitude, latitude);
+                    return;
+                  },
+                  fail: function(res) {
+                    console.log(res)
+                  },
+                  cancel: function(res) {
+                    console.log(res)
+                    console.log("用户取消");
+                  }
+                });
+            })
+
+        }).catch((error) => {
+            console.log(error)
+        })
+    },
     initSession4Test() {
       let url = "/initSession4Test/105";
       vm.receiveData.getData(vm, url, "Data", function() {});
