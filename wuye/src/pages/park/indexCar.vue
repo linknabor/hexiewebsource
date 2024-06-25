@@ -1,5 +1,4 @@
 <template>
-
   <div class="main">
     <van-overlay :show="show_overlay">
       <van-loading type="spinner"/>
@@ -10,25 +9,24 @@
           <img src="../../assets/img/park.png">
         </div>
         <div class="data-head">
-          <div>
-            <div class="data-park-left">停车场:</div>
-            <div class="data-park-right" @click="goMap">
-              <van-icon name="location"/>
-              <span class="data-park-txt">{{ selectParkName }}</span>
-              <van-icon name="arrow"/>
-            </div>
-            <div style="clear:both"></div>
-          </div>
+          <van-cell-group>
+            <van-cell title="" :value="selectParkName" value-class="text-val" @click="goMap" is-link>
+              <template #right-icon>
+                <van-icon name="location" size="0.3rem" style="position: relative;top: 0.03rem"/>
+                <span style="font-size: 0.3rem">{{selectParkName}}</span>
+              </template>
+            </van-cell>
+          </van-cell-group>
 
-          <plateNumber @getPlateLicense="getPlateLicense" :mat="formData" :butName="butName"
+          <plateNumber @getPlateLicense="getPlateLicense" :carNumber="carArray" :styleType="1" :butName="butName"
                        :isShowCheck="0"></plateNumber>
-
-          <div>
-            <div class="carList" v-for="(item, index) in carList" :key="index" @click="clickCar(item.car_no)">
-              {{ item.car_no }} >
-            </div>
+          <div style="margin: 0.2rem 0.6rem">
+            <van-row type="flex">
+              <van-col span="8" v-for="(item, index) in carList" :key="index" @click="clickCar(item.car_no)">
+                <van-tag type="primary" size="medium" :color="item.car_no.length===8?'#07C180':''">{{ item.car_no }}</van-tag>
+              </van-col>
+            </van-row>
           </div>
-
         </div>
         <div style="clear:both"></div>
         <div class="data-mid">
@@ -39,10 +37,9 @@
         </div>
 
         <div class="data-bottom">
-          <div class="data-bottom-title">计费规则：</div>
-          <div class="data-bottom-text" v-for="(item, index) in ruleList" :key="index">
-            <span>. {{ item.ruleName }}</span>
-          </div>
+          <van-cell-group title="计费规则">
+            <van-cell style="padding: 0.1rem 0.3rem" icon="info-o" :title="item.ruleName" v-for="(item, index) in ruleList"/>
+          </van-cell-group>
         </div>
 
         <div style="margin-top: -1.2rem;text-align: center;font-size: 0.3rem;color: blue;">
@@ -77,19 +74,8 @@
 
 <script>
   import {
-    Skeleton,
-    Icon,
-    Grid,
-    GridItem,
-    Cell,
-    Search,
-    List,
-    NavBar,
-    Dialog,
-    Switch,
-    Toast,
-    Overlay,
-    Loading
+    Cell, CellGroup, Overlay, Loading,Col,Row,Tag,
+    Skeleton,Icon,Grid,GridItem,Search,List,NavBar,Dialog,Switch,Toast,
   } from 'vant';
   import plateNumber from '@/components/plateNumber'
   import UserLogin from "@/components/UserLogin"
@@ -100,6 +86,27 @@
 
   export default {
     name: "indexCar",
+    components: {
+      "user-login": UserLogin,
+      plateNumber,
+      [Overlay.name]: Overlay,
+      [Loading.name]: Loading,
+      [Skeleton.name]: Skeleton,
+      [CellGroup.name]: CellGroup,
+      [Cell.name]: Cell,
+      [Col.name]: Col,
+      [Row.name]: Row,
+      [Tag.name]: Tag,
+      [Grid.name]: Grid,
+      [GridItem.name]: GridItem,
+      [Icon.name]: Icon,
+      [Search.name]: Search,
+      [List.name]: List,
+      [NavBar.name]: NavBar,
+      [Dialog.Component.name]: Dialog.Component,
+      [Switch.name]: Switch,
+      [Toast.name]: Toast,
+    },
     data() {
       return {
         oriParam: this.$route.query.param,
@@ -110,22 +117,12 @@
         searchValue: '',
         listLoading: false,
         finished: false,
+
         butName: '查询缴费',
+        carArray:[],
 
         addCarImg: require('../../assets/img/addcar.png'),
         queryCarImg: require('../../assets/img/querycar.png'),
-
-        formData: {
-          commonCard: '1',
-          num0: '',
-          num1: '',
-          num2: '',
-          num3: '',
-          num4: '',
-          num5: '',
-          num6: '',
-          num7: ''
-        },
 
         selectCarNo: '',
 
@@ -140,23 +137,6 @@
 
         ruleList: [],
       }
-    },
-    components: {
-      "user-login": UserLogin,
-      [Skeleton.name]: Skeleton,
-      [Icon.name]: Icon,
-      [Grid.name]: Grid,
-      [GridItem.name]: GridItem,
-      [Cell.name]: Cell,
-      [Search.name]: Search,
-      [List.name]: List,
-      [NavBar.name]: NavBar,
-      [Dialog.Component.name]: Dialog.Component,
-      [Switch.name]: Switch,
-      [Overlay.name]: Overlay,
-      [Loading.name]: Loading,
-      [Toast.name]: Toast,
-      plateNumber
     },
     created() {
       setTimeout(() => {
@@ -232,15 +212,12 @@
       onLoad() {
         this.finished = true
       },
-      getPlateLicense(data, checked) {
-        window.location.href = this.basePageUrl + "parkPay.html?carNo=" + data + "&parkId=" + this.selectParkId
-        // this.$router.push({
-        //   path: '/carPay',
-        //   query: {
-        //     carNo: data,
-        //     parkId: this.selectParkId
-        //   }
-        // })
+      getPlateLicense(oper, data, checked) {
+        if('clear' === oper) {
+          this.carArray.splice(0)
+        } else {
+          window.location.href = this.basePageUrl + "parkPay.html?carNo=" + data + "&parkId=" + this.selectParkId
+        }
       },
 
       goMap() {
@@ -273,17 +250,14 @@
       goBack() {
         this.showFlag = true
       },
-
-      clickCar(car_no) {
-        this.selectCarNo = car_no
-        var strs = car_no.split("")
-        if (strs.length === 7) {
-          this.formData.commonCard = '1'
-        } else {
-          this.formData.commonCard = '2'
-        }
-        for (var i = 0; i < strs.length; i++) {
-          this.formData['num' + i] = strs[i]
+      goClear() {
+        this.carArray.splice(0)
+      },
+      clickCar(carNo) {
+        this.goClear()
+        var strs = carNo.split("")
+        for (let i = 0; i < strs.length; i++) {
+          this.$set(this.carArray, i, strs[i])
         }
       },
 
@@ -299,7 +273,9 @@
         this.$router.push({
           path: '/queryBillCar',
           query: {
-            parkId: this.selectParkId
+            parkId: this.selectParkId,
+            carList: JSON.stringify(this.carList),
+            allow_car_pay_type: this.parkInfo.allow_car_pay_type,
           }
         })
       },
@@ -335,10 +311,11 @@
     position: relative;
     top: -1.5rem;
     background-color: white;
-    margin: 0.1rem 0.1rem;
+    margin: 0 0.05rem;
     border-radius: 0.5rem;
     height: auto !important;
-    min-height: 5.5rem;
+    min-height: 4.5rem;
+    padding: 0.1rem 0.1rem;
 
   }
 
@@ -359,53 +336,14 @@
     border-radius: 0.2rem;
   }
 
-  .data-bottom-title {
-    font-size: 0.3rem;
-    padding: 0.2rem 0.3rem;
-  }
-
-  .data-bottom-text {
-    font-size: 0.26rem;
-    padding: 0.1rem 0.4rem;
-  }
-
-  .data-park-left {
-    font-size: 0.3rem;
-    padding-top: 0.4rem;
-    padding-left: 0.5rem;
-    width: 40%;
-    float: left;
-  }
-
-  .data-park-right {
-    font-size: 0.3rem;
-    padding-top: 0.4rem;
-    padding-right: 0.4rem;
-    width: 47%;
-    text-align: right;
-    float: left;
-  }
-
-  .data-park-txt {
-    position: relative;
-    top: -0.05rem;
-  }
-
-  .carList {
-    background-color: #F5F5F5;
-    margin-left: 0.4rem;
-    width: 25%;
-    height: 0.6rem;
-    line-height: 0.6rem;
-    text-align: center;
-    float: left;
-    margin-bottom: 0.3rem;
-  }
-
   .van-loading {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+  }
+
+  .text-val {
+    color: #323233;
   }
 </style>

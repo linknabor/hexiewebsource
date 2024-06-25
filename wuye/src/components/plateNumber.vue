@@ -1,141 +1,70 @@
 <template>
   <div id="page">
     <div class="wrap">
-      <div class="radio-box">
-        <van-radio-group v-model="formData.commonCard" direction="horizontal">
-          <van-radio name="1" checked-color="#ED6A0C">普通车牌</van-radio>
-          <van-radio name="2" checked-color="#ED6A0C">新能源车牌</van-radio>
-        </van-radio-group>
+      <div style="padding-bottom: 0.1rem">
+        <van-cell-group>
+          <template #title>
+            <div>
+              <span class="custom-group">车牌号码</span>
+            </div>
+            <div class="custom-clear" @click="goClear">
+              <span style="color: #FAAB0C;font-weight: bold">清空</span>
+            </div>
+          </template>
+        </van-cell-group>
       </div>
-      <div class="card-header">车牌号码：</div>
+
       <div class="num-box">
         <div class="num0" @click="clickFirstWrap()">
-          <span>{{formData.num0}}</span>
+          <span>{{carNumber[0]}}</span>
         </div>
-        <div class="num1" @click="clickKeyWordWrap(1)"><span>{{formData.num1}}</span></div>
+        <div class="num1" @click="clickKeyWordWrap(1)"><span>{{carNumber[1]}}</span></div>
         <em class="spot"></em>
-        <div class="num1" @click="clickKeyWordWrap(2)"><span>{{formData.num2}}</span></div>
-        <div class="num1" @click="clickKeyWordWrap(3)"><span>{{formData.num3}}</span></div>
-        <div class="num1" @click="clickKeyWordWrap(4)"><span>{{formData.num4}}</span></div>
-        <div class="num1" @click="clickKeyWordWrap(5)"><span>{{formData.num5}}</span></div>
-        <div class="num1" @click="clickKeyWordWrap(6)"><span>{{formData.num6}}</span></div>
-        <div v-if="formData.commonCard === '2'" class="num1" @click="clickKeyWordWrap(7)"><span>{{formData.num7}}</span></div>
+        <div class="num1" @click="clickKeyWordWrap(2)"><span>{{carNumber[2]}}</span></div>
+        <div class="num1" @click="clickKeyWordWrap(3)"><span>{{carNumber[3]}}</span></div>
+        <div class="num1" @click="clickKeyWordWrap(4)"><span>{{carNumber[4]}}</span></div>
+        <div class="num1" @click="clickKeyWordWrap(5)"><span>{{carNumber[5]}}</span></div>
+        <div class="num1" @click="clickKeyWordWrap(6)"><span>{{carNumber[6]}}</span></div>
+        <div class="num1" @click="clickKeyWordWrap(7)">
+          <span>{{carNumber[7]}}</span>
+          <div class="code7-pla" v-if="carNumber[7] === undefined || carNumber[7] === ''"><span class="plus">+</span><span class="plus-text">新能源</span></div>
+        </div>
       </div>
 
       <div class="css-checked" v-if="isShowCheck === 1">
         <div class="css-checked-title">设置为默认车辆:</div>
-        <div class="css-checked-button"><van-switch active-color="#ED6A0C" v-model="formData.is_default" size="25"/></div>
+        <div class="css-checked-button"><van-switch active-color="#ED6A0C" v-model="isDefault" size="25"/></div>
       </div>
 
-      <div class="submit-box">
-        <button @click="submitFn()">{{butName}}</button>
+      <div class="submit-box" v-if="butName !== ''">
+        <button @click="submitFn()" :style="styleType===2?'width: 50%;height:0.6rem':''">{{butName}}</button>
       </div>
     </div>
     <div class="first-word-wrap"
          v-if="firstWrapStatus">
       <div class="first-word"
            @click="selectFirstWord($event)">
-        <div class="word">
-          <span>京</span>
+        <div class="word" v-for="(item) in provincesKeyOne">
+          <span>{{item}}</span>
         </div>
-        <div class="word">
-          <span>湘</span>
-        </div>
-        <div class="word">
-          <span>津</span>
-        </div>
-        <div class="word">
-          <span>鄂</span>
-        </div>
-        <div class="word">
-          <span>沪</span>
-        </div>
-        <div class="word">
-          <span>粤</span>
-        </div>
-        <div class="word">
-          <span>渝</span>
-        </div>
-        <div class="word">
-          <span>琼</span>
+
+      </div>
+      <div class="first-word"
+           @click="selectFirstWord($event)">
+        <div class="word" v-for="(item) in provincesKeyTwo">
+          <span>{{item}}</span>
         </div>
       </div>
       <div class="first-word"
            @click="selectFirstWord($event)">
-        <div class="word">
-          <span>翼</span>
-        </div>
-        <div class="word">
-          <span>川</span>
-        </div>
-        <div class="word">
-          <span>晋</span>
-        </div>
-        <div class="word">
-          <span>贵</span>
-        </div>
-        <div class="word">
-          <span>辽</span>
-        </div>
-        <div class="word">
-          <span>云</span>
-        </div>
-        <div class="word">
-          <span>吉</span>
-        </div>
-        <div class="word">
-          <span>陕</span>
+        <div class="word" v-for="(item) in provincesKeyThree">
+          <span>{{item}}</span>
         </div>
       </div>
       <div class="first-word"
            @click="selectFirstWord($event)">
-        <div class="word">
-          <span>黑</span>
-        </div>
-        <div class="word">
-          <span>甘</span>
-        </div>
-        <div class="word">
-          <span>苏</span>
-        </div>
-        <div class="word">
-          <span>青</span>
-        </div>
-        <div class="word">
-          <span>浙</span>
-        </div>
-        <div class="word">
-          <span>皖</span>
-        </div>
-        <div class="word">
-          <span>藏</span>
-        </div>
-        <div class="word">
-          <span>闽</span>
-        </div>
-      </div>
-      <div class="first-word"
-           @click="selectFirstWord($event)">
-        <div class="word">
-          <span>蒙</span>
-        </div>
-        <div class="word">
-          <span>赣</span>
-        </div>
-        <div class="word">
-          <span>桂</span>
-        </div>
-        <div class="word">
-          <span>鲁</span>
-        </div>
-        <div class="word">
-          <span>宁</span>
-        </div>
-        <div class="word">
-          <span>豫</span>
-        </div>
-        <div class="word">
-          <span>新</span>
+        <div class="word" v-for="(item) in provincesKeyFour">
+          <span>{{item}}</span>
         </div>
         <div class="word bordernone">
         </div>
@@ -186,19 +115,24 @@
         <span class="bordernone"></span>
         <span class="delete" @click="deleteWord"><img src="../assets/images/park/icon-delete.png" alt=""></span>
       </div>
-      <div class="cancel">
+      <div class="finish">
         <span @click="keyBoardStatus = false">完成</span>
       </div>
     </div>
   </div>
 </template>
 <script>
-  import {Switch, RadioGroup, Radio} from 'vant';
+  import {Cell, CellGroup,Switch, Toast} from 'vant';
 
   export default {
     data () {
       return {
-        formData: this.mat,
+        // carNumber: this.mat,
+        isDefault: false,
+        provincesKeyOne: '京津冀晋蒙辽吉黑',
+        provincesKeyTwo: '沪苏浙皖闽赣鲁豫',
+        provincesKeyThree: '鄂湘粤桂琼渝川贵',
+        provincesKeyFour: '云藏陕甘青宁新',
         allKeyWord: {
           _1: [1, 2, 3, 4, 5, 6, 7],
           _2: [8, 9, 0],
@@ -208,175 +142,106 @@
           _6: ['W', 'X', 'Y', 'Z'],
           _7: ['港', '澳', '学', '领', '警']
         },
-        activeKeyWordIndex: 1, // 当前车牌号
+        activeKeyWordIndex: 1, // 当前车牌号索引
         keyBoardStatus: false,
         firstWrapStatus: false, // 选择弹窗
-        confirmTitle: '',
-        submitConfirm: false,
-        submitConfirmFalse: false,
-        submitConfirmText: ''
       }
     },
-    props:{
-      mat:Object,
-      butName: String,
-      isShowCheck: Number,
-    },
-    mounted () {
-    },
+    props: ["carNumber", 'butName', 'isShowCheck', 'styleType'],
+    // props:{
+    //   mat: Array,
+    //   butName: String,
+    //   isShowCheck: Number,
+    //   styleType: String,
+    // },
     components: {
       [Switch.name]: Switch,
-      [RadioGroup.name]: RadioGroup,
-      [Radio.name]: Radio,
+      [Toast.name]: Toast,
+      [CellGroup.name]: CellGroup,
+      [Cell.name]: Cell,
     },
     methods: {
       clickFirstWrap () {
         // 点击第一个输入框
         this.firstWrapStatus = true
         this.keyBoardStatus = false
-        this.formData.num0 = ''
+        this.carNumber[0] = ''
+        document.addEventListener('click', this.hideKeyWordWrap, true);
       },
       selectFirstWord (event) {
         // 选择省份
         if (event.target.localName !== 'span') {
           return
         }
-        this.formData.num0 = event.target.innerText
+        this.carNumber[0] = event.target.innerText
         this.firstWrapStatus = false
         this.keyBoardStatus = true
         this.activeKeyWordIndex = 1
       },
       clickKeyBoard (item) { // 点击自定义键盘
-        this.formData['num' + this.activeKeyWordIndex] = item
-
-        if (this.formData.commonCard === '1') {
-          this.activeKeyWordIndex++
-          if (this.activeKeyWordIndex > 6) {
-            this.keyBoardStatus = false
-          }
-        } else {
-          this.activeKeyWordIndex++
-          if (this.activeKeyWordIndex > 7) {
-            this.keyBoardStatus = false
-          }
+        this.carNumber[this.activeKeyWordIndex] = item
+        this.activeKeyWordIndex++
+        if (this.activeKeyWordIndex > 7) {
+          this.keyBoardStatus = false
         }
       },
       deleteWord () { // 退格
         if (this.activeKeyWordIndex > 1) {
-          this.formData['num' + (this.activeKeyWordIndex - 1)] = ''
+          this.carNumber[(this.activeKeyWordIndex - 1)] = ''
           this.activeKeyWordIndex--
         }
       },
       clickKeyWordWrap (activeKeyWordIndex) {
         this.keyBoardStatus = true
         this.activeKeyWordIndex = activeKeyWordIndex
-        this.formData['num' + this.activeKeyWordIndex] = ''
+        this.carNumber[this.activeKeyWordIndex] = ''
+        document.addEventListener('click', this.hideKeyWordWrap, true);
       },
-      submitFn () {
-        let plateLicense
-        if (this.formData.commonCard === '1') {
-          plateLicense = this.plate_license_1
-          plateLicense = this.palindrome(plateLicense)
-          if (plateLicense.length < 7) {
-            alert('请输入正确的车牌号')
-            return
-          }
+      hideKeyWordWrap(event) {
+        if (!event.target.closest('.keyboard-wrap')) {
+          this.keyBoardStatus = false
+          this.firstWrapStatus = false
+          // 移除事件监听
+          document.removeEventListener('click', this.hideKeyWordWrap, true);
         }
-        if (this.formData.commonCard === '2') {
-          plateLicense = this.plate_license_2
-          plateLicense = this.palindrome(plateLicense)
-          if (plateLicense.length < 8) {
-            alert('请输入正确的车牌号')
-            return
-          }
-        }
-        this.$emit('getPlateLicense',plateLicense, this.formData.is_default)
-      },
-      palindrome (str) {
-        let arr = str.split('');
-        arr = arr.filter(function (val) {
-          return (
-            val !== ' ' &&
-            val !== ',' &&
-            val !== '.' &&
-            val !== '?' &&
-            val !== ':' &&
-            val !== ';' &&
-            val !== '`' &&
-            val !== "'" &&
-            val !== '_' &&
-            val !== '/' &&
-            val !== '-' &&
-            val !== '\\' &&
-            val !== '' &&
-            val !== '(' &&
-            val !== ')'
-          )
-        })
-        return arr.join('')
-      },
-    },
-    computed: {
-      normalizedSize: function () {
-        return this.mat.trim().toLowerCase()
       },
 
-      plate_license_1 () {
-        return (
-          this.formData.num0 +
-          this.formData.num1 +
-          this.formData.num2 +
-          this.formData.num3 +
-          this.formData.num4 +
-          this.formData.num5 +
-          this.formData.num6
-        )
+      submitFn () {
+        let carPlate = this.carNumber.join('')
+        if(!this.palindrome(carPlate)) {
+          Toast.fail('车牌号输入有误');
+          return;
+        }
+        this.$emit('getPlateLicense','click', carPlate, this.isDefault)
       },
-      plate_license_2 () {
-        return (
-          this.formData.num0 +
-          this.formData.num1 +
-          this.formData.num2 +
-          this.formData.num3 +
-          this.formData.num4 +
-          this.formData.num5 +
-          this.formData.num6 +
-          this.formData.num7
-        )
-      }
-    }
+
+      goClear() {
+        this.$emit('getPlateLicense', 'clear')
+      },
+
+      palindrome (carPlate) {
+        //普通车车牌校验
+        var creg=/^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}[A-HJ-NP-Z0-9]{4}[A-HJ-NP-Z0-9挂学警港澳]{1}$/;
+        //新能源车牌校验
+        var xxreg=/^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}(([0-9]{5}[DABCEFGHJK]$)|([DABCEFGHJK][A-HJ-NP-Z0-9][0-9]{4}$))/;
+
+        if(this.carNumber.length === 7) {
+          return creg.test(carPlate);
+        } else if(this.carNumber.length === 8) {
+          return xxreg.test(carPlate);
+        } else {
+          return false
+        }
+      },
+    },
   }
 </script>
 <style lang="less" scoped>
-  .flex-items-center {
-    display: flex;
-    align-items: center;
-  }
+
   .wrap {
-    height: 3rem;
-    margin: 0.1rem 0.1rem;
-    padding: 0.3rem 0.4rem;
+    padding: 0.1rem 0.2rem;
     background-color: #fff;
     border-radius: 0.5rem;
-    .radio-box {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      font-size: 0.26rem;
-      text-align: right;
-      color: #4a4a4a;
-      input[type="radio"] {
-        display: none;
-      }
-      label {
-        padding-left: 0.6rem;
-        cursor: pointer;
-        img {
-          width: 0.4rem;
-          margin-right: 0.1rem;
-        }
-      }
-    }
     .card-header {
       font-size: 0.26rem;
       margin: 0.1rem 0 0.2rem;
@@ -387,6 +252,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      float: left;
       .spot {
         width: 0.2rem;
         height: 0.2rem;
@@ -394,42 +260,15 @@
         background-color: #d8d8d8;
       }
       & > div {
-        width: 0.7rem;
-        height: 0.8rem;
+        width: 0.8rem;
+        height: 0.9rem;
         border: 1px solid #e4e4e4;
-        &.first {
-          position: relative;
-          text-align: center;
-          line-height: 1.7rem;
-          font-weight: 200;
-          .input-wrap {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            &.active {
-              z-index: 100;
-            }
-          }
-          em {
-            color: #979797;
-            font-size: 1.6rem;
-            line-height: 1.7rem;
-          }
-          span {
-            display: inline-block;
-            width: 100%;
-            height: 100%;
-            color: #828282;
-            line-height: 1.8rem;
-          }
+        border-right: 0;
+        &:nth-child(2){
+          border-right: 1px solid #e4e4e4;
         }
-        &.active {
-          border: 1px solid #4a90e2;
-          &:after {
-            border-bottom: 0.5rem solid #4a90e2;
-          }
+        &:nth-child(9){
+          border-right: 1px solid #e4e4e4;
         }
         span {
           display: flex;
@@ -439,35 +278,20 @@
           height: 100%;
           font-size: 0.4rem;
           color: #828282;
-          &.first {
-            background-color: #9cbce2;
-            color: #fff;
-            text-indent: 0.4rem;
-            border-radius: 0;
-          }
         }
       }
     }
     .submit-box {
+      text-align: center;
       button {
         width: 100%;
         height: 0.8rem;
         border-radius: 0.25rem;
         font-size: 0.3rem;
         margin-top: 0.4rem;
-        background: #ED6A0C;
+        background: var(--primary-color);
         border: 0;
         color: #fff;
-      }
-    }
-    .info {
-      font-size: 0.5rem;
-      margin-top: 0.9rem;
-      color: #828282;
-      text-align: left;
-      img {
-        width: 0.6rem;
-        vertical-align: middle;
       }
     }
   }
@@ -506,13 +330,8 @@
           color: #000;
           border-radius: 0.125rem;
         }
-        img {
-          width: 1.6rem;
-        }
       }
-      &:nth-last-of-type(1){
-        margin-bottom: 0;
-      }
+
     }
   }
   .keyboard-wrap {
@@ -558,7 +377,7 @@
         }
       }
     }
-    .cancel{
+    .finish {
       display: flex;
       justify-content: flex-end;
       align-items: center;
@@ -591,4 +410,38 @@
     text-align: right;
     float: left;
   }
+
+  .code7-pla {
+    margin-top: -0.9rem;
+    height: 100%;
+    background: #07C180;
+  }
+  .plus {
+    height: 40% !important;
+    position: relative;
+    top: 0.1rem;
+    font-size: 0.2rem !important;
+    color: white !important;
+  }
+  .plus-text {
+    height: 50% !important;
+    font-size: 0.2rem !important;
+    color: white !important;
+  }
+
+  .custom-group {
+    padding: 0.1rem 0;
+    color: rgb(150, 151, 153);
+    font-size: 14px;
+    line-height: 16px;
+    float: left;
+    font-weight: bold;
+  }
+
+  .custom-clear {
+    padding: 0.1rem;
+    color: rgb(150, 151, 153);
+    text-align: right;
+  }
+
 </style>

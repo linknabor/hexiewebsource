@@ -160,7 +160,7 @@
         }
 
         window.location.href = this.basePageUrl + "parkBillPay.html?invoiceTitleType=" + this.invoiceTitleType + "&creditCode=" + this.creditCode
-          + "&invoiceTitle=" + this.invoiceTitle + "&billIds=" + this.billIds + "&reduceMode=" + this.reduceMode
+          + "&invoiceTitle=" + this.invoiceTitle + "&billIds=" + this.billIds + "&reduceMode=" + this.reduceMode + "&payScenarioss=03"
 
         // this.$router.push({
         //   path: '/carBillPaying',
