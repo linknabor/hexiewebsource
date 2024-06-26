@@ -20,10 +20,10 @@
 
           <plateNumber @getPlateLicense="getPlateLicense" :carObj="carObj"></plateNumber>
 
-          <div style="margin: 0 0.4rem;line-height: 0.6rem">
+          <div style="margin: 0px 0.6rem;line-height: 0.8rem;">
             <van-row type="flex">
               <van-col span="8" v-for="(item, index) in carList" :key="index" @click="clickCar(item.car_no)">
-                <van-tag type="primary" size="medium" :color="item.car_no.length===8?'#07C180':''">{{ item.car_no }}</van-tag>
+                <van-tag type="primary" size="large" :color="item.car_no.length===8?'#07C180':''">{{ item.car_no }}</van-tag>
               </van-col>
             </van-row>
           </div>

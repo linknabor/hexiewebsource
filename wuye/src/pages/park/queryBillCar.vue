@@ -15,7 +15,7 @@
 
       <van-cell-group title="缴费月数" v-if="queryType==='2'">
         <div class="data-head">
-          <van-stepper v-model="months"  disable-input @change="onChangeStepper"/>
+          <van-stepper v-model="months" max="12" disable-input @change="onChangeStepper"/>
         </div>
       </van-cell-group>
 
@@ -26,7 +26,7 @@
             <span style="color: red;font-weight: bold">(点击车牌快速填充)</span>
           </div>
         </template>
-        <div style="margin: 0 0.4rem;line-height: 0.6rem">
+        <div style="margin: 0px 0.6rem;line-height: 0.8rem;">
           <van-row type="flex">
             <van-col span="8" v-for="(item, index) in carList" :key="index" @click="clickCar(item.car_no)">
               <van-tag type="primary" size="medium" :color="item.car_no.length===8?'#07C180':''">{{ item.car_no }}</van-tag>
@@ -278,7 +278,7 @@
   }
 
   .data-head {
-    margin: 0 0.1rem;
+    margin: 0 0.3rem;
     padding: 0.1rem 0.4rem;
   }
 
