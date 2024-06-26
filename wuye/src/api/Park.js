@@ -36,8 +36,8 @@ const ParkApi = {
     return http.get(baseUrl + '/park/getPayDetailById', param)
   },
 
-  getParkPayList(param) {
-    return http.get(baseUrl + '/park/getParkPayList', param)
+  getParkPayList() {
+    return http.get(baseUrl + '/park/getParkPayList', null)
   },
 
   getCarBillList(param) {

@@ -9,7 +9,7 @@
           <img src="../../assets/img/park.png">
         </div>
         <div class="data-head">
-          <van-cell-group>
+          <van-cell-group style="margin-top: 0.1rem">
             <van-cell title="" :value="selectParkName" value-class="text-val" @click="goMap" is-link>
               <template #right-icon>
                 <van-icon name="location" size="0.3rem" style="position: relative;top: 0.03rem"/>
@@ -18,9 +18,9 @@
             </van-cell>
           </van-cell-group>
 
-          <plateNumber @getPlateLicense="getPlateLicense" :carNumber="carArray" :styleType="1" :butName="butName"
-                       :isShowCheck="0"></plateNumber>
-          <div style="margin: 0.2rem 0.6rem">
+          <plateNumber @getPlateLicense="getPlateLicense" :carObj="carObj"></plateNumber>
+
+          <div style="margin: 0 0.4rem;line-height: 0.6rem">
             <van-row type="flex">
               <van-col span="8" v-for="(item, index) in carList" :key="index" @click="clickCar(item.car_no)">
                 <van-tag type="primary" size="medium" :color="item.car_no.length===8?'#07C180':''">{{ item.car_no }}</van-tag>
@@ -31,8 +31,22 @@
         <div style="clear:both"></div>
         <div class="data-mid">
           <van-grid direction="horizontal" :column-num="2">
-            <van-grid-item :icon="addCarImg" text="添加车辆" @click="addCar"/>
-            <van-grid-item :icon="queryCarImg" text="停车记录" @click="queryPay"/>
+            <van-grid-item @click="addCar">
+              <template #icon>
+                <van-icon :name="addCarImg" size="0.6rem"/>
+              </template>
+              <template #text>
+                <span style="margin-left: 0.1rem;">添加车辆</span>
+              </template>
+            </van-grid-item>
+            <van-grid-item @click="queryPay">
+              <template #icon>
+                <van-icon :name="queryCarImg" size="0.6rem"/>
+              </template>
+              <template #text>
+                <span style="margin-left: 0.1rem;">停车记录</span>
+              </template>
+            </van-grid-item>
           </van-grid>
         </div>
 
@@ -117,24 +131,18 @@
         searchValue: '',
         listLoading: false,
         finished: false,
-
-        butName: '查询缴费',
-        carArray:[],
-
+        carObj:{
+          carNums:[],
+          isDefault: false,
+          showBtnType: 0,
+        },
         addCarImg: require('../../assets/img/addcar.png'),
         queryCarImg: require('../../assets/img/querycar.png'),
-
-        selectCarNo: '',
-
         selectParkId: '',
         selectParkName: '',
-
         carList: [],
-
         parkInfo: '',
-
         parkList: [],
-
         ruleList: [],
       }
     },
@@ -212,10 +220,10 @@
       onLoad() {
         this.finished = true
       },
-      getPlateLicense(oper, data, checked) {
+      getPlateLicense(oper, data) {
         if('clear' === oper) {
-          this.carArray.splice(0)
-        } else {
+          this.goClear()
+        } else if('query' === oper) {
           window.location.href = this.basePageUrl + "parkPay.html?carNo=" + data + "&parkId=" + this.selectParkId
         }
       },
@@ -251,13 +259,13 @@
         this.showFlag = true
       },
       goClear() {
-        this.carArray.splice(0)
+        this.carObj.carNums.splice(0)
       },
       clickCar(carNo) {
         this.goClear()
         var strs = carNo.split("")
         for (let i = 0; i < strs.length; i++) {
-          this.$set(this.carArray, i, strs[i])
+          this.$set(this.carObj.carNums, i, strs[i])
         }
       },
 
@@ -345,5 +353,9 @@
 
   .text-val {
     color: #323233;
+  }
+
+  .van-cell-group__title {
+    font-size: 0.28rem;
   }
 </style>

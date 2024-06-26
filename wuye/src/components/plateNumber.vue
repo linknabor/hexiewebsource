@@ -7,8 +7,8 @@
             <div>
               <span class="custom-group">车牌号码</span>
             </div>
-            <div class="custom-clear" @click="goClear">
-              <span style="color: #FAAB0C;font-weight: bold">清空</span>
+            <div class="custom-clear" @click="submitFn('clear')">
+              <span style="color: #FAAB0C;">清空</span>
             </div>
           </template>
         </van-cell-group>
@@ -16,28 +16,39 @@
 
       <div class="num-box">
         <div class="num0" @click="clickFirstWrap()">
-          <span>{{carNumber[0]}}</span>
+          <span>{{carObj.carNums[0]}}</span>
         </div>
-        <div class="num1" @click="clickKeyWordWrap(1)"><span>{{carNumber[1]}}</span></div>
+        <div class="num1" @click="clickKeyWordWrap(1)"><span>{{carObj.carNums[1]}}</span></div>
         <em class="spot"></em>
-        <div class="num1" @click="clickKeyWordWrap(2)"><span>{{carNumber[2]}}</span></div>
-        <div class="num1" @click="clickKeyWordWrap(3)"><span>{{carNumber[3]}}</span></div>
-        <div class="num1" @click="clickKeyWordWrap(4)"><span>{{carNumber[4]}}</span></div>
-        <div class="num1" @click="clickKeyWordWrap(5)"><span>{{carNumber[5]}}</span></div>
-        <div class="num1" @click="clickKeyWordWrap(6)"><span>{{carNumber[6]}}</span></div>
+        <div class="num1" @click="clickKeyWordWrap(2)"><span>{{carObj.carNums[2]}}</span></div>
+        <div class="num1" @click="clickKeyWordWrap(3)"><span>{{carObj.carNums[3]}}</span></div>
+        <div class="num1" @click="clickKeyWordWrap(4)"><span>{{carObj.carNums[4]}}</span></div>
+        <div class="num1" @click="clickKeyWordWrap(5)"><span>{{carObj.carNums[5]}}</span></div>
+        <div class="num1" @click="clickKeyWordWrap(6)"><span>{{carObj.carNums[6]}}</span></div>
         <div class="num1" @click="clickKeyWordWrap(7)">
-          <span>{{carNumber[7]}}</span>
-          <div class="code7-pla" v-if="carNumber[7] === undefined || carNumber[7] === ''"><span class="plus">+</span><span class="plus-text">新能源</span></div>
+          <span>{{carObj.carNums[7]}}</span>
+          <div class="code7-pla" v-if="carObj.carNums[7] === undefined || carObj.carNums[7] === ''"><span class="plus">+</span><span class="plus-text">新能源</span></div>
         </div>
       </div>
 
-      <div class="css-checked" v-if="isShowCheck === 1">
-        <div class="css-checked-title">设置为默认车辆:</div>
-        <div class="css-checked-button"><van-switch active-color="#ED6A0C" v-model="isDefault" size="25"/></div>
+      <van-cell v-if="carObj.showBtnType === 1" center title="设置为默认车辆" style="padding: 0.2rem 0.05rem">
+        <template #right-icon>
+          <van-switch v-model="carObj.isDefault" size="24" />
+        </template>
+      </van-cell>
+      <div v-if="carObj.showBtnType === 0">
+        <van-button color="var(--primary-color)" @click="submitFn('query')" style="margin-top:1.2rem " type="default" block>查询</van-button>
       </div>
-
-      <div class="submit-box" v-if="butName !== ''">
-        <button @click="submitFn()" :style="styleType===2?'width: 50%;height:0.6rem':''">{{butName}}</button>
+      <div v-else-if="carObj.showBtnType === 1" style="display: flex;justify-content: center;">
+        <div style="width: 40%">
+          <van-button class="delBtn" type="default" :disabled="carObj.carNums.length === 0" color="lightgrey" block style="height: 0.8rem" @click="submitFn('delete')">删除</van-button>
+        </div>
+        <div style="width: 40%;padding-left: 0.5rem;">
+          <van-button color="var(--primary-color)" @click="submitFn('add')" type="default" block style="height: 0.8rem">添加</van-button>
+        </div>
+      </div>
+      <div v-else-if="carObj.showBtnType === 2">
+        <van-button color="var(--primary-color)" @click="submitFn('query')" block style="margin-top:1.2rem;width: 60%;margin-left: auto;margin-right: auto" type="default">查询</van-button>
       </div>
     </div>
     <div class="first-word-wrap"
@@ -122,13 +133,11 @@
   </div>
 </template>
 <script>
-  import {Cell, CellGroup,Switch, Toast} from 'vant';
+  import {Cell, CellGroup,Switch, Toast, Button } from 'vant';
 
   export default {
     data () {
       return {
-        // carNumber: this.mat,
-        isDefault: false,
         provincesKeyOne: '京津冀晋蒙辽吉黑',
         provincesKeyTwo: '沪苏浙皖闽赣鲁豫',
         provincesKeyThree: '鄂湘粤桂琼渝川贵',
@@ -147,25 +156,20 @@
         firstWrapStatus: false, // 选择弹窗
       }
     },
-    props: ["carNumber", 'butName', 'isShowCheck', 'styleType'],
-    // props:{
-    //   mat: Array,
-    //   butName: String,
-    //   isShowCheck: Number,
-    //   styleType: String,
-    // },
+    props: ["carObj"],
     components: {
       [Switch.name]: Switch,
       [Toast.name]: Toast,
       [CellGroup.name]: CellGroup,
       [Cell.name]: Cell,
+      [Button.name]: Button,
     },
     methods: {
       clickFirstWrap () {
         // 点击第一个输入框
         this.firstWrapStatus = true
         this.keyBoardStatus = false
-        this.carNumber[0] = ''
+        this.carObj.carNums[0] = ''
         document.addEventListener('click', this.hideKeyWordWrap, true);
       },
       selectFirstWord (event) {
@@ -173,13 +177,13 @@
         if (event.target.localName !== 'span') {
           return
         }
-        this.carNumber[0] = event.target.innerText
+        this.carObj.carNums[0] = event.target.innerText
         this.firstWrapStatus = false
         this.keyBoardStatus = true
         this.activeKeyWordIndex = 1
       },
       clickKeyBoard (item) { // 点击自定义键盘
-        this.carNumber[this.activeKeyWordIndex] = item
+        this.carObj.carNums[this.activeKeyWordIndex] = item
         this.activeKeyWordIndex++
         if (this.activeKeyWordIndex > 7) {
           this.keyBoardStatus = false
@@ -187,14 +191,14 @@
       },
       deleteWord () { // 退格
         if (this.activeKeyWordIndex > 1) {
-          this.carNumber[(this.activeKeyWordIndex - 1)] = ''
+          this.carObj.carNums[(this.activeKeyWordIndex - 1)] = ''
           this.activeKeyWordIndex--
         }
       },
       clickKeyWordWrap (activeKeyWordIndex) {
         this.keyBoardStatus = true
         this.activeKeyWordIndex = activeKeyWordIndex
-        this.carNumber[this.activeKeyWordIndex] = ''
+        this.carObj.carNums[this.activeKeyWordIndex] = ''
         document.addEventListener('click', this.hideKeyWordWrap, true);
       },
       hideKeyWordWrap(event) {
@@ -206,17 +210,13 @@
         }
       },
 
-      submitFn () {
-        let carPlate = this.carNumber.join('')
-        if(!this.palindrome(carPlate)) {
+      submitFn (oper) {
+        let carPlate = this.carObj.carNums.join('')
+        if(!this.palindrome(carPlate) && !'clear' === oper) {
           Toast.fail('车牌号输入有误');
           return;
         }
-        this.$emit('getPlateLicense','click', carPlate, this.isDefault)
-      },
-
-      goClear() {
-        this.$emit('getPlateLicense', 'clear')
+        this.$emit('getPlateLicense',oper, carPlate, this.carObj.isDefault)
       },
 
       palindrome (carPlate) {
@@ -225,9 +225,9 @@
         //新能源车牌校验
         var xxreg=/^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}(([0-9]{5}[DABCEFGHJK]$)|([DABCEFGHJK][A-HJ-NP-Z0-9][0-9]{4}$))/;
 
-        if(this.carNumber.length === 7) {
+        if(this.carObj.carNums.length === 7) {
           return creg.test(carPlate);
-        } else if(this.carNumber.length === 8) {
+        } else if(this.carObj.carNums.length === 8) {
           return xxreg.test(carPlate);
         } else {
           return false
@@ -237,7 +237,6 @@
   }
 </script>
 <style lang="less" scoped>
-
   .wrap {
     padding: 0.1rem 0.2rem;
     background-color: #fff;
@@ -432,16 +431,16 @@
   .custom-group {
     padding: 0.1rem 0;
     color: rgb(150, 151, 153);
-    font-size: 14px;
+    font-size: 0.28rem;
     line-height: 16px;
     float: left;
-    font-weight: bold;
   }
 
   .custom-clear {
     padding: 0.1rem;
     color: rgb(150, 151, 153);
     text-align: right;
+    font-size: 0.28rem;
   }
 
 </style>

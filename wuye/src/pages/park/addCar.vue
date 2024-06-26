@@ -4,17 +4,13 @@
       <van-loading type="spinner"/>
     </van-overlay>
 
-    <div style="height: 4.5rem">
-      <plateNumber @getPlateLicense="getPlateLicense" :mat="formData" :butName="butName"
-                   :isShowCheck="isShowCheck"></plateNumber>
-    </div>
-    <div class="css-bt">
-      <van-button class="delBtn" type="default" :disabled="disabled" color="lightgrey" block @click="delCar">删除车辆</van-button>
+    <div style="height: 4rem;margin: 0.1rem">
+      <plateNumber @getPlateLicense="getPlateLicense" :carObj="carObj"></plateNumber>
     </div>
 
     <div class="">
       <van-radio-group v-model="checkedCar">
-        <van-cell-group inset>
+        <van-cell-group title="我的车">
           <van-cell v-for="(item, index) in carList" :key="index" clickable icon="edit"
                     @click="checkedRad(item.car_no)">
             <template #title>
@@ -44,24 +40,14 @@
     data() {
       return {
         show_overlay: false,
-        isShowCheck: 1,
-        butName: '保存',
-        formData: {
-          commonCard: '1',
-          is_default: false,
-          num0: '',
-          num1: '',
-          num2: '',
-          num3: '',
-          num4: '',
-          num5: '',
-          num6: '',
-          num7: ''
+        carObj:{
+          carNums:[],
+          isDefault: false,
+          showBtnType: 1,
         },
         carList: [],
         checkedCar: '',
         tempChecked: '',
-        disabled: true
       }
     },
 
@@ -82,26 +68,31 @@
       this.getCarList()
     },
     methods: {
-      getPlateLicense(data, checked) {
-        console.log(checked)
-        this.show_overlay = true;
-        let is_default = "0";
-        if (checked) {
-          is_default = "1";
-        }
-        let param = {
-          carNo: data,
-          checked: is_default
-        }
-        ParkApi.saveCar(param).then((response) => {
-          let data = response.data
-          if (data.result) {
-            Toast("保存成功")
-            this.getCarList();
-            this.initFormData();
+      getPlateLicense(oper, data, isDefault) {
+        if('clear' === oper) {
+          this.goClear()
+        } else if('delete' === oper) {
+          this.delCar()
+        } else if('add' === oper) {
+          this.show_overlay = true;
+          let is_default = "0";
+          if (isDefault) {
+            is_default = "1";
           }
-          this.show_overlay = false
-        })
+          let param = {
+            carNo: data,
+            checked: is_default
+          }
+          ParkApi.saveCar(param).then((response) => {
+            let data = response.data
+            if (data.result) {
+              Toast("保存成功")
+              this.getCarList();
+              this.goClear();
+            }
+            this.show_overlay = false
+          })
+        }
       },
 
       getCarList() {
@@ -118,50 +109,33 @@
         })
       },
 
+      goClear() {
+        this.carObj.carNums.splice(0)
+        this.carObj.isDefault = false
+        this.checkedCar = '';
+      },
       checkedRad(carNo) {
+        this.goClear()
         if (this.tempChecked === carNo) {
           this.checkedCar = '';
           this.tempChecked = '';
-          this.initFormData();
-          this.disabled = true;
         } else {
           this.checkedCar = carNo;
           this.tempChecked = carNo;
-          this.radioChange();
-          this.disabled = false;
-        }
-      },
-
-      radioChange() {
-        let carNo = this.checkedCar;
-        let carBit = carNo.split("");
-        let data = this.formData;
-        for (let i = 0; i < carBit.length; i++) {
-          this.formData['num' + i] = carBit[i];
-        }
-        if (carBit.length === 7) {
-          data.commonCard = '1';
-        } else {
-          data.commonCard = '2';
-        }
-
-        this.carList.forEach(function (o) {
-          if (carNo === o.car_no) {
-            let is_default = false;
-            if (o.is_default === '1') {
-              is_default = true;
-            }
-            data.is_default = is_default
+          var strs = carNo.split("")
+          for (let i = 0; i < strs.length; i++) {
+            this.$set(this.carObj.carNums, i, strs[i])
           }
-        })
-      },
-
-      initFormData() {
-        for (let i = 0; i < 7; i++) {
-          this.formData['num' + i] = '';
+          let is_default = false;
+          this.carList.forEach(function (o) {
+            if (carNo === o.car_no) {
+              if (o.is_default === '1') {
+                is_default = true;
+              }
+            }
+          })
+          this.carObj.isDefault = is_default
         }
-        this.formData.commonCard = '1';
-        this.formData.is_default = false;
       },
 
       delCar() {
@@ -171,7 +145,7 @@
           if (data.result) {
             Toast("删除成功")
             this.getCarList();
-            this.initFormData();
+            this.goClear();
           }
           this.show_overlay = false
         })
@@ -183,9 +157,7 @@
     }
   }
 </script>
-
 <style scoped>
-
   .main {
     width: 100%;
     background-color: #F5F6F7;
@@ -194,20 +166,14 @@
     overflow: hidden
   }
 
-  .css-bt {
-    padding: 0.1rem 0.4rem;
-    margin: 0.1rem 0.1rem;
-  }
-
-  .delBtn {
-    border-radius: 0.25rem;
-    height: 0.8rem;
-    margin-top: -0.2rem;
-  }
   .van-loading {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+  }
+
+  .van-cell-group__title {
+    font-size: 0.28rem;
   }
 </style>

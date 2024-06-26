@@ -4,20 +4,13 @@
       <van-loading type="spinner" />
     </van-overlay>
     <div style="height: 0.1rem"></div>
-    <div style="margin: 0 0.1rem; border-radius: 0.3rem">
-      <van-search v-model="searchValue" show-action @search="onSearch" placeholder="请输入车牌号码">
-        <template name="action" slot="action">
-          <div @click="onSearch">搜索</div>
-        </template>
-      </van-search>
-    </div>
     <van-list v-model="listLoading" :finished="finished"
               finished-text="没有更多了"
               @load="onLoad"
     >
       <div v-for="(item, index) in payList" :key="index">
         <div class="data-detail">
-          <van-cell :title="item.park_name" :label="item.car_no" :value="item.pay_amt.concat('元')" value-class="css-value"/>
+          <van-cell :title="item.park_name" :label="item.car_no" :value="item.pay_amt.concat('元')"/>
           <div class="data-detail-content">
             <div class="data-invoice" v-if="item.is_invoice === '1'">
               已开票
@@ -34,9 +27,9 @@
           <van-divider/>
           <div class="data-detail-bottom">
             <div class="data-detail-bottom-text1 text-center">
-              <van-button v-if="item.is_invoice !=='1'" type="info" plain round hairline size="small" @click="applyInvoice(item.trade_id)">申请发票</van-button>
+              <van-button v-if="item.is_invoice !=='1'" color="var(--primary-color)" type="primary" size="small" @click="applyInvoice(item.trade_id)">申请发票</van-button>
             </div>
-            <div class="data-detail-bottom-text2 bottom-color" style="padding-top: 0.1rem;">
+            <div class="data-detail-bottom-text2">
               <img class="data-img" src="../../assets/images/common/icon_time_gray.png"/>
               停车时长: {{ item.park_time }}
             </div>
@@ -48,7 +41,7 @@
 </template>
 
 <script>
-  import {Search, Cell, List, Divider, Button, Toast, Dialog, Overlay, Loading } from 'vant';
+  import {Cell, List, Divider, Button, Toast, Dialog, Overlay, Loading } from 'vant';
   import ParkApi from "@/api/Park.js"
 
   export default {
@@ -56,16 +49,12 @@
     data() {
       return {
         show_overlay: true,
-        searchValue: '',
         listLoading: false,
         finished: false,
         payList: [],
-        currPage: 1,
-        isEntye: false
       }
     },
     components: {
-      [Search.name]: Search,
       [List.name]: List,
       [Cell.name]: Cell,
       [Divider.name]: Divider,
@@ -75,17 +64,8 @@
       [Overlay.name]: Overlay,
       [Loading.name]: Loading,
     },
-    created() {
-
-    },
-    mounted() {
-      // this.show_overlay = true
-      //this.getPayList()
-      // this.show_overlay = false
-    },
     methods: {
       onLoad() {
-        //this.show_overlay = true
         setTimeout(() => {
           this.getPayList();
           this.show_overlay = false
@@ -93,55 +73,28 @@
       },
 
       getPayList() {
-        if(this.isEntye) {
-          return
-        }
-        let param = {
-          carNo: this.searchValue,
-          currPage: this.currPage,
-        }
-        ParkApi.getParkPayList(param).then((response) => {
+        ParkApi.getParkPayList().then((response) => {
           let data = response.data
           if (data && data.success && data.result) {
-            if(this.currPage == 1 && data.result.length == 0) { //如果是第一页
+            if(data.result.length === 0) {
               Dialog({message: '没有支付记录'})
               this.payList = []
               this.finished = true
               this.listLoading = false
-              this.isEntye = true
             } else {
-              if(data.result.length > 0) {
-                this.payList = this.payList.concat(data.result)
-                this.finished = false
-                this.currPage++;
-                this.listLoading = false
-
-                console.log(this.currPage)
-              } else {
-                Toast('没有更多了')
-                this.finished = true
-                this.isEntye = true
-              }
+              this.payList = data.result
+              this.finished = false
+              this.listLoading = false
             }
-          }else {
+          } else {
             this.finished = false
             this.listLoading = false
-            this.isEntye = true
           }
         })
       },
 
       applyInvoice(trade_id) {
-        window.location.href = "https://test.e-shequ.cn/weixin/wuye/invoice.html?trade_water_id=" + trade_id
-      },
-
-      onSearch() {
-        this.currPage = 1;
-        this.loading = false;
-        this.finished = false;
-        this.payList = []
-        this.isEntye = false
-        this.onLoad()
+        window.location.href = this.basePageUrl + "wuye/invoice.html?trade_water_id=" + trade_id
       },
 
       goBack() {
@@ -167,6 +120,32 @@
     border-radius: 0.3rem;
   }
 
+  .van-cell__title {
+    font-size: 0.28rem;
+  }
+
+  .van-cell__label {
+    font-size: 0.25rem;
+  }
+
+  .van-cell__value {
+    font-size: 0.28rem;
+    color: red;
+  }
+
+  .data-date-txt {
+    height: 50%;
+    line-height: 1rem;
+    font-size: 0.26rem;
+    color: #A9A9A9;
+  }
+
+  .data-date {
+    height: 50%;
+    line-height: 0.5rem;
+    font-size: 0.25rem;
+  }
+
   .data-text {
     width: 50%;
     height: 100%;
@@ -179,19 +158,6 @@
   .data-detail-content {
     position: relative;
     height: 1.5rem;
-  }
-
-  .data-date-txt {
-    height: 50%;
-    line-height: 1rem;
-    font-size: 0.24rem;
-    color: #A9A9A9;
-  }
-
-  .data-date {
-    height: 50%;
-    line-height: 0.5rem;
-    font-size: 0.24rem;
   }
 
   .van-divider {
@@ -221,7 +187,9 @@
     float: left;
     line-height: 0.5rem;
     overflow: hidden;
-    font-size: 0.23rem;
+    font-size: 0.25rem;
+    padding-top: 0.1rem;
+    color: #1E90FF;
   }
 
   .data-img {
@@ -229,14 +197,6 @@
     width: 0.3rem;
     position: relative;
     top: 0.05rem;
-  }
-
-  .bottom-color {
-    color: #1E90FF;
-  }
-
-  .css-value{
-   color: red;
   }
 
   .data-invoice{
@@ -251,10 +211,6 @@
     line-height: 0.5rem;
     transform:rotate(20deg);
     color: red;
-  }
-
-  .van-button--small {
-    height: 0.5rem;
   }
 
   .van-loading {

@@ -15,7 +15,7 @@
 
       <van-cell-group title="缴费月数" v-if="queryType==='2'">
         <div class="data-head">
-          <van-stepper v-model="months" button-size="22" disable-input @change="onChangeStepper"/>
+          <van-stepper v-model="months"  disable-input @change="onChangeStepper"/>
         </div>
       </van-cell-group>
 
@@ -23,7 +23,7 @@
         <template #title>
           <div class="mycar">
             <span>我的车</span>
-            <span style="color: red">(点击车牌快速填充)</span>
+            <span style="color: red;font-weight: bold">(点击车牌快速填充)</span>
           </div>
         </template>
         <div style="margin: 0 0.4rem;line-height: 0.6rem">
@@ -36,8 +36,7 @@
       </van-cell-group>
 
       <div style="margin: 0.1rem">
-        <plateNumber @getPlateLicense="getPlateLicense" :carNumber="carArray" :styleType="2" :butName="butName"
-                     :isShowCheck="0"></plateNumber>
+        <plateNumber @getPlateLicense="getPlateLicense" :carObj="carObj"></plateNumber>
       </div>
 
       <van-cell-group title="账单详情" v-if="billInfos.length > 0">
@@ -126,8 +125,11 @@
         allow_car_pay_type: this.$route.query.allow_car_pay_type,
         allow_car_pay_list :[],
         queryType: '1', //缴费方式
-        carArray: [], //输入的车牌
-        butName: '查询缴费',
+        carObj:{
+          carNums:[],
+          isDefault: false,
+          showBtnType: 2,
+        },
 
         carList: JSON.parse(this.$route.query.carList),
 
@@ -157,10 +159,10 @@
       onChangeStepper() {
         this.billInfos = []
       },
-      getPlateLicense(oper, carNo, isDefault) {
+      getPlateLicense(oper, carNo) {
         if('clear' === oper) {
-          this.carArray.splice(0)
-        } else {
+          this.goClear()
+        } else if('query' === oper) {
           this.showOverlay = true
           let param = {
             park_id: this.parkId,
@@ -194,15 +196,15 @@
         }
       },
       clickCar(carNo) {
-        this.getClear()
+        this.goClear()
         var strs = carNo.split("")
         for (let i = 0; i < strs.length; i++) {
-          this.$set(this.carArray, i, strs[i])
+          this.$set(this.carObj.carNums, i, strs[i])
         }
       },
 
-      getClear() {
-        this.carArray.splice(0)
+      goClear() {
+        this.carObj.carNums.splice(0)
         this.billInfos = []
       },
       itemClick(index) {
@@ -281,15 +283,14 @@
   }
 
   .van-cell-group__title {
-    font-weight: bold;
+    font-size: 0.28rem;
   }
 
   .mycar {
     padding: 16px 16px 8px;
     color: #969799;
-    font-size: 14px;
+    font-size: 0.28rem;
     line-height: 16px;
-    font-weight: bold
   }
 
   .van-radio__label {
