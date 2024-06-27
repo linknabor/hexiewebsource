@@ -52,7 +52,7 @@
 
         <div style="color: red;margin: 0.3rem;line-height: 0.4rem">
           <h4 v-show="respObj.show_invoice_flag === '0'">支付后请前往物业管理处领取发票</h4>
-          <h4 v-show="respObj.show_invoice_flag === '1'">申请的电子发票预计在3个工作日内通过短信/微信公众号发送至您手机上,请注意查收</h4>
+          <h4 v-show="respObj.show_invoice_flag === '1'">申请的电子发票预计在3个工作日内通过短信发送至您手机上,请注意查收</h4>
         </div>
       </van-cell-group>
     </div>
@@ -160,7 +160,7 @@
         }
 
         window.location.href = this.basePageUrl + "parkBillPay.html?invoiceTitleType=" + this.invoiceTitleType + "&creditCode=" + this.creditCode
-          + "&invoiceTitle=" + this.invoiceTitle + "&billIds=" + this.billIds + "&reduceMode=" + this.reduceMode + "&payScenarioss=03"
+          + "&invoiceTitle=" + this.invoiceTitle + "&billIds=" + this.billIds + "&reduceMode=" + this.reduceMode + "&payScenarios=03"
 
         // this.$router.push({
         //   path: '/carBillPaying',

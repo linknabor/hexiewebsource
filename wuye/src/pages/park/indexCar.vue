@@ -224,7 +224,7 @@
         if('clear' === oper) {
           this.goClear()
         } else if('query' === oper) {
-          window.location.href = this.basePageUrl + "parkPay.html?carNo=" + data + "&parkId=" + this.selectParkId
+          window.location.href = this.basePageUrl + "parkPay.html?carNo=" + data + "&parkId=" + this.selectParkId + "&payScenarios=03"
         }
       },
 
