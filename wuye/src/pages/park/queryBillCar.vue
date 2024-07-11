@@ -8,7 +8,10 @@
       <van-cell-group title="缴费方式">
         <div class="data-head">
           <van-radio-group v-model="queryType" direction="horizontal" @change="changeQueryType">
-            <van-radio v-for="(item, index) in allow_car_pay_type" v-if="item!==','" :name="item" checked-color="var(--primary-color)">{{item==='1'?'按账单缴费':'按月缴费'}}</van-radio>
+            <li v-for="(item, index) in allow_car_pay_type" :key="index">
+              <van-radio v-if="item!==','" :name="item" checked-color="var(--primary-color)">{{item==='1'?'按账单缴费':'按月缴费'}}</van-radio>
+            </li>
+            
           </van-radio-group>
         </div>
       </van-cell-group>
@@ -44,7 +47,7 @@
           <BillList ref="parentBillComponent" :bill-info="billInfos" @itemClick="itemClick"></BillList>
         </div>
         <div class="data-head" v-if="queryType === '2'">
-          <div v-for="(item,index) in billInfos">
+          <div v-for="(item,index) in billInfos" :key="index">
             <van-cell title="缴费周期" :value="''.concat(months).concat('个月')" value-class="text-val" style="padding: 0.1rem"/>
             <van-cell :title="item.service_fee_name" :label="item.pay_cell_addr" :value="'￥'.concat(item.fee_price)" value-class="text-val" style="padding: 0.1rem"/>
             <van-cell :title="item.service_fee_cycle" style="padding: 0.1rem"/>
@@ -54,7 +57,7 @@
 
       <div style="height: 1rem;width: 100%"></div>
 
-      <div class="btn-fixed" v-if="billInfos.length > 0">
+      <div class="btn-fixed" v-if="billInfos.length > 0" >
         <div class="checkRadio" v-if="queryType !== '2'">
           <van-checkbox class="checkboxStyle" checked-color="var(--primary-color)" v-model="allChecked" @click="checkAll">
             <template #default>
@@ -122,6 +125,7 @@
         showOverlay: true,
         loading: true,
         parkId: this.$route.query.parkId,
+        parkName: this.$route.query.parkName,
         allow_car_pay_type: this.$route.query.allow_car_pay_type,
         allow_car_pay_list :[],
         queryType: '1', //缴费方式
@@ -262,6 +266,7 @@
             billIds: bills,
             totalPrice: this.allPrice,
             reduceMode: this.reduceMode,
+            parkName: this.parkName
           }
         })
       }

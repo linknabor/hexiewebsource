@@ -52,7 +52,7 @@
 
         <div class="data-bottom">
           <van-cell-group title="计费规则">
-            <van-cell style="padding: 0.1rem 0.3rem" icon="info-o" :title="item.ruleName" v-for="(item, index) in ruleList"/>
+            <van-cell style="padding: 0.1rem 0.3rem" icon="info-o" :title="item.ruleName" v-for="(item, index) in ruleList" :key="index"/>
           </van-cell-group>
         </div>
 
@@ -66,7 +66,7 @@
         />
         <div>
           <van-search v-model="searchValue" @search="onSearch" show-action placeholder="请输入停车场名称">
-            <template name="action" slot="action">
+            <template slot="action">
               <div @click="onSearch">搜索</div>
             </template>
           </van-search>
@@ -144,6 +144,7 @@
         parkInfo: '',
         parkList: [],
         ruleList: [],
+        allow_car_pay_type:'1',
       }
     },
     created() {
@@ -155,12 +156,13 @@
       this.show_overlay = true
       this.loading = true
       this.getParam()
-      //this.initSession4Test()
+      this.initSession4Test()
       this.getUserInfo()
       this.initCar()
       this.loading = false
       this.show_overlay = false
     },
+
     methods: {
       initSession4Test() {
         var data = {
@@ -211,9 +213,13 @@
           if (data && data.success) {
             this.carList = data.result.carList
             this.parkInfo = data.result.parkInfo
-            this.selectParkName = this.parkInfo.park_name;
-            this.selectParkId = this.parkInfo.park_id;
-            this.ruleList = this.parkInfo.ruleList
+            if(!this.parkInfo.park_id) {
+                this.selectParkName = '请选择停车场'
+            } else {
+              this.selectParkName = this.parkInfo.park_name;
+              this.selectParkId = this.parkInfo.park_id;
+              this.ruleList = this.parkInfo.ruleList
+            }
           }
         })
       },
@@ -224,6 +230,10 @@
         if('clear' === oper) {
           this.goClear()
         } else if('query' === oper) {
+          if(!this.selectParkId) {
+              Toast.fail('请选择停车场')
+              return
+          }
           window.location.href = this.basePageUrl + "parkPay.html?carNo=" + data + "&parkId=" + this.selectParkId + "&payScenarios=03"
         }
       },
@@ -253,6 +263,7 @@
         this.showFlag = true
         this.searchValue = ""
         this.ruleList = item.ruleList
+        this.allow_car_pay_type = item.allow_car_pay_type
       },
 
       goBack() {
@@ -282,8 +293,9 @@
           path: '/queryBillCar',
           query: {
             parkId: this.selectParkId,
+            parkName: this.selectParkName,
             carList: JSON.stringify(this.carList),
-            allow_car_pay_type: this.parkInfo.allow_car_pay_type,
+            allow_car_pay_type: this.allow_car_pay_type,
           }
         })
       },

@@ -77,6 +77,7 @@
         show_overlay: false,
         billIds: this.$route.query.billIds,
         reduceMode: this.$route.query.reduceMode,
+        parkName: this.$route.query.parkName,
         respObj:{},
         feeList:[],
         activeName:'',
@@ -160,7 +161,7 @@
         }
 
         window.location.href = this.basePageUrl + "parkBillPay.html?invoiceTitleType=" + this.invoiceTitleType + "&creditCode=" + this.creditCode
-          + "&invoiceTitle=" + this.invoiceTitle + "&billIds=" + this.billIds + "&reduceMode=" + this.reduceMode + "&payScenarios=03"
+          + "&invoiceTitle=" + this.invoiceTitle + "&billIds=" + this.billIds + "&reduceMode=" + this.reduceMode + "&payScenarios=03&parkName=" + this.parkName
 
         // this.$router.push({
         //   path: '/carBillPaying',

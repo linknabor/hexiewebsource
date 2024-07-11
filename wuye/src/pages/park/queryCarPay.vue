@@ -15,21 +15,21 @@
             <div class="data-invoice" v-if="item.is_invoice === '1'">
               已开票
             </div>
-            <div class="data-text">
-              <div class="data-date-txt">进场时间</div>
+           <div class="data-text">
+              <div class="data-date-txt">{{item.data_type === '1'?'进场时间':'开始账期'}}</div>
               <div class="data-date">{{ item.start_date }}</div>
             </div>
             <div class="data-text">
-              <div class="data-date-txt">出场时间</div>
+              <div class="data-date-txt">{{item.data_type === '1'?'出场时间':'截至账期'}}</div>
               <div class="data-date">{{ item.end_date }}</div>
             </div>
           </div>
           <van-divider/>
           <div class="data-detail-bottom">
             <div class="data-detail-bottom-text1 text-center">
-              <van-button v-if="item.is_invoice !=='1'" color="var(--primary-color)" type="primary" size="small" @click="applyInvoice(item.trade_id)">申请发票</van-button>
+              <van-button v-if="item.is_invoice !=='1'" color="var(--primary-color)" type="primary" size="small" @click="applyInvoice(item.trade_water_id)">申请发票</van-button>
             </div>
-            <div class="data-detail-bottom-text2">
+            <div class="data-detail-bottom-text2" v-if="item.data_type === '1'">
               <img class="data-img" src="../../assets/images/common/icon_time_gray.png"/>
               停车时长: {{ item.park_time }}
             </div>
@@ -75,6 +75,7 @@
       getPayList() {
         ParkApi.getParkPayList().then((response) => {
           let data = response.data
+          console.log(data)
           if (data && data.success && data.result) {
             if(data.result.length === 0) {
               Dialog({message: '没有支付记录'})
@@ -83,18 +84,19 @@
               this.listLoading = false
             } else {
               this.payList = data.result
-              this.finished = false
+              this.finished = true
               this.listLoading = false
             }
           } else {
-            this.finished = false
+            Toast.fail(data.errorCode, data.message)
+            this.finished = true
             this.listLoading = false
           }
         })
       },
 
-      applyInvoice(trade_id) {
-        window.location.href = this.basePageUrl + "wuye/invoice.html?trade_water_id=" + trade_id
+      applyInvoice(trade_water_id) {
+        window.location.href = this.basePageUrl + "wuye/invoice.html?trade_water_id=" + trade_water_id
       },
 
       goBack() {
