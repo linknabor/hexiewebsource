@@ -216,9 +216,10 @@
             if(!this.parkInfo.park_id) {
                 this.selectParkName = '请选择停车场'
             } else {
-              this.selectParkName = this.parkInfo.park_name;
-              this.selectParkId = this.parkInfo.park_id;
+              this.selectParkName = this.parkInfo.park_name
+              this.selectParkId = this.parkInfo.park_id
               this.ruleList = this.parkInfo.ruleList
+              this.allow_car_pay_type = this.parkInfo.allow_car_pay_type
             }
           }
         })

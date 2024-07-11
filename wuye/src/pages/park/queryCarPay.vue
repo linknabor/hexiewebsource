@@ -27,7 +27,7 @@
           <van-divider/>
           <div class="data-detail-bottom">
             <div class="data-detail-bottom-text1 text-center">
-              <van-button v-if="item.is_invoice !=='1'" color="var(--primary-color)" type="primary" size="small" @click="applyInvoice(item.trade_water_id)">申请发票</van-button>
+              <van-button color="var(--primary-color)" type="primary" size="small" @click="applyInvoice(item.trade_water_id)">{{item.is_invoice !=='1'?'申请发票':'查看发票'}}</van-button>
             </div>
             <div class="data-detail-bottom-text2" v-if="item.data_type === '1'">
               <img class="data-img" src="../../assets/images/common/icon_time_gray.png"/>

@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <van-checkbox-group v-model="checkedObj" ref="checkboxGroup">
-      <div v-for="(item,index) in billInfo">
+      <div v-for="(item,index) in billInfo" :key="index">
         <van-checkbox :name="index" checked-color="var(--primary-color)" @click="select(index)">
           <template #default>
             <van-cell :title="item.service_fee_name" :label="item.pay_cell_addr" :value="'￥'.concat(item.fee_price)" value-class="text-val" style="padding: 0.1rem"/>
@@ -30,13 +30,13 @@
       }
     },
     props: ["billInfo"],
-    watch: {
-      checkedObj :{
-        handler(arr) {
-          this.checkedObj = arr
-        }
-      }
-    },
+    // watch: {
+    //   checkedObj :{
+    //     handler(arr) {
+    //       this.checkedObj = arr
+    //     }
+    //   }
+    // },
     methods: {
       select(index) {
         this.$emit("itemClick", index, this.billInfo);

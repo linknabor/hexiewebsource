@@ -142,9 +142,19 @@
         billInfos: [],
 
         allChecked: false,
-        allPrice: 0.00,
         reduceMode: '', //减免模式
       }
+    },
+    computed: {
+      allPrice: function () {
+        let ap = 0
+        for (let i in this.billInfos) {
+          if (this.billInfos[i].selected == true) {
+            ap += Number(this.billInfos[i].fee_price)
+          }
+        }
+        return parseFloat(ap).toFixed(2)
+      },
     },
     mounted() {
       setTimeout(() => {
@@ -175,25 +185,25 @@
             pay_months: this.months,
           }
           ParkApi.getCarBillList(param).then((response) => {
-            let data = response.data;
+            let data = response.data
             if (data.success) {
               if (data.result == null || data.result.length === 0) {
                 Dialog({message: '车牌输入有误或没有可缴的账单'})
               } else {
-                this.billInfos = data.result.bills;
-                this.permit_skip_car_pay = data.result.permit_skip_car_pay;
-                this.reduceMode = data.result.reduce_mode;
+                this.billInfos = data.result.bills
+                this.permit_skip_car_pay = data.result.permit_skip_car_pay
+                this.reduceMode = data.result.reduce_mode
 
                 if(this.queryType === '2') {
-                  let ap = 0
-                  this.billInfos.map(item => {
-                    ap += Number(item.fee_price);
-                  })
-                  this.allPrice = parseFloat(ap).toFixed(2)
+                  for (let i in this.billInfos) {
+                    if (this.$set(this.billInfos[i], "selected", true)) {
+                      this.$set(this.billInfos[i], "selected", true)
+                    }
+                  }
                 }
               }
             } else {
-              Toast.fail(data.message);
+              Toast.fail(data.message)
             }
             this.showOverlay = false
           })
@@ -212,52 +222,63 @@
         this.billInfos = []
       },
       itemClick(index) {
-        let obj = this.$refs.parentBillComponent.checkedObj
-        let arr = obj.slice().sort((a, b) => a - b);
-        let ap = 0
+        let len = this.billInfos.length
         if (this.permit_skip_car_pay === "1") {
-          if(arr.includes(index)) { //选中
+          if(this.billInfos[index].selected) { //选中->取消
+            this.$refs.parentBillComponent.checkedObj.splice(index)
+            for (let i = index; i < len; i++) {
+              //后面的全部取消选中
+              this.$set(this.billInfos[i], "selected", false)
+            }
+          } else {
             this.$refs.parentBillComponent.checkedObj.splice(0)
             for (let i = 0; i <= index; i++) {
               this.$refs.parentBillComponent.checkedObj.push(i)
-              ap += Number(this.billInfos[i].fee_price);
-            }
-          } else { //取消
-            this.$refs.parentBillComponent.checkedObj.splice(index)
-            this.allChecked = false;
-            for (let i = 0; i < index; i++) {
-              ap += Number(this.billInfos[i].fee_price);
+              this.$set(this.billInfos[i], "selected", true)
             }
           }
+        } else {
+          if (this.billInfos[index].selected) {
+            //选中状态下
+            this.$set(this.billInfos[index], "selected", false)
+            //某一个点击了取消后全选消失
+            this.allChecked = false
+          } else {
+            //未选中状态下，前面全部选中
+            this.$set(this.billInfos[index], "selected", true)
+          }
         }
-        this.allPrice = parseFloat(ap).toFixed(2)
       },
       checkAll() {
-        let ap = 0
         this.$refs.parentBillComponent.$refs.checkboxGroup.toggleAll(this.allChecked)
-        let obj = this.$refs.parentBillComponent.checkedObj
-        let arr = obj.slice().sort((a, b) => a - b);
-        for (let i in arr) {
-          ap += Number(this.billInfos[i].fee_price);
+        if(this.allChecked) { //全选
+          for (let i in this.billInfos) {
+            if (this.$set(this.billInfos[i], "selected", true)) {
+              this.$set(this.billInfos[i], "selected", true)
+            }
+          }
+        } else {
+          for (let i in this.billInfos) {
+            this.$set(this.billInfos[i], "selected", false)
+          }
         }
-        this.allPrice = parseFloat(ap).toFixed(2)
       },
       pays() {
         if (this.allPrice < 0.01) {
           Dialog({message: '请选择账单后支付'})
-          return;
+          return
         }
-        let bills = '';
+        let bills = ''
         if(this.months === '1') {
           let arr = this.$refs.parentBillComponent.checkedObj
           for (let i in arr) {
-            bills += this.billInfos[i].bill_id + ",";
+            bills += this.billInfos[i].bill_id + ","
           }
           if(bills.length > 0) {
-            bills = bills.substring(0, bills.length -1);
+            bills = bills.substring(0, bills.length -1)
           }
         } else {
-          bills = this.billInfos[0].bill_id;
+          bills = this.billInfos[0].bill_id
         }
 
         this.$router.push({
