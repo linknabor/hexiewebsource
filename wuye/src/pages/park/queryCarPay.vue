@@ -119,7 +119,7 @@
             let data = response.data
             if (data.success) {
               this.qrImage = data.result
-              if(qrImage) {
+              if(this.qrImage) {
                   this.qrShow = true
               } else {
                 Toast.fail('处理失败,请联系负责人')
