@@ -35,8 +35,8 @@
           <van-divider/>
           <div class="data-detail-bottom">
             <div class="data-detail-bottom-text1 text-center">
-              <van-button v-if="item.allow_invoice==='0' && item.invoice_no === '' && item.receipt_id === ''" color="var(--primary-color)" type="primary" size="small" @click="handelInvoice(item.trade_water_id, '1')">申请数电发票</van-button>
-              <van-button v-if="item.allow_invoice==='1' && item.invoice_no === '' && item.receipt_id === ''" color="var(--primary-color)" type="primary" size="small" @click="handelInvoice(item.trade_water_id, '3')">申请电子收据</van-button>
+              <van-button v-if="item.allow_invoice==='1' && item.invoice_no === '' && item.receipt_id === ''" color="var(--primary-color)" type="primary" size="small" @click="handelInvoice(item.trade_water_id, '1')">申请数电发票</van-button>
+              <van-button v-if="item.allow_invoice==='0' && item.invoice_no === '' && item.receipt_id === ''" color="var(--primary-color)" type="primary" size="small" @click="handelInvoice(item.trade_water_id, '3')">申请电子收据</van-button>
               <van-button v-else-if="item.invoice_no !== '' && item.pdf_addr !== '' " color="var(--primary-color)" type="primary" size="small" @click="handelInvoice(item.trade_water_id, '2', item.pdf_addr)">查看数电发票</van-button>
               <van-button v-else-if="item.receipt_id !== ''" color="var(--primary-color)" type="primary" size="small" @click="handelInvoice(item.trade_water_id, '4', item.receipt_id)">查看电子收据</van-button>
             </div>
