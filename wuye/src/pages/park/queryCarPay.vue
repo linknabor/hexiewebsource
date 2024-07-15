@@ -119,8 +119,8 @@
           ParkApi.getInvoiceQr(param).then((response) => {
             let data = response.data;
             if (data.success) {
-              // this.url = data.result
-              this.qrImage = 'http://weixin.qq.com/q/02WfpRV9MYap_1A41Y1CcX'
+              this.url = data.result
+              // this.qrImage = 'http://weixin.qq.com/q/02WfpRV9MYap_1A41Y1CcX'
               this.qrShow = true
             } else {
               Toast.fail(data.message)
