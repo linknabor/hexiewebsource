@@ -32,10 +32,6 @@ const ParkApi = {
     return http.post(baseUrl + '/park/getPrePaying', param)
   },
 
-  getPayDetailById(param) {
-    return http.get(baseUrl + '/park/getPayDetailById', param)
-  },
-
   getParkPayList() {
     return http.get(baseUrl + '/park/getParkPayList', null)
   },
@@ -48,13 +44,9 @@ const ParkApi = {
     return http.get(baseUrl + '/getBillDetail', param)
   },
 
-  getDiscounts(param) {
-    return http.post(baseUrl + '/getDiscounts', param)
+  getInvoiceQr(param) {
+    return http.get(baseUrl + '/park/getInvoiceQrCode', param)
   },
-
-  getPrePayInfo(param) {
-    return http.post(baseUrl + '/getPrePayInfo', param)
-  }
 
 }
 export default ParkApi

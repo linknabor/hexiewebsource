@@ -4,6 +4,14 @@
       <van-loading type="spinner" />
     </van-overlay>
     <div style="height: 0.1rem"></div>
+
+    <div>
+      <van-popup v-model="qrShow" @close="closePopup">
+        <van-notice-bar ref="notice" wrapable :scrollable="false" text="长按识别二维码关注公众号，进入电子发票自助申请。"/>
+        <vue-qr :text="qrImage" :size="300"></vue-qr>
+      </van-popup>
+    </div>
+
     <van-list v-model="listLoading" :finished="finished"
               finished-text="没有更多了"
               @load="onLoad"
@@ -12,7 +20,7 @@
         <div class="data-detail">
           <van-cell :title="item.park_name" :label="item.car_no" :value="item.pay_amt.concat('元')"/>
           <div class="data-detail-content">
-            <div class="data-invoice" v-if="item.is_invoice === '1'">
+            <div class="data-invoice" v-if="item.invoice_no !== '' || item.receipt_id !== ''">
               已开票
             </div>
            <div class="data-text">
@@ -27,7 +35,10 @@
           <van-divider/>
           <div class="data-detail-bottom">
             <div class="data-detail-bottom-text1 text-center">
-              <van-button color="var(--primary-color)" type="primary" size="small" @click="applyInvoice(item.trade_water_id)">{{item.is_invoice !=='1'?'申请发票':'查看发票'}}</van-button>
+              <van-button v-if="item.allow_invoice==='0' && item.invoice_no === '' && item.receipt_id === ''" color="var(--primary-color)" type="primary" size="small" @click="handelInvoice(item.trade_water_id, '1')">申请数电发票</van-button>
+              <van-button v-if="item.allow_invoice==='1' && item.invoice_no === '' && item.receipt_id === ''" color="var(--primary-color)" type="primary" size="small" @click="handelInvoice(item.trade_water_id, '3')">申请电子收据</van-button>
+              <van-button v-else-if="item.invoice_no !== '' && item.pdf_addr !== '' " color="var(--primary-color)" type="primary" size="small" @click="handelInvoice(item.trade_water_id, '2', item.pdf_addr)">查看数电发票</van-button>
+              <van-button v-else-if="item.receipt_id !== ''" color="var(--primary-color)" type="primary" size="small" @click="handelInvoice(item.trade_water_id, '4', item.receipt_id)">查看电子收据</van-button>
             </div>
             <div class="data-detail-bottom-text2" v-if="item.data_type === '1'">
               <img class="data-img" src="../../assets/images/common/icon_time_gray.png"/>
@@ -41,8 +52,9 @@
 </template>
 
 <script>
-  import {Cell, List, Divider, Button, Toast, Dialog, Overlay, Loading } from 'vant';
+  import {Cell, List, Divider, Button, Toast, Dialog, Overlay, Loading, Popup,NoticeBar } from 'vant';
   import ParkApi from "@/api/Park.js"
+  import VueQr from 'vue-qr'
 
   export default {
     name: "queryCarPay",
@@ -52,6 +64,8 @@
         listLoading: false,
         finished: false,
         payList: [],
+        qrShow: false,
+        qrImage: ''
       }
     },
     components: {
@@ -63,6 +77,9 @@
       [Dialog.name]: Dialog,
       [Overlay.name]: Overlay,
       [Loading.name]: Loading,
+      [Popup.name]: Popup,
+      [NoticeBar.name]: NoticeBar,
+      VueQr
     },
     methods: {
       onLoad() {
@@ -94,9 +111,27 @@
           }
         })
       },
-
-      applyInvoice(trade_water_id) {
-        window.location.href = this.basePageUrl + "wuye/invoice.html?trade_water_id=" + trade_water_id
+      handelInvoice(trade_water_id, type, obj) {
+        if('1' === type || '3' === type) {
+          let param = {
+            trade_water_id: trade_water_id
+          }
+          ParkApi.getInvoiceQr(param).then((response) => {
+            let data = response.data;
+            if (data.success) {
+              // this.url = data.result
+              this.qrImage = 'http://weixin.qq.com/q/02WfpRV9MYap_1A41Y1CcX'
+              this.qrShow = true
+            } else {
+              Toast.fail(data.message)
+            }
+          })
+        } else if('2' === type) { //查看电子发票
+          location.href = obj
+        } else if('4' === type) { //查看电子收据
+          let appid = this.getUrlParam("oriApp")
+          this.$router.push({path: '/receipt', query:{appid: appid, receiptId: obj}})   
+        }
       },
 
       goBack() {
