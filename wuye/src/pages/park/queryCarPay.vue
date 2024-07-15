@@ -92,7 +92,6 @@
       getPayList() {
         ParkApi.getParkPayList().then((response) => {
           let data = response.data
-          console.log(data)
           if (data && data.success && data.result) {
             if(data.result.length === 0) {
               Dialog({message: '没有支付记录'})
@@ -117,11 +116,14 @@
             trade_water_id: trade_water_id
           }
           ParkApi.getInvoiceQr(param).then((response) => {
-            let data = response.data;
+            let data = response.data
             if (data.success) {
-              this.url = data.result
-              // this.qrImage = 'http://weixin.qq.com/q/02WfpRV9MYap_1A41Y1CcX'
-              this.qrShow = true
+              this.qrImage = data.result
+              if(qrImage) {
+                  this.qrShow = true
+              } else {
+                Toast.fail('处理失败,请联系负责人')
+              }
             } else {
               Toast.fail(data.message)
             }
