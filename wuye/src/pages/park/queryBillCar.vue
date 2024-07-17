@@ -269,7 +269,7 @@
           return
         }
         let bills = ''
-        if(this.months === '1') {
+        if(this.queryType === '1') {
           let arr = this.$refs.parentBillComponent.checkedObj
           for (let i in arr) {
             bills += this.billInfos[i].bill_id + ","
@@ -340,7 +340,7 @@
   }
 
   .checkboxStyle {
-    height: 0.85rem;
+    height: 0.83rem;
     margin-left: 0.2rem
   }
 
