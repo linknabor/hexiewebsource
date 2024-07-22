@@ -41,11 +41,11 @@
         </div>
     </div>
     
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6/dist/vue.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vant@2.12/lib/vant.min.js"></script>
-    <script src="https://unpkg.com/axios@0.21.4/dist/axios.min.js"></script>
+    <script src="./static/locaVue@2/vue.min.js"></script>
+    <script src="./static/locaVue@2/vant.min.js"></script>
+    <script src="./static/locaVue@2/axios.min.js"></script>
     <!-- 引入样式文件 -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@2.12/lib/index.css" />
+    <link rel="stylesheet" href="./static/locaVue@2/index.css" />
     <script>
         var baseUrl = /127|test/.test(location.origin)?'https://test.e-shequ.cn/weixin/':
             /uat/.test(location.origin)?'https://uat.e-shequ.cn/hexie/weixin/' : 'https://www.e-shequ.cn/weixin/'
@@ -79,7 +79,8 @@
                 payAmt: 0.00, //剔除掉优惠和精度后的实际支付金额
                 reduceAmt:0.00, //优惠减免金额
                 reduceMoney:0.00, //精度损失的金额
-
+				payScenarios:'', //场景
+				parkName:'', //停车场名称
                 ruleType:'',
             },
             watch: {
@@ -93,18 +94,22 @@
                     let invoiceTitle = params.get("invoiceTitle")
                     let billIds = params.get("billIds")
                     let reduceMode = params.get("reduceMode")
+					let payScenarios = params.get("payScenarios")
+					let parkName = params.get("parkName")
                     this.invoiceTitleType = invoiceTitleType
                     this.creditCode = creditCode
                     this.invoiceTitle = invoiceTitle
                     this.billIds = billIds
                     this.reduceMode = reduceMode
+					this.payScenarios = payScenarios
+					this.parkName = parkName
                 },
 
                 getDiscount() {
                     this.show_overlay = true
                     let param = {
                         billId: this.billIds,
-                        payType: '0',  //0微信
+                        payType: '2',  //0微信
                         payFeeType: '02', //01管理费，02停车费
                     }
 
@@ -122,10 +127,10 @@
                             } else {
                                 this.formatPay(this.respObj.total_fee_price)
                             }
+							this.show_overlay = false;
                         } else {
-                            Toast.fail(data.message);
+                            vant.Toast.fail(data.errorCode,data.message);
                         }
-                        this.show_overlay = false;
                     })
                 },
 
@@ -173,7 +178,7 @@
                     }
 
                     this.reduceMoney = parseFloat(amt) - parseFloat(reduced_amt.toFixed(2));//四舍五入的钱传给后端
-                    this.reduceMoney = vm.reduceMoney.toFixed(2); //减少的钱
+                    this.reduceMoney = this.reduceMoney.toFixed(2); //减少的钱
                     this.payAmt = reduced_amt.toFixed(2); //合计
 
                 },
@@ -189,6 +194,9 @@
                         credit_code : this.creditCode,
                         invoice_title : this.invoiceTitle,
                         billId : this.billIds,
+						isQrcode: '1',
+						pay_scenarios: this.payScenarios,
+						park_name: this.parkName,
                     }
 
                     axiosInstance({
@@ -239,7 +247,7 @@
                                 }
                             })
                         } else {
-                            Toast.fail(data.message);
+                            vant.Toast.fail(data.message);
                         }
                         this.show_overlay = false
                     })
