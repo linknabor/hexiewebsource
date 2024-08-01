@@ -23,7 +23,7 @@ const config = {
         
 		oauthUrl: 'https://open.weixin.qq.com/connect/oauth2/authorize?',
         oauthUrlPostFix:'&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect',
-		oauthUrlPostSilent:'&response_type=code&scope=snsapi_base&state=123#wechat_redirect'
+		oauthUrlPostSilent:'&response_type=code&scope=snsapi_base&state=123#wechat_redirect',
         
 
         alipayAppId: /127|test/.test(location.origin)?'2021001163621308':
