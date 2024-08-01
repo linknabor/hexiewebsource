@@ -25,6 +25,11 @@ const config = {
         oauthUrlPostFix:'&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect',
 		oauthUrlPostSilent:'&response_type=code&scope=snsapi_base&state=123#wechat_redirect'
         
+
+        alipayAppId: /127|test/.test(location.origin)?'2021001163621308':
+                /uat/.test(location.origin)?'2021001163651280' : '2021001161682727',
+
+        oauthAlipayUrl: 'https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=APPID&scope=SCOPE&redirect_uri=ENCODED_URL',
     }
 
     export default config;

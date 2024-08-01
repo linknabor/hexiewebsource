@@ -152,7 +152,7 @@
       },
 
       goBack() {
-        this.$router.push('/indexCar');
+        this.$router.push('/indexPark');
       }
     }
   }
