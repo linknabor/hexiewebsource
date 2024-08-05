@@ -57,7 +57,7 @@
   import VueQr from 'vue-qr'
 
   export default {
-    name: "queryCarPay",
+    name: "queryParkPayDetail",
     data() {
       return {
         show_overlay: true,
@@ -137,7 +137,7 @@
       },
 
       goBack() {
-        this.$router.push('/indexCar');
+        this.$router.push('/indexPark');
       },
 
     },

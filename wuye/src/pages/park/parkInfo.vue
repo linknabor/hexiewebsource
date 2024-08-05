@@ -82,7 +82,6 @@
         </van-list>
       </div>
     </van-skeleton>
-    <user-login ref="userLogin" @getLoginUser="getLoginUser"></user-login>
   </div>
 </template>
 
@@ -92,16 +91,12 @@
     Skeleton,Icon,Grid,GridItem,Search,List,NavBar,Dialog,Switch,Toast,
   } from 'vant';
   import plateNumber from '@/components/plateNumber'
-  import UserLogin from "@/components/UserLogin"
-  import UserApi from "@/api/api.js"
   import ParkApi from "@/api/Park.js"
   import Storage from "@/util/storage.js"
-  import {Base64} from 'js-base64'
 
   export default {
-    name: "indexPark",
+    name: "parkInfo",
     components: {
-      "user-login": UserLogin,
       plateNumber,
       [Overlay.name]: Overlay,
       [Loading.name]: Loading,
@@ -123,10 +118,12 @@
     },
     data() {
       return {
-        oriParam: this.$route.query.param,
-        oriParkId: '',
         show_overlay: true,
         loading: true,
+        parkId: this.$route.query.parkId, //停车场ID
+        scanChannel: this.$route.query.scanChannel, //3微信公众号扫的 1支付宝扫的
+        userInfo:{},
+        
         showFlag: true,
         searchValue: '',
         listLoading: false,
@@ -148,6 +145,8 @@
       }
     },
     created() {
+      console.log(3333)
+      this.userInfo = Storage.get('userInfo')
       setTimeout(() => {
         this.loading = false
       }, 1000) //延迟时间 这里是1秒
@@ -155,59 +154,25 @@
     mounted() {
       this.show_overlay = true
       this.loading = true
-      this.getParam()
-      // this.initSession4Test()
-      this.getUserInfo()
       this.initCar()
       this.loading = false
       this.show_overlay = false
     },
 
     methods: {
-      initSession4Test() {
-        var data = {
-          oriApp: "wx95f46f41ca5e570e",
-        };
-        UserApi.login("163275", data)
-      },
-
-      getUserInfo() {
-        UserApi.getUserInfo().then((response) => {
-          let data = response.data;
-          if (data.success && data.result != null) {
-            Storage.set("userInfo", data.result)
-            this.$emit("getUserInfo", data.result)
-          } else {
-            this.$refs.userLogin.login();
-          }
-        })
-          .catch((error) => {
-            Toast(error);
-          });
-      },
-
-      getParam() {
-        if(this.oriParam === undefined) {
-          return;
-        }
-        let theRequest = {};
-        let param = Base64.decode(this.oriParam);
-        let params = param.split("&");
-        for (let i = 0; i < params.length; i++) {
-          theRequest[params[i].split("=")[0]] = decodeURI(params[i].split("=")[1]);
-        }
-        if(theRequest.parkId !== '' && theRequest.parkId !== undefined) {
-          this.oriParkId = theRequest.parkId;
-        }
-      },
-
       initCar() {
-        if (this.oriParkId === undefined) {
-          this.oriParkId = "";
+        if(!this.userInfo) {
+          Toast.fail('登录失败，请刷新重试')
+          return
+        }
+        if (this.parkId === undefined) {
+          this.parkId = ''
         }
         let param = {
-          parkId: this.oriParkId
+          parkId: this.parkId,
+          scanChannel: this.scanChannel,
         }
+
         ParkApi.getIndexCar(param).then((response) => {
           let data = response.data
           if (data && data.success) {
@@ -235,7 +200,16 @@
               Toast.fail('请选择停车场')
               return
           }
-          window.location.href = this.basePageUrl + "parkPay.html?carNo=" + data + "&parkId=" + this.selectParkId + "&payScenarios=03"
+
+          this.$router.push({
+          path: '/parkPayingDetail',
+            query: {
+              dataType: '1', //临停
+              carNo: data,
+              parkId: this.selectParkId,
+              scanChannel: this.scanChannel
+            }
+          })
         }
       },
 
@@ -281,30 +255,28 @@
         }
       },
 
+      //新增车辆
       addCar() {
         this.$router.push('/addCar');
       },
 
+      //停车缴费记录
       queryPay() {
-        this.$router.push('/queryCarPay');
+        this.$router.push('/queryParkPayDetail');
       },
 
+      //包月车缴费
       queryBillCar() {
         this.$router.push({
-          path: '/queryBillCar',
+          path: '/queryParkFixBill',
           query: {
             parkId: this.selectParkId,
             parkName: this.selectParkName,
             carList: JSON.stringify(this.carList),
             allow_car_pay_type: this.allow_car_pay_type,
+            scanChannel: this.scanChannel
           }
         })
-      },
-
-      getLoginUser(data) {
-        if (data) {
-          this.$emit("getUserInfo", data.result);
-        }
       },
     },
   }

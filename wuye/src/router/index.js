@@ -238,37 +238,20 @@ const router= new VueRouter({
           title:'维修订单明细'
         }
       },
-
       {
         path:'/indexCar',
         name:'indexCar',
         component:resolve=> require(['@/pages/park/indexCar'],resolve),
         meta:{
-          title:'停车场'
+          title:'停车场授权登录'
         }
       },
       {
-        path:'/indexPark',
-        name:'indexPark',
-        component:resolve=> require(['@/pages/park/indexPark'],resolve),
+        path:'/parkInfo',
+        name:'parkInfo',
+        component:resolve=> require(['@/pages/park/parkInfo'],resolve),
         meta:{
           title:'停车场'
-        }
-      },
-      {
-        path:'/queryBillCar',
-        name:'queryBillCar',
-        component:resolve=> require(['@/pages/park/queryBillCar'],resolve),
-        meta:{
-          title:'包月车缴费'
-        }
-      },
-      {
-        path:'/queryCarPay',
-        name:'queryCarPay',
-        component:resolve=> require(['@/pages/park/queryCarPay'],resolve),
-        meta:{
-          title:'停车记录'
         }
       },
       {
@@ -280,11 +263,27 @@ const router= new VueRouter({
         }
       },
       {
-        path:'/carBillPayDetail',
-        name:'carBillPayDetail',
-        component:resolve=> require(['@/pages/park/carBillPayDetail'],resolve),
+        path:'/queryParkPayDetail',
+        name:'queryParkPayDetail',
+        component:resolve=> require(['@/pages/park/queryParkPayDetail'],resolve),
+        meta:{
+          title:'车辆缴费记录'
+        }
+      },
+      {
+        path:'/queryParkFixBill',
+        name:'queryParkFixBill',
+        component:resolve=> require(['@/pages/park/queryParkFixBill'],resolve),
         meta:{
           title:'包月车缴费'
+        }
+      },
+      {
+        path:'/parkPayingDetail',
+        name:'parkPayingDetail',
+        component:resolve=> require(['@/pages/park/parkPayingDetail'],resolve),
+        meta:{
+          title:'停车缴费确认'
         }
       },
       {
@@ -313,14 +312,22 @@ const router= new VueRouter({
       },
     ]
 });
+const parkArray = ['indexCar','parkInfo', 'queryParkPayDetail', 'addCar', 'queryParkFixBill', 'parkPayingDetail']
 
-const viewArray = ['index', 'register', 'sms_notification', 'receipt', 'version2', 'version3', 'huihong','wangdu','indexCar','indexPark', 'queryCarPay', 'addCar', 'queryBillCar','carBillPayDetail']
+const viewArray = ['index', 'register', 'sms_notification', 'receipt', 'version2', 'version3', 'huihong','wangdu','indexCar','parkInfo', 'queryParkPayDetail', 'addCar', 'queryParkFixBill', 'parkPayingDetail']
+
 //路由的钩子函数，
 //在每一次路由跳转之前会进入这个方法 to：到哪去  from：从哪来 next() 调用这个方法来完成这个钩子函数
 router.beforeEach((to, from, next) => {
   let pageName = to.matched[0].name
   if(viewArray.indexOf(pageName)===-1){
     if(!common.checkRegisterStatus()){
+      return
+  	}
+  }
+  //除了停车场页面，其他页面都要求登录
+  if(parkArray.indexOf(pageName) ===-1) {
+    if(!checkCodeAndLogin()){
       return
   	}
   }

@@ -101,7 +101,7 @@
   import ParkApi from "@/api/Park.js"
 
   export default {
-    name: "testCar",
+    name: "queryParkFixBill",
     components: {
       BillList,
       plateNumber,
@@ -127,6 +127,7 @@
         parkId: this.$route.query.parkId,
         parkName: this.$route.query.parkName,
         allow_car_pay_type: this.$route.query.allow_car_pay_type,
+        scanChannel: this.$route.query.scanChannel, //3微信公众号扫的 1支付宝扫的
         allow_car_pay_list :[],
         queryType: '1', //缴费方式
         carObj:{
@@ -143,6 +144,8 @@
 
         allChecked: false,
         reduceMode: '', //减免模式
+
+        
       }
     },
     computed: {
@@ -282,12 +285,14 @@
         }
 
         this.$router.push({
-          path: '/carBillPayDetail',
+          path: '/parkPayingDetail',
           query: {
             billIds: bills,
             totalPrice: this.allPrice,
             reduceMode: this.reduceMode,
-            parkName: this.parkName
+            parkName: this.parkName,
+            dataType: '2', //包月
+            scanChannel: this.scanChannel
           }
         })
       }

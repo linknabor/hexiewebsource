@@ -3,6 +3,7 @@
         <van-overlay :show="show_overlay">
             <van-loading type="spinner"/>
         </van-overlay>
+        loading...
     </div>
     
 </template>
@@ -11,6 +12,7 @@
 import {Base64} from 'js-base64'
 import {Toast, Overlay, Loading} from 'vant'
 import Api from "@/api/api.js"
+import Storage from "@/util/storage.js"
 import Common from "@/util/common.js"
 import Config from "@/util/config.js"
 export default {
@@ -23,28 +25,39 @@ export default {
     data() {
       return {
         show_overlay: true,
-        showWeixin: false,
         oriParam: this.$route.query.param,
         parkId: '',
         appid: Config.appId, //默认微信appid
-        componentAppId: '',
-
-        scanChannel: '', //0微信扫的 1支付宝扫的
-        openid: '', //根据scanChannel的值，这里存在微信的openid或支付宝的userid
+        componentAppId: Config.componentAppId,
+        scanChannel: '3', //3微信公众号扫的 1支付宝扫的
       }
     },
     mounted() {
-        console.log(1)
         this.getParam()
-        console.log(2)
-        this.IsWeixinOrAlipay()
+        //this.IsWeixinOrAlipay()
+        this.initSession4Test()
     },
     methods: {
         initSession4Test() {
             var data = {
-            oriApp: "wx95f46f41ca5e570e",
+                oriApp: "wx95f46f41ca5e570e",
             };
             Api.login("163275", data)
+            this.getUserInfo()
+        },
+
+        getUserInfo() {
+            this.showOverlay = true
+            Api.getUserInfo().then((response) => {
+                let data = response.data
+                if (data.success && data.result != null) {
+                    Storage.set("userInfo", data.result)
+                    this.showOverlay = false
+                    this.gotoPark()
+                }
+            }).catch((error) => {
+                Toast(error)
+            })
         },
 
         getParam() {
@@ -55,9 +68,11 @@ export default {
                 for (let i = 0; i < params.length; i++) {
                     theRequest[params[i].split("=")[0]] = decodeURI(params[i].split("=")[1])
                 }
+                if(theRequest.parkId !== '' && theRequest.parkId !== undefined) {
+                    this.parkId = theRequest.parkId
+                }
                 if(theRequest.appid) {
                     this.appid = theRequest.appid
-                    this.componentAppId = Config.componentAppId
                 }
             } else { //从公众号底部菜单进入的，码上没参
                 this.appid = Config.appId
@@ -69,11 +84,9 @@ export default {
         },
 
         IsWeixinOrAlipay() {
-            console.log(location.origin)
-            var ua = window.navigator.userAgent.toLowerCase()
+            let ua = window.navigator.userAgent.toLowerCase()
             let o = Common.getCallBackParams().code
-            let backurl = location.origin + Common.removeParamFromUrl(["code", ])
-
+            var backurl = location.origin + Common.removeParamFromUrl(["from", "bind", "code", "share_id", "isappinstalled", "state", "m", "c", "a"]) + Common.addParamHsah()
             //判断是不是微信
             if (ua.match(/MicroMessenger/i) == 'micromessenger') {
                 this.weixinAuthorize(o, backurl)
@@ -92,54 +105,58 @@ export default {
                 url = url.replace("APPID", this.appid).replace("SCOPE", "auth_base").replace("ENCODED_URL", encodeURIComponent(backurl))
                 location.href = url
             } else {
-                Api.alipayAuthorize(o).then((response) => {
-                    if (response.success) {
-                        let openid = response.result.userid
-                        this.gotoPark(openid)
-                    } else {
-                         Toast.fail('授权失败，请刷新重试')
-                    }
-                })
+                this.authorize(o)
             }
         },
 
         weixinAuthorize(o, backurl) {
-            this.scanChannel = '0' //微信
-
+            this.scanChannel = '3' //微信公众号
             if(void 0 === o) {
-                let url = Config.oauthUrl + "appid=" + this.appid
-                if(this.componentAppId) {
-                    url += "&component_appid=" + this.componentAppId
-                }
+                let url = Config.oauthUrl + "appid=" + this.appid + "&component_appid=" + this.componentAppId
                 url += "&redirect_uri=" + encodeURIComponent(backurl) + Config.oauthUrlPostSilent + "#wechat_redirect"
+                console.log('href:', url)
                 location.href = url
             } else {
-                Api.weixinAuthorize(o, this.appid).then((response) => {
-                    if (response.success) {
-                        let openid = response.result.openid
-                        this.gotoPark(openid)
-                    } else {
-                         Toast.fail('授权失败，请刷新重试')
-                    }
-                })
+                this.authorize(o)
             }
         },
 
-        gotoPark(openid) {
-            Toast(this.scanChannel, openid)
-            // this.$router.push({
-            //     path: '/indexPark',
-            //     query: {
-            //         scanChannel: this.scanChannel,
-            //         openid: openid,
-            //         param: this.oriParam
-            //     }
-            // })
+        authorize(o) {
+            let param = {
+                appid: this.appid,
+                sourceType: this.scanChannel,
+                code: o
+            }
+            Api.h5Authorize(param).then((response) => {
+                console.log('resp:', response)
+                let data = response.data
+                if (!data.success) {
+                    Common.removeParamFromUrl(["code"])
+                    Toast('请刷新重试')
+                } else {
+                    Storage.set("userInfo", data.result)
+                }
+            })
+        },
+
+        gotoPark() {
+            this.$router.push({
+                path: '/parkInfo',
+                query: {
+                    scanChannel: this.scanChannel,
+                    parkId: this.parkId
+                }
+            })
         },
     }
 }
 </script>
 
 <style>
-
+.van-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
 </style>

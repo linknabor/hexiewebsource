@@ -44,7 +44,7 @@
     }
   };
 </script>
-<style>
+<style scoped>
 
   .main {
     margin: .1rem .3rem;

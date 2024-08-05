@@ -28,12 +28,9 @@ const api = {
     getCellAddrList(param) {
         return http.get(baseUrl + '/getLikeCellAddr', param)
     },
-    weixinAuthorize(o, appid) {
-        return http.post(baseUrl + '/authorize/'+ o + '/' + appid, null)
-    },
-    alipayAuthorize(o) {
-        return http.post(baseUrl + '/authorizeAlipay/'+ o, null)
-    },
+    h5Authorize(param) {
+        return http.post(baseUrl + '/h5/authorize', param)
+    }
 }
 
 export default api;
