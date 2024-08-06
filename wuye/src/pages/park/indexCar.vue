@@ -3,7 +3,7 @@
         <van-overlay :show="show_overlay">
             <van-loading type="spinner"/>
         </van-overlay>
-        loading...
+         loading...
     </div>
     
 </template>
@@ -32,34 +32,23 @@ export default {
         scanChannel: '3', //3微信公众号扫的 1支付宝扫的
       }
     },
+    watch:{
+        $route(to, from) {//监听到路由（参数）改变
+            // this.getParam()
+            // this.IsWeixinOrAlipay()
+            window.location.reload();
+        }
+    },
     mounted() {
-        this.getParam()
-        //this.IsWeixinOrAlipay()
-        this.initSession4Test()
+        setTimeout(() => {
+            this.getParam()
+        }, 10);
+        
+        setTimeout(() => {
+            this.IsWeixinOrAlipay()
+        }, 10);
     },
     methods: {
-        initSession4Test() {
-            var data = {
-                oriApp: "wx95f46f41ca5e570e",
-            };
-            Api.login("163275", data)
-            this.getUserInfo()
-        },
-
-        getUserInfo() {
-            this.showOverlay = true
-            Api.getUserInfo().then((response) => {
-                let data = response.data
-                if (data.success && data.result != null) {
-                    Storage.set("userInfo", data.result)
-                    this.showOverlay = false
-                    this.gotoPark()
-                }
-            }).catch((error) => {
-                Toast(error)
-            })
-        },
-
         getParam() {
             if(this.oriParam) { //从生成的二维码进来的，码上带有参数
                 let theRequest = {}
@@ -79,29 +68,25 @@ export default {
             }
         },
 
-        getParkInfo() {
-            
-        },
-
         IsWeixinOrAlipay() {
             let ua = window.navigator.userAgent.toLowerCase()
-            let o = Common.getCallBackParams().code
-            var backurl = location.origin + Common.removeParamFromUrl(["from", "bind", "code", "share_id", "isappinstalled", "state", "m", "c", "a"]) + Common.addParamHsah()
             //判断是不是微信
             if (ua.match(/MicroMessenger/i) == 'micromessenger') {
-                this.weixinAuthorize(o, backurl)
+                this.weixinAuthorize()
             } else if (ua.match("alipayclient") == 'alipayclient') {
-                this.alipayAuthorize(o, backurl)
+                this.alipayAuthorize()
             } else {
                 Toast.fail('二维码错误')
             }
         },
 
-        alipayAuthorize(o, backurl) {
-           this.scanChannel = '1' //支付宝
-           this.appid = Config.alipayAppId
-           if(void 0 === o) {
-                let url = Config.oauthAlipayUrl
+        alipayAuthorize() {
+            let o = Common.getCallBackAlipayParams().auth_code
+            this.scanChannel = '1' //支付宝
+            if(void 0 === o) {
+                var backurl = location.origin + Common.removeParamFromUrl(["auth_code"]) + Common.addParamHsah()
+                this.appid = Config.alipayAppId
+                let url = Config.oauthAlipayUrl + '&state=123'
                 url = url.replace("APPID", this.appid).replace("SCOPE", "auth_base").replace("ENCODED_URL", encodeURIComponent(backurl))
                 location.href = url
             } else {
@@ -109,12 +94,13 @@ export default {
             }
         },
 
-        weixinAuthorize(o, backurl) {
+        weixinAuthorize() {
+            let o = Common.getCallBackParams().code
             this.scanChannel = '3' //微信公众号
             if(void 0 === o) {
+                var backurl = location.origin + Common.removeParamFromUrl(["from", "bind", "code", "share_id", "isappinstalled", "state", "m", "c", "a"]) + Common.addParamHsah()
                 let url = Config.oauthUrl + "appid=" + this.appid + "&component_appid=" + this.componentAppId
                 url += "&redirect_uri=" + encodeURIComponent(backurl) + Config.oauthUrlPostSilent + "#wechat_redirect"
-                console.log('href:', url)
                 location.href = url
             } else {
                 this.authorize(o)
@@ -128,13 +114,14 @@ export default {
                 code: o
             }
             Api.h5Authorize(param).then((response) => {
-                console.log('resp:', response)
                 let data = response.data
                 if (!data.success) {
                     Common.removeParamFromUrl(["code"])
+                    Common.removeParamFromUrl(["auth_code"])
                     Toast('请刷新重试')
                 } else {
                     Storage.set("userInfo", data.result)
+                    this.gotoPark()
                 }
             })
         },

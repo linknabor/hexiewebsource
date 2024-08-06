@@ -145,7 +145,6 @@
       }
     },
     created() {
-      console.log(3333)
       this.userInfo = Storage.get('userInfo')
       setTimeout(() => {
         this.loading = false

@@ -158,7 +158,6 @@ export default {
         } else if('2' === this.dataType) {
             this.getBillDetail()
         }
-        console.log(this.dataType)
     },
     methods: {
         getTempCarAmt() {
