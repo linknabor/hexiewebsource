@@ -168,6 +168,7 @@
                 
 
                 pay() {
+                    this.show_overlay = true
                     let dataType = this.paramObj.dataType
                     if('1' === dataType) { //道闸临停支付
                         axiosInstance({
@@ -181,6 +182,7 @@
                                 this.payChannel(data)
                             } else {
                                 alert(data.message);
+                                this.show_overlay = false
                                 return
                             }
                         })
@@ -188,13 +190,11 @@
                         let param = this.paramObj
                         param.reduceAmt = this.reduceMoney
                         param.ruleType = this.ruleType
-                        param.reductionAmt = this.reductionAmt
+                        param.reductionAmt = this.reduceMoney
                         param.payFeeType = '02'
                         param.isQrcode = '1'
-                        param.reduceAmt = this.reduceMoney
-                        param.reduceAmt = this.reduceMoney
                         axiosInstance({
-                            url: "/getPrePayInfo",
+                            url: "/getPrePayInfo4Qrcode",
                             method: 'post',
                             headers: {'Content-Type': 'application/json;charset=UTF-8'},
                             data: param,
@@ -204,10 +204,12 @@
                                 this.payChannel(data)
                             } else {
                                 alert(data.message);
+                                this.show_overlay = false
                                 return
                             }
                         })
                     }
+                    this.show_overlay = false
                 },
 
                 payChannel(data) {

@@ -62,10 +62,9 @@
       </div>
 
       <div id="mapList" v-if="!showFlag">
-        <van-nav-bar title="停车场列表" left-text="返回" left-arrow @click-left="goBack"
-        />
+        <van-nav-bar title="停车场列表" left-text="返回" left-arrow @click-left="goBack"/>
         <div>
-          <van-search v-model="searchValue" @search="onSearch" show-action placeholder="请输入停车场名称">
+          <van-search style="padding-right:0.2rem" v-model="searchValue" @search="onSearch" show-action placeholder="请输入停车场名称">
             <template slot="action">
               <div @click="onSearch">搜索</div>
             </template>
@@ -93,7 +92,6 @@
   import plateNumber from '@/components/plateNumber'
   import ParkApi from "@/api/Park.js"
   import Storage from "@/util/storage.js"
-
   export default {
     name: "parkInfo",
     components: {
@@ -157,7 +155,6 @@
       this.loading = false
       this.show_overlay = false
     },
-
     methods: {
       initCar() {
         if(!this.userInfo) {

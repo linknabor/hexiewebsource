@@ -3,7 +3,6 @@
         <van-overlay :show="show_overlay">
             <van-loading type="spinner"/>
         </van-overlay>
-         loading...
     </div>
     
 </template>
@@ -34,8 +33,6 @@ export default {
     },
     watch:{
         $route(to, from) {//监听到路由（参数）改变
-            // this.getParam()
-            // this.IsWeixinOrAlipay()
             window.location.reload();
         }
     },
@@ -46,9 +43,29 @@ export default {
         
         setTimeout(() => {
             this.IsWeixinOrAlipay()
+            // this.initSession4Test()
+            // this.getUserInfo()
         }, 10);
     },
     methods: {
+        initSession4Test() {
+            var data = {
+            oriApp: "wx95f46f41ca5e570e",
+            };
+            Api.login("163275", data)
+        },
+        getUserInfo() {
+            Api.getUserInfo().then((response) => {
+                let data = response.data;
+                if (data.success && data.result != null) {
+                    Storage.set("userInfo", data.result)
+                }
+                this.gotoPark()
+            }).catch((error) => {
+                Toast(error);
+            });
+        },
+
         getParam() {
             if(this.oriParam) { //从生成的二维码进来的，码上带有参数
                 let theRequest = {}
@@ -113,11 +130,11 @@ export default {
                 sourceType: this.scanChannel,
                 code: o
             }
+            Common.removeParamFromUrl(["code"])
+            Common.removeParamFromUrl(["auth_code"])
             Api.h5Authorize(param).then((response) => {
                 let data = response.data
                 if (!data.success) {
-                    Common.removeParamFromUrl(["code"])
-                    Common.removeParamFromUrl(["auth_code"])
                     Toast('请刷新重试')
                 } else {
                     Storage.set("userInfo", data.result)
@@ -131,7 +148,7 @@ export default {
                 path: '/parkInfo',
                 query: {
                     scanChannel: this.scanChannel,
-                    parkId: this.parkId
+                    parkId: this.parkId,
                 }
             })
         },

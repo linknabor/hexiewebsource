@@ -3,7 +3,56 @@
     <van-overlay :show="show_overlay">
       <van-loading type="spinner"/>
     </van-overlay>
-    <div v-if="dataType==='1'" style="margin: 0.2rem">
+    <van-skeleton title :row="3" :loading="show_overlay">
+    <div v-if="dataType==='1'" style="margin: 0.2rem;">
+        <div style="position: relative;top: 0px;left: 0px;height: 4.8rem;">
+            <img class="bg-park" src="../../assets/img/bg_parkpay.png" >
+
+            <div class="data-text1">应付费用(￥)</div>
+            <div class="data-text2">{{respObj.fee_amt}}</div>
+
+            <div class="data-text3">停车时长</div>
+            <div class="data-text4">{{respObj.park_time}}</div>
+        </div>
+        <van-cell>
+            <template slot="title">
+                <div class="data-font-size3" style="width: 30%;float: left;color:#969799">车牌号</div>
+                <div class="data-font-size3" style="width:70%;float: left;">{{respObj.car_no}}</div>
+            </template>
+        </van-cell>
+        <van-cell>
+            <template slot="title">
+                <div class="data-font-size3" style="width: 30%;float: left;color:#969799">车辆类型</div>
+                <div class="data-font-size3" style="width:70%;float: left;">临时车</div>
+            </template>
+        </van-cell>
+        <van-cell>
+            <template slot="title">
+                <div class="data-font-size3" style="width: 30%;float: left;color:#969799">入场时间</div>
+                <div class="data-font-size3" style="width:70%;float: left;">{{respObj.in_time}}</div>
+            </template>
+        </van-cell>
+        <van-cell>
+            <template slot="title">
+                <div class="data-font-size3" style="width: 30%;float: left;color:#969799">总金额</div>
+                <div class="data-font-size3" style="width:70%;float: left;">{{respObj.tot_amt}}</div>
+            </template>
+        </van-cell>
+        <van-cell>
+            <template slot="title">
+                <div class="data-font-size3" style="width: 30%;float: left;color:#969799">已付金额</div>
+                <div class="data-font-size3" style="width:70%;float: left;">{{respObj.already_amt}}</div>
+            </template>
+        </van-cell>
+        <div style="text-align: center;margin-top: 0.6rem;">
+            <van-button type="warning" size="small" style="width:3rem;height:0.8rem" round @click="toPay">
+                <template slot="default">
+                    <span style="font-size:0.28rem">立即支付</span>
+                </template>
+            </van-button>
+        </div>
+    </div>
+    <!-- <div v-if="dataType==='0'" style="margin: 0.2rem">
         <div class="data-head">
             <div class="data-title">
                 {{ respObj.park_name }}
@@ -16,6 +65,8 @@
             <van-cell title="车牌号" :value="respObj.car_no"></van-cell>
             <van-cell title="入场时间" :value="respObj.in_time"></van-cell>
             <van-cell title="停车时长" :value="parkTime"></van-cell>
+            <van-cell title="总金额" :value="respObj.tot_amt"></van-cell>
+            <van-cell title="已付金额" :value="respObj.already_amt"></van-cell>
         </van-cell-group>
 
         <div class="data-desc">
@@ -41,7 +92,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
     <div v-else-if="dataType === '2'" style="margin: 0.2rem">
         <div class="title">
         <van-cell-group title="车主信息">
@@ -102,11 +153,12 @@
         </van-button>
         </div>
     </div>
+    </van-skeleton>
   </div>
 </template>
 
 <script>
-import {Overlay, Loading,CellGroup, Cell, Icon, Button, Toast, NoticeBar, Field, RadioGroup, Radio, Collapse, CollapseItem} from 'vant';
+import {Overlay, Loading,CellGroup, Cell, Icon, Button, Toast, NoticeBar, Field, RadioGroup, Radio, Collapse, CollapseItem, Skeleton} from 'vant';
 import ParkApi from "@/api/Park.js"
 export default {
     name: 'parkPayingDetail',
@@ -124,6 +176,7 @@ export default {
       [Field.name]: Field,
       [RadioGroup.name]: RadioGroup,
       [Radio.name]: Radio,
+      [Skeleton.name]: Skeleton,
     },
     data() {
       return {
@@ -137,8 +190,6 @@ export default {
         parkName: this.$route.query.parkName,
         feeList:[],
         respObj: {},
-        parkTime: 0,
-        currTime: 0,
         currRefreshTime: 0,
 
         showBtnPay: true,
@@ -149,7 +200,6 @@ export default {
         creditCode:'',
         errorTitle:'',
         errorCredit:'',
-
       }
     },
     mounted() {
@@ -169,8 +219,6 @@ export default {
                 let data = response.data
                 if (data && data.success) {
                     this.respObj = data.result
-                    this.currTime = this.respObj.park_time
-                    this.relpTimer()
                     this.show_overlay = false
                 } else {
                     Toast.fail(data.message)
@@ -178,33 +226,6 @@ export default {
             }).catch((error) => {
 				Toast.fail(error)
 			})
-            
-        },
-
-        //计时器
-        relpTimer() {
-            this.currTime++
-            this.parkTime = this.formatOutput(this.currTime)
-            this.currRefreshTime++
-            if (this.respObj.refresh_time > 0) {
-                if (this.currRefreshTime > parseInt(this.respObj.refresh_time)) {
-                    this.showBtnPay = false
-                }
-            }
-            // 递归
-            setTimeout(this.relpTimer.bind(this), 1000)
-        },
-
-        //格式化
-        formatOutput(time) {
-            // 获取时分秒
-            let h = parseInt(time / 3600)
-            let m = parseInt((time - h * 3600) / 60)
-            let s = time - h * 3600 - m * 60
-            h < 10 ? h = `0${h}` : ''
-            m < 10 ? m = `0${m}` : ''
-            s < 10 ? s = `0${s}` : ''
-            return `${h}:${m}:${s}`;
         },
 
         getBillDetail() {
@@ -256,7 +277,8 @@ export default {
                     car_no: this.carNo,
                     record_id: this.respObj.record_id,
                     pay_scenarios: '03',
-                    scanChannel: this.scanChannel
+                    scanChannel: this.scanChannel,
+                    device_order_id: this.respObj.device_order_id
                 }
             } else if('2' === this.dataType) {
                 param = {
@@ -277,10 +299,6 @@ export default {
             let str = JSON.stringify(param)
             window.location.href = this.basePageUrl + "h5pay.html?param=" + str
         },
-
-        toReplayTime() {
-            location.reload()
-        }
     }
 }
 </script>
@@ -288,7 +306,6 @@ export default {
 <style scoped>
     .main {
         width: 100%;
-        background-color: #F5F6F7;
         height: 100%;
         min-height: 100vh;
         overflow: hidden;
@@ -358,5 +375,43 @@ export default {
         height: 0.92rem;
         line-height: 0.92rem;
         text-align: center;
+  }
+
+
+  .bg-park {
+    width: 100%;
+  }
+  .data-text1 {
+    position: relative;
+    top: -4rem;
+    left: 0.5rem;
+    font-size: 0.3rem;
+    color: white;
+  }
+  .data-text2 {
+        position: relative;
+        top: -3.7rem;
+        left: 0.5rem;
+        font-size: 0.6rem;
+        color: white;
+        font-weight: bold;
+  }
+  .data-text3 {
+    position: relative;
+    top: -2.8rem;
+    left: 0.5rem;
+    font-size: 0.3rem;
+    color: white;
+  }
+  .data-text4 {
+    position: relative;
+    top: -2.6rem;
+    left: 0.5rem;
+    font-size: 0.5rem;
+    color: white;
+    font-weight: bold;
+  }
+  .data-font-size3 {
+    font-size: 0.3rem;
   }
 </style>
