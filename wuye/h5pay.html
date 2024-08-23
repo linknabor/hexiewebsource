@@ -185,6 +185,8 @@
                                 this.show_overlay = false
                                 return
                             }
+                        }).catch((err)=> {
+                            alert(err);
                         })
                     } else if('2' === dataType) { //包月车支付
                         let param = this.paramObj
@@ -209,7 +211,7 @@
                             }
                         })
                     }
-                    this.show_overlay = false
+                    // this.show_overlay = false
                 },
 
                 payChannel(data) {
@@ -250,7 +252,7 @@
                                 wx.closeWindow()
                             },
                             fail: function (res) {
-                                alert('支付失败 ' + res)
+                                alert('支付失败 ' + res.errMsg)
                             },
                             cancel: function (res) {
                                 alert('支付取消')

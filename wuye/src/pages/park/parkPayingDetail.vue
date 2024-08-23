@@ -52,47 +52,6 @@
             </van-button>
         </div>
     </div>
-    <!-- <div v-if="dataType==='0'" style="margin: 0.2rem">
-        <div class="data-head">
-            <div class="data-title">
-                {{ respObj.park_name }}
-            </div>
-            <div>应付金额</div>
-            <div><span class="data-amt">{{ respObj.fee_amt }}</span> 元</div>
-        </div>
-
-        <van-cell-group title="停车信息">
-            <van-cell title="车牌号" :value="respObj.car_no"></van-cell>
-            <van-cell title="入场时间" :value="respObj.in_time"></van-cell>
-            <van-cell title="停车时长" :value="parkTime"></van-cell>
-            <van-cell title="总金额" :value="respObj.tot_amt"></van-cell>
-            <van-cell title="已付金额" :value="respObj.already_amt"></van-cell>
-        </van-cell-group>
-
-        <div class="data-desc">
-            <div class="data-desc-att">{{ respObj.pay_prompt }}</div>
-            <div class="data-desc-att">
-                <van-icon name="phone-o" color="blue"/>
-                <a style="color: blue" :href="'tel:'+respObj.cust_tel">客服电话</a></div>
-        </div>
-
-        <div class="data-bottom">
-            <van-notice-bar v-if="respObj.out_park_prompt !== ''" left-icon="info-o" :scrollable="false" :text="respObj.out_park_prompt" />
-            <div v-show="showBtnPay">
-                <div class="data-bottom-amt">
-                    应收金额：<span>{{ respObj.fee_amt }}</span> 元
-                </div>
-                <div class="data-bottom-bt">
-                    <van-button type="warning" size="small" round @click="toPay">立即支付</van-button>
-                </div>
-            </div>
-            <div v-show="!showBtnPay">
-                <div style="text-align: right;padding-right: 0.9rem;padding-top: 0.3rem;">
-                    <van-button type="warning" size="small" round @click="toReplayTime">刷新</van-button>
-                </div>
-            </div>
-        </div>
-    </div> -->
     <div v-else-if="dataType === '2'" style="margin: 0.2rem">
         <div class="title">
         <van-cell-group title="车主信息">
@@ -184,6 +143,7 @@ export default {
         dataType: this.$route.query.dataType, //1从临停来 2从包月停车费来
         carNo: this.$route.query.carNo,
         parkId: this.$route.query.parkId,
+        channelId: this.$route.query.channelId, //车道ID
         scanChannel: this.$route.query.scanChannel, //3微信公众号扫的 1支付宝扫的
         billIds: this.$route.query.billIds,
         reduceMode: this.$route.query.reduceMode,
@@ -213,7 +173,8 @@ export default {
         getTempCarAmt() {
             let param = {
                 parkId: this.parkId,
-                carNo: this.carNo
+                carNo: this.carNo,
+                channelId: this.channelId
             }
             ParkApi.getPayingDetail(param).then((response) => {
                 let data = response.data
@@ -274,6 +235,7 @@ export default {
                 param = {
                     dataType: this.dataType,
                     park_id: this.parkId,
+                    channel_id: this.channelId,
                     car_no: this.carNo,
                     record_id: this.respObj.record_id,
                     pay_scenarios: '03',
