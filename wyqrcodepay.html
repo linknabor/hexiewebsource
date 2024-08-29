@@ -20,7 +20,7 @@
         var baseurl = /127|test/.test(location.origin) ? 'https://test.e-shequ.cn/weixin/' :
             /uat/.test(location.origin) ? 'https://uat.e-shequ.cn/hexie/weixin/' : 'https://www.e-shequ.cn/weixin/';
 
-        var requrl = baseurl + "smsqrcodepay.html" + window.location.search;
+        var requrl = baseurl + "wyqrcodepay.html" + window.location.search;
 
         var wechat_url = /127|test/.test(location.origin) ? 'https://test.e-shequ.cn/wechat/hexie/wechat' :
             /uat/.test(location.origin) ? 'https://uat.e-shequ.cn/wechat/hexie/wechat' :
@@ -82,9 +82,9 @@
                         data: JSON.stringify(param),
                         success: function (res) {
                             if (res.success) {
-								let respUserId = res.result.aliuserid;
-								user_id = respUserId;
-                                location.href = baseurl + "smsqrcodepay.html" + window.location.search + "&user_id=" + user_id;
+                                let user_id = res.result.aliuserid;
+                                console.log("user_id:" + user_id);
+                                location.href = baseurl + "wyqrcodepay.html" + window.location.search + "&user_id=" + user_id;
                             } else {
                                 alert('请刷新重试');
                             }
@@ -126,14 +126,14 @@
                     $.ajax({
                         type: 'post',
                         url: url,
-						contentType: "application/json",
+                        contentType: "application/json",
                         dataType: "json",
                         data: JSON.stringify(param),
                         success: function (res) {
                             if (res.success) {
                                 let openid = res.result.openid;
                                 console.log("openid:" + openid);
-                                location.href = baseurl + "smsqrcodepay.html" + window.location.search + "&openid=" + openid;
+                                location.href = baseurl + "wyqrcodepay.html" + window.location.search + "&openid=" + openid;
                             } else {
                                 alert('请刷新重试');
                             }
@@ -198,8 +198,10 @@
         var appid = "";
 		var real_appid = '';
 		var payee_openid = '';
-		var cellId = '';
-		var batchNo = ''
+
+		var need_invoice = ''; //是否需要发票
+        var invoice_type = ''; //发票申请类型
+        var invoice_title_type = ''; //发票抬头类型
 
         //获取支付参数
         function getUrlParam() {
@@ -231,8 +233,10 @@
             appid = theRequest.appid;
 			real_appid = theRequest.appid;
             payee_openid = theRequest.payee_openid;
-			cellId = theRequest.cell_id;
-			batchNo = theRequest.batch_no
+
+            need_invoice = theRequest.need_invoice;
+            invoice_type = theRequest.invoice_type;
+            invoice_title_type = theRequest.invoice_title_type;
 
             openid = getParam(paramUrl, "openid");
             user_id = getParam(paramUrl, "user_id");
@@ -263,8 +267,9 @@
             list.reductionAmt = reductionAmt;//减免金额
             list.appid = real_appid;
             list.payee_openid = payee_openid;
-			list.cellId = cellId;
-			list.batchNo = batchNo;
+            list.need_invoice = need_invoice;
+            list.invoice_type = invoice_type;
+            list.invoice_title_type = invoice_title_type;
             if("Alipay" === checkclient) {
                 list.openid = user_id;
             } else if("WeiXin" === checkclient) {
@@ -274,7 +279,7 @@
             $.ajax({
                 type : "POST",
                 contentType: "application/json;charset=UTF-8",
-                url : wechat_url + '/getSmsPrePayInfo4Qrcode',
+                url : wechat_url + '/getPrePayInfo4Qrcode',
                 data : JSON.stringify(list),
                 dataType : "json",
                 success : function(n) {
@@ -337,10 +342,34 @@
     
 
     </script>
+	<style>
+		#loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 15000;
+        }
+
+
+        #loading img {
+            position: absolute;
+            top: 45%;
+            left: 48%;
+            width: 50px;
+            height: 50px;
+            margin-top: -15px;
+            margin-left: -15px;
+        }
+	</style>
 </head>
 
 <body>
-
+<div id="loading">
+	<img src="./static/images/common/loading.gif">
+</div>
 </body>
 
 </html>

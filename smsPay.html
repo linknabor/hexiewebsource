@@ -51,15 +51,21 @@
             } else {
                 let u_id = getParam(window.location.search, "user_id");
                 if(u_id == null) { //说明没拿过user_id
-                    let url = wechat_url + "/authorizeAlipay/" + o;
+					let param = {
+						appid: appId,
+						sourceType: '1',
+						code: o
+					}
+                    let url = wechat_url + "/h5/authorize";
                     $.ajax({
                         type: 'post',
                         url: url,
+                        contentType: "application/json",
                         dataType: "json",
-                        data: {},
+                        data: JSON.stringify(param),
                         success: function (res) {
                             if (res.success) {
-                                let user_id = res.result.userid;
+                                let user_id = res.result.aliuserid;
                                 console.log("user_id:" + user_id);
                                 location.href = baseurl + "smsPay.html"+ window.location.search +"&user_id=" + user_id;
                             } else {
@@ -92,12 +98,18 @@
                 let oid = getParam(window.location.search, "openid");
 
                 if(oid == null) { //说明没拿过openid
-                    let url = wechat_url + "/authorize/" + o + "/"+ appId;
+					let param = {
+						appid: appId,
+						sourceType: '3',
+						code: o
+					}
+                    let url = wechat_url + "/h5/authorize/";
                     $.ajax({
                         type: 'post',
                         url: url,
+                        contentType: "application/json",
                         dataType: "json",
-                        data: {},
+                        data: JSON.stringify(param),
                         success: function (res) {
                             if (res.success) {
                                 let openid = res.result.openid;
