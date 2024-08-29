@@ -54,7 +54,7 @@ export default {
       var data = {
         oriApp: "wx95f46f41ca5e570e",
       };
-      Api.login("163275", data);
+      Api.login("163275", data)
     },
     getUserInfo() {
       Api.getUserInfo()
@@ -84,7 +84,7 @@ export default {
         if (theRequest.parkId !== "" && theRequest.parkId !== undefined) {
           this.parkId = theRequest.parkId;
         }
-        if (theRequest.channelId !== "" && theRequest.channelId !== undefined) {
+        if (theRequest.channelId !== "" && theRequest.channelId !== undefined && theRequest.channelId !== null) {
           this.channelId = theRequest.channelId;
         }
         if (theRequest.appid) {
@@ -184,8 +184,7 @@ export default {
 
     gotoPark() {
       //这里判断码上是否有车道ID，有直接获取金额，没有跳到停车场首页
-      console.log(1)
-      if (this.channelId) {
+      if (this.channelId && this.channelId != null && this.channelId != 'null') {
         this.$router.push({
           path: "/parkPayingDetail",
           query: {
@@ -202,6 +201,7 @@ export default {
           query: {
             scanChannel: this.scanChannel,
             parkId: this.parkId,
+            channelId: '',
           },
         });
       }

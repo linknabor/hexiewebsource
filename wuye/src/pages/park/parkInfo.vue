@@ -203,7 +203,8 @@
               dataType: '1', //临停
               carNo: data,
               parkId: this.selectParkId,
-              scanChannel: this.scanChannel
+              scanChannel: this.scanChannel,
+              channelId: '', //默认给空
             }
           })
         }
