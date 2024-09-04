@@ -232,11 +232,15 @@ export default {
         toPay() {
             let param = {}
             if('1' === this.dataType) {
+                let car_no = this.carNo
+                if(this.respObj.car_no) {
+                    car_no = this.respObj.car_no
+                }
                 param = {
                     dataType: this.dataType,
                     park_id: this.parkId,
                     channel_id: this.channelId,
-                    car_no: this.carNo,
+                    car_no: car_no,
                     record_id: this.respObj.record_id,
                     pay_scenarios: '03',
                     scanChannel: this.scanChannel,
