@@ -320,10 +320,23 @@ const viewArray = ['index', 'register', 'sms_notification', 'receipt', 'version2
 //在每一次路由跳转之前会进入这个方法 to：到哪去  from：从哪来 next() 调用这个方法来完成这个钩子函数
 router.beforeEach((to, from, next) => {
   let pageName = to.matched[0].name
-  if(viewArray.indexOf(pageName)===-1){
-    if(!common.checkRegisterStatus()){
+  let config = Vue.prototype.is_config
+  let getUrlParam = Vue.prototype.getUrlParam
+  let appid = getUrlParam('oriApp')
+
+  if(viewArray.indexOf(pageName)===-1) {
+    let yjappid = config.C('yjappid') 
+    //宜居过来如果没注册不通过我们，跳到第三方
+    if(appid == yjappid && !common.isRegisted()) {
+      //跳第三方
+      window.location.href='weixin://dl/business/?appid=wx33e4eea4f156c489&path=pages/index/index&query=flag%3D1'
       return
-  	}
+    } else {
+      if(!common.checkRegisterStatus()){
+        return
+      }
+    }
+    
   }
   //除了停车场页面，其他页面都要求登录
   if(parkArray.indexOf(pageName) ===-1) {
@@ -333,9 +346,6 @@ router.beforeEach((to, from, next) => {
   }
   let version = ''
   if('index'===pageName){
-    let config = Vue.prototype.is_config
-    let getUrlParam = Vue.prototype.getUrlParam
-    let appid = getUrlParam('oriApp')
     let kyappid = config.C('kyappid')  //昆亿乐居
     let dcappid = config.C('dcappid')  //东辰物业
     let nbappid = config.C('nbappid')   //测试用
