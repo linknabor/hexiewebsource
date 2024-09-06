@@ -328,8 +328,11 @@ router.beforeEach((to, from, next) => {
     let yjappid = config.C('yjappid') 
     //宜居过来如果没注册不通过我们，跳到第三方
     if(appid == yjappid && !common.isRegisted()) {
-      //跳第三方
-      window.location.href='weixin://dl/business/?appid=wx33e4eea4f156c489&path=pages/index/index&query=flag%3D1'
+      if (confirm('您还未注册,是否去注册?')) {
+        //跳第三方
+        let yjMiniForWordUrl = config.C('yjMiniForWordUrl') 
+        window.location.href='weixin://dl/business/?'+yjMiniForWordUrl
+      }
       return
     } else {
       if(!common.checkRegisterStatus()){
