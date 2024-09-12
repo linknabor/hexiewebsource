@@ -75,7 +75,7 @@
                     <div class="moment-content" @click="notice.noticeType!==11&&noticeDetail(notice.url)">
                         <div class="content-text" v-for="(msg, key) in notice.showMsg" :key="key">{{msg}}</div>
                         <div class="content-image"
-                                v-for="(image, key) in notice.thumbnailImgList" :key="key">
+                                v-for="(image, key1) in notice.thumbnailImgList" :key="key1">
                                     <div :class="[{'content-image-view': notice.thumbnailImgList.length===1},
                                 {'content-image-view-multi': notice.thumbnailImgList.length>=2&&key!==2},
                                 {'content-image-view-triple': notice.thumbnailImgList.length>2&&key===2}]"
@@ -132,7 +132,6 @@ import NoticeApi from '@/api/NoticeApi.js'
 import TipsApi from '@/api/TipsApi.js'
 import BaseInfoApi from '@/api/BaseInfoApi.js'
 import Storage from '@/assets/js/storage.js'
-import UserApi from "@/api/api.js";
 
 export default ({
     data (){
@@ -228,10 +227,15 @@ export default ({
                 Toast("当前功能尚未开通。")
                 return
             }
+            //宜居从外部小程序注册回来的用户，因为无法监听，这里做注册判断
             let yjappid = this.is_config.C('yjappid')
-            if(!this.common.isRegisted && this.userInfo.appId === yjappid) {
-                this.replUser()
+            if(!this.common.isRegisted() && this.userInfo.appId === yjappid) {
+                this.replUser(code, url)
+            } else {
+                this.goUrl(code, url)
             }
+        },
+        goUrl(code, url) {
             if('repair'===code) {
                 this.gotoRepair(url)
             } else if ('onsale'===code) {
@@ -246,20 +250,32 @@ export default ({
                 this.$router.push({path: url, query:{}})
             }
         },
-        replUser() {
-            UserApi.getUserInfo().then((response) => {
-                let data = response.data;
-                if (data.success && data.result != null) {
-                    this.userInfo = data.result
-                    this.menuList = this.userInfo.menuList
-                    this.sectName = this.userInfo.xiaoquName
-                    if(!this.sectName) {
-                        this.sectName = '游客'
+        async replUser(code, url) {
+            let param = {
+                province: this.userInfo.province,
+                city: this.userInfo.city,
+                county: this.userInfo.county,
+                sectId: this.userInfo.sectId,
+                sectName: this.userInfo.xiaoquName,
+                cspId: this.userInfo.cspId
+            }
+            BaseInfoApi.switchSect(param).then((response)=>{
+                let data = response.data
+                if(data && data.errorCode === 0){
+                    if(data.result) {
+                        if(data.result.tel) {
+                            this.userInfo = data.result
+                            this.sectName = this.userInfo.xiaoquName
+                            if(!this.sectName) {
+                                this.sectName = '游客'
+                            }
+                            this.common.updatecookie(data.result.cardStatus,data.result.cardService,data.result.id,data.result.appid,
+                            data.result.cspId,data.result.sectId,data.result.cardPayService,data.result.bgImageList,data.result.wuyeTabsList,
+                            data.result.qrCode,data.result)
+
+                            this.goUrl(code, url)
+                        }
                     }
-                    Storage.set('userInfo', data.result)
-                    this.common.updatecookie(data.result.cardStatus,data.result.cardService,data.result.id,data.result.appid,
-                    data.result.cspId,data.result.sectId,data.result.cardPayService,data.result.bgImageList,data.result.wuyeTabsList,
-                    data.result.qrCode,data.result);
                 }
             })
         },
