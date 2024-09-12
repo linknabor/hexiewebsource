@@ -132,6 +132,7 @@ import NoticeApi from '@/api/NoticeApi.js'
 import TipsApi from '@/api/TipsApi.js'
 import BaseInfoApi from '@/api/BaseInfoApi.js'
 import Storage from '@/assets/js/storage.js'
+import UserApi from "@/api/api.js";
 
 export default ({
     data (){
@@ -218,7 +219,7 @@ export default ({
             this.qrShow = true
             this.qrImage = image
         },
-        gotoPage(url, status, code){
+        gotoPage(url, status, code) {
             if(status!==1){
                 Toast("当前功能尚未开通。")
                 return
@@ -226,6 +227,10 @@ export default ({
             if(!code){
                 Toast("当前功能尚未开通。")
                 return
+            }
+            let yjappid = this.is_config.C('yjappid')
+            if(!this.common.isRegisted && this.userInfo.appId === yjappid) {
+                this.replUser()
             }
             if('repair'===code) {
                 this.gotoRepair(url)
@@ -240,7 +245,23 @@ export default ({
             } else {
                 this.$router.push({path: url, query:{}})
             }
-
+        },
+        replUser() {
+            UserApi.getUserInfo().then((response) => {
+                let data = response.data;
+                if (data.success && data.result != null) {
+                    this.userInfo = data.result
+                    this.menuList = this.userInfo.menuList
+                    this.sectName = this.userInfo.xiaoquName
+                    if(!this.sectName) {
+                        this.sectName = '游客'
+                    }
+                    Storage.set('userInfo', data.result)
+                    this.common.updatecookie(data.result.cardStatus,data.result.cardService,data.result.id,data.result.appid,
+                    data.result.cspId,data.result.sectId,data.result.cardPayService,data.result.bgImageList,data.result.wuyeTabsList,
+                    data.result.qrCode,data.result);
+                }
+            })
         },
         gotoRepair(url) {
             let user = this.userInfo
