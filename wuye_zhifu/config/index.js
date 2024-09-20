@@ -28,8 +28,8 @@ module.exports = {
   dev: {
     env: require('./dev.env'),
     port: process.env.PORT || 80,
-    autoOpenBrowser: true,
-    assetsSubDirectory: 'staticvue',
+    autoOpenBrowser: false,
+    assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {},
     // CSS Sourcemaps off by default because relative paths are "buggy"
