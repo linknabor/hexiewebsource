@@ -6,7 +6,7 @@
 }
 .user-info{
 	padding:0.2rem;
-	border:1px solid #cecdc9;
+	border: 0.5px solid #cecdc9;
 	/* border-radius: 5px; */
 	/* height: 1.7rem; */
 	font-size: 14px;
@@ -24,7 +24,7 @@
 	color: #000;
 }
 .fee-list{
-	border:1px solid #cecdc9;
+	border:0.5px solid #cecdc9;
 	border-bottom: none;
 	/* border-radius: 5px; */
 	margin-top: 0.3rem;
@@ -54,8 +54,8 @@
 	line-height: 1.2rem;
 	/* background-color: #f6f7f1; */
 	color: var(--primary-color);
-	border:1px solid #cecdc9;
-	margin-top: 0.3rem;
+	/* border:0.5px solid #cecdc9; */
+	margin-top: 0.6rem;
 }
 .bigfont{
 	font-size: 0.32rem;
@@ -66,7 +66,7 @@
 	position: fixed;
 	left: 4%;
 	right: 4%;
-	bottom: 0;
+	bottom: 2.5vh;
 	z-index: 3;
 	width: 92%;
 	height: 0.9rem;
@@ -101,10 +101,9 @@
 
 /*发票*/
 .invoice{
-	border:1px solid #cecdc9;
-	padding-top: 0.5rem;
-	margin-top: 0.6rem;
-	padding-left: 1rem;
+	border:0.5px solid #cecdc9;
+	padding: 0.5rem 0 0.5rem 1rem;
+	margin: 0.6rem 0;
 }
 .invoice .ty-label{
 	padding: 0 0.2rem;
@@ -315,13 +314,27 @@
 	<div>
 		<div  class="pay-detail" v-if = request_siccess>
 		<!-- 用户信息 专业版-->
+			<div style="padding: 1vh 0;"></div>
+			<div v-if="version=='02' || version=='03'">
+				<van-cell-group class="mng-cell" :border="true">
+					<van-cell v-for="(item,index) in pay_cell" :key="index">
+						<template #title>
+							<p class="fl">{{item.cell_addr}}</p>
+						</template>
+						<template>
+							<p class="fr">{{item.cnst_area}} m<sup style="font-size:0.2rem">2</sup></p>
+						</template>
+					</van-cell>
+				</van-cell-group>
+			</div>
+			<!--
 			<div class="user-info" v-if="version=='02' || version=='03'">
-				<!-- <div class="number">户号&nbsp;{{verNumber}}</div> -->
 				<div class="addr ov" v-for="(item,index) in pay_cell" :key="index">
 					<p class="fl">{{item.cell_addr}}</p>
 					<p class="fr">{{item.cnst_area}} m<sup style="font-size:0.2rem">2</sup></p>
 				</div>
 			</div>
+			-->
 			<!-- 用户信息 标准版-->
 			<div class="user-info" v-else>
 				<div class="number">户号&nbsp;{{verNumber}}</div>
@@ -332,7 +345,31 @@
 			</div>
 
 		<!-- 费用列表 -->
-			<div v-if="version=='02' || version=='03'">
+			<div v-if="version=='02' || version=='03'" >
+				<van-collapse v-model="activeFeeType" v-for="(item,index) in feeList" :key="index" :border="true" @change="onChangeFeeType">
+					<van-collapse-item :name="index" v-for="(fee_item,index) in item.fee_name" :key="index" :border="false" @toggle="toggle" @click="toggle">
+						<template #title>
+							<div class="fee-name  fl" >{{fee_item.service_fee_name}}</div>
+							<div class="fee-price fr" >￥{{fee_item.totalFee.toFixed(2)}}</div>
+						</template>
+						<template>
+							<van-collapse :border="true">
+								<van-collapse-item name="index" v-for="(i,index) in fee_item.fee_detail" :key="index" :border="false" @toggle="toggle" @click="toggle">
+									<template #title>
+										<div class="detail-date fl">{{i.service_fee_cycle}}</div>
+										<div class="detail-price fr">{{i.fee_price}}</div>
+									</template>
+									<template #right-icon>
+										<div style="display: none;"></div>
+									</template>
+								</van-collapse-item>
+							</van-collapse>
+						</template>
+					</van-collapse-item>
+				</van-collapse>
+			</div>
+
+			<!-- <div v-if="version=='02' || version=='03'">
 				<div v-for="(item,index) in feeList" :key="index">
 				<div v-for="(fee_item,index) in item.fee_name" :key="index">
 				<dl class="fee-list">
@@ -348,6 +385,7 @@
 				</div>
 				</div>
 			</div>
+			 -->
 			<div v-if="version=='01'">
 				<dl v-for="(item,index) in feeList" class="fee-list" :key="index">
 					<dt class="ov name-color">
@@ -360,12 +398,16 @@
 					</dd>
 				</dl>
 			</div>
-
+			<div style="padding: 1vh 0;"></div>
 			<!-- 支付金额 -->
-			<div class="payCount">
-				<p class="fl">账单金额</p>
-				<p class="fr bigfont">￥{{routeParams.totalPrice}}</p>
-			</div>
+			<van-cell :border="true">
+				<template #title>
+					<p class="fl price-view">账单金额</p>
+				</template>
+				<template>
+					<p class="fr bigfont price-view">￥{{routeParams.totalPrice}}</p>
+				</template>
+			</van-cell>
 
 			<!-- 发票 -->
 			<form class="invoice" v-show="show_invoice=='1' ">
@@ -397,28 +439,13 @@
 				<h4 class="qufapiao" v-show="show_invoice_flag==0">支付后请前往物业管理处领取发票</h4>
 				<h4 class="qufapiao" v-show="show_invoice_flag==1">申请的电子发票预计在3个工作日内通过短信发送至您手机上,请注意查收</h4>
 			</form>
-			<!-- 支付按钮 -->
-			<!-- <div class="card " v-show="bindhouse">
-				<div class="ov item" >
-					<span  class="fl">是否自动绑定为该房屋的业主：</span>
-					<div class="ov fl  ml">
-						<label class="chendad " :class="{addse:bind_switch=='1'}" for="checkbox_a1"></label>
-						<span class="mr">是</span>
-						<input type="radio" id="checkbox_a1" name="flag" value="1" v-model="bind_switch" class="chk_1"  />
-
-						<label for="checkbox_a2" class="chendad" :class="{addse:bind_switch=='0'}" ></label>
-						<span>否</span>
-						<input type="radio" id="checkbox_a2" name="flag" value="0"  v-model="bind_switch" class="chk_1"  />
-					</div>
-				</div>
-			</div> -->
-
-			<!-- 贵州银行卡支付 -->
+			
+			<!-- 贵州银行卡支付 start -->
 			<div class="Manner" v-show="cardPayService == 'true' && support_card_pay=='1'">
 				<div class="Manner-title">选择支付方式</div>
 				<div class="Manner-hand ov">
 					<div class="Manner-img fl">
-						<img src="../../assets/image/wei.png" alt="">
+						<img src="../../assets/image/wehcatpay.png" alt="">
 					</div>
 					<span>微信支付</span>
 					<div class="fr">
@@ -509,6 +536,7 @@
 					</div>
 				</div>
 			</div>
+			<!-- 贵州银行卡支付 end -->
 			<div style="height:1.5rem;"></div>
 			<div v-if="selected == 'd' && is_create_qrcode == 1" class="btn-fix">
 				<div class="fl personnel" @click="personnel">工作人员收费</div>
@@ -521,16 +549,17 @@
 </template>
 <script>
 	let vm;
-	import wx from 'weixin-js-sdk';
 	import moment from "../filter/datafromat";
+	import { Collapse, CollapseItem, Cell, CellGroup } from 'vant';
 	export default {
 		data(){
 			return {
+				activeFeeType: [],
 				invoice_title:'',//发票抬头
 				credit_code:'',//公司税号
 				invoice_title_type:'01',//个人01或公司02
 				needInvoice:'1',//是否需要发票
-        is_default_invoice:'0',
+        		is_default_invoice:'0',
 				routeParams:{
 					billIds : this.$route.query.billIds,//id 集合
 					stmtId:this.$route.query.stmtId,//扫码数据
@@ -582,6 +611,12 @@
 				request_siccess:false,//判断是否请求成功
 			}
 		},
+		components: {
+			[Collapse.name]: Collapse,
+			[CollapseItem.name]: CollapseItem,
+			[Cell.name]: Cell,
+			[CellGroup.name]: CellGroup,
+		},
 		filters:{
 			moment
 		},
@@ -594,17 +629,17 @@
 				vm.routeParams.stmtId = ""
 			}
 			//无账单缴费
-			    this.house_id = this.$route.query.house_id;
-                this.sect_id = this.$route.query.sect_id;
-                this.start_date=this.$route.query.start_date;
-                this.end_date=this.$route.query.end_date;
-                this.regionname=this.$route.query.regionname;
-                this.getversion=this.$route.query.getversion;
-                vm.version=this.$route.query.getversion;
+			this.house_id = this.$route.query.house_id;
+			this.sect_id = this.$route.query.sect_id;
+			this.start_date=this.$route.query.start_date;
+			this.end_date=this.$route.query.end_date;
+			this.regionname=this.$route.query.regionname;
+			this.getversion=this.$route.query.getversion;
+			vm.version=this.$route.query.getversion;
 		},
 		mounted(){
 			// vm.common.checkRegisterStatus();
-			// this.initSession4Test();
+			this.initSession4Test();
 			var userStr = localStorage.getItem('userInfo');
 			console.log('userStr:' + userStr)
 			var userInfo = {}
@@ -719,9 +754,10 @@
 			},
 			//创造用户
 			initSession4Test(){
-				let url = '/initSession4Test/62';
-					vm.receiveData.getData(vm,url,'Data',function(){
+				let url = '/login/8441';
+					vm.receiveData.postData(vm,url,'Data',function(){
 				});
+				alert('init usr for test!')
 			},
 			//ios中留白问题
 			fixScroll() {
@@ -743,7 +779,7 @@
 						vm,url,'data',function(){
 							vm.request_siccess = true;//判断是否请求成功显示
 							vm.show_com_flag=vm.data.result.other_bill_info[0].show_com_flag;
-              vm.is_default_invoice=vm.data.result.other_bill_info[0].is_default_invoice;
+              				vm.is_default_invoice=vm.data.result.other_bill_info[0].is_default_invoice;
 							vm.show_invoice_flag = vm.data.result.other_bill_info[0].show_invoice_flag;
 							vm.is_create_qrcode = vm.data.result.other_bill_info[0].is_create_qrcode;
 							if(vm.is_create_qrcode == 0 || vm.selected != 'd') {
@@ -775,7 +811,7 @@
 						function(){
 							vm.request_siccess = true;//判断是否请求成功显示
 							vm.show_com_flag=vm.data.result.show_com_flag;
-              vm.is_default_invoice=vm.data.result.is_default_invoice;
+              				vm.is_default_invoice=vm.data.result.is_default_invoice;
 							vm.show_invoice_flag = vm.data.result.show_invoice_flag;
 							vm.is_create_qrcode = vm.data.result.is_create_qrcode;
 							if(vm.is_create_qrcode == 0 || vm.selected != 'd') {
@@ -858,8 +894,26 @@
 				vm.$router.push({path:'/payzhifu',query:{bind_switch:vm.bind_switch,version:vm.version,reduceMode:vm.routeParams.reduceMode,acctNNo:vm.acctNNo,cardId:vm.cardId,payFeeType:vm.routeParams.payFeeType}})
 
 			},
+			onChangeFeeType(e) {
+			},
+			toggle(e) {
+				console.log(e)
+			}
 
 		}
 	}
 </script>
 
+<style scoped>
+.mng-cell .van-cell__title {
+	min-width: 70% !important;
+}
+
+.mng-cell .van-cell__value {
+	min-width: 30% !important;
+}
+
+.price-view {
+	color: var(--primary-color);
+}
+</style>

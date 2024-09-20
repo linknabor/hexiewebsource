@@ -2,10 +2,10 @@
 <div>
     <div v-if="selectUpton">
         <div class="box-bg"></div>
-       <div class="pay-div">
+       <!-- <div class="pay-div">
            <span class="fl">支付方式</span>
            <span class="fr">{{typename}}</span>
-       </div>
+       </div> -->
        <div class="pay-div">
            <span class="fl">账单金额</span>
            <span class="fr padding-r">¥{{totalPrice}}</span>
@@ -48,6 +48,37 @@
        <div class="Color" v-show="reduceM == '1' || reduceM == '2' || reduceM == '4' || reduceM == '5' || reduceM == '6' || reduceM =='7'" style="padding: 0 0.3rem;letter-spacing: 1px;">本次支付四舍五入{{Math.abs(reduceMoney)}}元</div>
        <div class="Color" v-show="is_integral == '1'" style="padding: 0 0.3rem;letter-spacing: 1px;">本次支付您将获得{{integral}}积分</div>
        <div style="height:1.5rem;"></div>
+       <!--选择支付方式 start-->
+       <div>
+        <van-radio-group v-model="payMethod">
+            <van-cell-group>
+                <van-cell clickable @click="payMethod = '1'">
+                    <template #title>
+                        <div class="sel-paymethod">
+                            <img src="../../assets/image/wehcatpay.png" alt="">
+                            <span class="pay-text">微信支付</span>
+                        </div>
+                    </template>
+                    <template #right-icon>
+                        <van-radio name="1" />
+                    </template>
+                </van-cell>
+                <van-cell clickable @click="payMethod = '2'">
+                    <template #title>
+                        <div class="sel-paymethod">
+                            <img class="img-alipay" src="../../assets/image/alipay.png" alt="">
+                            <span class="pay-text">支付宝吱口令</span>
+                        </div>
+                    </template>
+                    <template #right-icon>
+                        <van-radio name="2" />
+                    </template>
+                </van-cell>
+            </van-cell-group>
+        </van-radio-group>
+        <!--选择支付方式 start-->
+       </div>
+       
 	   <div class="pay-btn"  @click="btnPay">立即支付</div>
     </div>
     <div v-else class="upton-list" >
@@ -81,52 +112,53 @@
 <script>
 var vm;
 import wx from 'weixin-js-sdk';
+import { RadioGroup, Radio, Cell, CellGroup } from 'vant';
 export default {
-   data () {
-       return {
-           typename:'微信支付',//支付方式
-           disname:'物业费优惠',//如物业优惠
-           distname:'停车费优惠',//停车优惠
-           discounts:[
-            //    {
-            //     reduction_amt: "0.01",
-            //     reduction_msg: "综合优惠",
-            //     rule_type: "1",
-            //    },
-            //    {
-            //     reduction_amt: "0.32",
-            //     reduction_msg: "综合优惠1",
-            //     rule_type: "2",
-            //    },
-           ],//如物业优惠
-           ruleType:'', //减免规则类型
-           reductionAmt:'',//减免金额
-           reducFeePrice:'',//减免金额
-           is_integral:1,//是否开通积分兑换减免 0不开通 1开通
-           integral:'',//积分
-           payFeeType:this.$route.query.payFeeType,//管理费01 停车费02
-           totalPrice:0,//账单金额
-           bind_switch:this.$route.query.bind_switch,//绑定房子
-           reduceAmt:0,//物业减免合计
-           version:this.$route.query.version,//版本
-           reduceM:this.$route.query.reduceMode,//减免数
-           cardId:this.$route.query.cardId,//记录银行卡卡id
-           orderNo:'',//订单流水号
-           acctNNo:this.$route.query.acctNNo,//卡号
-           hasReduce:'0',//是否有减免
-           tdiscount:0.00,//优惠总金额 
-           reduceMoney:0,//四舍五入减免钱
-           count:0,//支付金额
-           countmong:0,//记录支付减免后的金额
-           counttoll:0,//记录支付减免后的金额
-           captcha:'',
-           yzmtime : 60,
-           yzmstr:"获取验证码", 
-           showyan:false,
-           ulist:{},
-           uptonAmount:'未使用',
-           upronAmountNumber:0,////优惠券金额 数量
-           uptonData:[],
+    data () {
+        return {
+            typename:'微信支付',//支付方式
+            disname:'物业费优惠',//如物业优惠
+            distname:'停车费优惠',//停车优惠
+            discounts:[
+                //    {
+                //     reduction_amt: "0.01",
+                //     reduction_msg: "综合优惠",
+                //     rule_type: "1",
+                //    },
+                //    {
+                //     reduction_amt: "0.32",
+                //     reduction_msg: "综合优惠1",
+                //     rule_type: "2",
+                //    },
+            ],//如物业优惠
+            ruleType:'', //减免规则类型
+            reductionAmt:'',//减免金额
+            reducFeePrice:'',//减免金额
+            is_integral:1,//是否开通积分兑换减免 0不开通 1开通
+            integral:'',//积分
+            payFeeType:this.$route.query.payFeeType,//管理费01 停车费02
+            totalPrice:0,//账单金额
+            bind_switch:this.$route.query.bind_switch,//绑定房子
+            reduceAmt:0,//物业减免合计
+            version:this.$route.query.version,//版本
+            reduceM:this.$route.query.reduceMode,//减免数
+            cardId:this.$route.query.cardId,//记录银行卡卡id
+            orderNo:'',//订单流水号
+            acctNNo:this.$route.query.acctNNo,//卡号
+            hasReduce:'0',//是否有减免
+            tdiscount:0.00,//优惠总金额 
+            reduceMoney:0,//四舍五入减免钱
+            count:0,//支付金额
+            countmong:0,//记录支付减免后的金额
+            counttoll:0,//记录支付减免后的金额
+            captcha:'',
+            yzmtime : 60,
+            yzmstr:"获取验证码", 
+            showyan:false,
+            ulist:{},
+            uptonAmount:'未使用',
+            upronAmountNumber:0,////优惠券金额 数量
+            uptonData:[],
             allCoupons:[
                 //   {
                 //     	id:1,
@@ -142,372 +174,374 @@ export default {
             couponId:'',//优惠券id
             selectUpton:true,//显示的是缴费详情页面还是选择优惠劵页面
             sUptop:'No',//是否锁定优惠券
-       };
-   },
-   created(){
-       vm=this;
-   },
-   mounted() {
-       vm.geturl();//获取参数
-       vm.Coupons();//优惠券
-       vm.getDiscount();
-   },
-
-   components: {
-       
-   },
-
-   methods: {
-        geturl(){
-            let uls = window.localStorage.getItem('paylist');
-            if(uls) {
-                vm.ulist = JSON.parse(window.localStorage.getItem("paylist"));
-            }
-            if(vm.ulist.payType >= 1){
-                vm.typename ='银行卡支付('+vm.acctNNo.substring(vm.acctNNo.length-4)+')';
-            }
-            if(vm.ulist.payType  > 1){
-                vm.showyan=true;
-            }else {
-                vm.showyan=false;
-            }
-        },
-        Carandpay(count){
-            vm.count=count;
-			let reduced_amt=0;
-			let reduce_rate = 0; //减少到角还是分减少到角还是分
-            if(!vm.reduceM){
-                return false
-            }
-			if ("0" == vm.reduceM) {
-			    //不减免
-			    return false;
-			} else if ("1" == vm.reduceM) {
-			//四舍五入至元
-			reduce_rate = "1";
-            reduced_amt = Math.round(vm.count * reduce_rate) / reduce_rate;
-			vm.hasReduce = "1";
-			} else if ("2" == vm.reduceM) {
-			//表示四舍五入至角
-			reduce_rate = "10";
-			reduced_amt = Math.round(vm.count * reduce_rate) / reduce_rate;
-			vm.hasReduce = "1";
-			}
-			else if ("4" == vm.reduceM) {
-			//表示保留至角去分
-			reduce_rate = "10";
-			reduced_amt = Math.floor(vm.count * reduce_rate) / reduce_rate;
-			vm.hasReduce = "1";
-			}else if ("5" == vm.reduceM) {
-			//表示保留至角入分
-			reduce_rate = "10";
-			reduced_amt = Math.ceil(vm.count * reduce_rate) / reduce_rate;
-			vm.hasReduce = "1";
-			//保留至元去角
-			} else if("6" == vm.reduceM){
-			reduce_rate = "1";
-			reduced_amt = Math.floor(vm.count * reduce_rate) / reduce_rate;
-			vm.hasReduce = "1";
-			}else if("7" == vm.reduceM){
-			// 保留至元入角
-			reduce_rate = "1";
-			reduced_amt = Math.ceil(vm.count * reduce_rate) / reduce_rate;
-			vm.hasReduce = "1";
-			}else {
-			    return false;
-            }
-            vm.reduceMoney = parseFloat(vm.count) - parseFloat(reduced_amt.toFixed(2));//四舍五入的钱传给后端
-            vm.reduceMoney = vm.reduceMoney.toFixed(2); //减少的钱 
-            // vm.tdiscount =  (parseFloat(vm.reduceAmt) + parseFloat(vm.reduceMoney)).toFixed(2);//优惠总金额加上四舍五入
-            vm.count = reduced_amt.toFixed(2); //合计
-            vm.countmong = vm.count;//记录
-  		},
-        //物业优惠
-        getDiscount(){
-            $('.box-bg').css("display",'block');
-            let url = "/getDiscounts";
-            let pType;
-            if(vm.ulist.payType  >= 1){
-                pType = 1;
-            }else {
-                pType = vm.ulist.payType
-            }
-            let data = {
-                billId:vm.ulist.billId,
-                stmtId:vm.ulist.stmtId,
-                payType:pType,  //0微信,1卡
-                payFeeType:vm.payFeeType, //01管理费，02停车费
-                regionName:vm.ulist.regionname, //定位地区
-            }
-            vm.axios.post(
-            url,
-            data,
-            ).then(function(e) {
-                var res = JSON.parse(e.data);
-                if(res.success){
-                    vm.discounts = res.result.reduction;//数组
-                    vm.totalPrice = res.result.total_fee_price//账单金额
-                    vm.is_integral = res.result.is_enable_integral;//是否开通积分兑换减免 0不开通 1开通
-                    vm.integral = res.result.integral;//积分
-                    if(vm.is_integral == '0'){
-                        vm.cullDiscount();//优惠减免
+            payMethod: '',  //微信支付或者吱口令
+        };
+    },
+    created(){
+        vm=this;
+    },
+    mounted() {
+        vm.geturl();//获取参数
+        vm.Coupons();//优惠券
+        vm.getDiscount();
+    },
+    components: {
+        [RadioGroup.name]: RadioGroup,
+        [Radio.name]: Radio,
+        [Cell.name]: Cell,
+        [CellGroup.name]: CellGroup,
+    },
+    methods: {
+            geturl(){
+                let uls = window.localStorage.getItem('paylist');
+                if(uls) {
+                    vm.ulist = JSON.parse(window.localStorage.getItem("paylist"));
+                }
+                if(vm.ulist.payType >= 1){
+                    vm.typename ='银行卡支付('+vm.acctNNo.substring(vm.acctNNo.length-4)+')';
+                }
+                if(vm.ulist.payType  > 1){
+                    vm.showyan=true;
+                }else {
+                    vm.showyan=false;
+                }
+            },
+            Carandpay(count){
+                vm.count=count;
+                let reduced_amt=0;
+                let reduce_rate = 0; //减少到角还是分减少到角还是分
+                if(!vm.reduceM){
+                    return false
+                }
+                if ("0" == vm.reduceM) {
+                    //不减免
+                    return false;
+                } else if ("1" == vm.reduceM) {
+                //四舍五入至元
+                reduce_rate = "1";
+                reduced_amt = Math.round(vm.count * reduce_rate) / reduce_rate;
+                vm.hasReduce = "1";
+                } else if ("2" == vm.reduceM) {
+                //表示四舍五入至角
+                reduce_rate = "10";
+                reduced_amt = Math.round(vm.count * reduce_rate) / reduce_rate;
+                vm.hasReduce = "1";
+                }
+                else if ("4" == vm.reduceM) {
+                //表示保留至角去分
+                reduce_rate = "10";
+                reduced_amt = Math.floor(vm.count * reduce_rate) / reduce_rate;
+                vm.hasReduce = "1";
+                }else if ("5" == vm.reduceM) {
+                //表示保留至角入分
+                reduce_rate = "10";
+                reduced_amt = Math.ceil(vm.count * reduce_rate) / reduce_rate;
+                vm.hasReduce = "1";
+                //保留至元去角
+                } else if("6" == vm.reduceM){
+                reduce_rate = "1";
+                reduced_amt = Math.floor(vm.count * reduce_rate) / reduce_rate;
+                vm.hasReduce = "1";
+                }else if("7" == vm.reduceM){
+                // 保留至元入角
+                reduce_rate = "1";
+                reduced_amt = Math.ceil(vm.count * reduce_rate) / reduce_rate;
+                vm.hasReduce = "1";
+                }else {
+                    return false;
+                }
+                vm.reduceMoney = parseFloat(vm.count) - parseFloat(reduced_amt.toFixed(2));//四舍五入的钱传给后端
+                vm.reduceMoney = vm.reduceMoney.toFixed(2); //减少的钱 
+                // vm.tdiscount =  (parseFloat(vm.reduceAmt) + parseFloat(vm.reduceMoney)).toFixed(2);//优惠总金额加上四舍五入
+                vm.count = reduced_amt.toFixed(2); //合计
+                vm.countmong = vm.count;//记录
+            },
+            //物业优惠
+            getDiscount(){
+                $('.box-bg').css("display",'block');
+                let url = "/getDiscounts";
+                let pType;
+                if(vm.ulist.payType  >= 1){
+                    pType = 1;
+                }else {
+                    pType = vm.ulist.payType
+                }
+                let data = {
+                    billId:vm.ulist.billId,
+                    stmtId:vm.ulist.stmtId,
+                    payType:pType,  //0微信,1卡
+                    payFeeType:vm.payFeeType, //01管理费，02停车费
+                    regionName:vm.ulist.regionname, //定位地区
+                }
+                vm.axios.post(
+                url,
+                data,
+                ).then(function(e) {
+                    var res = JSON.parse(e.data);
+                    if(res.success){
+                        vm.discounts = res.result.reduction;//数组
+                        vm.totalPrice = res.result.total_fee_price//账单金额
+                        vm.is_integral = res.result.is_enable_integral;//是否开通积分兑换减免 0不开通 1开通
+                        vm.integral = res.result.integral;//积分
+                        if(vm.is_integral == '0'){
+                            vm.cullDiscount();//优惠减免
+                        }else {
+                            vm.Carandpay(vm.totalPrice)
+                        }
+                    }else {
+                        alert(res.message)
+                    }
+                    $('.box-bg').css("display",'none');
+                })
+            },
+            cullDiscount(){//优惠减免
+                var cull_price = 0 ;//历年今年总金额
+                for(var i=0;i<vm.discounts.length;i++){
+                    cull_price += parseFloat(vm.discounts[i].reduction_amt) //当前，历史优惠总值
+                    if(vm.discounts.length > 1){
+                        vm.ruleType += vm.discounts[i].rule_type+',';//规则
+                        vm.reductionAmt += vm.discounts[i].reduction_amt+',';//金额问号分割
+                    }else {
+                        vm.ruleType = vm.discounts[i].rule_type;
+                        vm.reductionAmt = vm.discounts[i].reduction_amt;
+                    }
+                    
+                }
+                // console.log(cull_price,vm.ruleType,vm.reductionAmt);
+                if(vm.discounts.length > 1){//数组
+                    vm.reduceAmt = cull_price; //当前，历史优惠总值
+                }else {
+                    if(vm.reductionAmt){
+                        vm.reduceAmt = parseFloat(vm.reductionAmt);//物业，停车优惠
+                    }
+                };
+                vm.tdiscount = (vm.reduceAmt).toFixed(2);//没有四舍五入直接赋值
+                vm.count = (parseFloat(vm.totalPrice) - parseFloat(vm.reduceAmt)).toFixed(2);//减去优惠的值
+                vm.countmong = vm.count;//记录金额
+                vm.counttoll = vm.count;//记录金额
+                vm.Carandpay(vm.count)//四舍五入
+            },
+            //优惠券
+            Coupons(){
+                let payType;
+                if(vm.ulist.payType  >= 1){
+                    payType = 1;
+                }else {
+                    payType = vm.ulist.payType
+                }
+                //更新后 获取优惠劵
+                let url3 = 'getCouponsPayWuYe?payType=' + payType;
+                vm.receiveData.getData(vm,url3,'uptonDatas',function(){
+                    vm.uptonData = vm.uptonDatas.result;
+                    vm.allCoupons=vm.uptonDatas.result;
+                    vm.filterCouponByAmount();
+                })
+            },
+            //使用filterCouponByAmount进行金额过滤
+            filterCouponByAmount() {
+                var c=[];
+                for(var i=0;i<vm.allCoupons.length;i++) {
+                    if(vm.allCoupons[i].usageCondition<=vm.count) {
+                        c.push(vm.allCoupons[i])
+                    }
+                }
+                vm.uptonData=c;
+            },
+            //跳转到优惠券列表
+            uptonList(){
+                if(vm.uptonData.length == 0){//无优惠券
+                    return
+                }else{
+                    if(vm.sUptop == 'No'){
+                        vm.selectUpton = false;	
+                    }
+                }
+                
+            },
+            //切换优惠券选中状态
+            showIcon(index){
+                if(vm.uptonData[index].selected){
+                    vm.$set(vm.uptonData[index],'selected',false);
+                    vm.tdiscount =  (parseFloat(vm.tdiscount) - parseFloat(vm.uptonData[index].amount)).toFixed(2);//优惠总金额
+                }else{
+                    vm.$set(vm.uptonData[index],'selected',true);
+                    vm.tdiscount =  (parseFloat(vm.tdiscount) + parseFloat(vm.uptonData[index].amount)).toFixed(2);//优惠总金额
+                    for(let i in vm.uptonData){
+                        if(i != index && vm.uptonData[i].selected == true){
+                            vm.$set(vm.uptonData[i],'selected',false);
+                            vm.tdiscount =  (parseFloat(vm.tdiscount) - parseFloat(vm.uptonData[i].amount)).toFixed(2);//优惠总金额
+                            break;							
+                        }
+                    }
+                }
+            },
+            submit(){//点击确定选择优惠劵
+                let flag = false;
+                for(let i in vm.uptonData){
+                    if(vm.uptonData[i].selected == true){
+                        flag = true;
+                        vm.couponId = vm.uptonData[i].id;//优惠券id
+                        vm.uptonAmount = '-￥' + vm.uptonData[i].amount+'元';//优惠券额度
+                        vm.upronAmountNumber = vm.uptonData[i].amount;  
+                        if(vm.is_integral =='0'){
+                            vm.count =vm.countmong - vm.uptonData[i].amount;
+                        }else {
+                            if(vm.reduceM == '1' || vm.reduceM == '2' || vm.reduceM == '4' || vm.reduceM == '5' || vm.reduceM == '6' || vm.reduceM =='7'){
+                                vm.count =vm.countmong - vm.uptonData[i].amount;
+                            }else {
+                                vm.count =vm.totalPrice - vm.uptonData[i].amount;
+                            }
+                        }
+                        // vm.count =vm.countmong - vm.uptonData[i].amount;
+                        // console.log(vm.counttoll,vm.countmong,vm.totalPrice,vm.count) 
+                        vm.count = vm.count.toFixed(2);//金额
+                        if(vm.count < 0 ){
+                            vm.count = 0.01;
+                        }
+                    }
+                };
+                if(!flag){
+                    vm.uptonAmount = "未使用";
+                    vm.upronAmountNumber = 0,
+                    vm.couponId = '';
+                    // console.log(vm.counttoll)
+                    if(vm.is_integral == '0'){//判断是否开通积分兑换
+                        vm.Carandpay(vm.counttoll)
                     }else {
                         vm.Carandpay(vm.totalPrice)
                     }
-                }else {
-                    alert(res.message)
                 }
-                $('.box-bg').css("display",'none');
-            })
-        },
-        cullDiscount(){//优惠减免
-            var cull_price = 0 ;//历年今年总金额
-            for(var i=0;i<vm.discounts.length;i++){
-                cull_price += parseFloat(vm.discounts[i].reduction_amt) //当前，历史优惠总值
-                if(vm.discounts.length > 1){
-                    vm.ruleType += vm.discounts[i].rule_type+',';//规则
-                    vm.reductionAmt += vm.discounts[i].reduction_amt+',';//金额问号分割
-                }else {
-                    vm.ruleType = vm.discounts[i].rule_type;
-                    vm.reductionAmt = vm.discounts[i].reduction_amt;
+                vm.selectUpton = true;
+            },
+            //ios中留白问题
+            fixScroll() {
+                let u = navigator.userAgent;
+                let isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+                if (isiOS) {
+                setTimeout(() => {
+                    const  scrollheight = document.documentElement.scrollTop || document.body.scrollTop || 0;
+                    window.scrollTo(0,Math.max(scrollheight, 0))
+                }, 200);
                 }
-                
-            }
-            // console.log(cull_price,vm.ruleType,vm.reductionAmt);
-            if(vm.discounts.length > 1){//数组
-                vm.reduceAmt = cull_price; //当前，历史优惠总值
-            }else {
-                if(vm.reductionAmt){
-                    vm.reduceAmt = parseFloat(vm.reductionAmt);//物业，停车优惠
+            },
+            //获取验证码
+            getCaptcha() {
+                vm.sUptop = 'Locking'; // 锁定优惠券
+                if(vm.yzmstr=="获取验证码"||vm.yzmstr=="重新获取"){
+                    vm.yzmstr="获取中";
+                    vm.yzmreq();
                 }
-            };
-            vm.tdiscount = (vm.reduceAmt).toFixed(2);//没有四舍五入直接赋值
-            vm.count = (parseFloat(vm.totalPrice) - parseFloat(vm.reduceAmt)).toFixed(2);//减去优惠的值
-            vm.countmong = vm.count;//记录金额
-            vm.counttoll = vm.count;//记录金额
-            vm.Carandpay(vm.count)//四舍五入
-        },
-        //优惠券
-        Coupons(){
-            let payType;
-            if(vm.ulist.payType  >= 1){
-                payType = 1;
-            }else {
-                payType = vm.ulist.payType
-            }
-            //更新后 获取优惠劵
-            let url3 = 'getCouponsPayWuYe?payType=' + payType;
-            vm.receiveData.getData(vm,url3,'uptonDatas',function(){
-                vm.uptonData = vm.uptonDatas.result;
-                vm.allCoupons=vm.uptonDatas.result;
-                vm.filterCouponByAmount();
-            })
-        },
-        //使用filterCouponByAmount进行金额过滤
-        filterCouponByAmount() {
-            var c=[];
-            for(var i=0;i<vm.allCoupons.length;i++) {
-                if(vm.allCoupons[i].usageCondition<=vm.count) {
-                    c.push(vm.allCoupons[i])
-                }
-            }
-            vm.uptonData=c;
-        },
-         //跳转到优惠券列表
-        uptonList(){
-            if(vm.uptonData.length == 0){//无优惠券
-                return
-            }else{
-                if(vm.sUptop == 'No'){
-                    vm.selectUpton = false;	
-                }
-            }
-            
-        },
-        //切换优惠券选中状态
-        showIcon(index){
-            if(vm.uptonData[index].selected){
-                vm.$set(vm.uptonData[index],'selected',false);
-                vm.tdiscount =  (parseFloat(vm.tdiscount) - parseFloat(vm.uptonData[index].amount)).toFixed(2);//优惠总金额
-            }else{
-                vm.$set(vm.uptonData[index],'selected',true);
-                vm.tdiscount =  (parseFloat(vm.tdiscount) + parseFloat(vm.uptonData[index].amount)).toFixed(2);//优惠总金额
-                for(let i in vm.uptonData){
-                    if(i != index && vm.uptonData[i].selected == true){
-                        vm.$set(vm.uptonData[i],'selected',false);
-                        vm.tdiscount =  (parseFloat(vm.tdiscount) - parseFloat(vm.uptonData[i].amount)).toFixed(2);//优惠总金额
-                        break;							
-                    }
-                }
-            }
-        },
-        submit(){//点击确定选择优惠劵
-            let flag = false;
-            for(let i in vm.uptonData){
-                if(vm.uptonData[i].selected == true){
-                    flag = true;
-                    vm.couponId = vm.uptonData[i].id;//优惠券id
-                    vm.uptonAmount = '-￥' + vm.uptonData[i].amount+'元';//优惠券额度
-                    vm.upronAmountNumber = vm.uptonData[i].amount;  
-                    if(vm.is_integral =='0'){
-                        vm.count =vm.countmong - vm.uptonData[i].amount;
+            },
+            //获取验证码
+            yzmreq(){
+                let url ="/getPaySmsCode?cardId="+vm.cardId;
+                vm.receiveData.getData(vm,url,'res',function(){
+                    if(vm.res.success){
+                        vm.orderNo = vm.res.result.orderNo;//获取流水号
+                        vm.yzmtime=60;
+                        alert("验证码已下发，请查收短信");
+                        var tt=setInterval(function() {
+                            vm.yzmstr=vm.yzmtime+'秒后重新获取';
+                            vm.yzmtime--;
+                            if(vm.yzmtime<=0) {
+                                vm.yzmstr='重新获取'
+                            }
+                        },1000);
+                    var ss = setTimeout(function(){clearInterval(tt);}, 61*1000);
                     }else {
-                        if(vm.reduceM == '1' || vm.reduceM == '2' || vm.reduceM == '4' || vm.reduceM == '5' || vm.reduceM == '6' || vm.reduceM =='7'){
-                            vm.count =vm.countmong - vm.uptonData[i].amount;
-                        }else {
-                            vm.count =vm.totalPrice - vm.uptonData[i].amount;
-                        }
+                        alert(vm.res.message == null ?'获取验证码失败':vm.message)
                     }
-                    // vm.count =vm.countmong - vm.uptonData[i].amount;
-                    // console.log(vm.counttoll,vm.countmong,vm.totalPrice,vm.count) 
-                    vm.count = vm.count.toFixed(2);//金额
-                    if(vm.count < 0 ){
-                        vm.count = 0.01;
-                    }
-                }
-            };
-            if(!flag){
-                vm.uptonAmount = "未使用";
-                vm.upronAmountNumber = 0,
-                vm.couponId = '';
-                // console.log(vm.counttoll)
-                if(vm.is_integral == '0'){//判断是否开通积分兑换
-                    vm.Carandpay(vm.counttoll)
-                }else {
-                    vm.Carandpay(vm.totalPrice)
-                }
-            }
-            vm.selectUpton = true;
-        },
-        //ios中留白问题
-        fixScroll() {
-            let u = navigator.userAgent;
-            let isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
-            if (isiOS) {
-            setTimeout(() => {
-                const  scrollheight = document.documentElement.scrollTop || document.body.scrollTop || 0;
-                window.scrollTo(0,Math.max(scrollheight, 0))
-            }, 200);
-            }
-        },
-        //获取验证码
-        getCaptcha() {
-            vm.sUptop = 'Locking'; // 锁定优惠券
-            if(vm.yzmstr=="获取验证码"||vm.yzmstr=="重新获取"){
-	       		vm.yzmstr="获取中";
-	       		vm.yzmreq();
-	       	}
-        },
-        //获取验证码
-        yzmreq(){
-            let url ="/getPaySmsCode?cardId="+vm.cardId;
-            vm.receiveData.getData(vm,url,'res',function(){
-                if(vm.res.success){
-                    vm.orderNo = vm.res.result.orderNo;//获取流水号
-                    vm.yzmtime=60;
-                    alert("验证码已下发，请查收短信");
-                    var tt=setInterval(function() {
-                        vm.yzmstr=vm.yzmtime+'秒后重新获取';
-                        vm.yzmtime--;
-                        if(vm.yzmtime<=0) {
-                            vm.yzmstr='重新获取'
-                        }
-                    },1000);
-                  var ss = setTimeout(function(){clearInterval(tt);}, 61*1000);
-                }else {
-                    alert(vm.res.message == null ?'获取验证码失败':vm.message)
-                }
-            })	
-        },
-       btnPay() {
-        let url = "getPrePayInfo";
-        let list = {};
-        list = vm.ulist;
-        list.couponUnit = vm.upronAmountNumber;
-        list.couponId = vm.couponId;
-        list.reduceAmt = vm.reduceMoney;
-        list.ruleType = vm.ruleType; //减免规则类型
-        list.reductionAmt = vm.reductionAmt;//减免金额
-        list.payFeeType = vm.payFeeType; //01管理费，02停车费
-        if(list.payType > 1 && vm.captcha == '') {
-            alert("请输入验证码");
-            return;
-        }
-        if(vm.showyan) {
-            list.veriCode = vm.captcha;//验证码
-            list.orderNo = vm.orderNo;
-            list.cardId = vm.cardId;
-        }
-        if(list.payType > 1) {
-            list.payType = '1';
-        }
-        $('.box-bg').css("display",'block');
-        vm.axios.post(
-            url,
-            list,
-        ).then(
-        function(res){
-            let wd = JSON.parse(res.data);
-            // console.log(wd);
-            if(wd.success == false){
-                alert(wd.message == null?'支付失败':wd.message);
-                $('.box-bg').css("display",'none');
+                })	
+            },
+        btnPay() {
+            let url = "getPrePayInfo";
+            let list = {};
+            list = vm.ulist;
+            list.couponUnit = vm.upronAmountNumber;
+            list.couponId = vm.couponId;
+            list.reduceAmt = vm.reduceMoney;
+            list.ruleType = vm.ruleType; //减免规则类型
+            list.reductionAmt = vm.reductionAmt;//减免金额
+            list.payFeeType = vm.payFeeType; //01管理费，02停车费
+            if(list.payType > 1 && vm.captcha == '') {
+                alert("请输入验证码");
                 return;
             }
-        if(list.payType == 0){
-            wx.config({
-                debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
-                appId: wd.result.appid, // 必填，公众号的唯一标识
-                timestamp: wd.result.timestamp, // 必填，生成签名的时间戳
-                nonceStr: wd.result.noncestr, // 必填，生成签名的随机串
-                signature: wd.result.paysign,// 必填，签名，见附录1
-                jsApiList: ['chooseWXPay'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
-            });
-            wx.chooseWXPay({
-                "appId":wd.result.appid,
-                "timestamp":wd.result.timestamp,
-                "nonceStr":wd.result.noncestr,
-                "package":wd.result.package,
-                "signType":wd.result.signtype,
-                "paySign":wd.result.paysign,
-                
-                success: function (res) {
-                        //支付成功跳转详情
-                        var oriapp=vm.common.getoriApp();
-                        window.location.href = vm.basePageUrl+'wuye/index.html?'+oriapp+'#/paymentquery';
-                },
-                fail:function(res) {
-                    console.log(JSON.stringify(res))
-                },
-                cancel:function(res){
-                    alert('支付取消');
+            if(vm.showyan) {
+                list.veriCode = vm.captcha;//验证码
+                list.orderNo = vm.orderNo;
+                list.cardId = vm.cardId;
+            }
+            if(list.payType > 1) {
+                list.payType = '1';
+            }
+            $('.box-bg').css("display",'block');
+            vm.axios.post(
+                url,
+                list,
+            ).then(
+            function(res){
+                let wd = JSON.parse(res.data);
+                // console.log(wd);
+                if(wd.success == false){
+                    alert(wd.message == null?'支付失败':wd.message);
                     $('.box-bg').css("display",'none');
+                    return;
                 }
-                
-            })
-        }else {//银行卡调转支付
-            let payurl = wd.result.PAYURL;
-            let pay_result = wd.result.pay_result;
-            if(pay_result == 'SUCCESS'){
-                vm.$router.push({path:'/blank',query:{'tradeWaterId':wd.result.trade_water_id+'?'}})
-            }
-            if(payurl) {
-                window.location.href=payurl;
-            }
-            $('.box-bg').css("display",'none');
-        }    
-        }).catch(
-            function(err){
-                console.log(err);
-            }
-        )
-        
-       }
-   },
+            if(list.payType == 0){
+                wx.config({
+                    debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+                    appId: wd.result.appid, // 必填，公众号的唯一标识
+                    timestamp: wd.result.timestamp, // 必填，生成签名的时间戳
+                    nonceStr: wd.result.noncestr, // 必填，生成签名的随机串
+                    signature: wd.result.paysign,// 必填，签名，见附录1
+                    jsApiList: ['chooseWXPay'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+                });
+                wx.chooseWXPay({
+                    "appId":wd.result.appid,
+                    "timestamp":wd.result.timestamp,
+                    "nonceStr":wd.result.noncestr,
+                    "package":wd.result.package,
+                    "signType":wd.result.signtype,
+                    "paySign":wd.result.paysign,
+                    
+                    success: function (res) {
+                            //支付成功跳转详情
+                            var oriapp=vm.common.getoriApp();
+                            window.location.href = vm.basePageUrl+'wuye/index.html?'+oriapp+'#/paymentquery';
+                    },
+                    fail:function(res) {
+                        console.log(JSON.stringify(res))
+                    },
+                    cancel:function(res){
+                        alert('支付取消');
+                        $('.box-bg').css("display",'none');
+                    }
+                    
+                })
+            }else {//银行卡调转支付
+                let payurl = wd.result.PAYURL;
+                let pay_result = wd.result.pay_result;
+                if(pay_result == 'SUCCESS'){
+                    vm.$router.push({path:'/blank',query:{'tradeWaterId':wd.result.trade_water_id+'?'}})
+                }
+                if(payurl) {
+                    window.location.href=payurl;
+                }
+                $('.box-bg').css("display",'none');
+            }    
+            }).catch(
+                function(err){
+                    console.log(err);
+                }
+            )
+            
+        }
+    },
 
-   computed: {
+    computed: {
 
-   },
+    },
 }
 </script>
 
@@ -678,7 +712,7 @@ ul li:last-of-type {
     position: fixed;
     left: 4%;
     right: 4%;
-    bottom: 0;
+    bottom: 2.5vh;
     z-index: 3;
     width: 92%;
     height: 0.9rem;
@@ -691,4 +725,19 @@ ul li:last-of-type {
      position: absolute;
 }
 
+.sel-paymethod {
+	display: flex;
+    align-items: center;
+}
+.sel-paymethod img {
+	width: 0.7rem;
+    height: 0.7rem;
+}
+.sel-paymethod .img-alipay {
+	width: 0.7rem !important;
+    height: 0.62rem !important;
+}
+.pay-text {
+    margin-left: 0.25rem;
+}
 </style>
