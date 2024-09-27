@@ -208,7 +208,7 @@ export default {
         totalPrice: {
             handler (newVal) {
                 if (newVal) {
-                    this.getAlipayConsult()
+                    // this.getAlipayConsult()
                 }
             },
         },
