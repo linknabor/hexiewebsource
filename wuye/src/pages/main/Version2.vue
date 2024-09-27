@@ -229,6 +229,7 @@ export default ({
             }
             //宜居从外部小程序注册回来的用户，因为无法监听，这里做注册判断
             let yjappid = this.is_config.C('yjappid')
+            //
             if(!this.common.isRegisted() && this.userInfo.appId === yjappid) {
                 this.replUser(code, url)
             } else {
@@ -252,6 +253,7 @@ export default ({
         },
         async replUser(code, url) {
             api.getUserInfo().then((response) => {
+                console.log(response)
                 let data = response.data
                 if(data && data.errorCode === 0){
                     if(data.result) {
@@ -264,9 +266,8 @@ export default ({
                             this.common.updatecookie(data.result.cardStatus,data.result.cardService,data.result.id,data.result.appid,
                             data.result.cspId,data.result.sectId,data.result.cardPayService,data.result.bgImageList,data.result.wuyeTabsList,
                             data.result.qrCode,data.result)
-
-                            this.goUrl(code, url)
                         }
+                        this.goUrl(code, url)
                     }
                 }
             })
