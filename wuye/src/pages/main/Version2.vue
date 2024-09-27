@@ -132,7 +132,7 @@ import NoticeApi from '@/api/NoticeApi.js'
 import TipsApi from '@/api/TipsApi.js'
 import BaseInfoApi from '@/api/BaseInfoApi.js'
 import Storage from '@/assets/js/storage.js'
-
+import api from "@/api/api.js";
 export default ({
     data (){
         return {
@@ -251,15 +251,10 @@ export default ({
             }
         },
         async replUser(code, url) {
-            let param = {
-                province: this.userInfo.province,
-                city: this.userInfo.city,
-                county: this.userInfo.county,
-                sectId: this.userInfo.sectId,
-                sectName: this.userInfo.xiaoquName,
-                cspId: this.userInfo.cspId
-            }
-            BaseInfoApi.switchSect(param).then((response)=>{
+            var data = {
+                oriApp: this.userInfo.appId,
+            };
+            api.login(this.userInfo.id, data).then((response) => {
                 let data = response.data
                 if(data && data.errorCode === 0){
                     if(data.result) {
@@ -268,6 +263,9 @@ export default ({
                             this.sectName = this.userInfo.xiaoquName
                             if(!this.sectName) {
                                 this.sectName = '游客'
+                            }
+                            if(data.result.wuyeTabsList.length == 0) {
+                                data.result.wuyeTabsList = null
                             }
                             this.common.updatecookie(data.result.cardStatus,data.result.cardService,data.result.id,data.result.appid,
                             data.result.cspId,data.result.sectId,data.result.cardPayService,data.result.bgImageList,data.result.wuyeTabsList,
@@ -409,7 +407,7 @@ export default ({
                 console.log(error)
                 Toast(error)
             })
-        }
+        },
     },
 
 })
