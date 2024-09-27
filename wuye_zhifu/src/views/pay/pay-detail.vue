@@ -895,6 +895,7 @@
 
 			},
 			onChangeFeeType(e) {
+				console.log(e)
 			},
 			toggle(e) {
 				console.log(e)
