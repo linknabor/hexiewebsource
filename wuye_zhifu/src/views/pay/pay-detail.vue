@@ -641,12 +641,10 @@
 			// vm.common.checkRegisterStatus();
 			// this.initSession4Test();
 			var userStr = localStorage.getItem('userInfo');
-			console.log('userStr:' + userStr)
 			var userInfo = {}
 			if(userStr) {
 				userInfo = JSON.parse(userStr)
 				let wdappids = this.masterConfig.C('wdappids')
-				console.log('wdappids:' + wdappids)
 				if(wdappids.indexOf(userInfo.appId)>-1) {
 					const secondaryColor = getComputedStyle(document.documentElement).getPropertyValue('--secondary-color');
 					document.documentElement.style.setProperty('--primary-color', secondaryColor);
@@ -894,11 +892,9 @@
 				vm.$router.push({path:'/payzhifu',query:{bind_switch:vm.bind_switch,version:vm.version,reduceMode:vm.routeParams.reduceMode,acctNNo:vm.acctNNo,cardId:vm.cardId,payFeeType:vm.routeParams.payFeeType}})
 
 			},
-			onChangeFeeType(e) {
-				console.log(e)
+			onChangeFeeType() {
 			},
-			toggle(e) {
-				console.log(e)
+			toggle() {
 			}
 
 		}
