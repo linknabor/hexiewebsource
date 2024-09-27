@@ -251,10 +251,7 @@ export default ({
             }
         },
         async replUser(code, url) {
-            var data = {
-                oriApp: this.userInfo.appId,
-            };
-            api.login(this.userInfo.id, data).then((response) => {
+            api.getUserInfo().then((response) => {
                 let data = response.data
                 if(data && data.errorCode === 0){
                     if(data.result) {
@@ -263,9 +260,6 @@ export default ({
                             this.sectName = this.userInfo.xiaoquName
                             if(!this.sectName) {
                                 this.sectName = '游客'
-                            }
-                            if(data.result.wuyeTabsList.length == 0) {
-                                data.result.wuyeTabsList = null
                             }
                             this.common.updatecookie(data.result.cardStatus,data.result.cardService,data.result.id,data.result.appid,
                             data.result.cspId,data.result.sectId,data.result.cardPayService,data.result.bgImageList,data.result.wuyeTabsList,
