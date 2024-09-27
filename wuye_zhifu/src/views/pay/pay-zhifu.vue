@@ -505,7 +505,6 @@ export default {
 
             function(res){
                 let wd = JSON.parse(res.data);
-                console.log(wd);
                 if(wd.success == false){
                     alert(wd.message == null?'支付失败':wd.message);
                     $('.box-bg').css("display",'none');
