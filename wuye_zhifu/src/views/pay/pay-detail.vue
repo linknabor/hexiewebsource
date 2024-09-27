@@ -353,7 +353,7 @@
 							<div class="fee-price fr" >￥{{fee_item.totalFee.toFixed(2)}}</div>
 						</template>
 						<template>
-							<van-collapse :border="true">
+							<van-collapse v-model="activeFeeTypeDetail" :border="true">
 								<van-collapse-item name="index" v-for="(i,index) in fee_item.fee_detail" :key="index" :border="false" @toggle="toggle" @click="toggle">
 									<template #title>
 										<div class="detail-date fl">{{i.service_fee_cycle}}</div>
@@ -555,6 +555,7 @@
 		data(){
 			return {
 				activeFeeType: [],
+				activeFeeTypeDetail: [],
 				invoice_title:'',//发票抬头
 				credit_code:'',//公司税号
 				invoice_title_type:'01',//个人01或公司02
