@@ -639,7 +639,7 @@
 		},
 		mounted(){
 			// vm.common.checkRegisterStatus();
-			this.initSession4Test();
+			// this.initSession4Test();
 			var userStr = localStorage.getItem('userInfo');
 			console.log('userStr:' + userStr)
 			var userInfo = {}
