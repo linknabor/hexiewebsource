@@ -126,6 +126,9 @@ export default{
       vm.initUserInfo();
       vm.geturl();
       this.wdappid = this.is_config.C('wdappids')
+      if(!this.wdappid) {
+        this.wdappid = []
+      }
     },
     updated(){
       vm.getclass();

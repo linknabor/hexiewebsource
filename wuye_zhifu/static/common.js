@@ -32,6 +32,9 @@ var MasterConfig = function() {
         componentAppId: /127|test/.test(location.origin)?'wx4d706a1a7a139d1f':
         /uat/.test(location.origin)?'wxc65085912aca5444':
         'wx0d408844b35d85e2',
+
+        aliappId: /127|test/.test(location.origin)?'2021001161682727':
+                /uat/.test(location.origin)?'2021001161682727' : '2021001161682727',
         
 		oauthUrl: "https://open.weixin.qq.com/connect/oauth2/authorize?",
         oauthUrlPostFix:"&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect",		

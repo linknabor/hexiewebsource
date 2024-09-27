@@ -2,10 +2,10 @@
 <div>
     <div v-if="selectUpton">
         <div class="box-bg"></div>
-       <!-- <div class="pay-div">
+       <div class="pay-div" v-show="shareTokenService != 1 || !channelOperationInfo">
            <span class="fl">支付方式</span>
            <span class="fr">{{typename}}</span>
-       </div> -->
+       </div>
        <div class="pay-div">
            <span class="fl">账单金额</span>
            <span class="fr padding-r">¥{{totalPrice}}</span>
@@ -47,12 +47,15 @@
        </div>
        <div class="Color" v-show="reduceM == '1' || reduceM == '2' || reduceM == '4' || reduceM == '5' || reduceM == '6' || reduceM =='7'" style="padding: 0 0.3rem;letter-spacing: 1px;">本次支付四舍五入{{Math.abs(reduceMoney)}}元</div>
        <div class="Color" v-show="is_integral == '1'" style="padding: 0 0.3rem;letter-spacing: 1px;">本次支付您将获得{{integral}}积分</div>
+        <van-overlay :show="showLoading" @click="showLoading = false" z-index="99" class-name="my-loading">
+            <van-loading type="spinner" color="var(--primary-color)" :v-show="showLoading"/>
+        </van-overlay>
        <div style="height:1.5rem;"></div>
        <!--选择支付方式 start-->
-       <div>
-        <van-radio-group v-model="payMethod">
+       <div v-show="shareTokenService == 1 && channelOperationInfo">
+        <van-radio-group v-model="payMethod" @change="onRadioChange">
             <van-cell-group>
-                <van-cell clickable @click="payMethod = '1'">
+                <van-cell clickable @click="payMethod = '06'">
                     <template #title>
                         <div class="sel-paymethod">
                             <img src="../../assets/image/wehcatpay.png" alt="">
@@ -60,10 +63,10 @@
                         </div>
                     </template>
                     <template #right-icon>
-                        <van-radio name="1" />
+                        <van-radio name="06" />
                     </template>
                 </van-cell>
-                <van-cell clickable @click="payMethod = '2'">
+                <van-cell clickable @click="payMethod = '20'">
                     <template #title>
                         <div class="sel-paymethod">
                             <img class="img-alipay" src="../../assets/image/alipay.png" alt="">
@@ -71,7 +74,7 @@
                         </div>
                     </template>
                     <template #right-icon>
-                        <van-radio name="2" />
+                        <van-radio name="20" />
                     </template>
                 </van-cell>
             </van-cell-group>
@@ -79,7 +82,8 @@
         <!--选择支付方式 start-->
        </div>
        
-	   <div class="pay-btn"  @click="btnPay">立即支付</div>
+	   <div class="pay-btn" @click="btnPay" v-show="payMethod=='06'">立即支付</div>
+       <div class="alipay-btn" @click="btnPay" v-show="payMethod=='20'">打开支付宝，去支付></div>
     </div>
     <div v-else class="upton-list" >
         <!-- 可用券的数量 -->
@@ -112,7 +116,7 @@
 <script>
 var vm;
 import wx from 'weixin-js-sdk';
-import { RadioGroup, Radio, Cell, CellGroup } from 'vant';
+import { RadioGroup, Radio, Cell, CellGroup, Loading, Overlay, Dialog  } from 'vant';
 export default {
     data () {
         return {
@@ -174,7 +178,13 @@ export default {
             couponId:'',//优惠券id
             selectUpton:true,//显示的是缴费详情页面还是选择优惠劵页面
             sUptop:'No',//是否锁定优惠券
-            payMethod: '',  //微信支付或者吱口令
+            payMethod: '06',  //微信支付或者吱口令
+            showLoading: true,
+            aliuserid: '',
+            shareTokenService: this.$route.query.shareTokenService, //是否支持支付宝吱口令，0不支持，1支持
+            sectId: this.$route.query.sectId,
+            channelOperationInfo: '',    //支付宝吱口令渠道参数
+            orderId: '',    //支付宝吱口令支付会提前生成订单号，后面当trade_water_id用
         };
     },
     created(){
@@ -190,6 +200,18 @@ export default {
         [Radio.name]: Radio,
         [Cell.name]: Cell,
         [CellGroup.name]: CellGroup,
+        [Loading.name]: Loading,
+        [Overlay.name]: Overlay,
+        [Dialog.name]: Dialog,
+    },
+    watch: {
+        totalPrice: {
+            handler (newVal) {
+                if (newVal) {
+                    this.getAlipayConsult()
+                }
+            },
+        },
     },
     methods: {
             geturl(){
@@ -480,70 +502,148 @@ export default {
                 url,
                 list,
             ).then(
+
             function(res){
                 let wd = JSON.parse(res.data);
-                // console.log(wd);
+                console.log(wd);
                 if(wd.success == false){
                     alert(wd.message == null?'支付失败':wd.message);
                     $('.box-bg').css("display",'none');
                     return;
                 }
-            if(list.payType == 0){
-                wx.config({
-                    debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
-                    appId: wd.result.appid, // 必填，公众号的唯一标识
-                    timestamp: wd.result.timestamp, // 必填，生成签名的时间戳
-                    nonceStr: wd.result.noncestr, // 必填，生成签名的随机串
-                    signature: wd.result.paysign,// 必填，签名，见附录1
-                    jsApiList: ['chooseWXPay'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
-                });
-                wx.chooseWXPay({
-                    "appId":wd.result.appid,
-                    "timestamp":wd.result.timestamp,
-                    "nonceStr":wd.result.noncestr,
-                    "package":wd.result.package,
-                    "signType":wd.result.signtype,
-                    "paySign":wd.result.paysign,
-                    
-                    success: function (res) {
-                            //支付成功跳转详情
-                            var oriapp=vm.common.getoriApp();
-                            window.location.href = vm.basePageUrl+'wuye/index.html?'+oriapp+'#/paymentquery';
-                    },
-                    fail:function(res) {
-                        console.log(JSON.stringify(res))
-                    },
-                    cancel:function(res){
-                        alert('支付取消');
+                if (wd.result.pay_url) {
+                    //光大支付，直接跳转去光大的页面
+                    window.location.hre = wd.result.pay_url;
+                } else {
+                    if(list.payType == 0){
+                        wx.config({
+                            debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+                            appId: wd.result.appid, // 必填，公众号的唯一标识
+                            timestamp: wd.result.timestamp, // 必填，生成签名的时间戳
+                            nonceStr: wd.result.noncestr, // 必填，生成签名的随机串
+                            signature: wd.result.paysign,// 必填，签名，见附录1
+                            jsApiList: ['chooseWXPay'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+                        });
+                        wx.chooseWXPay({
+                            "appId":wd.result.appid,
+                            "timestamp":wd.result.timestamp,
+                            "nonceStr":wd.result.noncestr,
+                            "package":wd.result.package,
+                            "signType":wd.result.signtype,
+                            "paySign":wd.result.paysign,
+                            
+                            success: function (res) {
+                                    //支付成功跳转详情
+                                    var oriapp=vm.common.getoriApp();
+                                    window.location.href = vm.basePageUrl+'wuye/index.html?'+oriapp+'#/paymentquery';
+                            },
+                            fail:function(res) {
+                                console.log(JSON.stringify(res))
+                            },
+                            cancel:function(res){
+                                alert('支付取消');
+                                $('.box-bg').css("display",'none');
+                            }
+                            
+                        })
+                    }else {//银行卡调转支付
+                        let payurl = wd.result.PAYURL;
+                        let pay_result = wd.result.pay_result;
+                        if(pay_result == 'SUCCESS'){
+                            vm.$router.push({path:'/blank',query:{'tradeWaterId':wd.result.trade_water_id+'?'}})
+                        }
+                        if(payurl) {
+                            window.location.href=payurl;
+                        }
                         $('.box-bg').css("display",'none');
                     }
-                    
-                })
-            }else {//银行卡调转支付
-                let payurl = wd.result.PAYURL;
-                let pay_result = wd.result.pay_result;
-                if(pay_result == 'SUCCESS'){
-                    vm.$router.push({path:'/blank',query:{'tradeWaterId':wd.result.trade_water_id+'?'}})
                 }
-                if(payurl) {
-                    window.location.href=payurl;
-                }
-                $('.box-bg').css("display",'none');
-            }    
             }).catch(
                 function(err){
                     console.log(err);
                 }
             )
             
+        },
+        onRadioChange (e) {
+            if(e === '20' && !this.aliuserid) {
+                const aliappId = this.masterConfig.C('aliappId')
+                this.showLoading = true
+                ap.getAuthCode({
+                    appId: aliappId,
+                    scopes: ['auth_base'],
+                    showErrorTip: false
+                }, function(res) {
+                    this.showLoading = false
+                    if (res.authCode) {
+                        let authUrl = 'authorizeAlipay/' + res.authCode;
+                        vm.receiveData.getData(vm, authUrl,'data',function(){
+                            if(vm.data.success) {
+                                vm.aliuserid = vm.data.result.userid
+                            } else {
+                                Dialog.alert({
+                                    title: '用户授权失败',
+                                    message: vm.data.result.message
+                                })
+                            }
+                        })
+                    // 认证成功
+                    // 调用自己的服务端接口，让服务端进行后端的授权认证，并且利用session，需要解决跨域问题
+                    } else {
+                        Dialog.alert({
+                            title: '获取支付宝用户信息失败',
+                            message: res.errorDesc,
+                        })
+                    }   
+                });
+            }
+        },
+        //获取支付宝优惠咨询
+        getAlipayConsult () {
+            const url = 'alipay/marketingConsult'
+            const params = {
+                appid: this.masterConfig.C('aliappId'),
+                // user_id: this.aliuserid, TODO
+                user_id: '2088312129787880',
+                // sect_id: this.sectId,    TODO
+                sect_id: '180427100113842987',
+                tran_amt: this.count
+            }
+            this.receiveData.postData(vm, url, params, 'data', 
+            function () {
+                const response = vm.data
+                vm.showLoading = false
+                if(response.success) {
+                    vm.channelOperationInfo = response.result.channel_operation_info
+                    vm.orderId = response.result.orderId
+                } else {
+                    console.log(response.result.message)
+                }
+            },
+            function (err) {
+                console.log(err)
+                vm.showLoading = false
+            })
         }
     },
-
     computed: {
 
     },
 }
 </script>
+
+<!-- <script src="https://gw.alipayobjects.com/as/g/h5-lib/alipayjsapi/3.1.1/alipayjsapi.min.js"></script>
+
+<button id="test">getAuthCode</button>
+<script>document.querySelector('#test').addEventListener('click', function() {
+    ap.getAuthCode({
+      appId: '${appId}',
+      scopes: ['auth_user'],
+    }, function(res){
+      ap.alert(JSON.stringify(res));
+    });
+  });
+  </script> -->
 
 <style  scoped>
 .box-bg {width: 100%;opacity: .5;height: 100%;position: fixed;
@@ -721,6 +821,21 @@ ul li:last-of-type {
     line-height: 0.9rem;
     background-color: var(--primary-color);
 }
+
+.alipay-btn{
+    position: fixed;
+    left: 4%;
+    right: 4%;
+    bottom: 2.5vh;
+    z-index: 3;
+    width: 92%;
+    height: 0.9rem;
+    text-align: center;
+    color: #fff;
+    line-height: 0.9rem;
+    background-color: #1E6FFF;
+}
+
 .posb {
      position: absolute;
 }
@@ -739,5 +854,10 @@ ul li:last-of-type {
 }
 .pay-text {
     margin-left: 0.25rem;
+}
+.my-loading {
+    display: flex; 
+    justify-content:center; 
+    align-items: center;
 }
 </style>
