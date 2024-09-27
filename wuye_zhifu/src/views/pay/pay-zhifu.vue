@@ -179,7 +179,7 @@ export default {
             selectUpton:true,//显示的是缴费详情页面还是选择优惠劵页面
             sUptop:'No',//是否锁定优惠券
             payMethod: '06',  //微信支付或者吱口令
-            showLoading: true,
+            showLoading: false,
             aliuserid: '',
             shareTokenService: this.$route.query.shareTokenService, //是否支持支付宝吱口令，0不支持，1支持
             sectId: this.$route.query.sectId,
