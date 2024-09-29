@@ -512,7 +512,7 @@ export default {
                 }
                 if (wd.result.pay_url) {
                     //光大支付，直接跳转去光大的页面
-                    window.location.hre = wd.result.pay_url;
+                    window.location.href = wd.result.pay_url;
                 } else {
                     if(list.payType == 0){
                         wx.config({
