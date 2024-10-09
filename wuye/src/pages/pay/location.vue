@@ -123,11 +123,8 @@ body {
         return {
           value2:"",
           address:"",
-          citys: [
-          ],
-        
-          // latitude:'',//维度
-          // longitude:'',//经度
+          citys: [],
+          from: this.$route.query.from
         };
       },
         created() {
@@ -148,7 +145,11 @@ body {
         methods: {
           dj(item){
               var citydata=item.showRegionName;
-              vm.$router.push({path:'/Fontunit',query:{citydata1:citydata,address:item.regionName}})
+              if(this.from == '1') {
+                vm.$router.push({path:'/querySectNearby',query:{province: item.regionName}})
+              } else {
+                vm.$router.push({path:'/Fontunit',query:{citydata1:citydata,address:item.regionName}})
+              }
           },
            city(){    //定义获取城市方法
               wx.ready(function () {
@@ -158,7 +159,7 @@ body {
                   ],
               success: function (res) {
                   if (res.checkResult.getLocation == false) {
-                      alert('你的微信版本太低，不支持微信JS接口，请升级到最新的微信版本！');
+                      alert('您的微信版本太低，不支持微信JS接口，请升级到最新的微信版本！');
                       return;
                   }
                 }

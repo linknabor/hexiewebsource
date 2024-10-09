@@ -98,6 +98,15 @@ const router= new VueRouter({
               title:'查询缴费'
             }
         },
+        //查询小区
+        {
+          path:'/querySectNearby',
+          name:'querySectNearby',
+          component:resolve=>require(['@/pages/pay/querySectNearby'],resolve),
+          meta:{
+            title:'选择所在小区'
+          }
+        },
         {
             path:'/location',
             name:'location',

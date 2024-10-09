@@ -663,7 +663,8 @@ export default {
     },
     // 查询小区
     fond() {
-      vm.$router.push({ path: "/fontUnit" });
+      // vm.$router.push({ path: "/fontUnit" });
+      vm.$router.push({ path: "/querySectNearBy" });
     },
     //叉叉
     clicki() {
