@@ -40,12 +40,12 @@ export default {
     [CellGroup.name]: CellGroup,
   },
   mounted () {
-    // const longitude = '121.823151'
-    // const latitude = '31.488808'
-    const longitude = '121.812406'
-    const latitude = '31.484573'
-    let coordinate = longitude + ',' + latitude
-    this.getLocation(coordinate)
+    //below for local debug
+    // const longitude = '121.812406'
+    // const latitude = '31.484573'
+    // let coordinate = longitude + ',' + latitude
+    // this.getLocation(coordinate)
+    this.initWxConfig()
   },
   filters: {
     ellipsis (value) {
@@ -89,25 +89,26 @@ export default {
                   }).then(() => {
                     return false;
                   });
+                } else {
+                  wx.getLocation({
+                    type: "wgs84",
+                    success: function (res) {
+                      console.log(res)
+                      const latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+                      const longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+                      let coordinate = longitude + "," + latitude
+                      that.getLocation(coordinate);
+                      return;
+                    },
+                    fail: function (res) {
+                      console.log(res);
+                    },
+                    cancel: function (res) {
+                      console.log(res);
+                      console.log("用户取消");
+                    },
+                  });
                 }
-              },
-            });
-            wx.getLocation({
-              type: "wgs84",
-              success: function (res) {
-                const latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
-                const longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
-                let coordinate = longitude + "," + latitude
-                that.getLocation(coordinate);
-                that.getSectNearby(coordinate)
-                return;
-              },
-              fail: function (res) {
-                console.log(res);
-              },
-              cancel: function (res) {
-                console.log(res);
-                console.log("用户取消");
               },
             });
           });
