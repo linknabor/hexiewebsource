@@ -400,6 +400,7 @@ export default {
         }
         this.zong()
       }
+      this.initWxConfig(newv)
     }
   },
   created() {
@@ -410,15 +411,6 @@ export default {
     vm.TabsList();
     vm.unitselect();
     vm.getHousin();
-    let url = location.href.split("#")[0];
-    var data = {
-                vm:vm,
-                wx:wx,
-                apiList:['scanQRCode','getLocation'],
-                url:url
-            }
-    vm.receiveData.wxconfig(data);
-
     vm.Compatibility();
     // 判断是否是专业版
   },
@@ -663,7 +655,12 @@ export default {
     },
     // 查询小区
     fond() {
-      vm.$router.push({ path: "/fontUnit" });
+      let wdappids = this.is_config.C('wdappids')
+      if(wdappids.indexOf(userInfo.appId)>-1) {
+        vm.$router.push({ path: "/querySectNearBy" });
+      } else {
+        vm.$router.push({ path: "/fontUnit" });
+      }
     },
     //叉叉
     clicki() {
@@ -1314,6 +1311,22 @@ export default {
             })
         }
     },
+    initWxConfig (currTab) {
+      let apiList = []
+      if('a' == currTab) {
+        apiList.push('scanQRCode')
+      } else if ('b' == currTab) {
+        apiList.push('getLocation')
+      }
+      let url = location.href.split("#")[0];
+      var data = {
+        vm,
+        wx,
+        apiList,
+        url
+      }
+      vm.receiveData.wxconfig(data);
+    }
 }
 </script>
 <style>

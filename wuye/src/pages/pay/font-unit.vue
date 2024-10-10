@@ -221,11 +221,18 @@ export default {
                 openTagList: [],
             })
             wx.ready(() => {
-                console.log('weixin init ready.')
+                console.log('begin exec wx.ready.')
                 wx.checkJsApi({
                   jsApiList,
                   success: function(res) {
                     console.log(res)
+                    if (!res.checkResult.getLocation) {
+                      Dialog.alert({
+                        message: '您的微信版本太低，请升级到最新的微信版本！',
+                      }).then(() => {
+                        return false
+                      })
+                    }
                   }
                 })
                 wx.getLocation({
