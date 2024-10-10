@@ -186,6 +186,7 @@ export default {
     //     url:url2
     // }
     // vm.receiveData.wxconfig(data);
+    this.replacecity()
     this.initWxConfig()
 
     // vm.city();
