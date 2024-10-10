@@ -1309,23 +1309,23 @@ export default {
                 console.log(error)
                 Toast(error)
             })
+        },
+        initWxConfig (currTab) {
+          let apiList = []
+          if('a' == currTab) {
+            apiList.push('scanQRCode')
+          } else if ('b' == currTab) {
+            apiList.push('getLocation')
+          }
+          let url = location.href.split("#")[0];
+          var data = {
+            vm,
+            wx,
+            apiList,
+            url
+          }
+          vm.receiveData.wxconfig(data);
         }
-    },
-    initWxConfig (currTab) {
-      let apiList = []
-      if('a' == currTab) {
-        apiList.push('scanQRCode')
-      } else if ('b' == currTab) {
-        apiList.push('getLocation')
-      }
-      let url = location.href.split("#")[0];
-      var data = {
-        vm,
-        wx,
-        apiList,
-        url
-      }
-      vm.receiveData.wxconfig(data);
     }
 }
 </script>
