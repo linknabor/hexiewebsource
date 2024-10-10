@@ -13,6 +13,17 @@
           ><van-icon name="arrow-down" /><span style="margin-left: 0.2rem"></span></div>
       </template>
     </van-search>
+    <van-cell-group title="当前定位">
+      <van-cell :to="{name: 'Pay', query: {selected: 'd'}}">
+        <template slot="title" >
+          <van-icon name="location-o" />{{ currAddrName }}
+        </template>
+        <template>
+          <div style="color: var(--primary-color);">重新定位</div>
+        </template>
+      </van-cell>
+    </van-cell-group>
+    <div style="width: 100%; height: 2vh; background-color: rgb(238, 238, 238);"></div>
     <van-cell-group title="附近小区">
         <van-cell v-for="(item, index) in sectList" :title="item.sect_name" :value="item.distance" :label="item.sect_address" :key="index" @click="checkSect(item)" />
     </van-cell-group>
@@ -29,8 +40,10 @@ export default {
   data() {
     return {
       sectList: [], //小区列表
-      sectName: "",
-      province: "",
+      sectName: '',
+      province: '',
+      currAddr: '',
+      currAddrName: '',
       jsApiList: ["getLocation"],
     };
   },
@@ -41,7 +54,7 @@ export default {
     [CellGroup.name]: CellGroup,
   },
   mounted () {
-    //below for local debug
+    // below for local debug
     // const longitude = '121.812406'
     // const latitude = '31.484573'
     // let coordinate = longitude + ',' + latitude
@@ -130,6 +143,8 @@ export default {
             if(data.success) {
                 this.province = data.result.province
                 this.sectList = data.result.sectList
+                this.currAddr = data.result.currentAddr
+                this.currAddrName = data.result.currentName
             } else {
                 Dialog({message: data.message})
                 this.province = defaultPro
@@ -151,7 +166,7 @@ export default {
     clickProvince() {
       this.$router.push({ path: "/location", query: {from: '1'} })
     }
-  },
+  }
 };
 </script>
 
