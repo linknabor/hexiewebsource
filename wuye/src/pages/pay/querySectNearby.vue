@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import wx from "weixin-js-sdk";
 import { Search, Icon, Dialog, Cell, CellGroup } from "vant"
 import UserApi from '@/api/api.js'
 import LocationApi from '@/api/LocationApi.js'
