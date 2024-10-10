@@ -384,6 +384,7 @@ export default {
   watch: {
     selected(newv,old){
       isloadPage=false;
+      this.initWxConfig(newv)
       if(newv=='b'){
         this.getSwitchSectTips()
         this.billPage = 1  //页码重置
@@ -400,7 +401,6 @@ export default {
         }
         this.zong()
       }
-      this.initWxConfig(newv)
     }
   },
   created() {
@@ -655,6 +655,10 @@ export default {
     },
     // 查询小区
     fond() {
+      let userInfo = this.userInfo
+      if (!userInfo || !userInfo.id) {
+        userInfo = Storage.get("userInfo")
+      }
       let wdappids = this.is_config.C('wdappids')
       if(wdappids.indexOf(userInfo.appId)>-1) {
         vm.$router.push({ path: "/querySectNearBy" });
@@ -1314,17 +1318,19 @@ export default {
           let apiList = []
           if('a' == currTab) {
             apiList.push('scanQRCode')
-          } else if ('b' == currTab) {
+          } else if ('d' == currTab) {
             apiList.push('getLocation')
           }
-          let url = location.href.split("#")[0];
-          var data = {
-            vm,
-            wx,
-            apiList,
-            url
+          if(apiList.length > 0) {
+            let url = location.href.split("#")[0];
+            var data = {
+              vm,
+              wx,
+              apiList,
+              url
+            }
+            vm.receiveData.wxconfig(data);
           }
-          vm.receiveData.wxconfig(data);
         }
     }
 }
