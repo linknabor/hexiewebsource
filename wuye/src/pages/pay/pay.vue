@@ -423,7 +423,6 @@ export default {
         let wdappids = this.is_config.C('wdappids')
         if(wdappids.indexOf(userInfo.appId)>-1) {
           const secondaryColor = getComputedStyle(document.documentElement).getPropertyValue('--secondary-color');
-          console.log(secondaryColor)
           document.documentElement.style.setProperty('--primary-color', secondaryColor);
           const secondarySelIcon = getComputedStyle(document.documentElement).getPropertyValue('--secondary-icon-selected');
           document.documentElement.style.setProperty('--primary-icon-selected', secondarySelIcon);
@@ -1315,6 +1314,7 @@ export default {
             })
         },
         initWxConfig (currTab) {
+          console.log('currTab : ' + currTab)
           let apiList = []
           if('a' == currTab) {
             apiList.push('scanQRCode')
@@ -1326,7 +1326,7 @@ export default {
             var data = {
               vm,
               wx,
-              apiList,
+              apilist: apiList,
               url
             }
             vm.receiveData.wxconfig(data);
