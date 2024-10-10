@@ -124,69 +124,73 @@ body {
           value2:"",
           address:"",
           citys: [],
-          from: this.$route.query.from
-        };
+          from: this.$route.query.from,
+        }
       },
         created() {
           vm = this;
         },
         mounted(){
-          vm.city();    //触发获取城市方法
-          let url2 = location.href.split('#')[0];
-          var data = {
-                vm:vm,
-                wx:wx,
-                apiList:['getLocation'],
-                url:url2
-            }
-          vm.receiveData.wxconfig(data);
-
+          const coordinate = this.$route.query.coordinate
+          if(!coordinate) {
+            vm.city();    //触发获取城市方法
+            let url2 = location.href.split('#')[0];
+            var data = {
+                  vm:vm,
+                  wx:wx,
+                  apiList:['getLocation'],
+                  url:url2
+              }
+            vm.receiveData.wxconfig(data);
+          } else {
+            vm.getReionUrlByCoordinate(this.coordinate)
+          }
         },
         methods: {
           dj(item){
               var citydata=item.showRegionName;
-              if(this.from == '1') {
-                vm.$router.push({path:'/querySectNearby',query:{province: item.regionName}})
-              } else {
-                vm.$router.push({path:'/Fontunit',query:{citydata1:citydata,address:item.regionName}})
-              }
+              vm.$router.push({path:'/fontUnit',query:{citydata1:citydata,address:item.regionName}})
           },
            city(){    //定义获取城市方法
               wx.ready(function () {
-              wx.checkJsApi({
-                  jsApiList: [
-                      'getLocation'
-                  ],
-              success: function (res) {
-                  if (res.checkResult.getLocation == false) {
-                      alert('您的微信版本太低，不支持微信JS接口，请升级到最新的微信版本！');
-                      return;
-                  }
-                }
-                });
+                wx.checkJsApi({
+                    jsApiList: [
+                        'getLocation'
+                    ],
+                    success: function (res) {
+                      if (res.checkResult.getLocation == false) {
+                          alert('您的微信版本太低，不支持微信JS接口，请升级到最新的微信版本！');
+                          return;
+                      }
+                    }
+                  });
                   wx.getLocation({
-                  type: 'wgs84',
-                  success: function (res) {
-                   
-                  let latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
-                  let longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
-                 
-                  vm.getRegionurl(longitude,latitude);
+                    type: 'wgs84',
+                    success: function (res) {
+                    
+                    let latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+                    let longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
                   
-                    return;
-                  },  
-                  cancel: function (res) {
-                      console.log('用户取消')
-                  }
-                });
+                    vm.getRegionurl(longitude,latitude);
+                    
+                      return;
+                    },  
+                    cancel: function (res) {
+                        console.log('用户取消')
+                        vm.getReionUrlByCoordinate('')
+                    }
+                  });
                   wx.error(function(res){
                       alert("获取位置失败")
                   });
-
                 })
               },
           getRegionurl(longitude,latitude){
-              vm.receiveData.getData(vm,'/getRegionUrl?coordinate='+longitude+','+latitude,'res',function(){
+            let coordinate = longitude+','+ latitude
+            this.getReionUrlByCoordinate(coordinate)
+          },
+          getReionUrlByCoordinate(coordinate) {
+            vm.receiveData.getData(vm,'/getRegionUrl?coordinate='+coordinate,'res',function(){
                 if(vm.res.success){
                 vm.value2=vm.res.result.showAddress;
                 vm.address=vm.res.result.address;

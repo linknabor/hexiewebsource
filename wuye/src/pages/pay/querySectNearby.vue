@@ -42,9 +42,11 @@ export default {
       sectList: [], //小区列表
       sectName: '',
       province: '',
+      provinceAbbr: '',
       currAddr: '',
       currAddrName: '',
       jsApiList: ["getLocation"],
+      coordinate: '',
     };
   },
   components: {
@@ -111,7 +113,8 @@ export default {
                       const latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
                       const longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
                       let coordinate = longitude + "," + latitude
-                      that.getLocation(coordinate);
+                      that.getLocation(coordinate)
+                      that.coordinate = coordinate
                       return;
                     },
                     fail: function (res) {
@@ -138,33 +141,37 @@ export default {
           appid
         }
         const defaultPro = '上海市'
+        const defaultProAbbr = '上海'
         LocationApi.getLocation(param).then(response => {
             const data = response.data
             if(data.success) {
                 this.province = data.result.province
+                this.provinceAbbr = data.result.provinceAbbr
                 this.sectList = data.result.sectList
                 this.currAddr = data.result.currentAddr
                 this.currAddrName = data.result.currentName
             } else {
                 Dialog({message: data.message})
                 this.province = defaultPro
+                this.provinceAbbr = defaultProAbbr
             }
         }).catch(err => {
             Dialog({message: data.message})
             this.province = defaultPro
+            this.provinceAbbr = defaultProAbbr
         })
     },
     checkSect(obj) {
       this.$router.push({
         path: "/Pay",
-        query: { selected: "d", userunit: obj.sect_name, queryID: obj.sect_id, City: this.sectName }
+        query: { selected: "d", userunit: obj.sect_name, queryID: obj.sect_id, City: this.province }
       })
     },
     clickSearch() {
       this.$router.push({ path: "/fontUnit" })
     },
     clickProvince() {
-      this.$router.push({ path: "/location", query: {from: '1'} })
+      this.$router.push({ path: "/location", query: {from: '1', coordinate: this.coordinate} })
     }
   }
 };
