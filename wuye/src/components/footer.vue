@@ -123,11 +123,6 @@ export default{
       vm=this;
     },
     mounted(){
-      try {
-        alert(getCookie('SESSION'))
-      } catch(e) {
-        console.log(e)
-      }
       vm.initUserInfo();
       vm.geturl();
       this.wdappid = this.is_config.C('wdappids')
