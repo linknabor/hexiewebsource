@@ -2,7 +2,7 @@
 <div>
     <div v-if="selectUpton">
         <div class="box-bg"></div>
-       <div class="pay-div" v-show="shareTokenService != 1 || !channelOperationInfo">
+       <div class="pay-div" v-show="!channelOperationInfo">
            <span class="fl">支付方式</span>
            <span class="fr">{{typename}}</span>
        </div>
@@ -52,9 +52,21 @@
         </van-overlay>
        <div style="height:1.5rem;"></div>
        <!--选择支付方式 start-->
-       <div v-show="shareTokenService == 1 && channelOperationInfo">
+       <div v-show="channelOperationInfo">
         <van-radio-group v-model="payMethod" @change="onRadioChange">
             <van-cell-group>
+                <van-cell clickable @click="payMethod = '20'">
+                    <template #title>
+                        <div class="sel-paymethod">
+                            <img class="img-alipay" src="../../assets/image/alipay.png" alt="">
+                            <span class="pay-text">支付宝</span>
+                            <!-- <img class="img-alipay-recommand" src="../../assets/image/recommand.png" alt=""> -->
+                        </div>
+                    </template>
+                    <template #right-icon>
+                        <van-radio name="20" />
+                    </template>
+                </van-cell>
                 <van-cell clickable @click="payMethod = '06'">
                     <template #title>
                         <div class="sel-paymethod">
@@ -66,24 +78,14 @@
                         <van-radio name="06" />
                     </template>
                 </van-cell>
-                <van-cell clickable @click="payMethod = '20'">
-                    <template #title>
-                        <div class="sel-paymethod">
-                            <img class="img-alipay" src="../../assets/image/alipay.png" alt="">
-                            <span class="pay-text">支付宝吱口令</span>
-                        </div>
-                    </template>
-                    <template #right-icon>
-                        <van-radio name="20" />
-                    </template>
-                </van-cell>
             </van-cell-group>
         </van-radio-group>
         <!--选择支付方式 start-->
        </div>
        
+       <div class="alipay-btn" @click="btnPay" v-show="payMethod=='20'">立即支付</div>
 	   <div class="pay-btn" @click="btnPay" v-show="payMethod=='06'">立即支付</div>
-       <div class="alipay-btn" @click="btnPay" v-show="payMethod=='20'">打开支付宝，去支付></div>
+       
     </div>
     <div v-else class="upton-list" >
         <!-- 可用券的数量 -->
@@ -110,13 +112,22 @@
         <!-- 提交按钮 -->
 		<div class="btn" @click="submit">确定</div>
     </div>
+    <van-action-sheet v-model="showPaySheet" title="支付订单已生成" @cancel="onCancelSheet">
+        <div class="content">
+            <div class="title-scnd">口令已复制</div>
+            <div style="display: flex; justify-content: center; margin-top: 0.5rem; ">
+                <img class="open-zhi" src="../../assets/image/openzhi.png" alt="">
+            </div>
+            <div class="alipay-btn" disabled >打开支付宝，去支付></div>
+        </div>
+    </van-action-sheet>
 </div>    
 </template>
 
 <script>
 var vm;
 import wx from 'weixin-js-sdk';
-import { RadioGroup, Radio, Cell, CellGroup, Loading, Overlay, Dialog  } from 'vant';
+import { RadioGroup, Radio, Cell, CellGroup, Loading, Overlay, Dialog, Tag, ActionSheet } from 'vant';
 export default {
     data () {
         return {
@@ -181,16 +192,18 @@ export default {
             payMethod: '06',  //微信支付或者吱口令
             showLoading: false,
             aliuserid: '',
-            shareTokenService: this.$route.query.shareTokenService, //是否支持支付宝吱口令，0不支持，1支持
             sectId: this.$route.query.sectId,
             channelOperationInfo: '',    //支付宝吱口令渠道参数
             orderId: '',    //支付宝吱口令支付会提前生成订单号，后面当trade_water_id用
+            shareToken: '',  //吱口令
+            showPaySheet: false
         };
     },
     created(){
         vm=this;
     },
     mounted() {
+        // vm.initSession4Test()
         vm.geturl();//获取参数
         vm.Coupons();//优惠券
         vm.getDiscount();
@@ -203,26 +216,34 @@ export default {
         [Loading.name]: Loading,
         [Overlay.name]: Overlay,
         [Dialog.name]: Dialog,
+        [Tag.name]: Tag,
+        [ActionSheet.name]: ActionSheet
     },
     watch: {
         totalPrice: {
             handler (newVal) {
                 if (newVal) {
-                    // this.getAlipayConsult()
+                    this.getAlipayConsult()
                 }
             },
         },
     },
     methods: {
+            initSession4Test(){
+				let url = '/login/8441';
+					vm.receiveData.postData(vm,url,'Data',function(){
+				});
+				alert('init usr for test!')
+			},
             geturl(){
                 let uls = window.localStorage.getItem('paylist');
                 if(uls) {
                     vm.ulist = JSON.parse(window.localStorage.getItem("paylist"));
                 }
-                if(vm.ulist.payType >= 1){
+                if(vm.ulist.payType == 1){
                     vm.typename ='银行卡支付('+vm.acctNNo.substring(vm.acctNNo.length-4)+')';
                 }
-                if(vm.ulist.payType  > 1){
+                if(vm.ulist.payType  == '1'){
                     vm.showyan=true;
                 }else {
                     vm.showyan=false;
@@ -283,15 +304,18 @@ export default {
                 $('.box-bg').css("display",'block');
                 let url = "/getDiscounts";
                 let pType;
-                if(vm.ulist.payType  >= 1){
+                if(vm.ulist.payType  == '1'){
                     pType = 1;
                 }else {
                     pType = vm.ulist.payType
+                    if (this.payMethod == '20') {
+                        pType = '4'
+                    }
                 }
                 let data = {
                     billId:vm.ulist.billId,
                     stmtId:vm.ulist.stmtId,
-                    payType:pType,  //0微信,1卡
+                    payType:pType,  //0微信,1卡,2wexinMini,3alipayMini,4.alipayShareToken
                     payFeeType:vm.payFeeType, //01管理费，02停车费
                     regionName:vm.ulist.regionname, //定位地区
                 }
@@ -313,7 +337,6 @@ export default {
                     }else {
                         alert(res.message)
                     }
-                    $('.box-bg').css("display",'none');
                 })
             },
             cullDiscount(){//优惠减免
@@ -485,7 +508,7 @@ export default {
             list.ruleType = vm.ruleType; //减免规则类型
             list.reductionAmt = vm.reductionAmt;//减免金额
             list.payFeeType = vm.payFeeType; //01管理费，02停车费
-            if(list.payType > 1 && vm.captcha == '') {
+            if(list.payType == '1' && vm.captcha == '') {
                 alert("请输入验证码");
                 return;
             }
@@ -496,6 +519,10 @@ export default {
             }
             if(list.payType > 1) {
                 list.payType = '1';
+            }
+            if (this.payMethod == '20') {
+                list.payType = '4';
+                list.channelInfo = vm.channelOperationInfo
             }
             $('.box-bg').css("display",'block');
             vm.axios.post(
@@ -545,7 +572,7 @@ export default {
                             }
                             
                         })
-                    }else {//银行卡调转支付
+                    } else if (list.payType == '1') {//银行卡调转支付
                         let payurl = wd.result.PAYURL;
                         let pay_result = wd.result.pay_result;
                         if(pay_result == 'SUCCESS'){
@@ -555,6 +582,15 @@ export default {
                             window.location.href=payurl;
                         }
                         $('.box-bg').css("display",'none');
+                    } else if (list.payType == '4') {
+                        const shareToken = wd.result.package
+                        if(shareToken) {
+                            vm.showPaySheet = true
+                            $('.box-bg').css("display",'none');
+                            setTimeout(() => {
+
+                            }, 30000);
+                        }
                     }
                 }
             }).catch(
@@ -562,48 +598,15 @@ export default {
                     console.log(err);
                 }
             )
-            
         },
         onRadioChange (e) {
-            if(e === '20' && !this.aliuserid) {
-                const aliappId = this.masterConfig.C('aliappId')
-                this.showLoading = true
-                ap.getAuthCode({
-                    appId: aliappId,
-                    scopes: ['auth_base'],
-                    showErrorTip: false
-                }, function(res) {
-                    this.showLoading = false
-                    if (res.authCode) {
-                        let authUrl = 'authorizeAlipay/' + res.authCode;
-                        vm.receiveData.getData(vm, authUrl,'data',function(){
-                            if(vm.data.success) {
-                                vm.aliuserid = vm.data.result.userid
-                            } else {
-                                Dialog.alert({
-                                    title: '用户授权失败',
-                                    message: vm.data.result.message
-                                })
-                            }
-                        })
-                    // 认证成功
-                    // 调用自己的服务端接口，让服务端进行后端的授权认证，并且利用session，需要解决跨域问题
-                    } else {
-                        Dialog.alert({
-                            title: '获取支付宝用户信息失败',
-                            message: res.errorDesc,
-                        })
-                    }   
-                });
-            }
         },
         //获取支付宝优惠咨询
         getAlipayConsult () {
             const url = 'alipay/marketingConsult'
             const params = {
                 appid: this.masterConfig.C('aliappId'),
-                // user_id: this.aliuserid, TODO
-                user_id: '2088312129787880',
+                user_id: '',
                 // sect_id: this.sectId,    TODO
                 sect_id: '180427100113842987',
                 tran_amt: this.count
@@ -614,15 +617,28 @@ export default {
                 vm.showLoading = false
                 if(response.success) {
                     vm.channelOperationInfo = response.result.channel_operation_info
-                    vm.orderId = response.result.orderId
+                    vm.orderId = response.result.order_id
+                    console.log(vm.orderId)
+                    if(vm.orderId && vm.channelOperationInfo) {
+                        vm.payMethod = '20'
+                    }
                 } else {
                     console.log(response.result.message)
                 }
+                $('.box-bg').css("display",'none');
             },
             function (err) {
+                $('.box-bg').css("display",'none');
                 console.log(err)
                 vm.showLoading = false
             })
+        },
+        copyToken () {
+
+        },
+
+        onCancelSheet () {
+            //do something
         }
     },
     computed: {
@@ -851,6 +867,12 @@ ul li:last-of-type {
 	width: 0.7rem !important;
     height: 0.62rem !important;
 }
+
+.sel-paymethod .img-alipay-recommand {
+    width: 0.5rem;
+    height: auto;
+}
+
 .pay-text {
     margin-left: 0.25rem;
 }
@@ -859,4 +881,19 @@ ul li:last-of-type {
     justify-content:center; 
     align-items: center;
 }
+
+.content {
+    min-height: 50vh;
+  }
+
+  .title-scnd {
+    display: flex;
+    justify-content: center;
+    color: grey;
+  }
+
+  .open-zhi {
+    width: auto;
+    height: auto;
+  }
 </style>
