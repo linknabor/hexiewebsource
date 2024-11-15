@@ -642,7 +642,7 @@ export default {
                 Dialog.alert({
                     message: '口令已复制'
                 }).then(()=>{
-                    const url = 'alipays://'
+                    const url = 'https://ulink.alipay.com/?scheme=alipays://'
                     console.log('ali url : ' + url)
                     window.location.href = url
                 })
