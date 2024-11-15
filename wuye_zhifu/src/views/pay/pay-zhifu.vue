@@ -114,11 +114,11 @@
     </div>
     <van-action-sheet v-model="showPaySheet" title="支付订单已生成" @cancel="onCancelSheet">
         <div class="content">
-            <div class="title-scnd">口令已复制</div>
+            <!-- <div class="title-scnd">口令已复制</div> -->
             <div style="display: flex; justify-content: center; margin-top: 0.5rem; ">
                 <img class="open-zhi" src="../../assets/image/openzhi.png" alt="">
             </div>
-            <div class="alipay-btn" disabled >打开支付宝，去支付></div>
+            <div class="alipay-btn" @click="copyToken" >打开支付宝，去支付></div>
         </div>
     </van-action-sheet>
 </div>    
@@ -192,7 +192,7 @@ export default {
             payMethod: '06',  //微信支付或者吱口令
             showLoading: false,
             aliuserid: '',
-            sectId: this.$route.query.sectId,
+            sectId: '',
             channelOperationInfo: '',    //支付宝吱口令渠道参数
             orderId: '',    //支付宝吱口令支付会提前生成订单号，后面当trade_water_id用
             shareToken: '',  //吱口令
@@ -326,6 +326,7 @@ export default {
                     var res = JSON.parse(e.data);
                     if(res.success){
                         vm.discounts = res.result.reduction;//数组
+                        vm.sectId = res.result.sect_id
                         vm.totalPrice = res.result.total_fee_price//账单金额
                         vm.is_integral = res.result.is_enable_integral;//是否开通积分兑换减免 0不开通 1开通
                         vm.integral = res.result.integral;//积分
@@ -583,13 +584,14 @@ export default {
                         }
                         $('.box-bg').css("display",'none');
                     } else if (list.payType == '4') {
-                        const shareToken = wd.result.package
+                        const shareToken = wd.result.packageId
                         if(shareToken) {
+                            vm.shareToken = shareToken
                             vm.showPaySheet = true
                             $('.box-bg').css("display",'none');
-                            setTimeout(() => {
-
-                            }, 30000);
+                            // setTimeout(() => {
+                            //     vm.loopPayResult(orderNo)
+                            // }, 30000);
                         }
                     }
                 }
@@ -607,8 +609,8 @@ export default {
             const params = {
                 appid: this.masterConfig.C('aliappId'),
                 user_id: '',
-                // sect_id: this.sectId,    TODO
-                sect_id: '180427100113842987',
+                sect_id: this.sectId,
+                // sect_id: '180427100113842987',
                 tran_amt: this.count
             }
             this.receiveData.postData(vm, url, params, 'data', 
@@ -616,7 +618,9 @@ export default {
                 const response = vm.data
                 vm.showLoading = false
                 if(response.success) {
-                    vm.channelOperationInfo = response.result.channel_operation_info
+                    if(response.result.channel_operation_info) {
+                        vm.channelOperationInfo = response.result.channel_operation_info
+                    }
                     vm.orderId = response.result.order_id
                     console.log(vm.orderId)
                     if(vm.orderId && vm.channelOperationInfo) {
@@ -634,9 +638,40 @@ export default {
             })
         },
         copyToken () {
-
+            navigator.clipboard.writeText(this.shareToken).then(() =>{
+                Dialog.alert({
+                    message: '口令已复制'
+                })
+                const url = 'alipays://platformapi/startapp?appId=20000067'
+                window.location.href = url
+            }).catch(err => {
+                Dialog.alert({
+                    title: "口令复制失败",
+                    message: err
+                })
+            })
         },
+        loopPayResult(orderNo) {
+            setTimeout(() => {
+                Dialog.confirm({
+                    message: '是否已完成支付?',
+                    confirmButtonText: '已完成支付',
+                    cancelButtonText: '继续支付'
+                }).then(()=>{
+                    vm.payed = true
+                    vm.$router.replace({path:'/paymentquery'})
+                }).catch(()=>{
+                    $('.box-bg').css("display",'none');
+                })
+            }, 3000);
+            // intervalId = setInterval(vm.loopInterval, 3000);
 
+            // vm.axios.post(url, list).then((res)=>{
+            //     alert(JSON.stringify(res))
+            // }).catch((error)=>{
+            //     alert(JSON.stringify(error))
+            // })
+        },
         onCancelSheet () {
             //do something
         }
