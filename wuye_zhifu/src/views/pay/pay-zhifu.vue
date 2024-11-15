@@ -641,9 +641,11 @@ export default {
             navigator.clipboard.writeText(this.shareToken).then(() =>{
                 Dialog.alert({
                     message: '口令已复制'
+                }).then(()=>{
+                    const url = 'alipays://'
+                    console.log('ali url : ' + url)
+                    window.location.href = url
                 })
-                const url = 'alipays://platformapi/startapp?appId=20000067'
-                window.location.href = url
             }).catch(err => {
                 Dialog.alert({
                     title: "口令复制失败",
