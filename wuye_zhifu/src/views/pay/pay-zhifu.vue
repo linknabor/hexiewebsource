@@ -618,7 +618,7 @@ export default {
                 const response = vm.data
                 vm.showLoading = false
                 if(response.success) {
-                    if(response.result.channel_operation_info) {
+                    if(response.result && response.result.channel_operation_info) {
                         vm.channelOperationInfo = response.result.channel_operation_info
                     }
                     vm.orderId = response.result.order_id
