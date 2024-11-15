@@ -607,7 +607,7 @@ export default {
         getAlipayConsult () {
             const url = 'alipay/marketingConsult'
             const params = {
-                appid: this.masterConfig.C('aliappId'),
+                appid: '2021001161682727',
                 user_id: '',
                 sect_id: this.sectId,
                 // sect_id: '180427100113842987',
@@ -618,7 +618,7 @@ export default {
                 const response = vm.data
                 vm.showLoading = false
                 if(response.success) {
-                    if(response.result.channel_operation_info) {
+                    if(response.result && response.result.channel_operation_info) {
                         vm.channelOperationInfo = response.result.channel_operation_info
                     }
                     vm.orderId = response.result.order_id
