@@ -607,7 +607,7 @@ export default {
         getAlipayConsult () {
             const url = 'alipay/marketingConsult'
             const params = {
-                appid: this.masterConfig.C('aliappId'),
+                appid: '2021001161682727',
                 user_id: '',
                 sect_id: this.sectId,
                 // sect_id: '180427100113842987',
