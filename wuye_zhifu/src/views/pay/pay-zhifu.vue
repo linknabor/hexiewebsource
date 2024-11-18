@@ -235,7 +235,7 @@ export default {
                     const userInfo = vm.userInfo
                     if(userInfo && userInfo.id) {
                         let wdappids = this.masterConfig.C('wdappids')
-                        if(wdappids.indexOf(userInfo.appId)==-1) {
+                        if(wdappids.indexOf(userInfo.appId) > -1) {
                             this.getAlipayConsult()
                         } else {
                             $('.box-bg').css("display",'none');
