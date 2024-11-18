@@ -59,8 +59,10 @@
                     <template #title>
                         <div class="sel-paymethod">
                             <img class="img-alipay" src="../../assets/image/alipay.png" alt="">
-                            <span class="pay-text">支付宝</span>
-                            <!-- <img class="img-alipay-recommand" src="../../assets/image/recommand.png" alt=""> -->
+                            <div style="display: flex; flex-direction: column;">
+                                <div class="pay-text">支付宝</div>
+                                <div style="margin-left: 0.25rem;"><van-tag type="danger" color="#FF0000">{{consultMsg}}</van-tag></div>
+                            </div>
                         </div>
                     </template>
                     <template #right-icon>
@@ -196,6 +198,7 @@ export default {
             channelOperationInfo: '',    //支付宝吱口令渠道参数
             orderId: '',    //支付宝吱口令支付会提前生成订单号，后面当trade_water_id用
             shareToken: '',  //吱口令
+            consultMsg: '', //优惠信息
             showPaySheet: false
         };
     },
@@ -203,7 +206,7 @@ export default {
         vm=this;
     },
     mounted() {
-        // vm.initSession4Test()
+        //vm.initSession4Test()
         vm.geturl();//获取参数
         vm.Coupons();//优惠券
         vm.getDiscount();
@@ -223,8 +226,22 @@ export default {
         totalPrice: {
             handler (newVal) {
                 if (newVal) {
-                    this.getAlipayConsult()
+                    var userStr = localStorage.getItem('userInfo');
+                    var userInfo = {}
+                    console.log(1234567)
+                    if(userStr) {
+                        userInfo = JSON.parse(userStr)
+                        let wdappids = this.masterConfig.C('wdappids')
+                        if(wdappids.indexOf(userInfo.appId)>-1) {
+                            this.getAlipayConsult()
+                        } else {
+                            $('.box-bg').css("display",'none');
+                        }
+                    } else {
+                        $('.box-bg').css("display",'none');
+                    }
                 }
+
             },
         },
     },
@@ -620,6 +637,7 @@ export default {
                 if(response.success) {
                     if(response.result && response.result.channel_operation_info) {
                         vm.channelOperationInfo = response.result.channel_operation_info
+                        vm.consultMsg = response.result.consult_msg
                     }
                     vm.orderId = response.result.order_id
                     console.log(vm.orderId)
