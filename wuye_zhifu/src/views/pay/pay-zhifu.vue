@@ -133,6 +133,7 @@ import { RadioGroup, Radio, Cell, CellGroup, Loading, Overlay, Dialog, Tag, Acti
 export default {
     data () {
         return {
+            userInfo: {},
             typename:'微信支付',//支付方式
             disname:'物业费优惠',//如物业优惠
             distname:'停车费优惠',//停车优惠
@@ -207,6 +208,11 @@ export default {
     },
     mounted() {
         //vm.initSession4Test()
+        var userStr = localStorage.getItem('userInfo');
+        if(userStr) {
+            const userInfo = JSON.parse(userStr)
+            vm.userInfo = userInfo
+        }
         vm.geturl();//获取参数
         vm.Coupons();//优惠券
         vm.getDiscount();
@@ -226,13 +232,10 @@ export default {
         totalPrice: {
             handler (newVal) {
                 if (newVal) {
-                    var userStr = localStorage.getItem('userInfo');
-                    var userInfo = {}
-                    console.log(1234567)
-                    if(userStr) {
-                        userInfo = JSON.parse(userStr)
+                    const userInfo = vm.userInfo
+                    if(userInfo && userInfo.id) {
                         let wdappids = this.masterConfig.C('wdappids')
-                        if(wdappids.indexOf(userInfo.appId)>-1) {
+                        if(wdappids.indexOf(userInfo.appId)==-1) {
                             this.getAlipayConsult()
                         } else {
                             $('.box-bg').css("display",'none');
@@ -606,9 +609,6 @@ export default {
                             vm.shareToken = shareToken
                             vm.showPaySheet = true
                             $('.box-bg').css("display",'none');
-                            // setTimeout(() => {
-                            //     vm.loopPayResult(orderNo)
-                            // }, 30000);
                         }
                     }
                 }
@@ -660,8 +660,8 @@ export default {
                 Dialog.alert({
                     message: '口令已复制'
                 }).then(()=>{
+                    vm.loopPayResult()
                     const url = 'https://ulink.alipay.com/?scheme=alipays://'
-                    console.log('ali url : ' + url)
                     window.location.href = url
                 })
             }).catch(err => {
@@ -678,19 +678,14 @@ export default {
                     confirmButtonText: '已完成支付',
                     cancelButtonText: '继续支付'
                 }).then(()=>{
-                    vm.payed = true
-                    vm.$router.replace({path:'/paymentquery'})
+                    const basePageUrl = vm.basePageUrl
+                    const userInfo = vm.userInfo
+                    const queryPage = basePageUrl + 'wuye/index.html?oriAppi=' + userInfo.appId + '#/paymentquery'
+                    window.location.href = queryPage
                 }).catch(()=>{
                     $('.box-bg').css("display",'none');
                 })
-            }, 3000);
-            // intervalId = setInterval(vm.loopInterval, 3000);
-
-            // vm.axios.post(url, list).then((res)=>{
-            //     alert(JSON.stringify(res))
-            // }).catch((error)=>{
-            //     alert(JSON.stringify(error))
-            // })
+            }, 10000);
         },
         onCancelSheet () {
             //do something
