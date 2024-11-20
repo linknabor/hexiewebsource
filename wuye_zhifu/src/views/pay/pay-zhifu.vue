@@ -55,7 +55,7 @@
        <div v-show="channelOperationInfo">
         <van-radio-group v-model="payMethod" @change="onRadioChange">
             <van-cell-group>
-                <van-cell clickable @click="payMethod = '20'">
+                <van-cell clickable @click="payMethod = '21'">
                     <template #title>
                         <div class="sel-paymethod">
                             <img class="img-alipay" src="../../assets/image/alipay.png" alt="">
@@ -66,7 +66,7 @@
                         </div>
                     </template>
                     <template #right-icon>
-                        <van-radio name="20" />
+                        <van-radio name="21" />
                     </template>
                 </van-cell>
                 <van-cell clickable @click="payMethod = '06'">
@@ -85,7 +85,7 @@
         <!--选择支付方式 start-->
        </div>
        
-       <div class="alipay-btn" @click="btnPay" v-show="payMethod=='20'">立即支付</div>
+       <div class="alipay-btn" @click="btnPay" v-show="payMethod=='21'">立即支付</div>
 	   <div class="pay-btn" @click="btnPay" v-show="payMethod=='06'">立即支付</div>
        
     </div>
@@ -328,7 +328,7 @@ export default {
                     pType = 1;
                 }else {
                     pType = vm.ulist.payType
-                    if (this.payMethod == '20') {
+                    if (this.payMethod == '21') {
                         pType = '4'
                     }
                 }
@@ -541,7 +541,7 @@ export default {
             if(list.payType > 1) {
                 list.payType = '1';
             }
-            if (this.payMethod == '20') {
+            if (this.payMethod == '21') {
                 list.payType = '4';
                 list.channelInfo = vm.channelOperationInfo
             }
@@ -635,15 +635,17 @@ export default {
                 const response = vm.data
                 vm.showLoading = false
                 if(response.success) {
-                    if(response.result && response.result.channel_operation_info) {
-                        vm.channelOperationInfo = response.result.channel_operation_info
-                        vm.consultMsg = response.result.consult_msg
+                    if(response.result) {
+                        if(response.result.channel_operation_info) {
+                            vm.channelOperationInfo = response.result.channel_operation_info
+                            vm.consultMsg = response.result.consult_msg
+                            vm.orderId = response.result.order_id
+                            if(vm.orderId && vm.channelOperationInfo) {
+                                vm.payMethod = '21'
+                            }
+                        }
                     }
-                    vm.orderId = response.result.order_id
-                    console.log(vm.orderId)
-                    if(vm.orderId && vm.channelOperationInfo) {
-                        vm.payMethod = '20'
-                    }
+                    
                 } else {
                     console.log(response.result.message)
                 }
