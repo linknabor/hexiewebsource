@@ -245,8 +245,8 @@ export default {
                     } else {
                         $('.box-bg').css("display",'none');
                     }
+                 */
                 }
-                */
             },
         },
     },
