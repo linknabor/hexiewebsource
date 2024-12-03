@@ -232,6 +232,8 @@ export default {
         totalPrice: {
             handler (newVal) {
                 if (newVal) {
+                    this.getAlipayConsult()
+                /*
                     const userInfo = vm.userInfo
                     if(userInfo && userInfo.id) {
                         let wdappids = this.masterConfig.C('wdappids')
@@ -244,7 +246,7 @@ export default {
                         $('.box-bg').css("display",'none');
                     }
                 }
-
+                */
             },
         },
     },
