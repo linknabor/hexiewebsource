@@ -325,7 +325,7 @@ const parkArray = ['indexCar','parkInfo', 'queryParkPayDetail', 'addCar', 'query
 
 const viewArray = ['index', 'register', 'sms_notification', 'receipt', 'version2', 'version3', 'huihong','wangdu','indexCar','parkInfo', 'queryParkPayDetail', 'addCar', 'queryParkFixBill', 'parkPayingDetail']
 
-const yjFilter= ['Pay','workorder', 'opinionList']
+const yjFilter= ['Pay','workorder', 'opinionList', 'myhouse', 'paymentquery']
 
 import Api from '@/api/api.js'
 import Storage from '@/assets/js/storage.js'
