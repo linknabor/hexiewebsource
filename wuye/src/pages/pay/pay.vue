@@ -385,6 +385,15 @@ export default {
     selected(newv,old){
       isloadPage=false;
       this.initWxConfig(newv)
+
+      //判断是否是宜居
+      if(this.userInfo) {
+        const flag = this.checkyjRegisted()
+        if(!flag) {
+          return
+        }
+      }
+
       if(newv=='b'){
         this.getSwitchSectTips()
         this.billPage = 1  //页码重置
@@ -409,7 +418,6 @@ export default {
   mounted() {
     this.initUser()
     vm.TabsList()
-    this.checkyjRegisted()  
     vm.unitselect();
     vm.getHousin();
     vm.Compatibility();
@@ -418,41 +426,40 @@ export default {
   methods: {
     //判断宜居用户是否注册
     checkyjRegisted() {
-      console.log(11, this.userInfo)
-      console.log(22, Storage.get("userInfo"))
-      // let yjappid = this.is_config.C("yjappid")
-      // if (!this.common.isRegisted() && this.userInfo.appId === yjappid) {
-      //   Api.getUserInfo().then((response) => {
-      //     let data = response.data
-      //     if (data && data.errorCode === 0) {
-      //       if (data.result) {
-      //         if (data.result.tel) {
-      //           this.userInfo = data.result
-      //           this.common.updatecookie(
-      //             data.result.cardStatus,
-      //             data.result.cardService,
-      //             data.result.id,
-      //             data.result.appid,
-      //             data.result.cspId,
-      //             data.result.sectId,
-      //             data.result.cardPayService,
-      //             data.result.bgImageList,
-      //             data.result.wuyeTabsList,
-      //             data.result.qrCode,
-      //             data.result
-      //           );
-      //         } else {
-      //           if (confirm('您还未注册,是否去注册?')) {
-      //             //跳第三方
-      //             let yjMiniForWordUrl = this.is_config.C('yjMiniForWordUrl') 
-      //             window.location.href='weixin://dl/business/?'+yjMiniForWordUrl
-      //           }
-      //           return
-      //         }
-      //       }
-      //     }
-      //   });
-      // }
+      let yjappid = this.is_config.C("yjappid")
+      if (!this.common.isRegisted() && this.userInfo.appId === yjappid) {
+        Api.getUserInfo().then((response) => {
+          let data = response.data
+          if (data && data.errorCode === 0) {
+            if (data.result) {
+              if (data.result.tel) {
+                this.userInfo = data.result
+                this.common.updatecookie(
+                  data.result.cardStatus,
+                  data.result.cardService,
+                  data.result.id,
+                  data.result.appid,
+                  data.result.cspId,
+                  data.result.sectId,
+                  data.result.cardPayService,
+                  data.result.bgImageList,
+                  data.result.wuyeTabsList,
+                  data.result.qrCode,
+                  data.result
+                )
+                return true
+              } else {
+                if (confirm('您还未注册,是否去注册?')) {
+                  //跳第三方
+                  let yjMiniForWordUrl = this.is_config.C('yjMiniForWordUrl') 
+                  window.location.href='weixin://dl/business/?'+yjMiniForWordUrl
+                }
+                return false
+              }
+            }
+          }
+        });
+      }
     },
     initUser() {
       let userInfo = Storage.get("userInfo")
@@ -497,17 +504,20 @@ export default {
             if(n.result.wuyeTabsList) { //判断是否有值重新填入
               vm.common.localSet('wuyeTabsList',JSON.stringify(n.result.wuyeTabsList))
               //填入后在获取赋值
-              vm.wuyeTabsList = JSON.parse(window.localStorage.getItem("wuyeTabsList"));
+              vm.wuyeTabsList = JSON.parse(window.localStorage.getItem("wuyeTabsList"))
+
+              vm.sectId=cookie.get('sectId'); //获取sectid
+              vm.cardPayService =cookie.get('cardPayService');
+              Storage.set("userInfo", n.result)
+              vm.userInfo = n.result
+              vm.initUser()
+
               vm.selected = vm.wuyeTabsList[0].value;
             }else {
               Dialog({message: '没有配置选项卡'})
               return
             }
-            vm.sectId=cookie.get('sectId'); //获取sectid
-            vm.cardPayService =cookie.get('cardPayService');
-            Storage.set("userInfo", n.result)
-            vm.userInfo = n.result
-            vm.initUser()
+            
           },
           r = function(n) {
 
