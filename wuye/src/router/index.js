@@ -344,7 +344,7 @@ router.beforeEach((to, from, next) => {
       if(yjFilter.indexOf(pageName) !== -1) {
         if(!common.isRegisted()) {
           console.log('pageName:', pageName)
-          getUser.then(data => {
+          getUser().then(data => {
             console.log('isRegisted:', !common.isRegisted())
             if(!common.isRegisted()) {
               if (confirm('您还未注册,是否去注册?')) {
@@ -424,17 +424,20 @@ function changeTitle(title) {
 
 function getUser() {
   return new Promise((resolve, reject) => {
-    Api.getUserInfo().then((response) => {
-      let data = response.data
-      if (data.success && data.result != null) {
-        Storage.set("userInfo", data.result)
-        let n = data
-        common.updatecookie(n.result.cardStatus,n.result.cardService,n.result.id,n.result.appid,n.result.cspId,n.result.sectId,n.result.cardPayService,n.result.bgImageList,n.result.wuyeTabsList,n.result.qrCode,n.result)
+    try {
+      Api.getUserInfo().then((response) => {
+        let data = response.data
+        if (data.success && data.result != null) {
+          Storage.set("userInfo", data.result)
+          let n = data
+          common.updatecookie(n.result.cardStatus,n.result.cardService,n.result.id,n.result.appid,n.result.cspId,n.result.sectId,n.result.cardPayService,n.result.bgImageList,n.result.wuyeTabsList,n.result.qrCode,n.result)
+        }
         resolve(data)
-      } else {
-        reject(data.message)
-      }
-    })
+      })
+    } catch (error) {
+      reject(error);
+    }
+    
   })
 }
 
