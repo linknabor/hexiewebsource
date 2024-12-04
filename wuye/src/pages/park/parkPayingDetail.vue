@@ -356,22 +356,22 @@ export default {
   }
   .data-text2 {
         position: relative;
-        top: -3.7rem;
+        top: -3.8rem;
         left: 0.5rem;
-        font-size: 0.6rem;
+        font-size: 1.2rem;
         color: white;
         font-weight: bold;
   }
   .data-text3 {
     position: relative;
-    top: -2.8rem;
+    top: -3.4rem;
     left: 0.5rem;
     font-size: 0.3rem;
     color: white;
   }
   .data-text4 {
     position: relative;
-    top: -2.6rem;
+    top: -3.2rem;
     left: 0.5rem;
     font-size: 0.5rem;
     color: white;

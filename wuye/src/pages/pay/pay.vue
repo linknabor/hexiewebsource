@@ -408,6 +408,7 @@ export default {
   },
   mounted() {
     this.initUser()
+    this.checkyjRegisted()  
     vm.TabsList();
     vm.unitselect();
     vm.getHousin();
@@ -415,6 +416,35 @@ export default {
     // 判断是否是专业版
   },
   methods: {
+    //判断宜居用户是否注册
+    checkyjRegisted() {
+      let yjappid = this.is_config.C("yjappid")
+      if (!this.common.isRegisted() && this.userInfo.appId === yjappid) {
+        Api.getUserInfo().then((response) => {
+          let data = response.data
+          if (data && data.errorCode === 0) {
+            if (data.result) {
+              if (data.result.tel) {
+                this.userInfo = data.result
+                this.common.updatecookie(
+                  data.result.cardStatus,
+                  data.result.cardService,
+                  data.result.id,
+                  data.result.appid,
+                  data.result.cspId,
+                  data.result.sectId,
+                  data.result.cardPayService,
+                  data.result.bgImageList,
+                  data.result.wuyeTabsList,
+                  data.result.qrCode,
+                  data.result
+                );
+              }
+            }
+          }
+        });
+      }
+    },
     initUser() {
       let userInfo = Storage.get("userInfo")
       this.userInfo = userInfo
