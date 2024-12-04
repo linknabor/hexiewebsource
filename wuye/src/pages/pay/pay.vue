@@ -418,39 +418,41 @@ export default {
   methods: {
     //判断宜居用户是否注册
     checkyjRegisted() {
-      let yjappid = this.is_config.C("yjappid")
-      if (!this.common.isRegisted() && this.userInfo.appId === yjappid) {
-        Api.getUserInfo().then((response) => {
-          let data = response.data
-          if (data && data.errorCode === 0) {
-            if (data.result) {
-              if (data.result.tel) {
-                this.userInfo = data.result
-                this.common.updatecookie(
-                  data.result.cardStatus,
-                  data.result.cardService,
-                  data.result.id,
-                  data.result.appid,
-                  data.result.cspId,
-                  data.result.sectId,
-                  data.result.cardPayService,
-                  data.result.bgImageList,
-                  data.result.wuyeTabsList,
-                  data.result.qrCode,
-                  data.result
-                );
-              } else {
-                if (confirm('您还未注册,是否去注册?')) {
-                  //跳第三方
-                  let yjMiniForWordUrl = this.is_config.C('yjMiniForWordUrl') 
-                  window.location.href='weixin://dl/business/?'+yjMiniForWordUrl
-                }
-                return
-              }
-            }
-          }
-        });
-      }
+      console.log(11, this.userInfo)
+      console.log(22, Storage.get("userInfo"))
+      // let yjappid = this.is_config.C("yjappid")
+      // if (!this.common.isRegisted() && this.userInfo.appId === yjappid) {
+      //   Api.getUserInfo().then((response) => {
+      //     let data = response.data
+      //     if (data && data.errorCode === 0) {
+      //       if (data.result) {
+      //         if (data.result.tel) {
+      //           this.userInfo = data.result
+      //           this.common.updatecookie(
+      //             data.result.cardStatus,
+      //             data.result.cardService,
+      //             data.result.id,
+      //             data.result.appid,
+      //             data.result.cspId,
+      //             data.result.sectId,
+      //             data.result.cardPayService,
+      //             data.result.bgImageList,
+      //             data.result.wuyeTabsList,
+      //             data.result.qrCode,
+      //             data.result
+      //           );
+      //         } else {
+      //           if (confirm('您还未注册,是否去注册?')) {
+      //             //跳第三方
+      //             let yjMiniForWordUrl = this.is_config.C('yjMiniForWordUrl') 
+      //             window.location.href='weixin://dl/business/?'+yjMiniForWordUrl
+      //           }
+      //           return
+      //         }
+      //       }
+      //     }
+      //   });
+      // }
     },
     initUser() {
       let userInfo = Storage.get("userInfo")
