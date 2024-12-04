@@ -385,15 +385,6 @@ export default {
     selected(newv,old){
       isloadPage=false;
       this.initWxConfig(newv)
-
-      //判断是否是宜居
-      if(this.userInfo) {
-        const flag = this.checkyjRegisted()
-        if(!flag) {
-          return
-        }
-      }
-
       if(newv=='b'){
         this.getSwitchSectTips()
         this.billPage = 1  //页码重置
@@ -417,57 +408,51 @@ export default {
   },
   mounted() {
     this.initUser()
-    vm.TabsList()
-    vm.unitselect();
-    vm.getHousin();
-    vm.Compatibility();
-    // 判断是否是专业版
+    if(this.checkyjRegisted) {
+      vm.TabsList()
+      vm.unitselect()
+      vm.getHousin()
+      vm.Compatibility()
+    }
   },
   methods: {
     //判断宜居用户是否注册
     checkyjRegisted() {
       let yjappid = this.is_config.C("yjappid")
       if (!this.common.isRegisted() && this.userInfo.appId === yjappid) {
-        Api.getUserInfo().then((response) => {
-          let data = response.data
-          if (data && data.errorCode === 0) {
-            if (data.result) {
-              if (data.result.tel) {
-                this.userInfo = data.result
-                this.common.updatecookie(
-                  data.result.cardStatus,
-                  data.result.cardService,
-                  data.result.id,
-                  data.result.appid,
-                  data.result.cspId,
-                  data.result.sectId,
-                  data.result.cardPayService,
-                  data.result.bgImageList,
-                  data.result.wuyeTabsList,
-                  data.result.qrCode,
-                  data.result
-                )
-                return true
-              } else {
-                if (confirm('您还未注册,是否去注册?')) {
-                  //跳第三方
-                  let yjMiniForWordUrl = this.is_config.C('yjMiniForWordUrl') 
-                  window.location.href='weixin://dl/business/?'+yjMiniForWordUrl
-                }
-                return false
-              }
-            }
-          }
-        });
+        if (confirm('您还未注册,是否去注册?')) {
+          //跳第三方
+          let yjMiniForWordUrl = this.is_config.C('yjMiniForWordUrl') 
+          window.location.href='weixin://dl/business/?'+yjMiniForWordUrl
+        }
+        return false
       }
+      return true
     },
     initUser() {
       let userInfo = Storage.get("userInfo")
       this.userInfo = userInfo
-      if(userInfo) {
-        this.sectName = userInfo.xiaoquName
+      this.showOverlay = true
+      if(!userInfo) {
+        Api.getUserInfo().then((response) => {
+          let data = response.data
+          if (data.success && data.result != null) {
+            Storage.set("userInfo", data.result)
+            this.userInfo = data.result
+            let n = data
+            this.common.updatecookie(n.result.cardStatus,n.result.cardService,n.result.id,n.result.appid,n.result.cspId,n.result.sectId,n.result.cardPayService,n.result.bgImageList,n.result.wuyeTabsList,n.result.qrCode,n.result)
+            this.showOverlay = false
+          } else {
+            this.showOverlay = false
+          }
+        }).catch((error) => {
+          console.log(error)
+        })
+      }
+      if(this.userInfo) {
+        this.sectName = this.userInfo.xiaoquName
         let wdappids = this.is_config.C('wdappids')
-        if(wdappids.indexOf(userInfo.appId)>-1) {
+        if(wdappids.indexOf(this.userInfo.appId)>-1) {
           const secondaryColor = getComputedStyle(document.documentElement).getPropertyValue('--secondary-color');
           document.documentElement.style.setProperty('--primary-color', secondaryColor);
           const secondarySelIcon = getComputedStyle(document.documentElement).getPropertyValue('--secondary-icon-selected');
@@ -479,7 +464,7 @@ export default {
           document.documentElement.style.setProperty('--primary-icon-selected', originSelIcon);
         }
         let ccappid = this.is_config.C('ccappid')
-        if(ccappid == userInfo.appId) {
+        if(ccappid == this.userInfo.appId) {
           this.showBindHouse = false
         }
       }
