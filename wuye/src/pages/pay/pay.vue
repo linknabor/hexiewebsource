@@ -432,8 +432,8 @@ export default {
     initUser() {
       let userInfo = Storage.get("userInfo")
       this.userInfo = userInfo
-      this.showOverlay = true
       if(!userInfo) {
+        this.showOverlay = true
         Api.getUserInfo().then((response) => {
           let data = response.data
           if (data.success && data.result != null) {
