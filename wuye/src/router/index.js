@@ -336,13 +336,17 @@ router.beforeEach((to, from, next) => {
   if(viewArray.indexOf(pageName)===-1) {
     let yjappid = config.C('yjappid') 
     //宜居过来如果没注册不通过我们，跳到第三方
-    if(appid == yjappid && !common.isRegisted()) {
-      if (confirm('您还未注册,是否去注册?')) {
-        //跳第三方
-        let yjMiniForWordUrl = config.C('yjMiniForWordUrl') 
-        window.location.href='weixin://dl/business/?'+yjMiniForWordUrl
+    if(appid == yjappid) {
+      if(pageName !== 'Pay') {
+        if(!common.isRegisted()) {
+          if (confirm('您还未注册,是否去注册?')) {
+            //跳第三方
+            let yjMiniForWordUrl = config.C('yjMiniForWordUrl') 
+            window.location.href='weixin://dl/business/?'+yjMiniForWordUrl
+          }
+          return
+        }
       }
-      return
     } else {
       if(!common.checkRegisterStatus()){
         return

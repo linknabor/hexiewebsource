@@ -439,6 +439,13 @@ export default {
                   data.result.qrCode,
                   data.result
                 );
+              } else {
+                if (confirm('您还未注册,是否去注册?')) {
+                  //跳第三方
+                  let yjMiniForWordUrl = this.is_config.C('yjMiniForWordUrl') 
+                  window.location.href='weixin://dl/business/?'+yjMiniForWordUrl
+                }
+                return
               }
             }
           }
