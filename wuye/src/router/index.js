@@ -343,7 +343,10 @@ router.beforeEach((to, from, next) => {
     if(appid == yjappid) {
       if(yjFilter.indexOf(pageName) !== -1) {
         if(!common.isRegisted()) {
-          if(!getUser()) {
+          console.log('pageName:', pageName)
+          let flag = getUser(config)
+          console.log('check flag:', flag)
+          if(!flag) {
             return
           }
         }
@@ -411,7 +414,7 @@ function changeTitle(title) {
     window.document.title = title;
 }
 
-function getUser() {
+function getUser(config) {
   Api.getUserInfo().then((response) => {
     let data = response.data
     if (data.success && data.result != null) {
@@ -419,7 +422,7 @@ function getUser() {
       let n = data
       common.updatecookie(n.result.cardStatus,n.result.cardService,n.result.id,n.result.appid,n.result.cspId,n.result.sectId,n.result.cardPayService,n.result.bgImageList,n.result.wuyeTabsList,n.result.qrCode,n.result)
     }
-
+    console.log('isRegisted:', !common.isRegisted())
     if(!common.isRegisted()) {
       if (confirm('您还未注册,是否去注册?')) {
         //跳第三方
