@@ -408,8 +408,8 @@ export default {
   },
   mounted() {
     this.initUser()
+    vm.TabsList()
     this.checkyjRegisted()  
-    vm.TabsList();
     vm.unitselect();
     vm.getHousin();
     vm.Compatibility();
