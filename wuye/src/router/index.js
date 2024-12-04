@@ -344,11 +344,19 @@ router.beforeEach((to, from, next) => {
       if(yjFilter.indexOf(pageName) !== -1) {
         if(!common.isRegisted()) {
           console.log('pageName:', pageName)
-          let flag = getUser(config)
-          console.log('check flag:', flag)
-          if(!flag) {
-            return
-          }
+          getUser.then(data => {
+            console.log('isRegisted:', !common.isRegisted())
+            if(!common.isRegisted()) {
+              if (confirm('您还未注册,是否去注册?')) {
+                //跳第三方
+                let yjMiniForWordUrl = config.C('yjMiniForWordUrl') 
+                window.location.href='weixin://dl/business/?'+yjMiniForWordUrl
+              }
+              return
+            }
+          }).catch(err => {
+            console.error(err);
+          })
         }
       }
     } else {
@@ -414,28 +422,19 @@ function changeTitle(title) {
     window.document.title = title;
 }
 
-function getUser(config) {
-  Api.getUserInfo().then((response) => {
-    let data = response.data
-    if (data.success && data.result != null) {
-      Storage.set("userInfo", data.result)
-      let n = data
-      common.updatecookie(n.result.cardStatus,n.result.cardService,n.result.id,n.result.appid,n.result.cspId,n.result.sectId,n.result.cardPayService,n.result.bgImageList,n.result.wuyeTabsList,n.result.qrCode,n.result)
-    }
-    console.log('isRegisted:', !common.isRegisted())
-    if(!common.isRegisted()) {
-      if (confirm('您还未注册,是否去注册?')) {
-        //跳第三方
-        let yjMiniForWordUrl = config.C('yjMiniForWordUrl') 
-        window.location.href='weixin://dl/business/?'+yjMiniForWordUrl
+function getUser() {
+  return new Promise((resolve, reject) => {
+    Api.getUserInfo().then((response) => {
+      let data = response.data
+      if (data.success && data.result != null) {
+        Storage.set("userInfo", data.result)
+        let n = data
+        common.updatecookie(n.result.cardStatus,n.result.cardService,n.result.id,n.result.appid,n.result.cspId,n.result.sectId,n.result.cardPayService,n.result.bgImageList,n.result.wuyeTabsList,n.result.qrCode,n.result)
+        resolve(data)
+      } else {
+        reject(data.message)
       }
-      return false
-    }
-
-    return true
-  }).catch((error) => {
-    console.log(error)
-    return false
+    })
   })
 }
 
