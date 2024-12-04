@@ -341,23 +341,24 @@ router.beforeEach((to, from, next) => {
     let yjappid = config.C('yjappid') 
     //宜居过来如果没注册不通过我们，跳到第三方
     if(appid == yjappid) {
-      if(yjFilter.indexOf(pageName) !== -1) {
-        if(!common.isRegisted()) {
-          console.log('pageName:', pageName)
-          getUser().then(data => {
-            console.log('isRegisted:', !common.isRegisted())
-            if(!common.isRegisted()) {
-              if (confirm('您还未注册,是否去注册?')) {
-                //跳第三方
-                let yjMiniForWordUrl = config.C('yjMiniForWordUrl') 
-                window.location.href='weixin://dl/business/?'+yjMiniForWordUrl
-              }
-              return
-            }
-          }).catch(err => {
-            console.error(err);
-          })
+      let checkFlag = false
+      console.log(1)
+      getUser(pageName).then(data => {
+        console.log('isRegisted:', !common.isRegisted())
+        if(common.isRegisted()) { //已经注册
+          checkFlag = true
         }
+      }).catch(err => {
+        console.error(err)
+      })
+      console.log(2)
+      if(!checkFlag) {
+        if (confirm('您还未注册,是否去注册?')) {
+          //跳第三方
+          let yjMiniForWordUrl = config.C('yjMiniForWordUrl') 
+          window.location.href='weixin://dl/business/?'+yjMiniForWordUrl
+        }
+        return
       }
     } else {
       if(!common.checkRegisterStatus()){
@@ -422,18 +423,20 @@ function changeTitle(title) {
     window.document.title = title;
 }
 
-function getUser() {
+function getUser(pageName) {
   return new Promise((resolve, reject) => {
     try {
-      Api.getUserInfo().then((response) => {
-        let data = response.data
-        if (data.success && data.result != null) {
-          Storage.set("userInfo", data.result)
-          let n = data
-          common.updatecookie(n.result.cardStatus,n.result.cardService,n.result.id,n.result.appid,n.result.cspId,n.result.sectId,n.result.cardPayService,n.result.bgImageList,n.result.wuyeTabsList,n.result.qrCode,n.result)
-        }
-        resolve(data)
-      })
+      if(yjFilter.indexOf(pageName) !== -1 && !common.isRegisted()) {
+        Api.getUserInfo().then((response) => {
+          let data = response.data
+          if (data.success && data.result != null) {
+            Storage.set("userInfo", data.result)
+            let n = data
+            common.updatecookie(n.result.cardStatus,n.result.cardService,n.result.id,n.result.appid,n.result.cspId,n.result.sectId,n.result.cardPayService,n.result.bgImageList,n.result.wuyeTabsList,n.result.qrCode,n.result)
+          }
+          resolve(data)
+        })
+      }
     } catch (error) {
       reject(error);
     }
