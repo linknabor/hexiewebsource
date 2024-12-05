@@ -227,7 +227,14 @@ export default ({
                 Toast("当前功能尚未开通。")
                 return
             }
-            this.goUrl(code, url)
+            //宜居从外部小程序注册回来的用户，因为无法监听，这里做注册判断
+            let yjappid = this.is_config.C('yjappid')
+            //
+            if(!this.common.isRegisted() && this.userInfo.appId === yjappid) {
+                this.replUser(code, url)
+            } else {
+                this.goUrl(code, url)
+            }
         },
         goUrl(code, url) {
             if('repair'===code) {
@@ -243,6 +250,27 @@ export default ({
             } else {
                 this.$router.push({path: url, query:{}})
             }
+        },
+        async replUser(code, url) {
+            api.getUserInfo().then((response) => {
+                console.log(response)
+                let data = response.data
+                if(data && data.errorCode === 0){
+                    if(data.result) {
+                        if(data.result.tel) {
+                            this.userInfo = data.result
+                            this.sectName = this.userInfo.xiaoquName
+                            if(!this.sectName) {
+                                this.sectName = '游客'
+                            }
+                            this.common.updatecookie(data.result.cardStatus,data.result.cardService,data.result.id,data.result.appid,
+                            data.result.cspId,data.result.sectId,data.result.cardPayService,data.result.bgImageList,data.result.wuyeTabsList,
+                            data.result.qrCode,data.result)
+                        }
+                        this.goUrl(code, url)
+                    }
+                }
+            })
         },
         gotoRepair(url) {
             let user = this.userInfo
