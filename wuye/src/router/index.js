@@ -339,7 +339,7 @@ router.beforeEach((to, from, next) => {
   if(viewArray.indexOf(pageName)===-1) {
     let yjappid = config.C('yjappid') 
     //宜居过来如果没注册不通过我们，跳到第三方
-    if(appid !== yjappid) {
+    if(appid === yjappid) {
       let checkFlag = false
       if(yjFilter.indexOf(pageName) !== -1 && !common.isRegisted()) {
         getUser().then(data => {
