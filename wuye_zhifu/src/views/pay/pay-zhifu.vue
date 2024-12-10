@@ -69,7 +69,8 @@
                         <van-radio name="21" />
                     </template>
                 </van-cell>
-                <van-cell clickable @click="payMethod = '06'">
+                <div v-show="showMoreFlag" style="text-align: center;"><a href="#" @click="handleMore">更多支付方式</a><van-icon name="arrow-down" /></div>
+                <van-cell clickable @click="payMethod = '06'" v-show="!showMoreFlag">
                     <template #title>
                         <div class="sel-paymethod">
                             <img src="../../assets/image/wehcatpay.png" alt="">
@@ -80,6 +81,7 @@
                         <van-radio name="06" />
                     </template>
                 </van-cell>
+                <view v-show="!showMoreFlag" style="text-align: center;" bind:tap="handleMore">收起<van-icon name="arrow-up" /></view>
             </van-cell-group>
         </van-radio-group>
         <!--选择支付方式 start-->
@@ -129,7 +131,7 @@
 <script>
 var vm;
 import wx from 'weixin-js-sdk';
-import { RadioGroup, Radio, Cell, CellGroup, Loading, Overlay, Dialog, Tag, ActionSheet } from 'vant';
+import { RadioGroup, Radio, Cell, CellGroup, Loading, Overlay, Dialog, Tag, ActionSheet, Icon } from 'vant';
 export default {
     data () {
         return {
@@ -200,7 +202,8 @@ export default {
             orderId: '',    //支付宝吱口令支付会提前生成订单号，后面当trade_water_id用
             shareToken: '',  //吱口令
             consultMsg: '', //优惠信息
-            showPaySheet: false
+            showPaySheet: false,
+            showMoreFlag: true //显示更多开关
         };
     },
     created(){
@@ -226,7 +229,8 @@ export default {
         [Overlay.name]: Overlay,
         [Dialog.name]: Dialog,
         [Tag.name]: Tag,
-        [ActionSheet.name]: ActionSheet
+        [ActionSheet.name]: ActionSheet,
+        [Icon.name]: Icon
     },
     watch: {
         totalPrice: {
@@ -693,6 +697,9 @@ export default {
         },
         onCancelSheet () {
             //do something
+        },
+        handleMore() {
+            this.showMoreFlag = !this.showMoreFlag
         }
     },
     computed: {
