@@ -69,7 +69,7 @@
                         <van-radio name="21" />
                     </template>
                 </van-cell>
-                <div v-show="showMoreFlag" style="text-align: center;"><a href="#" @click="handleMore">更多支付方式</a><van-icon name="arrow-down" /></div>
+                <div v-show="showMoreFlag" style="text-align: center;margin-top: 0.2rem;"><span @click="handleMore">更多支付方式 </span><van-icon name="arrow-down" /></div>
                 <van-cell clickable @click="payMethod = '06'" v-show="!showMoreFlag">
                     <template #title>
                         <div class="sel-paymethod">
@@ -81,7 +81,7 @@
                         <van-radio name="06" />
                     </template>
                 </van-cell>
-                <view v-show="!showMoreFlag" style="text-align: center;" bind:tap="handleMore">收起<van-icon name="arrow-up" /></view>
+                <div v-show="!showMoreFlag" style="text-align: center;margin-top: 0.2rem"><span @click="handleMore">收起 </span><van-icon name="arrow-up" /></div>
             </van-cell-group>
         </van-radio-group>
         <!--选择支付方式 start-->
