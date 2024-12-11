@@ -672,13 +672,11 @@ export default {
                     const userAgent = vm.getUserAgent()
                     let url = 'https://ulink.alipay.com/?scheme=alipays://platformapi'
                     if('Android' == userAgent) {
-                        const basePageUrl = vm.basePageUrl
-                        if(basePageUrl.indexOf('test.e-shequ.cn')) {
-                            url = 'https://test.e-shequ.cn/weixin/android_alipay.html'
-                        } else {
-                            url = 'https://www.e-shequ.cn/weixin/android_alipay.html'
-                        }
-                        
+                        Dialog.alert({
+                            message: '如未唤起支付，请将口令粘贴到支付宝APP首页搜索框'
+                        }).then(()=>{
+                        })
+                        url = 'https://www.e-shequ.cn/weixin/android_alipay.html'
                     }
                     window.location.href = url
                 })
