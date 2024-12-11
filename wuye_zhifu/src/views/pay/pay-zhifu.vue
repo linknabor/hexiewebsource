@@ -64,7 +64,7 @@
                                 <div style="margin-left: 0.25rem;"><van-tag type="danger" color="#FF0000">{{consultMsg}}</van-tag></div>
                             </div>
                         </div>
-                    </template>
+                    </template>2024/12/11
                     <template #right-icon>
                         <van-radio name="21" />
                     </template>
@@ -665,7 +665,7 @@ export default {
                     message: '口令已复制'
                 }).then(()=>{
                     vm.loopPayResult()
-                    const url = 'https://ulink.alipay.com/?scheme=alipays://'
+                    const url = 'https://ulink.alipay.com/?scheme=alipays://platformapi'
                     window.location.href = url
                 })
             }).catch(err => {
