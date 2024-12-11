@@ -674,10 +674,13 @@ export default {
                     if('Android' == userAgent) {
                         Dialog({
                             message: '如未唤起支付，请直接打开您的支付宝app，将口令粘贴到支付宝首页搜索框。'
+                        }).then(()=>{
+                            url = 'https://www.e-shequ.cn/weixin/android_alipay.html'
+                            window.location.href = url
                         })
-                        url = 'https://www.e-shequ.cn/weixin/android_alipay.html'
+                    } else {
+                        window.location.href = url
                     }
-                    window.location.href = url
                 })
             }).catch(err => {
                 Dialog.alert({
