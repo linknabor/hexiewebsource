@@ -669,7 +669,7 @@ export default {
                     message: '口令已复制'
                 }).then(()=>{
                     vm.loopPayResult()
-                    const url = 'https://ulink.alipay.com/?scheme=alipays://'
+                    const url = 'https://ulink.alipay.com/?scheme=alipays://platformapi'
                     window.location.href = url
                 })
             }).catch(err => {
