@@ -712,7 +712,7 @@ export default {
                 }).catch(()=>{
                     $('.box-bg').css("display",'none');
                 })
-            }, 10000);
+            }, 15000);
         },
         onCancelSheet () {
             //do something
