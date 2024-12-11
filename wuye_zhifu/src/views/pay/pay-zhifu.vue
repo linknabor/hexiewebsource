@@ -669,7 +669,17 @@ export default {
                     message: '口令已复制'
                 }).then(()=>{
                     vm.loopPayResult()
-                    const url = 'https://ulink.alipay.com/?scheme=alipays://platformapi'
+                    const userAgent = vm.getUserAgent()
+                    let url = 'https://ulink.alipay.com/?scheme=alipays://platformapi'
+                    if('Android' == userAgent) {
+                        const basePageUrl = vm.basePageUrl
+                        if(basePageUrl.indexOf('test.e-shequ.cn')) {
+                            url = 'https://test.e-shequ.cn/weixin/android_alipay.html'
+                        } else {
+                            url = 'https://www.e-shequ.cn/weixin/android_alipay.html'
+                        }
+                        
+                    }
                     window.location.href = url
                 })
             }).catch(err => {
@@ -678,6 +688,19 @@ export default {
                     message: err
                 })
             })
+        },
+
+        getUserAgent() {
+            const userAgent = navigator.userAgent.toLowerCase();
+            if (/android/i.test(userAgent)) {
+                return "Android";
+            } else if (/iphone|ipod/i.test(userAgent)) {
+                return "iOS";
+            } else if (/windows phone/i.test(userAgent)) {
+                return "Windows Phone";
+            } else {
+                return "Other";
+            }
         },
         loopPayResult(orderNo) {
             setTimeout(() => {
