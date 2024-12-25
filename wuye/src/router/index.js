@@ -340,24 +340,21 @@ router.beforeEach((to, from, next) => {
     let yjappid = config.C('yjappid') 
     //宜居过来如果没注册不通过我们，跳到第三方
     if(appid === yjappid) {
-      let checkFlag = false
       if(yjFilter.indexOf(pageName) !== -1 && !common.isRegisted()) {
         getUser().then(data => {
           console.log('isRegisted:', !common.isRegisted())
-          if(common.isRegisted()) { //已经注册
-            checkFlag = true
+          if(!common.isRegisted()) { //已经注册
+            if (confirm('您还未注册,是否去注册?')) {
+              //跳第三方
+              let yjMiniForWordUrl = config.C('yjMiniForWordUrl') 
+              window.location.href='weixin://dl/business/?'+yjMiniForWordUrl
+            }
+            return
           }
         }).catch(err => {
           console.error(err)
         })
-        if(!checkFlag) {
-          if (confirm('您还未注册,是否去注册?')) {
-            //跳第三方
-            let yjMiniForWordUrl = config.C('yjMiniForWordUrl') 
-            window.location.href='weixin://dl/business/?'+yjMiniForWordUrl
-          }
-          return
-        }
+        
       }
     } else {
       if(!common.checkRegisterStatus()){
