@@ -1,0 +1,70 @@
+<!--
+  ~ 版权所有(C)，上海奈博信息科技有限公司，2024，所有权利保留。
+  ~
+  ~ 项目名： servplat_v2.0
+  ~ 文件名： viewPDF.html
+  ~ 模块说明：
+  ~ 修改历史:
+  ~ 2024-12-30 - jackie - 创建。
+  -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>协议预览</title>
+    <link rel="stylesheet" href="./static/pdfjs/css/pdfh5.css"/>
+
+    <style type="text/css">
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+
+        html,
+        body,
+        #app {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="demo"></div>
+<script src="./static/pdfjs/js/pdf.js" type="text/javascript" charset="utf-8"></script>
+<script src="./static/pdfjs/js/pdf.worker.js" type="text/javascript" charset="utf-8"></script>
+<script src="./static/jquery.js" type="text/javascript" charset="utf-8"></script>
+<script src="./static/pdfjs/js/pdfh5.js" type="text/javascript" charset="utf-8"></script>
+
+<script>
+    function url2Object(val = '', unDecodeURI = true) {
+        let result = {};
+        const query = val.split('?')[1];
+        const arr = query.split('&');
+        arr.forEach((item, idx) => {
+            let param = item.split('='),
+                name = param[0],
+                value = param[1] || ''
+            if (name) {
+                result[name] = value;
+            }
+        });
+        return result;
+    }
+
+    // 获取地址url
+    let win = window.location.href;
+    // 经过 encodeURIComponent 加密的字符串需要用 decodeURIComponent 解码
+    let url = decodeURIComponent(url2Object(win).src);
+    let name = decodeURIComponent(url2Object(win).title);
+
+    document.title = decodeURIComponent(name);
+
+    var pdfh5 = new Pdfh5('#demo', {
+        pdfurl: url
+    });
+</script>
+</body>
+</html>
