@@ -341,21 +341,18 @@ router.beforeEach(async (to, from, next) => {
     //宜居过来如果没注册不通过我们，跳到第三方
     if (appid === yjappid) {
       if (yjFilter.indexOf(pageName) !== -1 && !common.isRegisted()) {
-        let userInfo = Storage.get("userInfo")
-        if(!userInfo) {
-          common.login()
-          return
-        } else {
-          const checkTel = await getUser()
-          if(!checkTel) {
-            if (confirm('您还未注册,是否去注册?')) {
-              //跳第三方
-              let yjMiniForWordUrl = config.C('yjMiniForWordUrl')
-              window.location.href = 'weixin://dl/business/?' + yjMiniForWordUrl
-            } else {
-              next('/temp') //报错空白页，目的是不继续往下走
-            }
+        console.log('init isRegisted:' + !common.isRegisted())
+        const checkTel = await getUser()
+        console.log('checkTel:' + checkTel)
+        if('0' === checkTel) {
+          if (confirm('您还未注册,是否去注册?')) {
+            //跳第三方
+            let yjMiniForWordUrl = config.C('yjMiniForWordUrl')
+            window.location.href = 'weixin://dl/business/?' + yjMiniForWordUrl
           }
+          next('/temp') //报错空白页，目的是不继续往下走
+        } else if('2' === checkTel) {
+          return
         }
       }
     } else {
@@ -365,7 +362,6 @@ router.beforeEach(async (to, from, next) => {
     }
 
   }
-  console.log(111111)
   //除了停车场页面，其他页面都要求登录
   if (parkArray.indexOf(pageName) === -1) {
     if (!checkCodeAndLogin()) {
@@ -426,17 +422,21 @@ async function getUser() {
   return new Promise((resolve, reject) => {
     try {
         Api.getUserInfo().then((response) => {
+          console.log('response:', response)
         let data = response.data
+        let checkTel = '0'
         if (data.success && data.result != null) {
-          Storage.set("userInfo", data.result)
-          let n = data
-          common.updatecookie(n.result.cardStatus, n.result.cardService, n.result.id, n.result.appid, n.result.cspId, n.result.sectId, n.result.cardPayService, n.result.bgImageList, n.result.wuyeTabsList, n.result.qrCode, n.result)
-        }
-        let checkTel = false
-        if(data.result) {
-          if(data.result.tel) {
-            checkTel = true
+          let res = data.result
+          common.updatecookie(res.cardStatus, res.cardService, res.id, res.appid, res.cspId, res.sectId, res.cardPayService, res.bgImageList, res.wuyeTabsList, res.qrCode, res)
+          Storage.set("userInfo", res)
+          if(res) {
+            if(res.tel) {
+              checkTel = '1'
+            }
           }
+        } else {
+          reLogin()
+          checkTel = '2'
         }
         resolve(checkTel)
       })
