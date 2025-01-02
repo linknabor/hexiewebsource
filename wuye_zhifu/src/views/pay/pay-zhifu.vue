@@ -61,7 +61,7 @@
                             <img class="img-alipay" src="../../assets/image/alipay.png" alt="">
                             <div style="display: flex; flex-direction: column;">
                                 <div class="pay-text">支付宝</div>
-                                <div style="margin-left: 0.25rem;"><van-tag type="danger" color="#FF0000">{{consultMsg}}</van-tag></div>
+                                <div style="margin-left: 0.25rem;"><van-tag type="danger" color="#FF0000" v-if="consultMsg">{{consultMsg}}</van-tag></div>
                             </div>
                         </div>
                     </template>2024/12/11
