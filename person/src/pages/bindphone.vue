@@ -46,6 +46,7 @@
 
 <script>
 let vm;
+let validateCodeToken = ''
 export default {
    data () {
        return {
@@ -85,6 +86,10 @@ export default {
             var n = "GET",
             a = "userInfo?oriApp="+vm.getUrlParam('oriApp'),
             i = null,
+            c = function(xhr,data) {
+                //获取请求头标识
+                validateCodeToken = xhr.getResponseHeader('Access-Control-Allow-Token');
+            },
             e = function(n) {
                  if(n.success&&n.result==null) {
                        reLogin();
@@ -93,7 +98,7 @@ export default {
                 vm.oriPhone = vm.user.tel;
             },
             r = function() {};
-            vm.common.invokeApi(n, a, i, null, e, r)
+            vm.common.invokeApi(n, a, i, null, e, r, c)
         },
         //点击选择性别
         showModal() {
@@ -131,33 +136,69 @@ export default {
 			}
         },
         getCaptcha() {
-            var reg = /^0?1[3|4|5|8][0-9]\d{8}$/;
-	       	if (!reg.test(vm.user.tel)) {
-	       	     alert("请输入正确的手机号");
-	       	     return;
-               };
-               if(vm.yzmstr=="获取验证码"||vm.yzmstr=="重新获取"){
-	       		vm.yzmreq();
-	       	}
+            let tel = vm.user.tel
+            if (!tel) {
+                alert("请输入正确的手机号");
+                return false;
+            }
+            tel = tel.trim()
+            if (tel.length !== 11) {
+                alert("请输入正确的手机号");
+                return false;
+            }
+            if(vm.yzmstr=="获取验证码"||vm.yzmstr=="重新获取"){
+                vm.yzmreq();
+            }
         },
         yzmreq() {
-             vm.receiveData.postData(vm,'/getyzm',{mobile:vm.user.tel},'n',function(){
+            //  vm.receiveData.postData(vm,'/getyzm',{mobile:vm.user.tel},'n',function(){
+            //     vm.yzmtime = 60;
+        	//    var tt=setInterval(function(){
+            //         vm.yzmstr=vm.yzmtime+"秒后重新获取";
+            //             vm.yzmtime--;
+            //             // console.log(vm.yzmtime)
+            //             if(vm.yzmtime<=0){
+            //                 vm.yzmstr="重新获取";
+            //             }
+            //         },1000);
+            //    var ss = setTimeout(function(){clearInterval(tt);}, 61*1000);
+            //     if(!vm.res.success) {
+            //         alert("验证码已下发，请查收短信");
+            //         vm.yzmtime = 60;
+            //         vm.yzmstr="重新获取";
+            //     }
+            // })
+            var n = "POST",
+            a = "getyzm",
+            i = {mobile:vm.user.tel},
+            b = function(xhr) {
+		    	xhr.setRequestHeader('Access-Control-Allow-Token',validateCodeToken)
+            },
+            e = function(n) {
+                vm.yzmtime=60;
+                alert("验证码已下发，请查收短信");
+                var tt=setInterval(function() {
+                    vm.yzmstr=vm.yzmtime+'秒后重新获取';
+                    vm.yzmtime--;
+                    if(vm.yzmtime<=0) {
+                        vm.yzmstr='重新获取'
+                    }
+                },1000);
+                var ss = setTimeout(function(){clearInterval(tt);}, 61*1000);
+            },
+            r = function(n) {
                 vm.yzmtime = 60;
-        	   var tt=setInterval(function(){
-                    vm.yzmstr=vm.yzmtime+"秒后重新获取";
-                        vm.yzmtime--;
-                        // console.log(vm.yzmtime)
-                        if(vm.yzmtime<=0){
-                            vm.yzmstr="重新获取";
-                        }
-                    },1000);
-               var ss = setTimeout(function(){clearInterval(tt);}, 61*1000);
-                if(!vm.res.success) {
-                    alert("验证码已下发，请查收短信");
-                    vm.yzmtime = 60;
-                    vm.yzmstr="重新获取";
-                }
-            })
+                vm.message=n.message;
+                var tt=setInterval(function() {
+                    vm.yzmstr=vm.yzmtime+'秒后重新获取';
+                    vm.yzmtime--;
+                    if(vm.yzmtime<=0) {
+                        vm.yzmstr='重新获取'
+                    }
+                },1000);
+                var ss = setTimeout(function(){clearInterval(tt);}, 61*1000);
+            };
+            vm.common.invokeApi(n, a, i, b, e, r)
         },
         save() {
             if(vm.user.name=="" || vm.user.realName=="" || vm.user.tel=="") {

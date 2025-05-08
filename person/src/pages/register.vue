@@ -115,10 +115,15 @@ export default {
         },
         //获取验证码
         getCaptcha() {
-            var reg = /^1[3-9][0-9]\d{8}$/;
-            if(!reg.test(vm.user.tel)) {
-                alert('请输入正确的手机号')
-                return
+            let tel = vm.user.tel
+            if (!tel) {
+                alert("请输入正确的手机号");
+                return false;
+            }
+            tel = tel.trim()
+            if (tel.length !== 11) {
+                alert("请输入正确的手机号");
+                return false;
             }
             if(vm.yzmstr=="获取验证码"||vm.yzmstr=="重新获取"){
 	       		vm.yzmstr="获取中";
