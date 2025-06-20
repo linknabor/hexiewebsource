@@ -20,7 +20,8 @@ export default {
       oriApp: '',
       sectId: '',
       sectName: '',
-      province: ''
+      province: '',
+      clientType: '0'
     }
   },
   components: {
@@ -56,7 +57,7 @@ export default {
         })
         return false
       }
-      BaseInfoApi.mySect(this.sectId).then(response => {
+      BaseInfoApi.mySect(this.sectId, this.clientType).then(response => {
         const data = response.data
         if (data.success) {
           this.province = data.result.province_name

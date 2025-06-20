@@ -23,8 +23,8 @@ const baseInfoApi = {
     switchSect(data) {
         return Http.post(baseUrl + '/switchSect', data)
     },
-    mySect(param) {
-        return Http.get(baseUrl + '/mySect/' + param, null)
+    mySect(param, data) {
+        return Http.get(baseUrl + '/mySect/' + param + '?clientType=' + data, null)
     }
 
 }
