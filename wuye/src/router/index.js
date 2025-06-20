@@ -319,6 +319,14 @@ const router = new VueRouter({
         title: '我的收据'
       }
     },
+	{
+      path:'/qrScanPay',
+      name:'qrScanPay',
+      component:resolve=> require(['@/pages/pay/qrScanPay'],resolve),
+      meta:{
+        title:'二维码支付'
+      }
+	},
   ]
 });
 const parkArray = ['indexCar', 'parkInfo', 'queryParkPayDetail', 'addCar', 'queryParkFixBill', 'parkPayingDetail']
