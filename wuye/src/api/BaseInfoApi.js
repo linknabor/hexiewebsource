@@ -23,6 +23,9 @@ const baseInfoApi = {
     switchSect(data) {
         return Http.post(baseUrl + '/switchSect', data)
     },
+    mySect(param) {
+        return Http.get(baseUrl + '/mySect/' + param, null)
+    }
 
 }
 export default baseInfoApi

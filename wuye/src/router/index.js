@@ -319,6 +319,14 @@ const router= new VueRouter({
           title:'我的收据'
         }
       },
+      {
+        path:'/qrScanPay',
+        name:'qrScanPay',
+        component:resolve=> require(['@/pages/pay/qrScanPay'],resolve),
+        meta:{
+          title:'二维码支付'
+        }
+      },
     ]
 });
 const parkArray = ['indexCar','parkInfo', 'queryParkPayDetail', 'addCar', 'queryParkFixBill', 'parkPayingDetail']
@@ -344,9 +352,9 @@ router.beforeEach((to, from, next) => {
       }
       return
     } else {
-      if(!common.checkRegisterStatus()){
-        return
-      }
+      // if(!common.checkRegisterStatus()){
+      //   return
+      // }
     }
     
   }
@@ -369,7 +377,7 @@ router.beforeEach((to, from, next) => {
 
     console.log('router, oriApp : ' + appid)
     if(appid!==kyappid && appid!==dcappid && appid!==nbappid){
-      version = 'version2'
+      // version = 'version2'
     }
     if(appid===ccappid) {
       version = 'version3'
