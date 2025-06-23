@@ -47,6 +47,8 @@
 let vm;
 let Token;
 import ageess from './ageess';
+import { Dialog } from 'vant'
+
 export default {
    data () {
        return {
@@ -62,6 +64,8 @@ export default {
             message:"",
             agree:true,//是否同意
        };
+   },
+   components: {
    },
    created() {
        vm=this;
@@ -96,8 +100,7 @@ export default {
                     const originColor = getComputedStyle(document.documentElement).getPropertyValue('--origin-color');
                     document.documentElement.style.setProperty('--primary-color', originColor);
                 }
-                alert('tel : ' + vm.user.tel)
-                alert('comeFrom : ' + vm.comeFrom)
+                Dialog({ message: vm.comeFrom })
                 if(vm.user.tel && vm.user.tel!='null') {
                     console.log('user registered, will forward ! ')
                     vm.common.updateUserStatus(n.result);
@@ -110,6 +113,7 @@ export default {
                     }
                     console.log('forward page : ' + forwardPage);
                     location.href = forwardPage;
+                    return false
                 }
                 
             },
@@ -230,7 +234,6 @@ export default {
                 let comeFrom=vm.getUrlParam("comeFrom") || vm.$route.query.comeFrom;
                 var url = location.href;
                 var idx = url.lastIndexOf('#');
-                alert('hashIdx : ' + idx)
                 var hash = ''
                 if (idx > -1) {
                     hash = url.substring(idx);
@@ -244,13 +247,7 @@ export default {
                         hash = url.substring(index)
                     }
                 }
-                if (hash) {
-                    var hashStr = hash.replace(/\//g, '#');
-                    if(!hashStr.startsWith('#')) {
-                        hash = '#' + hashStr
-                    }
-                }
-                alert('hash : ' + hash)
+                Dialog({ message: hash })
                 vm.comeFrom =comeFrom +''+hash;
                 console.log(vm.comeFrom)
         }
