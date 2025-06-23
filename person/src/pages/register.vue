@@ -67,7 +67,8 @@ export default {
        vm=this;
    },
    mounted() {
-       vm.getUserInfo();
+        vm.getComeFrom()
+        vm.getUserInfo();
    },
    
    methods: {
@@ -95,7 +96,7 @@ export default {
                     const originColor = getComputedStyle(document.documentElement).getPropertyValue('--origin-color');
                     document.documentElement.style.setProperty('--primary-color', originColor);
                 }
-                vm.getComeFrom()
+                alert('tel : ' + vm.user.tel)
                 if(vm.user.tel && vm.user.tel!='null') {
                     console.log('user registered, will forward ! ')
                     vm.common.updateUserStatus(n.result);
@@ -109,6 +110,7 @@ export default {
                     console.log('forward page : ' + forwardPage);
                     location.href = forwardPage;
                 }
+                
             },
             r = function() {};
             vm.common.invokeApi(n, a, i, null, e, r,c)
@@ -202,21 +204,21 @@ export default {
              vm.receiveData.postData(vm,'simpleRegister',{mobile:vm.user.tel,name:vm.user.name,yzm:vm.captcha},'res',function(){
                  if(vm.res.success) {
                         vm.common.updateUserStatus(vm.res.result);
-                            var forwardPage = "";
-                            if(vm.comeFrom){
-                                forwardPage = vm.comeFrom;
-                            } else {
-                                // let oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
-                                forwardPage = vm.basePageUrl+'person/index.html?'+vm.common.getoriApp();
-                            }
-                            alert("注册成功。");
-                            location.href = forwardPage;
-                }else {
+                        var forwardPage = "";
+                        if(vm.comeFrom){
+                            forwardPage = vm.comeFrom;
+                        } else {
+                            // let oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
+                            forwardPage = vm.basePageUrl+'person/index.html?'+vm.common.getoriApp();
+                        }
+                        alert("注册成功。");
+                        location.href = forwardPage;
+                } else {
                      vm.zzmb=false;
                     vm.isClick=false;
                     alert(vm.res.message==null?"验证码不正确或信息保存失败，请重试！":vm.res.message);
                 }
-                });
+            });
         },
          getUrlParam(name) {
             var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
