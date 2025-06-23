@@ -97,6 +97,7 @@ export default {
                     document.documentElement.style.setProperty('--primary-color', originColor);
                 }
                 alert('tel : ' + vm.user.tel)
+                alert('comeFrom : ' + vm.comeFrom)
                 if(vm.user.tel && vm.user.tel!='null') {
                     console.log('user registered, will forward ! ')
                     vm.common.updateUserStatus(n.result);
@@ -245,6 +246,9 @@ export default {
                 }
                 if (hash) {
                     hash = hash.replace('/', '#')
+                    if(!hash.startsWith('#')) {
+                        hash = '#' + hash
+                    }
                 }
                 alert('hash : ' + hash)
                 vm.comeFrom =comeFrom +''+hash;
@@ -348,7 +352,7 @@ export default {
     color: #fff;
     left: 3%;
     right: 3%;
-    bottom: 10px;
+    bottom: 20px;
 }
 .submit-btn {
     height: 44px;
