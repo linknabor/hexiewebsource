@@ -101,6 +101,7 @@ export default {
                     document.documentElement.style.setProperty('--primary-color', originColor);
                 }
                 Dialog({ message: vm.comeFrom })
+                alert('1')
                 if(vm.user.tel && vm.user.tel!='null') {
                     console.log('user registered, will forward ! ')
                     vm.common.updateUserStatus(n.result);
@@ -111,6 +112,8 @@ export default {
                         // let oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
                         forwardPage = vm.basePageUrl+'person/index.html?'+vm.common.getoriApp();
                     }
+                    Dialog({ message: forwardPage })
+                    alert('3')
                     console.log('forward page : ' + forwardPage);
                     location.href = forwardPage;
                     return false
@@ -248,6 +251,7 @@ export default {
                     }
                 }
                 Dialog({ message: hash })
+                alert('2')
                 vm.comeFrom =comeFrom +''+hash;
                 console.log(vm.comeFrom)
         }
