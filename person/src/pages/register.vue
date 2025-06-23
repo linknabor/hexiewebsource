@@ -97,7 +97,6 @@ export default {
                     document.documentElement.style.setProperty('--primary-color', originColor);
                 }
                 alert('tel : ' + vm.user.tel)
-                alert('fromPage : ' + vm.comeFrom)
                 if(vm.user.tel && vm.user.tel!='null') {
                     console.log('user registered, will forward ! ')
                     vm.common.updateUserStatus(n.result);
@@ -232,11 +231,23 @@ export default {
                 let comeFrom=vm.getUrlParam("comeFrom") || vm.$route.query.comeFrom;
                 alert('comeFrom : ' + comeFrom)
                 var url = location.href;
+                alert('url :' + url)
                 var idx = url.lastIndexOf('#');
                 var hash = ''
                 if (idx > -1) {
-                    hash=url.substring(idx - 1);
+                    hash=url.substring(idx);
+                } else {
+                    var index = url.lastIndexOf('/')
+                    var markIndex = url.lastIndexOf('&')
+                    if (markIndex === -1) {
+                        markIndex = url.indexOf('?')
+                    }
+                    if(markIndex < index) {
+                        hash = url.substring(index-1)
+                        hash = '#' + hash
+                    }
                 }
+                alert('hash : ' + hash)
                 vm.comeFrom =comeFrom +''+hash;
                 console.log(vm.comeFrom)
         }
