@@ -352,7 +352,7 @@ export default {
     color: #fff;
     left: 3%;
     right: 3%;
-    bottom: 10px;
+    bottom: 20px;
 }
 .submit-btn {
     height: 44px;
