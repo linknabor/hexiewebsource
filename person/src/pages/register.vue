@@ -97,7 +97,7 @@ export default {
                     document.documentElement.style.setProperty('--primary-color', originColor);
                 }
                 alert('tel : ' + vm.user.tel)
-                alert('comeFrom : ' + vm.comeFrom)
+                alert('fromPage : ' + vm.comeFrom)
                 if(vm.user.tel && vm.user.tel!='null') {
                     console.log('user registered, will forward ! ')
                     vm.common.updateUserStatus(n.result);
@@ -227,10 +227,16 @@ export default {
             if (r != null) return unescape(r[2]); return ""; //返回参数值
         },
          getComeFrom(){
+                alert('urlParam : ' + vm.getUrlParam("comeFrom"))
+                alert('routeQuery ： ' + vm.$route.query.comeFrom)
                 let comeFrom=vm.getUrlParam("comeFrom") || vm.$route.query.comeFrom;
+                alert('comeFrom : ' + comeFrom)
                 var url = location.href;
                 var idx = url.lastIndexOf('#');
-                var hash=url.substring(idx);
+                var hash = ''
+                if (idx > -1) {
+                    hash=url.substring(idx - 1);
+                }
                 vm.comeFrom =comeFrom +''+hash;
                 console.log(vm.comeFrom)
         }
