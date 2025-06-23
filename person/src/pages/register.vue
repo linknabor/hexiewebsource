@@ -97,6 +97,7 @@ export default {
                     document.documentElement.style.setProperty('--primary-color', originColor);
                 }
                 alert('tel : ' + vm.user.tel)
+                alert('comeFrom : ' + comeFrom)
                 if(vm.user.tel && vm.user.tel!='null') {
                     console.log('user registered, will forward ! ')
                     vm.common.updateUserStatus(n.result);
