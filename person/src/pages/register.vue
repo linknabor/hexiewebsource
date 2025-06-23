@@ -245,9 +245,9 @@ export default {
                     }
                 }
                 if (hash) {
-                    hash = hash.replace('/', '#')
-                    if(!hash.startsWith('#')) {
-                        hash = '#' + hash
+                    var hashStr = hash.replace(/\//g, '#');
+                    if(!hashStr.startsWith('#')) {
+                        hash = '#' + hashStr
                     }
                 }
                 alert('hash : ' + hash)
