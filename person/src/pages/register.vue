@@ -226,16 +226,13 @@ export default {
             if (r != null) return unescape(r[2]); return ""; //返回参数值
         },
          getComeFrom(){
-                alert('urlParam : ' + vm.getUrlParam("comeFrom"))
-                alert('routeQuery ： ' + vm.$route.query.comeFrom)
                 let comeFrom=vm.getUrlParam("comeFrom") || vm.$route.query.comeFrom;
-                alert('comeFrom : ' + comeFrom)
                 var url = location.href;
-                alert('url :' + url)
                 var idx = url.lastIndexOf('#');
+                alert('hashIdx : ' + idx)
                 var hash = ''
                 if (idx > -1) {
-                    hash=url.substring(idx);
+                    hash = url.substring(idx);
                 } else {
                     var index = url.lastIndexOf('/')
                     var markIndex = url.lastIndexOf('&')
@@ -243,9 +240,11 @@ export default {
                         markIndex = url.indexOf('?')
                     }
                     if(markIndex < index) {
-                        hash = url.substring(index-1)
-                        hash = '#' + hash
+                        hash = url.substring(index)
                     }
+                }
+                if (hash) {
+                    hash = hash.replace('/', '#')
                 }
                 alert('hash : ' + hash)
                 vm.comeFrom =comeFrom +''+hash;
