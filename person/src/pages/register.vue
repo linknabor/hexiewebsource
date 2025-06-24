@@ -100,8 +100,6 @@ export default {
                     const originColor = getComputedStyle(document.documentElement).getPropertyValue('--origin-color');
                     document.documentElement.style.setProperty('--primary-color', originColor);
                 }
-                Dialog({ message: vm.comeFrom })
-                alert('1')
                 if(vm.user.tel && vm.user.tel!='null') {
                     console.log('user registered, will forward ! ')
                     vm.common.updateUserStatus(n.result);
@@ -250,8 +248,9 @@ export default {
                         hash = url.substring(index)
                     }
                 }
-                Dialog({ message: hash })
-                alert('2')
+                if(hash) {
+                    hash = hash.replace('/', '')
+                }
                 vm.comeFrom =comeFrom +''+hash;
                 console.log(vm.comeFrom)
         }
