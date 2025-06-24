@@ -32,7 +32,7 @@ export default {
   mounted() {
     //初始化参数
     const oriApp = this.getUrlParam("oriApp")
-    const sectId = this.getUrlParam("sectId")
+    const sectId = this.getUrlParam("id")
     this.oriApp = oriApp
     this.sectId = sectId
   },
