@@ -155,7 +155,7 @@ export default {
             },
             e = function(n) {
                 vm.yzmtime=60;
-                Dialog.confirm({
+                Dialog.alert({
                     message: '验证码已下发，请查收短信。',
                 }).then(() => {
                      var tt=setInterval(function() {
@@ -218,7 +218,7 @@ export default {
                             // let oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
                             forwardPage = vm.basePageUrl+'person/index.html?'+vm.common.getoriApp();
                         }
-                        Dialog.confirm({
+                        Dialog.alert({
                             message: '注册成功。',
                         }).then(() => {
                             location.href = forwardPage;
