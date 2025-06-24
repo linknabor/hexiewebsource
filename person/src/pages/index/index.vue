@@ -242,6 +242,7 @@
   import img from "../../assets/images/common/logo.jpg";
   import {Popup} from 'vant';
   import vueQr from 'vue-qr';
+  import Storage from '../../assets/js/storage.js'
   export default {
     data() {
       return {
@@ -332,6 +333,7 @@
               vm.qrCodePayService();
               //保存
               vm.common.updatecookie(n.result.cardStatus,n.result.cardService,n.result.id,n.result.appid,n.result.cspId,n.result.sectId,n.result.cardPayService,n.result.bgImageList,n.result.wuyeTabsList,n.result.qrCode,n.result);
+              Storage.set('userInfo', n.result)
             }
           },
           r = function() {

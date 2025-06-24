@@ -12,6 +12,7 @@
 </template>
 
 <script>
+import Storage from '../../assets/js/storage.js'
 var vm;
 export default {
     data() {
@@ -64,6 +65,7 @@ export default {
                     }
                     if(n.result!=null) {
                         vm.common.updatecookie(n.result.cardStatus,n.result.cardService,n.result.id,n.result.appid,n.result.cspId,n.result.sectId,n.result.cardPayService,n.result.bgImageList,n.result.wuyeTabsList,n.result.qrCode,n.result);
+                        Storage.set('userInfo', n.result)
                         //判断是否领卡
                         if(n.result.cardService && n.result.cardStatus != 3) {
                             if(n.result.tel ==null || n.result.tel == "") {
