@@ -100,13 +100,9 @@ export default {
                     const originColor = getComputedStyle(document.documentElement).getPropertyValue('--origin-color');
                     document.documentElement.style.setProperty('--primary-color', originColor);
                 }
-                alert('cookie tel1 : ' + vm.common.getCookieParam('tel'))
-                alert('cookie UID1 : ' + vm.common.getCookieParam('UID'))
                 if(vm.user.tel && vm.user.tel!='null') {
                     console.log('user registered, will forward ! ')
                     vm.common.updateUserStatus(n.result);
-                    alert('cookie tel2 : ' + vm.common.getCookieParam('tel'))
-                    alert('cookie UID2 : ' + vm.common.getCookieParam('UID'))
                     var forwardPage = "";
                     if(vm.comeFrom){
                         forwardPage = vm.comeFrom;
@@ -159,15 +155,18 @@ export default {
             },
             e = function(n) {
                 vm.yzmtime=60;
-                alert("验证码已下发，请查收短信");
-                var tt=setInterval(function() {
+                Dialog.confirm({
+                    message: '验证码已下发，请查收短信。',
+                }).then(() => {
+                     var tt=setInterval(function() {
                     vm.yzmstr=vm.yzmtime+'秒后重新获取';
                     vm.yzmtime--;
                     if(vm.yzmtime<=0) {
                         vm.yzmstr='重新获取'
                     }
                 },1000);
-                var ss = setTimeout(function(){clearInterval(tt);}, 61*1000);
+                    setTimeout(function(){clearInterval(tt);}, 61*1000);
+                })
             },
             r = function(n) {
                 vm.yzmtime = 60;
