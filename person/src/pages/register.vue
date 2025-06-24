@@ -100,11 +100,13 @@ export default {
                     const originColor = getComputedStyle(document.documentElement).getPropertyValue('--origin-color');
                     document.documentElement.style.setProperty('--primary-color', originColor);
                 }
+                alert('cookie tel1 : ' + vm.common.getCookie('tel'))
+                alert('cookie UID1 : ' + vm.common.getCookie('UID'))
                 if(vm.user.tel && vm.user.tel!='null') {
                     console.log('user registered, will forward ! ')
                     vm.common.updateUserStatus(n.result);
-                    alert('cookie tel : ' + vm.common.getCookie('tel'))
-                    alert('cookie UID : ' + vm.common.getCookie('UID'))
+                    alert('cookie tel2 : ' + vm.common.getCookie('tel'))
+                    alert('cookie UID2 : ' + vm.common.getCookie('UID'))
                     var forwardPage = "";
                     if(vm.comeFrom){
                         forwardPage = vm.comeFrom;
@@ -221,9 +223,7 @@ export default {
                             message: '注册成功。',
                         }).then(() => {
                             location.href = forwardPage;
-                        }).catch(() => {
-                            location.href = forwardPage;
-                        });
+                        })
                 } else {
                      vm.zzmb=false;
                     vm.isClick=false;
@@ -261,7 +261,8 @@ export default {
         }
    },
    components: {
-         ageess
+         ageess,
+         [Dialog.name]: Dialog,
    }
 
 }
