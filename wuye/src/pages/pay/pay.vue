@@ -409,7 +409,7 @@ export default {
   mounted() {
     this.initUser()
     vm.TabsList();
-    vm.unitselect();
+    // vm.unitselect();
     vm.getHousin();
     vm.Compatibility();
     // 判断是否是专业版
@@ -443,8 +443,12 @@ export default {
       vm.sectId = cookie.get('sectId');//
       vm.cardPayService = cookie.get('cardPayService');//获取sectId
       if(wuyeTabs && (wuyeTabs != 'null' && wuyeTabs != 'undefined')) {//不等于空获取
-         vm.wuyeTabsList = JSON.parse(window.localStorage.getItem("wuyeTabsList"));
-         vm.selected = vm.wuyeTabsList[0].value;
+         vm.wuyeTabsList = JSON.parse(wuyeTabs);
+         if(this.$route.query.selected == "d") {
+            this.unitselect()
+         } else {
+            vm.selected = vm.wuyeTabsList[0].value;
+         }
       }
       if(!wuyeTabs || wuyeTabs == 'null' || wuyeTabs == 'undefined' || !vm.sectId || (vm.cardPayService =='' || vm.cardPayService  == undefined)){
           let n = "GET",
@@ -456,10 +460,15 @@ export default {
             cookie.set('sectId',n.result.sectId);
             cookie.set('cardPayService',n.result.cardPayService);
             if(n.result.wuyeTabsList) { //判断是否有值重新填入
-              vm.common.localSet('wuyeTabsList',JSON.stringify(n.result.wuyeTabsList))
+              const tabsList = n.result.wuyeTabsList
+              vm.common.localSet('wuyeTabsList',JSON.stringify(tabsList))
               //填入后在获取赋值
-              vm.wuyeTabsList = JSON.parse(window.localStorage.getItem("wuyeTabsList"));
-              vm.selected = vm.wuyeTabsList[0].value;
+              vm.wuyeTabsList = tabsList
+              if(vm.$route.query.selected == "d") {
+                  this.unitselect()
+              } else {
+                  vm.selected = vm.wuyeTabsList[0].value;
+              }
             }else {
               Dialog({message: '没有配置选项卡'})
               return

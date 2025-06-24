@@ -269,6 +269,7 @@ export default ({
                             if(!this.sectName) {
                                 this.sectName = '游客'
                             }
+                            Storage.set('userInfo', data.result)
                             this.common.updatecookie(data.result.cardStatus,data.result.cardService,data.result.id,data.result.appid,
                             data.result.cspId,data.result.sectId,data.result.cardPayService,data.result.bgImageList,data.result.wuyeTabsList,
                             data.result.qrCode,data.result)
