@@ -159,12 +159,12 @@ export default {
                     message: '验证码已下发，请查收短信。',
                 }).then(() => {
                      var tt=setInterval(function() {
-                    vm.yzmstr=vm.yzmtime+'秒后重新获取';
-                    vm.yzmtime--;
-                    if(vm.yzmtime<=0) {
-                        vm.yzmstr='重新获取'
-                    }
-                },1000);
+                        vm.yzmstr=vm.yzmtime+'秒后重新获取';
+                        vm.yzmtime--;
+                        if(vm.yzmtime<=0) {
+                            vm.yzmstr='重新获取'
+                        }
+                    },1000);
                     setTimeout(function(){clearInterval(tt);}, 61*1000);
                 })
             },
@@ -221,7 +221,8 @@ export default {
                         Dialog.alert({
                             message: '注册成功。',
                         }).then(() => {
-                            location.href = forwardPage;
+                            alert(1234)
+                            window.location.href = forwardPage;
                         })
                 } else {
                      vm.zzmb=false;
