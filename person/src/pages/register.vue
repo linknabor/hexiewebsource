@@ -100,13 +100,13 @@ export default {
                     const originColor = getComputedStyle(document.documentElement).getPropertyValue('--origin-color');
                     document.documentElement.style.setProperty('--primary-color', originColor);
                 }
-                alert('cookie tel1 : ' + vm.common.getCookie('tel'))
-                alert('cookie UID1 : ' + vm.common.getCookie('UID'))
+                alert('cookie tel1 : ' + vm.common.getCookieParam('tel'))
+                alert('cookie UID1 : ' + vm.common.getCookieParam('UID'))
                 if(vm.user.tel && vm.user.tel!='null') {
                     console.log('user registered, will forward ! ')
                     vm.common.updateUserStatus(n.result);
-                    alert('cookie tel2 : ' + vm.common.getCookie('tel'))
-                    alert('cookie UID2 : ' + vm.common.getCookie('UID'))
+                    alert('cookie tel2 : ' + vm.common.getCookieParam('tel'))
+                    alert('cookie UID2 : ' + vm.common.getCookieParam('UID'))
                     var forwardPage = "";
                     if(vm.comeFrom){
                         forwardPage = vm.comeFrom;
