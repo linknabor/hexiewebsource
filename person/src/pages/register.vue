@@ -47,7 +47,8 @@
 let vm;
 let Token;
 import ageess from './ageess';
-import { Dialog } from 'vant'
+import { Dialog, Toast } from 'vant'
+
 
 export default {
    data () {
@@ -218,12 +219,10 @@ export default {
                             // let oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
                             forwardPage = vm.basePageUrl+'person/index.html?'+vm.common.getoriApp();
                         }
-                        Dialog.alert({
-                            message: '注册成功。',
-                        }).then(() => {
-                            alert(1234)
+                        Toast.success('注册成功。');
+                        setTimeout(() => {
                             window.location.href = forwardPage;
-                        })
+                        }, 1000);
                 } else {
                      vm.zzmb=false;
                     vm.isClick=false;
