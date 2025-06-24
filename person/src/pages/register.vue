@@ -103,6 +103,8 @@ export default {
                 if(vm.user.tel && vm.user.tel!='null') {
                     console.log('user registered, will forward ! ')
                     vm.common.updateUserStatus(n.result);
+                    alert('cookie tel : ' + vm.common.getCookie('tel'))
+                    alert('cookie UID : ' + vm.common.getCookie('UID'))
                     var forwardPage = "";
                     if(vm.comeFrom){
                         forwardPage = vm.comeFrom;
@@ -110,8 +112,6 @@ export default {
                         // let oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
                         forwardPage = vm.basePageUrl+'person/index.html?'+vm.common.getoriApp();
                     }
-                    Dialog({ message: forwardPage })
-                    alert('3')
                     console.log('forward page : ' + forwardPage);
                     location.href = forwardPage;
                     return false
@@ -217,8 +217,13 @@ export default {
                             // let oriapp=vm.getUrlParam('oriApp')?'oriApp='+vm.getUrlParam('oriApp'):'';
                             forwardPage = vm.basePageUrl+'person/index.html?'+vm.common.getoriApp();
                         }
-                        alert("注册成功。");
-                        location.href = forwardPage;
+                        Dialog.confirm({
+                            message: '注册成功。',
+                        }).then(() => {
+                            location.href = forwardPage;
+                        }).catch(() => {
+                            location.href = forwardPage;
+                        });
                 } else {
                      vm.zzmb=false;
                     vm.isClick=false;
