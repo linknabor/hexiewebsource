@@ -465,7 +465,7 @@
                 //填入后在获取赋值
                 vm.wuyeTabsList = tabsList
                 if(vm.$route.query.selected == "d") {
-                    this.unitselect()
+                    vm.unitselect()
                 } else {
                     vm.selected = vm.wuyeTabsList[0].value;
                 }
