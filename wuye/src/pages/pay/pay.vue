@@ -455,6 +455,8 @@ export default {
           a = "userInfo?oriApp="+vm.getUrlParam('oriApp'),
           i = null,
           e = function(n) {
+            var responseStr = JSON.stringify(n)
+            alert(responseStr)
             cookie.set('userId',n.result.id);
             cookie.set('cspId',n.result.cspId);
             cookie.set('sectId',n.result.sectId);
