@@ -455,24 +455,28 @@
             a = "userInfo?oriApp="+vm.getUrlParam('oriApp'),
             i = null,
             e = function(n) {
-	    var responseStr = JSON.stringify(n)
-            alert(responseStr)
               cookie.set('userId',n.result.id);
               cookie.set('cspId',n.result.cspId);
               cookie.set('sectId',n.result.sectId);
               cookie.set('cardPayService',n.result.cardPayService);
               if(n.result.wuyeTabsList) { //判断是否有值重新填入
-		const tabsList = n.result.wuyeTabsList
-                vm.common.localSet('wuyeTabsList',JSON.stringify(tabsList))
-                //填入后在获取赋值
-                vm.wuyeTabsList = tabsList
-                if(vm.$route.query.selected == "d") {
-                    vm.unitselect()
-                } else {
-                    vm.selected = vm.wuyeTabsList[0].value;
-                }
-                Dialog({message: '没有配置选项卡'})
-                return
+		var tabsList = []
+		if(n.result) {
+		    tabsList = n.result.wuyeTabsList
+		}
+		if(tabsList) { //判断是否有值重新填入
+		    vm.common.localSet('wuyeTabsList',JSON.stringify(tabsList))
+		    //填入后在获取赋值
+		    vm.wuyeTabsList = tabsList
+		    if(vm.$route.query.selected == "d") {
+			vm.unitselect()
+		    } else {
+			vm.selected = vm.wuyeTabsList[0].value;
+		    }
+		} else {
+		    Dialog({message: '没有配置选项卡'})
+                    return
+		}
               }
               vm.sectId=cookie.get('sectId'); //获取sectid
               vm.cardPayService =cookie.get('cardPayService');
