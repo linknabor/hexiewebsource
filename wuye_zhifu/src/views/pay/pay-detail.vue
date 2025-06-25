@@ -537,6 +537,22 @@
 				</div>
 			</div>
 			<!-- 贵州银行卡支付 end -->
+			
+			<!-- 绑定房屋选项 start -->
+			<div v-if="showBindHouse">
+				<van-cell-group :border="true">
+					<van-cell title="是否绑定缴费房屋">
+						<slot>
+							<van-radio-group v-model="bindHouseOption" direction="horizontal">
+								<van-radio name="0">否</van-radio>
+								<van-radio name="1">是</van-radio>
+							</van-radio-group>
+						</slot>
+					</van-cell>
+				</van-cell-group>
+			</div>
+			<!-- 绑定房屋选项 end -->
+
 			<div style="height:1.5rem;"></div>
 			<div v-if="selected == 'd' && is_create_qrcode == 1" class="btn-fix">
 				<div class="fl personnel" @click="personnel">工作人员收费</div>
@@ -550,7 +566,7 @@
 <script>
 	let vm;
 	import moment from "../filter/datafromat";
-	import { Collapse, CollapseItem, Cell, CellGroup } from 'vant';
+	import { Collapse, CollapseItem, Cell, CellGroup, Radio, RadioGroup } from 'vant';
 	export default {
 		data(){
 			return {
@@ -580,7 +596,6 @@
 				is_create_qrcode:'',//是否开启工作人员收费
 				support_card_pay:'',
 				version:'',
-				bind_switch:'0',
 				reduceMoney:'0',
 
 				selected:this.$route.query.selected,//查询缴费显示工作人员收费
@@ -608,8 +623,9 @@
 				certspan:'请选择',
 				bankCards:[],
 				cardId:'',//记录卡的id
-				bindhouse:true,
 				request_siccess:false,//判断是否请求成功
+				showBindHouse:true,	//是否显示绑定房屋
+				bindHouseOption: '0',	//0不绑定，1绑定
 			}
 		},
 		components: {
@@ -617,6 +633,8 @@
 			[CollapseItem.name]: CollapseItem,
 			[Cell.name]: Cell,
 			[CellGroup.name]: CellGroup,
+			[Radio.name]: Radio,
+			[RadioGroup.name]: RadioGroup
 		},
 		filters:{
 			moment
@@ -684,17 +702,12 @@
 					this.invoice_title_type ='01'
 				}
 			},
-			bind_switch(na,nw) {
-				this.bind_switch=na;
-
-			},
 			remember(na,nw) { //监控是否记住卡号 0->false 1->true
 				if(na == true){
 					vm.remerbernumm = '1';
 				}else {
 					vm.remerbernumm = '0';
 				}
-
 			},
 			certType(na,nw) { //证件类型
 				if(na != nw) {
@@ -714,20 +727,22 @@
 					vm.phoneNo = ''//手机号
 
 				}
-			}
+			},
+			is_create_qrcode(newVal, oldVal) {
 
+			},
 		},
 		methods:{
 			//判断是否显示绑定房子
 			bindhouses() {
 				if(vm.selected == 'd' && vm.is_create_qrcode == 1) {
-					vm.bindhouse = false;
+					vm.showBindHouse = false;
 				}else if (vm.selected == 'd' && vm.is_create_qrcode == 0) {
-					vm.bindhouse = true;
+					vm.showBindHouse = true;
 				}else if(vm.selected != 'd' && vm.is_create_qrcode != 1) {
-					vm.bindhouse = true;
+					vm.showBindHouse = true;
 				}else if (vm.selected != 'd' && vm.is_create_qrcode == 0) {
-					vm.bindhouse = true;
+					vm.showBindHouse = true;
 				}
 			},
 			//判断支付方式
@@ -787,8 +802,6 @@
 									vm.invoice_title_type='01';
 								}
 							}
-							vm.bindhouses();
-
 							vm.support_card_pay = vm.data.result.other_bill_info[0].support_card_pay;
 							let useDate = vm.data.result.other_bill_info[0];
 							vm.verNumber = useDate.ver_no;
@@ -819,7 +832,6 @@
 									vm.invoice_title_type='01';
 								}
 							}
-							vm.bindhouses();
 							vm.support_card_pay = vm.data.result.support_card_pay;
 
 							// let useDate = vm.data.result.fee_data[0];
@@ -878,6 +890,7 @@
 					invoice_title : this.invoice_title,
 					billId : vm.routeParams.billIds,
 					stmtId : vm.routeParams.stmtId,
+					bindHouse: vm.bindHouseOption
 				};
 				urlc.payType = vm.payType;//支付方式
 				if(vm.payType == 1) {
@@ -890,7 +903,9 @@
 					vm.acctNNo = vm.acctNo;
 				}
 				window.localStorage.setItem('paylist',JSON.stringify(urlc));
-				vm.$router.push({path:'/payzhifu',query:{bind_switch:vm.bind_switch,version:vm.version,reduceMode:vm.routeParams.reduceMode,acctNNo:vm.acctNNo,cardId:vm.cardId,payFeeType:vm.routeParams.payFeeType}})
+				vm.$router.push({path:'/payzhifu',
+					query:{version:vm.version,reduceMode:vm.routeParams.reduceMode,acctNNo:vm.acctNNo,cardId:vm.cardId,payFeeType:vm.routeParams.payFeeType}}
+				)
 
 			},
 			onChangeFeeType() {
