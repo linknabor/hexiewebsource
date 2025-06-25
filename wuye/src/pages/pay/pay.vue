@@ -401,14 +401,6 @@ export default {
         }
         this.zong()
       }
-    },
-    query: {
-      handler(newval, oldval) {
-        if(newval && newval.sect) {
-          this.getHousin()
-        }
-      },
-      deep: true
     }
   },
   created() {
@@ -625,6 +617,7 @@ export default {
         vm.query.sect = this.$route.query.userunit;
         vm.query.sectID = this.$route.query.queryID;
         vm.regionname = this.$route.query.City;
+        vm.getHousin()
       }
     },
 
