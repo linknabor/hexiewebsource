@@ -66,7 +66,7 @@
 	position: fixed;
 	left: 4%;
 	right: 4%;
-	bottom: 2.5vh;
+	bottom: 3.5vh;
 	z-index: 3;
 	width: 92%;
 	height: 0.9rem;
@@ -83,7 +83,7 @@
 	position: fixed;
 	left: 4%;
 	right: 4%;
-	bottom: 0;
+	bottom: 3.5vh;
 	z-index: 3;
 	width: 92%;
 }
@@ -729,7 +729,9 @@
 				}
 			},
 			is_create_qrcode(newVal, oldVal) {
-
+				if(newVal) {
+					this.bindhouses()
+				}
 			},
 		},
 		methods:{
