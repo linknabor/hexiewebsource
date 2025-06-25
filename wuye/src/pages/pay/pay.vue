@@ -401,6 +401,14 @@ export default {
         }
         this.zong()
       }
+    },
+    query: {
+      handler(newval, oldval) {
+        if(newval && newval.sect) {
+          this.getHousin()
+        }
+      },
+      deep: true
     }
   },
   created() {
@@ -410,7 +418,7 @@ export default {
     this.initUser()
     vm.TabsList();
     // vm.unitselect();
-    vm.getHousin();
+    // vm.getHousin();
     vm.Compatibility();
     // 判断是否是专业版
   },
@@ -455,14 +463,15 @@ export default {
           a = "userInfo?oriApp="+vm.getUrlParam('oriApp'),
           i = null,
           e = function(n) {
-            var responseStr = JSON.stringify(n)
-            alert(responseStr)
             cookie.set('userId',n.result.id);
             cookie.set('cspId',n.result.cspId);
             cookie.set('sectId',n.result.sectId);
             cookie.set('cardPayService',n.result.cardPayService);
-            if(n.result.wuyeTabsList) { //判断是否有值重新填入
-              const tabsList = n.result.wuyeTabsList
+            let tabsList = []
+            if(n.result) {
+              tabsList = n.result.wuyeTabsList
+            }
+            if(tabsList) { //判断是否有值重新填入
               vm.common.localSet('wuyeTabsList',JSON.stringify(tabsList))
               //填入后在获取赋值
               vm.wuyeTabsList = tabsList
@@ -475,8 +484,8 @@ export default {
               Dialog({message: '没有配置选项卡'})
               return
             }
-            vm.sectId=cookie.get('sectId'); //获取sectid
-            vm.cardPayService =cookie.get('cardPayService');
+            vm.sectId = n.result.sectId; //获取sectid
+            vm.cardPayService = n.result.cardPayService;
             Storage.set("userInfo", n.result)
             vm.userInfo = n.result
             vm.initUser()
@@ -621,7 +630,7 @@ export default {
 
     //获取小区
     getHousin() {
-      if(vm.query.sect==''){
+      if(!vm.query.sect){
        return
       }
       let url =
