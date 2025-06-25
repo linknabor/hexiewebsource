@@ -401,7 +401,15 @@
           }
           this.zong()
         }
-      }
+      },
+		query: {
+		  handler(newval, oldval) {
+			if(newval && newval.sect) {
+			  this.getHousin()
+			}
+		  },
+		  deep: true
+		}
     },
     created() {
       vm = this;
@@ -410,7 +418,7 @@
       this.initUser()
       vm.TabsList();
       //vm.unitselect();
-      vm.getHousin();
+      //vm.getHousin();
       vm.Compatibility();
       // 判断是否是专业版
     },
@@ -460,31 +468,31 @@
               cookie.set('sectId',n.result.sectId);
               cookie.set('cardPayService',n.result.cardPayService);
               if(n.result.wuyeTabsList) { //判断是否有值重新填入
-		var tabsList = []
-		if(n.result) {
-		    tabsList = n.result.wuyeTabsList
-		}
-		if(tabsList) { //判断是否有值重新填入
-		    vm.common.localSet('wuyeTabsList',JSON.stringify(tabsList))
-		    //填入后在获取赋值
-		    vm.wuyeTabsList = tabsList
-		    if(vm.$route.query.selected == "d") {
-			vm.unitselect()
-		    } else {
-			vm.selected = vm.wuyeTabsList[0].value;
-		    }
-		} else {
-		    Dialog({message: '没有配置选项卡'})
-                    return
-		}
-              }
-              vm.sectId=cookie.get('sectId'); //获取sectid
-              vm.cardPayService =cookie.get('cardPayService');
-              Storage.set("userInfo", n.result)
-              vm.userInfo = n.result
-              vm.initUser()
-            },
-            r = function(n) {
+				var tabsList = []
+				if(n.result) {
+					tabsList = n.result.wuyeTabsList
+				}
+				if(tabsList) { //判断是否有值重新填入
+					vm.common.localSet('wuyeTabsList',JSON.stringify(tabsList))
+					//填入后在获取赋值
+					vm.wuyeTabsList = tabsList
+					if(vm.$route.query.selected == "d") {
+						vm.unitselect()
+					} else {
+						vm.selected = vm.wuyeTabsList[0].value;
+					}
+				} else {
+					Dialog({message: '没有配置选项卡'})
+						return
+				}
+			  }
+			  vm.sectId = n.result.sectId; //获取sectid
+			  vm.cardPayService = n.result.cardPayService;
+			  Storage.set("userInfo", n.result)
+			  vm.userInfo = n.result
+			  vm.initUser()
+			},
+			r = function(n) {
   
             };
           this.common.invokeApi(n, a, i, null, e, r);
