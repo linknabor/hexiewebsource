@@ -1,5 +1,6 @@
 <template>
 <div :class="{wapcontent:cvertion == 'conv'}">
+   <van-overlay :show="showOverlay"></van-overlay>
    <div class="reg" v-show="cvertion == 'sale'">
        <div id="zzmb" class="zzmb" v-show="zzmb"></div>
        <div id="phoneAjax" class="hidden"  v-show="zzmb">
@@ -46,11 +47,15 @@
 <script>
 let vm;
 let Token;
+import { Overlay, Dialog, Toast } from 'vant'
 import ageess from './ageess';
-import { Dialog, Toast } from 'vant'
 
-
-export default {
+export default ({
+   components: {
+         ageess,
+         [Overlay.name]: Overlay,
+         [Dialog.name]: Dialog,
+   },
    data () {
        return {
            cvertion:'sale',
@@ -64,10 +69,10 @@ export default {
             comeFrom:'',
             message:"",
             agree:true,//是否同意
+            showOverlay: true
        };
    },
-   components: {
-   },
+   
    created() {
        vm=this;
    },
@@ -115,6 +120,7 @@ export default {
                     location.href = forwardPage;
                     return false
                 }
+                vm.showOverlay = false
                 
             },
             r = function() {};
@@ -258,13 +264,9 @@ export default {
                 vm.comeFrom =comeFrom +''+hash;
                 console.log(vm.comeFrom)
         }
-   },
-   components: {
-         ageess,
-         [Dialog.name]: Dialog,
    }
 
-}
+})
 </script>
 
 <style  scoped>
