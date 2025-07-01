@@ -382,6 +382,11 @@
       };
     },
     watch: {
+	  userInfo(newVal, oldVal) {
+        if(newVal && newVal.id) {
+          this.TabsList()
+        }
+      },
       selected(newv,old){
         isloadPage=false;
         this.initWxConfig(newv)
@@ -408,7 +413,7 @@
     },
     mounted() {
       this.initUser()
-      vm.TabsList();
+      //vm.TabsList();
       //vm.unitselect();
       //vm.getHousin();
       vm.Compatibility();
@@ -443,12 +448,21 @@
         vm.sectId = cookie.get('sectId');//
         vm.cardPayService = cookie.get('cardPayService');//获取sectId
         if(wuyeTabs && (wuyeTabs != 'null' && wuyeTabs != 'undefined')) {//不等于空获取
-           vm.wuyeTabsList = JSON.parse(wuyeTabs);
-           if(this.$route.query.selected == "d") {
-              this.unitselect()
-           } else {
-              vm.selected = vm.wuyeTabsList[0].value;
+           var wuyeTabsList = JSON.parse(wuyeTabs);
+		   if(wuyeTabsList[0].appId) {
+              if(wuyeTabsList[0].appId != vm.userInfo.appId) {
+                window.localStorage.removeItem("wuyeTabsList")
+                wuyeTabs = undefined
+              }
            }
+		   if(wuyeTabs) {
+              vm.wuyeTabsList = wuyeTabsList 
+              if(this.$route.query.selected == "d") {
+                 this.unitselect()
+              } else {
+                 vm.selected = vm.wuyeTabsList[0].value;
+              }
+            }
         }
         if(!wuyeTabs || wuyeTabs == 'null' || wuyeTabs == 'undefined' || !vm.sectId || (vm.cardPayService =='' || vm.cardPayService  == undefined)){
             let n = "GET",
