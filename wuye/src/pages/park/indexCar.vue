@@ -72,6 +72,8 @@ export default {
     },
 
     getParam() {
+      console.log(111, this.oriParam)
+      console.log(222, window.location.search)
       if (this.oriParam) {
         //从生成的二维码进来的，码上带有参数
         let theRequest = {};
