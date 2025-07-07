@@ -25,6 +25,7 @@ export default {
       show_overlay: true,
       oriParam: this.$route.query.param,
       parkId: "",
+      parkCode: '',
       channelId: "",
       appid: Config.appId, //默认微信appid
       componentAppId: Config.componentAppId,
@@ -91,6 +92,25 @@ export default {
           this.appid = theRequest.appid;
         }
       } else {
+        //这里要做一下判断，入口可能是捷顺控制屏上的二维码进入
+        const hash = window.location.hash;
+        const queryIndex = hash.indexOf('?')
+        if (queryIndex !== -1) {
+          const queryString = hash.substring(queryIndex + 1)
+          const urlParams = new URLSearchParams(queryString);
+          const params = {};
+          for (const [key, value] of urlParams.entries()) {
+            params[key] = value;
+          }
+          if(params.equipcode) { //有值代表是从捷顺控制屏进入
+          this.channelId = params.equipcode
+          this.parkCode = params.parkcode
+          } else {
+            if(params.channelId) {
+              this.channelId = params.channelId
+            }
+          }
+        }   
         //从公众号底部菜单进入的，码上没参
         this.appid = Config.appId;
       }
@@ -191,7 +211,8 @@ export default {
             dataType: "1", //临停
             carNo: '',
             parkId: this.parkId,
-            channelId: this.channelId, //车道ID
+            parkCode: this.parkCode, //道闸里的停车场编号
+            channelId: this.channelId, //车道ID（道闸里的出场设备号）
             scanChannel: this.scanChannel,
           },
         })
