@@ -143,7 +143,8 @@ export default {
         dataType: this.$route.query.dataType, //1从临停来 2从包月停车费来
         carNo: this.$route.query.carNo,
         parkId: this.$route.query.parkId,
-        channelId: this.$route.query.channelId, //车道ID
+        parkCode: this.$route.query.parkCode, // 道闸里的停车场编号
+        channelId: this.$route.query.channelId, //车道ID（道闸里的出场设备号）
         scanChannel: this.$route.query.scanChannel, //3微信公众号扫的 1支付宝扫的
         billIds: this.$route.query.billIds,
         reduceMode: this.$route.query.reduceMode,
@@ -173,6 +174,7 @@ export default {
         getTempCarAmt() {
             let param = {
                 parkId: this.parkId,
+                parkCode: this.parkCode,
                 carNo: this.carNo,
                 channelId: this.channelId
             }
