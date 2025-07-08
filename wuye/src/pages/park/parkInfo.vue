@@ -205,6 +205,7 @@
               parkId: this.selectParkId,
               scanChannel: this.scanChannel,
               channelId: '', //默认给空
+              parkCode: ''
             }
           })
         }
