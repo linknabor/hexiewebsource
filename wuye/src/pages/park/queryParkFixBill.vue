@@ -292,7 +292,8 @@
             reduceMode: this.reduceMode,
             parkName: this.parkName,
             dataType: '2', //包月
-            scanChannel: this.scanChannel
+            scanChannel: this.scanChannel,
+            parkCode: ''
           }
         })
       }
