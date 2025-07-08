@@ -25,7 +25,7 @@ export default {
       show_overlay: true,
       oriParam: this.$route.query.param,
       parkId: "",
-      parkCode: '',
+      parkCode: "",
       channelId: "",
       appid: Config.appId, //默认微信appid
       componentAppId: Config.componentAppId,
@@ -209,7 +209,7 @@ export default {
           path: "/parkPayingDetail",
           query: {
             dataType: "1", //临停
-            carNo: '',
+            carNo: "",
             parkId: this.parkId,
             parkCode: this.parkCode, //道闸里的停车场编号
             channelId: this.channelId, //车道ID（道闸里的出场设备号）
