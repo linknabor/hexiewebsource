@@ -25,6 +25,9 @@ const baseInfoApi = {
     },
     mySect(param, data) {
         return Http.get(baseUrl + '/mySect/' + param + '?clientType=' + data, null)
+    },
+    getBaseInfo(data) {
+        return Http.post(baseUrl + '/getHeXieCellById4Qrcode', data, 1)
     }
 
 }
