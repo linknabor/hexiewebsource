@@ -4,7 +4,7 @@
     </van-overlay>
     <van-loading type="spinner" v-show="pageLoading" class="page-laoding"></van-loading>
     <div class="sect-location">
-      <van-icon name="location-o" size="1.5em" />
+      <van-icon name="location-o" size="1.75em" />
       <div class="sect-info">
         <div class="sect-name">{{ sectName }}</div>
         <div class="sect-addr">{{ sectAddr }}</div>
@@ -26,7 +26,7 @@
                   ref="checkboxes" @click="noToggle"></van-checkbox>
               </div>
               <div class="cell-bills">
-                <van-cell >
+                <van-cell>
                   <div class="bill-price">￥{{ item.fee_price }}</div>
                   <div slot="label">{{ item.pay_cell_addr }}</div>
                   <div slot="title">{{ item.service_fee_name }} {{ item.service_fee_cycle }}</div>
@@ -373,7 +373,6 @@ export default {
       this.showPickerPopup = true
     },
     onBuildConfirm(e) {
-      // console.log(e)
       const buildId = this.buildMap.get(e)
       const oriBuildId = this.buildId
       if (buildId != oriBuildId) {
@@ -396,7 +395,6 @@ export default {
       this.showPickerPopup = true
     },
     onUnitConfirm(e) {
-      // console.log(e)
       const unitId = this.unitMap.get(e)
       const oriUnitId = this.unitId
       this.unitId = unitId
@@ -489,6 +487,7 @@ export default {
           if (result && result.bill_info && result.bill_info.length > 0) {
             this.currentPage += 1
             this.permit_skip_pay = result.permit_skip_pay
+            // this.permit_skip_pay = '0' for test
             this.pay_least_month = result.pay_least_month
             this.reduceMode = result.reduce_mode
             const queryBills = result.bill_info
@@ -522,8 +521,8 @@ export default {
         })
       })
     },
-    onChangeCheckAll(e) {
-      if (e) {
+    onChangeCheckAll() {
+      if (this.allChecked) {
         const checkedBills = []
         this.bills.forEach(bill => {
           checkedBills.push(bill.bill_id)
@@ -536,15 +535,13 @@ export default {
     noToggle() {
     },
     toggle(index) {
-      console.log(this.$refs.checkboxes[index].checked)
       if (this.permit_skip_pay == '1') {
         // 选中操作
         const totalSize = this.bills.length
-        console.log(this.$refs.checkboxes)
         if (!this.$refs.checkboxes[index].checked) {
           for (var i = 0; i <= totalSize; i++) {
             if (i <= index) {
-              if(!this.$refs.checkboxes[i].checked) {
+              if (!this.$refs.checkboxes[i].checked) {
                 this.$refs.checkboxes[i].toggle()
               }
             } else {
@@ -559,7 +556,7 @@ export default {
         else {
           for (var i = 0; i <= totalSize; i++) {
             if (i >= index) {
-              if(this.$refs.checkboxes[i] && this.$refs.checkboxes[i].checked) {
+              if (this.$refs.checkboxes[i] && this.$refs.checkboxes[i].checked) {
                 this.$refs.checkboxes[i].toggle()
               }
             }
@@ -597,7 +594,6 @@ export default {
       } else {
         this.allChecked = false
       }
-      console.log('onChangeBill')
       // console.log(maxIndex)
       // if (this.permit_skip_pay == '1' && this.checkedBills.length > 0) {
       //   let checkedBills = []
@@ -615,6 +611,31 @@ export default {
       // }
     },
     onSubmit() {
+      if (!this.checkedBills || this.checkedBills.length == 0) {
+        Dialog.alert({ message: '请选择账单后支付' })
+        return false
+      }
+      let billMap = new Map()
+      this.bills.forEach(bill => {
+        billMap.set(bill.bill_id, bill)
+      })
+      let checkedBillSet = new Set()
+      if (this.pay_least_month > 0) {
+        this.checkedBills.forEach(element => {
+          checkedBillSet.add(element.service_fee_cycle)
+        })
+        if (this.pay_least_month > checkedBillSet.size) {
+          Dialog.alert({ message: '请至少选择' + this.pay_least_month + '个月的账单进行支付。' })
+          return false
+        }
+      }
+      let totalYuan = this.totalPrice / 100
+      totalYuan = totalYuan.toFixed(2)
+      let bills = this.checkedBills.join(',')
+      let payUrl = this.basePageUrl + "wuyepay.html?" + this.oriApp + "#/?billIds=" + bills + "&stmtId=" +
+        "&totalPrice=" + totalYuan + "&reduceMode=" + this.reduceMode + "&regionname=" + this.province + "&getversion=" + "02" + "&cardPayService=&payFeeType=01" + "&selected=d";
+      console.log('payUrl : ' + payUrl)
+      window.location.href = payUrl
     }
   }
 }
@@ -658,12 +679,13 @@ export default {
   font-size: 0.32rem;
   color: var(--primary-color);
   margin: 0 10px;
+  font-weight: 600;
 }
 
 .sect-addr {
   font-size: 0.25rem;
-  color: black;
-  margin: 0 10px;
+  color: #969799;
+  margin: 5px 10px;
 }
 
 .van-cell-group__title {
