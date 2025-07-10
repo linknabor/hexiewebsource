@@ -45,7 +45,7 @@
 
     </div>
     <van-popup v-model="showPickerPopup" @close="onPopupClose" position="bottom" :style="{ height: '45%' }"
-      :overlay-style="{ zIndex: 99 }" safe-area-inset-bottom round closeable>
+      :overlay-style="{ zIndex: 98 }" safe-area-inset-bottom round closeable>
       <div class="pop-header">请选择要缴费的房屋地址</div>
       <van-cell v-if="buildViewVisible" title="选择楼幢" @click="selectBuild" :value="buildAddr" is-link />
       <van-cell v-if="unitViewVisible" title="选择门牌" @click="selectUnit" :value="unitAddr" is-link />
@@ -78,8 +78,6 @@ import BaseInfoApi from '@/api/BaseInfoApi.js'
 import UserInfo from "../../components/UserInfo.vue"
 import baseInfoApi from "../../api/BaseInfoApi"
 import WuyepayApi from "../../api/WuyepayApi"
-import { replace } from "lodash"
-import { indexOf } from "lodash"
 
 export default {
   data() {
@@ -476,7 +474,10 @@ export default {
       this.onCheckCellLoad()
     },
     onPopupClose() {
-      this.showOverlay = false
+      // console.log('onPopupClose')
+      if(!this.showBuildPicker && !this.showUnitPicker && !this.showCellPicker) {
+        this.showOverlay = false
+      }
     },
     closeAddrPop() {
       this.buildViewVisible = false
