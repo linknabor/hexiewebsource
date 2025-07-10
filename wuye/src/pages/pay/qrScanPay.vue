@@ -43,10 +43,10 @@
       </van-submit-bar>
 
     </div>
-    <van-popup v-model="showPickerPopup" position="bottom" :style="{ height: '45%' }" :overlay-style="{ zIndex: 99 }"
+    <van-popup v-model="showPickerPopup" @close="onPopupClose" position="bottom" :style="{ height: '45%' }" :overlay-style="{ zIndex: 99 }"
       safe-area-inset-bottom round closeable>
       <div class="pop-header">请选择要缴费的房屋地址</div>
-      <van-cell v-if="buildViewVisible" title="选择楼幢" @click="selectBuild" :value="buildAddr" :border="false" is-link />
+      <van-cell v-if="buildViewVisible" title="选择楼幢" @click="selectBuild" :value="buildAddr" is-link />
       <van-cell v-if="unitViewVisible" title="选择门牌" @click="selectUnit" :value="unitAddr" is-link />
       <van-cell v-if="cellViewVisible" title="选择房屋单元" @click="selectCell" :value="cellAddr" is-link />
 
@@ -370,6 +370,7 @@ export default {
     },
     onBuildCancel() {
       this.showBuildPicker = false
+      this.showOverlay = false
       this.showPickerPopup = true
     },
     onBuildConfirm(e) {
@@ -392,6 +393,7 @@ export default {
 
     onUnitCancel() {
       this.showUnitPicker = false
+      this.showOverlay = false
       this.showPickerPopup = true
     },
     onUnitConfirm(e) {
@@ -412,6 +414,7 @@ export default {
 
     onCellCancel() {
       this.showCellPicker = false
+      this.showOverlay = false
       this.showPickerPopup = true
     },
     onCellConfirm(e) {
@@ -437,6 +440,9 @@ export default {
       this.showAddr = showAddr
       this.closeAddrPop()
       this.onCheckCellLoad()
+    },
+    onPopupClose () {
+      this.showOverlay = false
     },
     closeAddrPop() {
       this.buildViewVisible = false
