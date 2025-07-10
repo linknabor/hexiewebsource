@@ -38,7 +38,7 @@
       </van-list>
       <div class="no-more" v-if="billFinished">没有更多了</div>
       <div style="width: 100%; height: 5.5vh;"></div>
-      <van-submit-bar :price="totalPrice" button-text="去支付" @submit="onSubmit" v-if="bills && bills.length > 0">
+      <van-submit-bar :price="totalPrice" button-text="去支付" safe-area-inset-bottom  @submit="onSubmit" v-if="bills && bills.length > 0">
         <van-checkbox v-model="allChecked" @click="onChangeCheckAll" v-if="billFinished">全选</van-checkbox>
       </van-submit-bar>
 
