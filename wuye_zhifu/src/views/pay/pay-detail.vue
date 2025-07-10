@@ -544,8 +544,8 @@
 					<van-cell title="是否绑定缴费房屋">
 						<slot>
 							<van-radio-group v-model="bindHouseOption" direction="horizontal">
-								<van-radio name="0">否</van-radio>
 								<van-radio name="1">是</van-radio>
+								<van-radio name="0">否</van-radio>
 							</van-radio-group>
 						</slot>
 					</van-cell>
@@ -625,7 +625,7 @@
 				cardId:'',//记录卡的id
 				request_siccess:false,//判断是否请求成功
 				showBindHouse:true,	//是否显示绑定房屋
-				bindHouseOption: '0',	//0不绑定，1绑定
+				bindHouseOption: '1',	//0不绑定，1绑定
 			}
 		},
 		components: {

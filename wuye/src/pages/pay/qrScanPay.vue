@@ -718,7 +718,7 @@ export default {
         }
       }
       if (this.permit_skip_pay == '1') {
-        if (uncheckedMinFeeDate <= checkedMaxFeeDate) {
+        if (this.checkedBills.length != this.bills.length && uncheckedMinFeeDate <= checkedMaxFeeDate) {
           let year = uncheckedMinFeeDate.substring(0, 4) + '年'
           let month = uncheckedMinFeeDate.substring(4, 6)
           let monthNum = parseInt(month)
