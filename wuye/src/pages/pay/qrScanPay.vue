@@ -38,13 +38,14 @@
       </van-list>
       <div class="no-more" v-if="billFinished">没有更多了</div>
       <div style="width: 100%; height: 5.5vh;"></div>
-      <van-submit-bar :price="totalPrice" button-text="去支付" safe-area-inset-bottom  @submit="onSubmit" v-if="bills && bills.length > 0">
+      <van-submit-bar :price="totalPrice" button-text="去支付" safe-area-inset-bottom @submit="onSubmit"
+        v-if="bills && bills.length > 0">
         <van-checkbox v-model="allChecked" @click="onChangeCheckAll" v-if="billFinished">全选</van-checkbox>
       </van-submit-bar>
 
     </div>
-    <van-popup v-model="showPickerPopup" @close="onPopupClose" position="bottom" :style="{ height: '45%' }" :overlay-style="{ zIndex: 99 }"
-      safe-area-inset-bottom round closeable>
+    <van-popup v-model="showPickerPopup" @close="onPopupClose" position="bottom" :style="{ height: '45%' }"
+      :overlay-style="{ zIndex: 99 }" safe-area-inset-bottom round closeable>
       <div class="pop-header">请选择要缴费的房屋地址</div>
       <van-cell v-if="buildViewVisible" title="选择楼幢" @click="selectBuild" :value="buildAddr" is-link />
       <van-cell v-if="unitViewVisible" title="选择门牌" @click="selectUnit" :value="unitAddr" is-link />
@@ -77,6 +78,8 @@ import BaseInfoApi from '@/api/BaseInfoApi.js'
 import UserInfo from "../../components/UserInfo.vue"
 import baseInfoApi from "../../api/BaseInfoApi"
 import WuyepayApi from "../../api/WuyepayApi"
+import { replace } from "lodash"
+import { indexOf } from "lodash"
 
 export default {
   data() {
@@ -144,6 +147,37 @@ export default {
 
   },
   mounted() {
+
+    // const uncheckedMinFeeDate = '20251211'
+    // let year = uncheckedMinFeeDate.substring(0, 4) + '年'
+    // let month = uncheckedMinFeeDate.substring(4, 6)
+    // let monthNum = parseInt(month)
+    // month = monthNum + '月'
+    // let day = ''
+    // if (uncheckedMinFeeDate.length > 6) {
+    //   day = uncheckedMinFeeDate.substring(6, 8)
+    //   let dayNum = parseInt(day)
+    //   day = dayNum + '日'
+    // }
+    // let uncheckedDate = year + month + day
+    // console.log('uncheckedDate : ' + uncheckedDate)
+
+    // let feeDateStr = '2025年2月'
+    // let year = feeDateStr.substring(0, 4)
+    // let month = feeDateStr.substring(feeDateStr.indexOf('年') + 1, feeDateStr.indexOf('月'))
+    // if (month.length == 1) {
+    //   month = '0' + month
+    // }
+    // let day = ''
+    // if (feeDateStr.indexOf('日') > -1) {
+    //   day = feeDateStr.substring(feeDateStr.indexOf('月') + 1, feeDateStr.indexOf('日'))
+    //   if (day.length == 1) {
+    //     day = '0' + day
+    //   }
+    // }
+    // feeDateStr = year + month + day
+    // console.log('1feeDateStr : ' + feeDateStr)
+
     //初始化参数
     const oriApp = this.getUrlParam("oriApp")
     const sectId = this.getUrlParam("id")
@@ -441,7 +475,7 @@ export default {
       this.closeAddrPop()
       this.onCheckCellLoad()
     },
-    onPopupClose () {
+    onPopupClose() {
       this.showOverlay = false
     },
     closeAddrPop() {
@@ -622,16 +656,82 @@ export default {
         return false
       }
       let billMap = new Map()
+      let uncheckedMinFeeDate = '0'
       this.bills.forEach(bill => {
         billMap.set(bill.bill_id, bill)
+        if (this.checkedBills.indexOf(bill.bill_id) == -1) {
+          let feeDateStr = bill.service_fee_cycle
+          let year = feeDateStr.substring(0, 4)
+          let month = feeDateStr.substring(feeDateStr.indexOf('年') + 1, feeDateStr.indexOf('月'))
+          if (month.length == 1) {
+            month = '0' + month
+          }
+          let day = ''
+          if (feeDateStr.indexOf('日') > -1) {
+            day = feeDateStr.substring(feeDateStr.indexOf('月') + 1, feeDateStr.indexOf('日'))
+            if (day.length == 1) {
+              day = '0' + day
+            }
+          }
+          let billDate = year + month + day
+          if (uncheckedMinFeeDate == '0') {
+            uncheckedMinFeeDate = billDate
+          } else {
+            if (billDate < uncheckedMinFeeDate) {
+              uncheckedMinFeeDate = billDate
+            }
+          }
+        }
       })
+      let checkedMaxFeeDate = '0'
       let checkedBillSet = new Set()
+      this.checkedBills.forEach(element => {
+        const checkedBill = billMap.get(element)
+        let feeDateStr = checkedBill.service_fee_cycle
+        let year = feeDateStr.substring(0, 4)
+        let month = feeDateStr.substring(feeDateStr.indexOf('年') + 1, feeDateStr.indexOf('月'))
+        if (month.length == 1) {
+          month = '0' + month
+        }
+        let day = ''
+        if (feeDateStr.indexOf('日') > -1) {
+          day = feeDateStr.substring(feeDateStr.indexOf('月') + 1, feeDateStr.indexOf('日'))
+          if (day.length == 1) {
+            day = '0' + day
+          }
+        }
+        let billDate = year + month + day
+        checkedBillSet.add(billDate)
+        if (checkedMaxFeeDate == '0') {
+          checkedMaxFeeDate = billDate
+        } else {
+          if (billDate > checkedMaxFeeDate) {
+            checkedMaxFeeDate = billDate
+          }
+        }
+      })
       if (this.pay_least_month > 0) {
-        this.checkedBills.forEach(element => {
-          checkedBillSet.add(element.service_fee_cycle)
-        })
         if (this.pay_least_month > checkedBillSet.size) {
           Dialog.alert({ message: '请至少选择' + this.pay_least_month + '个月的账单进行支付。' })
+          return false
+        }
+      }
+      if (this.permit_skip_pay == '1') {
+        if (uncheckedMinFeeDate <= checkedMaxFeeDate) {
+          let year = uncheckedMinFeeDate.substring(0, 4) + '年'
+          let month = uncheckedMinFeeDate.substring(4, 6)
+          let monthNum = parseInt(month)
+          month = monthNum  + '月'
+          let day = ''
+          if (uncheckedMinFeeDate.length > 6) {
+            day = uncheckedMinFeeDate.substring(6, 8)
+            let dayNum = parseInt(day)
+            day = dayNum + '日'
+          }
+          let uncheckedDate = year + month + day
+          Dialog.alert({
+            message: '仍有' + uncheckedDate + '的账单未勾选。'
+          })
           return false
         }
       }
@@ -640,7 +740,6 @@ export default {
       let bills = this.checkedBills.join(',')
       let payUrl = this.basePageUrl + "wuyepay.html?" + this.oriApp + "#/?billIds=" + bills + "&stmtId=" +
         "&totalPrice=" + totalYuan + "&reduceMode=" + this.reduceMode + "&regionname=" + this.province + "&getversion=" + "02" + "&cardPayService=&payFeeType=01" + "&selected=d";
-      console.log('payUrl : ' + payUrl)
       window.location.href = payUrl
     }
   }
