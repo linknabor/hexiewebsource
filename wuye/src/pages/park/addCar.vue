@@ -86,7 +86,7 @@ export default {
         //这里先临时判断一下 如果车辆超过3辆就不允许添加
         const exists = this.carList.some(item => item.car_no === data);
         if (this.carList.length >= 3 && !exists) {
-          Toast.fail("做多只允许添加3辆车")
+          Toast.fail("最多只允许添加3辆车")
           this.show_overlay = false
           return
         }
